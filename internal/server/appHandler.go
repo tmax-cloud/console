@@ -2,13 +2,12 @@ package server
 
 import (
 	"console/pkg/version"
+	"github.com/rs/zerolog"
 	"html/template"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
-
-	kitlog "github.com/go-kit/log"
 )
 
 const (
@@ -41,7 +40,7 @@ type App struct {
 	PrometheusTenancyBaseURL string `json:"prometheusTenancyBaseURL"`
 	AlertManagerBaseURL      string `json:"alertManagerBaseURL"`
 
-	logger kitlog.Logger
+	logger zerolog.Logger
 }
 
 func NewAppConfig() *App {
@@ -55,22 +54,24 @@ func NewAppConfig() *App {
 	}
 }
 
-func (a *App) AddLogger(logger kitlog.Logger) {
+func (a *App) AddLogger(logger zerolog.Logger) {
 	a.logger = logger
 }
 
 func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
-	a.logger.Log("msg", "create template then response the index.html")
+	a.logger.Debug().Msg("create template then response the index.html")
+	//a.logger.Log("msg", "create template then response the index.html")
 	tpl := template.New(indexPageTemplateName)
 	tpl.Delims("[[", "]]")
 	tpls, err := tpl.ParseFiles(path.Join(a.PublicDir, indexPageTemplateName))
 	if err != nil {
-		a.logger.Log("error", err, "msg", "index.html not found in configured public-dir path")
+		a.logger.Error().AnErr("error", err).Msg("index.html not found in configured public-dir path")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		os.Exit(1)
 	}
 
 	if err := tpls.ExecuteTemplate(w, indexPageTemplateName, a); err != nil {
-		a.logger.Log("error", err)
+		a.logger.Error().AnErr("error", err).Msg("failed to execute template")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

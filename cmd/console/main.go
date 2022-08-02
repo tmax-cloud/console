@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"net/url"
 	"os"
@@ -14,7 +15,6 @@ import (
 	"syscall"
 	"time"
 
-	kitlog "github.com/go-kit/log"
 	oscrypto "github.com/openshift/library-go/pkg/crypto"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -43,6 +43,7 @@ func main() {
 var (
 	servingInfo = &ServingInfo{}
 	app         = server.NewAppConfig()
+	logInfo     = NewLogInfo()
 
 	rootCmd = &cobra.Command{
 		Use:   "console",
@@ -93,12 +94,20 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 			k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
 			fmt.Printf("%v \n", app)
 
-			var logger kitlog.Logger
-			logger = kitlog.NewLogfmtLogger(kitlog.NewSyncWriter(os.Stderr))
-			logger = kitlog.With(logger, "ts", kitlog.DefaultTimestampUTC)
+			//var logger zerolog.Logger
+			//logInfo := LogInfo{
+			//	logLevel: "info",
+			//	logType:  "pretty",
+			//}
+			//logInfo.LogType=fs.GetString
+			logger := logInfo.getLogger()
 
-			app.AddLogger(kitlog.With(logger, "component", "App"))
-			k8sHandler.AddLogger(kitlog.With(logger, "component", "k8sHandler"))
+			//logger = level.NewFilter(logger, level.AllowNone())
+
+			//var leveltest level.Value
+
+			app.AddLogger(logger)
+			k8sHandler.AddLogger(logger)
 
 			httpHandler := server.NewServer(app, k8sHandler)
 
@@ -124,13 +133,15 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 				if listenURL.Scheme == "https" {
 					err := httpsrv.ListenAndServeTLS(servingInfo.CertFile, servingInfo.KeyFile)
 					if err != nil && err != http.ErrServerClosed {
-						logger.Log("Error", err)
+						//log.Log("Error", err)
+						log.Error().Err(err)
 						os.Exit(1)
 					}
 				} else {
 					err := httpsrv.ListenAndServe()
 					if err != nil && err != http.ErrServerClosed {
-						logger.Log("Error", err)
+						//logger.Log("Error", err)
+						log.Error().Err(err)
 						os.Exit(1)
 					}
 				}
@@ -156,7 +167,7 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 				go func() {
 					err := redirectServer.ListenAndServe()
 					if err != nil && err != http.ErrServerClosed {
-						logger.Log("Error", err)
+						log.Error().Err(err)
 						os.Exit(1)
 					}
 				}()
@@ -167,31 +178,35 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 			signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 			go func() {
 				<-sig
-
-				logger.Log("msg", "Shutdown signal received")
+				log.Info().Msg("Shutdown signal received")
+				//logger.Log("msg", "Shutdown signal received")
 				// Shutdown signal with grace period of 30 seconds
 				shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
 
 				go func() {
 					<-shutdownCtx.Done()
 					if shutdownCtx.Err() == context.DeadlineExceeded {
-						logger.Log("Error", "graceful shutdown timed out.. forcing exit.")
+						log.Error().Msg("graceful shutdown timed out.. forcing exit.")
 						os.Exit(1)
 					}
 				}()
 
 				// Trigger graceful shutdown
-				logger.Log("msg", "graceful Shutdown httpsrv")
+				log.Info().Msg("Shutdown signal received")
+				//logger.Log("msg", "graceful Shutdown httpsrv")
 				err := httpsrv.Shutdown(shutdownCtx)
 				if err != nil {
-					logger.Log("Error", err)
+					log.Error().Err(err).Msg("graceful shutdown timed out.. forcing exit.")
+					//logger.Log("Error", err)
 					os.Exit(1)
 				}
-				logger.Log("msg", "graceful Shutdown redirectServer")
+				log.Info().Msg("graceful Shutdown redirectServer")
+				//logger.Log("msg", "graceful Shutdown redirectServer")
 				if servingInfo.RedirectPort != 0 {
 					err := redirectServer.Shutdown(shutdownCtx)
 					if err != nil {
-						logger.Log("Error", err)
+						log.Error().Err(err)
+						//logger.Log("Error", err)
 						os.Exit(1)
 					}
 				}
@@ -250,12 +265,19 @@ var serverCmd = &cobra.Command{
 		k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
 		fmt.Printf("%v \n", app)
 
-		var logger kitlog.Logger
-		logger = kitlog.NewLogfmtLogger(kitlog.NewSyncWriter(os.Stderr))
-		logger = kitlog.With(logger, "ts", kitlog.DefaultTimestampUTC)
+		//var logger zerolog.Logger
+		//logInfo := LogInfo{
+		//	logLevel: "debug",
+		//	logType:  "pretty",
+		//}
+		logger := logInfo.getLogger()
 
-		app.AddLogger(kitlog.With(logger, "component", "App"))
-		k8sHandler.AddLogger(kitlog.With(logger, "component", "k8sHandler"))
+		//logger = level.NewFilter(logger, level.AllowNone())
+
+		//var leveltest level.Value
+
+		app.AddLogger(logger)
+		k8sHandler.AddLogger(logger)
 
 		httpHandler := server.NewServer(app, k8sHandler)
 
@@ -281,13 +303,13 @@ var serverCmd = &cobra.Command{
 			if listenURL.Scheme == "https" {
 				err := httpsrv.ListenAndServeTLS(servingInfo.CertFile, servingInfo.KeyFile)
 				if err != nil && err != http.ErrServerClosed {
-					logger.Log("Error", err)
+					logger.Error().Err(err).Msg("fail to listen https server")
 					os.Exit(1)
 				}
 			} else {
 				err := httpsrv.ListenAndServe()
 				if err != nil && err != http.ErrServerClosed {
-					logger.Log("Error", err)
+					logger.Error().Err(err).Msg("fail to listen https server")
 					os.Exit(1)
 				}
 			}
@@ -313,7 +335,7 @@ var serverCmd = &cobra.Command{
 			go func() {
 				err := redirectServer.ListenAndServe()
 				if err != nil && err != http.ErrServerClosed {
-					logger.Log("Error", err)
+					logger.Error().Err(err).Msg("fail to listen redirect server")
 					os.Exit(1)
 				}
 			}()
@@ -325,30 +347,31 @@ var serverCmd = &cobra.Command{
 		go func() {
 			<-sig
 
-			logger.Log("msg", "Shutdown signal received")
+			logger.Info().Msgf("Shutdown signal received")
 			// Shutdown signal with grace period of 30 seconds
 			shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
 
 			go func() {
 				<-shutdownCtx.Done()
 				if shutdownCtx.Err() == context.DeadlineExceeded {
-					logger.Log("Error", "graceful shutdown timed out.. forcing exit.")
+					logger.Error().Msgf("graceful shutdown timed out.. forcing exit.")
 					os.Exit(1)
 				}
 			}()
 
 			// Trigger graceful shutdown
-			logger.Log("msg", "graceful Shutdown httpsrv")
+			logger.Info().Msgf("graceful Shutdown httpsrv")
+			//logger.Log("msg", "graceful Shutdown httpsrv")
 			err := httpsrv.Shutdown(shutdownCtx)
 			if err != nil {
-				logger.Log("Error", err)
+				logger.Error().Err(err)
 				os.Exit(1)
 			}
-			logger.Log("msg", "graceful Shutdown redirectServer")
+			logger.Info().Msgf("graceful Shutdown redirectServer")
 			if servingInfo.RedirectPort != 0 {
 				err := redirectServer.Shutdown(shutdownCtx)
 				if err != nil {
-					logger.Log("Error", err)
+					logger.Error().Err(err)
 					os.Exit(1)
 				}
 			}
@@ -380,6 +403,9 @@ func NewConsoleCommand() *cobra.Command {
 	rootCmd.PersistentFlags().BoolVar(&app.ChatbotEmbed, "app.chatbotEmbed", false, "when true, enable chatbot")
 	rootCmd.PersistentFlags().BoolVar(&app.ReleaseMode, "app.releaseMode", true, "when true, use jwt token given by keycloak")
 	rootCmd.PersistentFlags().StringVar(&app.CustomProductName, "app.customProductName", "hypercloud", "prduct name for console | default hypercloud")
+
+	rootCmd.PersistentFlags().StringVar(&logInfo.LogLevel, "logInfo.logLevel", "info", "trace | debug | info | warn | crit, default info")
+	rootCmd.PersistentFlags().StringVar(&logInfo.LogType, "logInfo.logType", "pretty", "json | pretty , default pretty")
 
 	//rootCmd.PersistentFlags().StringVar(&k8sHandler.KubeAPIServerURL, "k8sHandler.kubeAPIServerURL", "kubernetes.default.svc", "kube api server hostname")
 	rootCmd.PersistentFlags().String("clusterInfo.kubeAPIServerURL", "https://kubernetes.default.svc", "kube api server hostname")
