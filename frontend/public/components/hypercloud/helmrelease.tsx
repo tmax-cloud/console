@@ -21,7 +21,9 @@ import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
 import { HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
-import { HelmreleasesForm } from '@console/internal/components/hypercloud/form/helmreleases/create-helmrelease'
+import { HelmreleasesForm } from '@console/internal/components/hypercloud/form/helmreleases/create-helmrelease';
+import { EditDefaultPage } from '../hypercloud/crd/edit-resource';
+import { CreateHelmRelease } from '../hypercloud/form/helmreleases/create-helmrelease';
 
 const kind = HelmReleaseModel.kind;
 const getHost = async () => {
@@ -156,7 +158,7 @@ const tableProps: TableProps = {
   },
 };
 
-const { details, editResource } = navFactory;
+const { details } = navFactory;
 export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
   const { t } = useTranslation();
   const name = props.match?.params?.name;
@@ -188,7 +190,15 @@ export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
     <DetailsPage
       {...props}
       kind={kind}
-      pages={[details(detailsPage(HelmReleaseDetails)), editResource()]}
+      pages={[
+        details(detailsPage(HelmReleaseDetails)),
+        // editResource(),
+        {
+          name: 'COMMON:MSG_DETAILS_TAB_18',
+          href: 'edit',
+          component: CreateHelmRelease,
+        },
+      ]}
       name={props.match?.params?.name}
       menuActions={menuActions}
       getResourceStatus={capitalizeHelmReleaseStatusReducer}
@@ -391,6 +401,11 @@ const allPages = [
   {
     name: 'COMMON:MSG_DETAILS_TAB_18',
     href: 'edit',
-    component: HelmReleaseEditPage,
+    component: EditDefaultPage,
+  },
+  {
+    name: 'COMMON:MSG_DETAILS_TAB_18',
+    href: 'edit',
+    component: CreateHelmRelease,
   },
 ];

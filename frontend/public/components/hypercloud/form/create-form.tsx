@@ -15,8 +15,11 @@ import { Tooltip } from '@patternfly/react-core';
 import { saveButtonDisabledString, isSaveButtonDisabled } from '../utils/button-state';
 import { coFetchJSON } from '@console/internal/co-fetch';
 
-export const isCreatePage = defaultValues => {
-  return !_.has(defaultValues, 'metadata.creationTimestamp');
+export const isCreatePage = (defaultValues, isNonK8sResource?) => {
+  let returnValue = !_.has(defaultValues, 'metadata.creationTimestamp');
+  returnValue = isNonK8sResource ? defaultValues.name === '' : returnValue;
+
+  return returnValue;
 };
 export const kindToggle = (kindPlural, methods) => {
   //범용적으로 변경할 필요 있음
@@ -44,14 +47,14 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
 
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
-    const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: NonK8sKindModel ? t(NonK8sKindModel.i18nInfo.label) : ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: NonK8sKindModel ? t(NonK8sKindModel.i18nInfo.label) : ResourceLabel({ kind: kind }, t) })}`;
+    const title = `${isCreatePage(defaultValues, !!NonK8sKindModel) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: NonK8sKindModel ? t(NonK8sKindModel.i18nInfo.label) : ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: NonK8sKindModel ? t(NonK8sKindModel.i18nInfo.label) : ResourceLabel({ kind: kind }, t) })}`;
 
     const [inProgress, setProgress] = React.useState(false);
     const [errorMessage, setError] = React.useState('');
 
     const onClick = methods.handleSubmit(data => {
       let inDo;
-      if (isCreatePage(defaultValues)) {
+      if (isCreatePage(defaultValues, !!NonK8sKindModel)) {
         inDo = _.defaultsDeep(data, props.fixed);
       } else {
         // 1. data에는 이미 spec에 대한 값은 다 있을 것이기 때문에 기존 defaultValues에서 spec영역만을 제외한 부분을 fixed로 정의
@@ -82,7 +85,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
         } else {
           const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
           setProgress(true);
-          isCreatePage(defaultValues)
+          isCreatePage(defaultValues, !!NonK8sKindModel)
             ? k8sCreate(model, inDo)
                 .then(() => {
                   history.push(resourceObjPath(inDo, referenceFor(model)));
@@ -127,13 +130,13 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
                   <Tooltip content={saveButtonDisabledString(t)} maxWidth="30rem" position="bottom">
                     <div>
                       <Button type="button" variant="primary" id="save-changes" onClick={onClick} isDisabled={true}>
-                        {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
+                        {isCreatePage(defaultValues, !!NonK8sKindModel) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
                       </Button>
                     </div>
                   </Tooltip>
                 ) : (
                   <Button type="button" variant="primary" id="save-changes" onClick={onClick} isDisabled={false}>
-                    {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
+                    {isCreatePage(defaultValues, !!NonK8sKindModel) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
                   </Button>
                 )}
                 <Button type="button" variant="secondary" id="cancel" onClick={history.goBack}>
