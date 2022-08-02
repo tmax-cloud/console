@@ -70,12 +70,6 @@
       background-image: url('../../imgs/hypercloud/lnb/filled/ferderation_filled.svg');
     }
   }
-  &.ansible {
-    background-image: url('../../imgs/hypercloud/lnb/ansible_lnb.svg');
-    &.pf-m-current {
-      background-image: url('../../imgs/hypercloud/lnb/filled/ansible_filled_lnb.svg');
-    }
-  }
 
   // master cluster
   &.home {
@@ -88,12 +82,6 @@
     background-image: url('../../imgs/hypercloud/lnb/workload.svg');
     &.pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/workload_filled.svg');
-    }
-  }
-  &.helm {
-    background-image: url('../../imgs/hypercloud/lnb/helm_lnb.svg');
-    &.pf-m-current {
-      background-image: url('../../imgs/hypercloud/lnb/filled/helm_filled_lnb.svg');
     }
   }
   &.networking {
@@ -150,6 +138,12 @@
       background-image: url('../../imgs/hypercloud/lnb/filled/service_catalog_filled.svg');
     }
   }
+  &.helm {
+    background-image: url('../../imgs/hypercloud/lnb/helm_lnb.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/helm_filled_lnb.svg');
+    }
+  }
   &.service_mesh {
     background-image: url('../../imgs/hypercloud/lnb/service_mesh.svg');
     &.pf-m-current {
@@ -168,12 +162,34 @@
       background-image: url('../../imgs/hypercloud/lnb/filled/ai_devops_filled.svg');
     }
   }
+  &.kafka {
+    background-image: url('../../imgs/hypercloud/lnb/kafka.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/kafka_filled.svg');
+    }
+  }
   &.image {
     background-image: url('../../imgs/hypercloud/lnb/image.svg');
     &.pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/image_filled.svg');
     }
   }
+
+  // baremetal
+  &.ansible {
+    background-image: url('../../imgs/hypercloud/lnb/ansible_lnb.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/ansible_filled_lnb.svg');
+    }
+  }
+  &.provisioning {
+    background-image: url('../../imgs/hypercloud/lnb/provisioning.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/provisioning_filled.svg');
+    }
+  }
+
+  // custom
   &.custom_menu {
     background-image: url('../../imgs/hypercloud/lnb/add_menu.svg');
     &.pf-m-current {
