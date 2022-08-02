@@ -1,7 +1,7 @@
 import * as models from '../../../models';
 import { CustomResourceDefinitionModel } from '../../../models';
 import { allModels, getK8sAPIPath, K8sKind } from '../../../module/k8s';
-import * as helmModels from 'public/models/hypercloud/helm-model';
+import * as helmModels from '@console/internal/models/hypercloud/helm-model';
 
 enum SCHEMA_DIRECTORY {
   MANAGEMENT = 'management',
