@@ -65,7 +65,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   const [yamlValues, setYamlValues] = React.useState(defaultYamlValues ? safeDump(defaultYamlValues) : null);
   const [entries, setEntries] = React.useState([]);
   const [chartNameList, setChartNameList] = React.useState({});
-  const [versions, setVersions] = React.useState({});
+  const [versions, setVersions] = React.useState([]);
   const [selectRepoName, setSelectRepoName] = React.useState(defaultRepoName);
 
   const [host, setHost] = React.useState('');
@@ -133,12 +133,12 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
       await coFetchJSON(`${tempHost}/helm/charts/${selectRepoName}_${selectChartName}`).then(res => {
         const tempVersionsList = _.get(res, 'versions');
         if (tempVersionsList) {
-          let tempVersionsObject = {};
+          let tempVersionsObjectList = [];
           tempVersionsList.map((version: any) => {
-            let tempObject = { [version]: version };
-            _.merge(tempVersionsObject, tempObject);
+            let tempObject = { label: version, value: version };
+            tempVersionsObjectList.push(tempObject);
           });
-          setVersions(tempVersionsObject);
+          setVersions(tempVersionsObjectList);
         }
       });
     };
@@ -155,9 +155,14 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
     })[0];
     setSelectRepoName(selectedEntry.repo?.name);
   };
-  
+
   React.useEffect(() => {
-    const selectedVersion = versions[version.value];
+    const selectedVersion =
+      versions.length > 0 && version.label !== ''
+        ? versions.filter(e => {
+            if (e.label === version.label) return true;
+          })[0].value
+        : '';
     const setChartVersion = async () => {
       await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
         const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
@@ -165,7 +170,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
         setYamlValues(safeDump(_.get(res, 'values')));
       });
     };
-    versions ? setChartVersion() : methods.setValue('version', { value: defaultVersion, label: defaultVersion });
+    versions.length > 0 ? setChartVersion() : methods.setValue('version', { value: defaultVersion, label: defaultVersion });
   }, [version]);
 
   const updateYamlValues = (newValue, event) => {
@@ -184,7 +189,14 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   return (
     <>
       <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
-        <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} isDisabled={defaultReleaseName !== ''} />
+        {defaultReleaseName !== '' ? (
+          <>
+            {defaultReleaseName}
+            <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} hidden={true} />
+          </>
+        ) : (
+          <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} />
+        )}
       </Section>
       {loading && (
         <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_2')} id="chartName" isRequired={true}>
