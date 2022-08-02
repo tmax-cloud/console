@@ -10,6 +10,7 @@ import { Button } from '@patternfly/react-core';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { ButtonBar, Dropdown } from '@console/internal/components/utils';
+import { DropdownWithRef } from '../../utils/dropdown-new';
 import { history } from '@console/internal/components/utils/router';
 import { getIdToken } from '@console/internal/hypercloud/auth';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
@@ -53,25 +54,33 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   const { t } = useTranslation();
   const queryChartName = getQueryArgument('chartName');
   const queryChartRepo = getQueryArgument('chartRepo');
-  const defalutChartName = queryChartName ? queryChartName : defaultValues ? defaultValues.chart.metadata.name : '';
-  const defalutReleaseName = defaultValues ? defaultValues.name : '';
-  const defalutVersion = defaultValues ? defaultValues.chart.metadata.version : '';
-  const defalutValues = defaultValues ? defaultValues.chart.values : null;
-  const defalutRepoName = queryChartRepo ? queryChartRepo : '';
+  const defaultChartName = queryChartName ? queryChartName : defaultValues ? defaultValues.chart.metadata.name : '';
+  const defaultReleaseName = defaultValues ? defaultValues.name : '';
+  const defaultVersion = defaultValues ? defaultValues.chart.metadata.version : '';
+  const defaultYamlValues = defaultValues ? defaultValues.chart.values : null;
+  const defaultRepoName = queryChartRepo ? queryChartRepo : '';
 
   const [loading, setLoading] = React.useState(false);
-  const [selectChartName, setSelectChartName] = React.useState(defalutChartName);
-  const [postPackageURL, setPostPackageURL] = React.useState('');
-  const [postVersion, setPostVersion] = React.useState(defalutVersion);
-  const [postValues, setPostValues] = React.useState(defalutValues ? safeDump(defalutValues) : null);
+  const [selectChartName, setSelectChartName] = React.useState(defaultChartName);
+  const [yamlValues, setYamlValues] = React.useState(defaultYamlValues ? safeDump(defaultYamlValues) : null);
   const [entries, setEntries] = React.useState([]);
   const [chartNameList, setChartNameList] = React.useState({});
   const [versions, setVersions] = React.useState({});
-  const [selectRepoName, setSelectRepoName] = React.useState(defalutRepoName);
+  const [selectRepoName, setSelectRepoName] = React.useState(defaultRepoName);
 
   const [host, setHost] = React.useState('');
 
-  const noEntryMessageTest = 'This chart is not on the server';
+  const version = useWatch<{ value: string; label: string }>({
+    control: methods.control,
+    name: 'version',
+    defaultValue: { value: defaultVersion, label: defaultVersion },
+  });
+  const packageURL = useWatch<string>({
+    control: methods.control,
+    name: 'packageURL',
+  });
+
+  // const noEntryMessageTest = 'This chart is not on the server';
 
   const [postUrl, setPostUrl] = React.useState('');
   React.useEffect(() => {
@@ -100,13 +109,18 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
         });
         if (defaultValues.name !== '') {
           const entry = tempEntriesList.filter(e => {
-            if (e.name === tempChartObject[defalutChartName]) return true;
+            if (e.name === tempChartObject[defaultChartName]) return true;
           })[0];
-          setPostPackageURL(entry ? entry.urls[0] : null);
           methods.setValue('packageURL', entry ? entry.urls[0] : null);
         }
         setEntries(tempEntriesList);
         setChartNameList(tempChartObject);
+        if (defaultChartName) {
+          const selectedEntry = tempEntriesList.filter(e => {
+            if (e.name === defaultChartName) return true;
+          })[0];
+          setSelectRepoName(selectedEntry.repo?.name);
+        }
         setLoading(true);
       });
     };
@@ -129,12 +143,11 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
       });
     };
     getVersions();
-    setPostVersion('');
-    methods.setValue('version', '');
-    setPostPackageURL('');
+    methods.setValue('version', { value: defaultVersion, label: defaultVersion });
     methods.setValue('packageURL', '');
-    setPostValues(null);
-  }, [selectChartName]);
+    setYamlValues(defaultYamlValues ? safeDump(defaultYamlValues) : null);
+  }, [selectChartName, selectRepoName]);
+
   const updateChartName = (selection: string) => {
     setSelectChartName(selection);
     const selectedEntry = entries.filter(e => {
@@ -142,45 +155,27 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
     })[0];
     setSelectRepoName(selectedEntry.repo?.name);
   };
-  const updateVersion = (selection: string) => {
-    const selectedVersion = versions[selection];
-    setPostVersion(selectedVersion ? selectedVersion : noEntryMessageTest);
-    const setChartVersion = async () => {
-      await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
-        const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
-        setPostPackageURL(entryValue[0].urls[0]);
-        methods.setValue('packageURL', entryValue[0].urls[0]);
-        setPostValues(safeDump(_.get(res, 'values')));
-      });
-    };
-    setChartVersion();
-  };
-  const version = useWatch<string>({
-    control: methods.control,
-    name: 'version',
-  });
+  
   React.useEffect(() => {
-    const selectedVersion = versions[version];
-    setPostVersion(selectedVersion ? selectedVersion : noEntryMessageTest);
+    const selectedVersion = versions[version.value];
     const setChartVersion = async () => {
       await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
         const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
-        setPostPackageURL(entryValue[0].urls[0]);
         methods.setValue('packageURL', entryValue[0].urls[0]);
-        setPostValues(safeDump(_.get(res, 'values')));
+        setYamlValues(safeDump(_.get(res, 'values')));
       });
     };
-    setChartVersion();
+    versions ? setChartVersion() : methods.setValue('version', { value: defaultVersion, label: defaultVersion });
   }, [version]);
 
-  const updatePostValues = (newValue, event) => {
-    setPostValues(newValue);
+  const updateYamlValues = (newValue, event) => {
+    setYamlValues(newValue);
     return {};
   };
 
   React.useEffect(() => {
-    methods.setValue('values', postValues);
-  }, [postValues]);
+    methods.setValue('values', yamlValues);
+  }, [yamlValues]);
 
   React.useEffect(() => {
     methods.setValue('postUrl', postUrl);
@@ -189,64 +184,45 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   return (
     <>
       <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
-        {defaultValues.name !== '' ? <p>{defalutReleaseName}</p> : <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defalutReleaseName} disabled={!!defaultValues} />}
+        <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} isDisabled={defaultReleaseName !== ''} />
       </Section>
       {loading && (
         <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_2')} id="chartName" isRequired={true}>
-          {defaultValues.name !== '' ? (
-            <p>{selectChartName}</p>
-          ) : (
-            <Dropdown
-              name="chartName"
-              className="btn-group"
-              title={selectChartName || t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_3')}
-              items={chartNameList} // (필수)
-              required={true}
-              onChange={updateChartName}
-              buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
-              itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-              disabled={defaultValues.name !== ''}
-              autocompleteFilter={fuzzy}
-            />
-          )}
+          <Dropdown
+            name="chartName"
+            className="btn-group"
+            title={selectChartName || t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_3')}
+            items={chartNameList} // (필수)
+            required={true}
+            onChange={updateChartName}
+            buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
+            itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+            disabled={defaultValues.name !== ''}
+            autocompleteFilter={fuzzy}
+          />
         </Section>
       )}
       {selectChartName && (
         <>
           <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')} id="version">
-            {defaultValues.name !== '' ? (
-              <p>{postVersion}</p>
-            ) : (
-              <Controller
-                name="version"
-                id="version"
-                as={
-                  <Dropdown
-                    name="version"
-                    className="btn-group"
-                    title={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')}
-                    items={versions} // (필수)
-                    required={true}
-                    onChange={updateVersion}
-                    buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
-                    itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-                    disabled={defaultValues.name !== ''}
-                    autocompleteFilter={fuzzy}
-                  />
-                }
-                onChange={updateVersion}
-                control={methods.control}
-              />
-            )}
+            <Controller
+              as={<DropdownWithRef name="version" defaultValue={{ value: defaultVersion, label: defaultVersion }} methods={methods} useResourceItemsFormatter={false} items={versions} placeholder={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')} />}
+              control={methods.control}
+              name="version"
+              onChange={([selected]) => {
+                return { value: selected };
+              }}
+              defaultValue={{ value: defaultVersion, label: defaultVersion }}
+            />
           </Section>
-          {postPackageURL && (
+          {packageURL && (
             <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL">
-              <p>{postPackageURL}</p>
+              <p>{packageURL}</p>
             </Section>
           )}
         </>
       )}
-      {postValues !== undefined && postValues !== null && <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />}
+      {yamlValues !== undefined && yamlValues !== null && <YAMLEditor value={yamlValues} minHeight="300px" onChange={updateYamlValues} showShortcuts={true} />}
       <TextInput inputClassName="pf-c-form-control" id="packageURL" name="packageURL" defaultValue="" hidden={true} />
       <TextArea inputClassName="pf-c-form-control" id="values" name="values" defaultValue="" hidden={true} />
       <TextInput inputClassName="pf-c-form-control" id="postUrl" name="postUrl" defaultValue="" hidden={true} />
@@ -268,7 +244,7 @@ export const onSubmitCallback = data => {
     releaseRequestSpec: {
       packageURL: data.packageURL,
       releaseName: data.releaseName,
-      version: data.version,
+      version: data.version.value,
     },
     values: data.values,
   };
