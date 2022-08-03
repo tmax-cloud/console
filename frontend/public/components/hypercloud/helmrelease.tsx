@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { match as RMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { SectionHeading, Timestamp, ResourceLink, Kebab, KebabOption, detailsPage, navFactory, KebabAction } from '@console/internal/components/utils';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
@@ -15,7 +14,7 @@ import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
-import { HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
+import { HelmChartModel, HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { CreateHelmRelease } from '../hypercloud/form/helmreleases/create-helmrelease';
 
 const kind = HelmReleaseModel.kind;
@@ -117,7 +116,7 @@ const tableProps: TableProps = {
     ];
     return [
       {
-        children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
+        children: <ResourceLink manualPath={`/helmreleases/ns/${obj.namespace}/${obj.name}`} kind={HelmReleaseModel.kind} name={obj.name} />,
       },
       {
         className: 'co-break-word',
@@ -277,7 +276,7 @@ export const HelmReleaseDetailsList: React.FC<HelmReleaseDetailsListProps> = ({ 
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
       <dd>{release.chart?.metadata?.description}</dd>
       <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
-      <dd>{release.chart?.metadata?.repo ? <Link to={`/helmcharts/${release.chart?.metadata?.repo}/${release.chart?.metadata?.name}`}>{release.chart?.metadata?.name}</Link> : release.chart?.metadata?.name}</dd>
+      <dd>{release.chart?.metadata?.repo ?  <ResourceLink manualPath={`/helmcharts/${release.chart?.metadata?.repo}/${release.chart?.metadata?.name}`} kind={HelmChartModel.kind} name={release.chart?.metadata?.name} /> : release.chart?.metadata?.name}</dd>
       <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_2')}</dt>
       <dd>{release.version}</dd>
     </dl>

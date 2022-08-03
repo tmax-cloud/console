@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { SectionHeading, Timestamp, detailsPage, navFactory } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, detailsPage, navFactory, ResourceLink } from '@console/internal/components/utils';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
+import { HelmChartModel, HelmRepositoryModel } from '@console/internal/models/hypercloud/helm-model';
 
 const kind = HelmChartModel.kind;
 
@@ -42,18 +41,10 @@ const tableProps: TableProps = {
   row: (obj: any) => {
     return [
       {
-        children: (
-          <Link key={'link' + obj.name} to={`/helmcharts/${obj.repo?.name}/${obj.name}`}>
-            {obj.name}
-          </Link>
-        ),
+        children: <ResourceLink manualPath={`/helmcharts/${obj.repo?.name}/${obj.name}`} kind={HelmChartModel.kind} name={obj.name} />,
       },
       {
-        children: (
-          <Link key={'link' + obj.name} to={`/helmrepositories/${obj.repo?.name}`}>
-            {obj.repo?.name}
-          </Link>
-        ),
+        children: <ResourceLink manualPath={`/helmrepositories/${obj.repo?.name}`} kind={HelmRepositoryModel.kind} name={obj.repo?.name} />,
       },
       {
         children: obj.repo?.url,
@@ -160,21 +151,4 @@ export const HelmChartDetailsList: React.FC<HelmChartDetailsListProps> = ({ entr
 };
 type HelmChartDetailsListProps = {
   entry: any;
-};
-
-type HelmchartDetailsHeaderProps = {
-  name: string;
-};
-export const HelmchartDetailsHeader: React.FC<HelmchartDetailsHeaderProps> = props => {
-  const { name } = props;
-  const { t } = useTranslation();
-  return (
-    <div style={{ padding: '30px', borderBottom: '1px solid #ccc' }}>
-      <div style={{ display: 'inline-block' }}>
-        <Link to={'/helmcharts'}>{t('COMMON:MSG_LNB_MENU_223')}</Link>
-        {' > ' + t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}
-      </div>
-      <h1>{name}</h1>
-    </div>
-  );
 };

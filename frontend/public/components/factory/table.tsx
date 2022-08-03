@@ -166,7 +166,7 @@ const sorts = {
         framework = curPredictor;
       }
     });
-    return (isvc?.spec?.predictor[framework]?.storageUri) ? 'N' : 'Y';
+    return isvc?.spec?.predictor[framework]?.storageUri ? 'N' : 'Y';
   },
   TrainedModelPhase: instance => {
     let phase = '';
@@ -184,7 +184,16 @@ const sorts = {
     }
   },
   HelmReleaseStatusReducer: Helmreleases => HelmReleaseStatusReducer(Helmreleases),
-  helmResourcesNumber: Helmreleases => Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0,
+  helmResourcesNumber: Helmreleases => (Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0),
+};
+
+const afterFuzzySort = (a, b, value) => {
+  const sortLengthLimit = 20000;  //리소스 이름 규칙 이상의 충분히 큰 수로 임의로 설정
+  let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
+  resultA = resultA === -1 ? sortLengthLimit : resultA;
+  let resultB = b.metadata?.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
+  resultB = resultB === -1 ? sortLengthLimit : resultB;
+  return resultA - resultB;
 };
 
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {
@@ -220,18 +229,28 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
     };
     newData?.sort((a, b) => {
       const lang = navigator.languages[0] || navigator.language;
+
+      // name filter 적용되며, 이름이 정렬 기준인 경우에는 검색단어가 완전히 포함하면 따라서 상위로 이동하며, 위치 순서로 정렬되며, 완전히 일치하지않고 fuzzysearch 만 만족하면 하위에 정렬된다.
+      if (allFilters.name && currentSortField === ('metadata.name' || 'name')) {
+        const afterFuzzySortResult = afterFuzzySort(a, b, allFilters.name);
+        if (afterFuzzySortResult !== 0) {
+          return afterFuzzySortResult;
+        }
+      }
+
       // Use `localCompare` with `numeric: true` for a natural sort order (e.g., pv-1, pv-9, pv-10)
       const compareOpts = { numeric: true, ignorePunctuation: true };
       const aValue = getSortValue(a);
       const bValue = getSortValue(b);
       const result: number = Number.isFinite(aValue) && Number.isFinite(bValue) ? aValue - bValue : `${aValue}`.localeCompare(`${bValue}`, lang, compareOpts);
+
       if (result !== 0) {
         return currentSortOrder === SortByDirection.asc ? result : result * -1;
       }
 
       // Use name as a secondary sort for a stable sort.
-      const aName = a?.metadata?.name || '';
-      const bName = b?.metadata?.name || '';
+      const aName = a?.metadata?.name || a?.name || '';
+      const bName = b?.metadata?.name || b?.name || '';
       return aName.localeCompare(bName, lang, compareOpts);
     });
   }
