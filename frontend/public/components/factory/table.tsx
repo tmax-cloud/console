@@ -221,12 +221,7 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
     newData?.sort((a, b) => {
       const lang = navigator.languages[0] || navigator.language;
       // Use `localCompare` with `numeric: true` for a natural sort order (e.g., pv-1, pv-9, pv-10)
-      const compareOpts = { numeric: true, ignorePunctuation: true };
-      const aValue = getSortValue(a);
-      const bValue = getSortValue(b);
-      const result: number = Number.isFinite(aValue) && Number.isFinite(bValue) ? aValue - bValue : `${aValue}`.localeCompare(`${bValue}`, lang, compareOpts);
-
-      if (allFilters.name) {
+      if (allFilters.name && currentSortField === ('metadata.name' || 'name')) {
         const afterFuzzySort = (a, b, value) => {
           let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
           resultA = resultA === -1 ? 20000 : resultA;
@@ -239,6 +234,12 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
           return afterFuzzySortResult;
         }
       }
+
+      const compareOpts = { numeric: true, ignorePunctuation: true };
+      const aValue = getSortValue(a);
+      const bValue = getSortValue(b);
+      const result: number = Number.isFinite(aValue) && Number.isFinite(bValue) ? aValue - bValue : `${aValue}`.localeCompare(`${bValue}`, lang, compareOpts);
+
       if (result !== 0) {
         return currentSortOrder === SortByDirection.asc ? result : result * -1;
       }
