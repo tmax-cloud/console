@@ -38,9 +38,16 @@ export interface TextPayload extends Payload {
 export interface QuickReplyPayload extends Payload {
   text?: string;
   payload?: any;
+  statusView?: ResourceStatus;
 }
 
 export type MessagePayload = TextPayload | QuickReplyPayload;
+
+export interface ResourceStatus {
+  resource: string;
+  namespace: string;
+  status: string;
+}
 
 interface Overrides {
   [componentToOverride: string]: [

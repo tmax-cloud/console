@@ -432,18 +432,18 @@ export const PodsPage = connect<{}, PodPagePropsFromDispatch, PodPageProps>(
       rowFilters={[
         {
           filterGroupName: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
-          type: 'pod-status',
+          type: POD_STATUS_QUERY_PARAM,
           reducer: podPhaseFilterReducer,
           items: [
-            { id: 'Running', title: 'Running' },
-            { id: 'Pending', title: 'Pending' },
-            { id: 'Terminating', title: 'Terminating' },
-            { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
+            { id: POD_STATUS.RUNNING, title: POD_STATUS.RUNNING },
+            { id: POD_STATUS.PENDING, title: POD_STATUS.PENDING },
+            { id: POD_STATUS.TERMINATING, title: POD_STATUS.TERMINATING },
+            { id: POD_STATUS.CRASHLOOPBACKOFF, title: POD_STATUS.CRASHLOOPBACKOFF },
             // Use title "Completed" to match what appears in the status column for the pod.
             // The pod phase is "Succeeded," but the container state is "Completed."
-            { id: 'Succeeded', title: 'Succeeded' },
-            { id: 'Failed', title: 'Failed' },
-            { id: 'Unknown', title: 'Unknown' },
+            { id: POD_STATUS.SUCCEEDED, title: POD_STATUS.SUCCEEDED },
+            { id: POD_STATUS.FAILED, title: POD_STATUS.FAILED },
+            { id: POD_STATUS.UNKNOWN, title: POD_STATUS.UNKNOWN },
           ],
         },
       ]}
@@ -452,6 +452,18 @@ export const PodsPage = connect<{}, PodPagePropsFromDispatch, PodPageProps>(
     />
   );
 });
+
+export const POD_STATUS_QUERY_PARAM = 'pod-status';
+
+export enum POD_STATUS {
+  PENDING = 'Pending',
+  RUNNING = 'Running',
+  SUCCEEDED = 'Succeeded',
+  CRASHLOOPBACKOFF = 'CrashLoopBackOff',
+  FAILED = 'Failed',
+  TERMINATING = 'Terminating',
+  UNKNOWN = 'Unknown',
+}
 
 type ContainerLinkProps = {
   pod: PodKind;
