@@ -120,9 +120,6 @@ export const ColoredValue: React.FC<ColeredValueProps> = props => {
   return (
     <>
       {coleredValue}
-      {/* {value.split(query)[0]}
-      {value.length !== value.split(query)[0].length && <span style={{ backgroundColor: 'yellow' }}>{query}</span>}
-      {value.split(query)[1]} */}
     </>
   );
 };
