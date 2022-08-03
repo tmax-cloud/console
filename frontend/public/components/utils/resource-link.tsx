@@ -61,13 +61,13 @@ export const resourcePath = (kind: K8sResourceKindReference, name?: string, name
 
 export const resourceObjPath = (obj: K8sResourceKind, kind: K8sResourceKindReference) => resourcePath(kind, _.get(obj, 'metadata.name'), _.get(obj, 'metadata.namespace'));
 
-export const ResourceLink = connectToModel(({ className, displayName, inline = false, kind, linkTo = true, name, namespace, hideIcon, title, children }) => {
+export const ResourceLink = connectToModel(({ className, displayName, inline = false, kind, linkTo = true, name, namespace, hideIcon, title, children, manualPath }) => {
   const query = getQueryArgument('name');
 
   if (!kind) {
     return null;
   }
-  const path = resourcePath(kind, name, namespace);
+  const path = manualPath ? manualPath : resourcePath(kind, name, namespace);
   const value = displayName ? displayName : name;
   const classes = classNames('co-resource-item', className, {
     'co-resource-item--inline': inline,
@@ -117,11 +117,7 @@ export const ColoredValue: React.FC<ColeredValueProps> = props => {
       </>
     );
   });
-  return (
-    <>
-      {coleredValue}
-    </>
-  );
+  return <>{coleredValue}</>;
 };
 type ColeredValueProps = {
   query?: string;
