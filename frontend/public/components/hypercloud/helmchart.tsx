@@ -6,6 +6,8 @@ import { SectionHeading, Timestamp, detailsPage, navFactory } from '@console/int
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
+import { ColoredValue } from '@console/internal/components/utils/resource-link';
+import { getQueryArgument } from '@console/internal/components/utils';
 
 const kind = HelmChartModel.kind;
 
@@ -40,11 +42,12 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: any) => {
+    const query = getQueryArgument('name');
     return [
       {
         children: (
           <Link key={'link' + obj.name} to={`/helmcharts/${obj.repo?.name}/${obj.name}`}>
-            {obj.name}
+            {query ? <ColoredValue query={query} value={obj.name} /> : obj.name}
           </Link>
         ),
       },

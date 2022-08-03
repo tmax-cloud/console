@@ -13,6 +13,8 @@ import { deleteModal, helmrepositoryUpdateModal } from '../modals';
 import { TFunction } from 'i18next';
 import { ExpandableInnerTable } from './utils/expandable-inner-table';
 import { HelmRepositoryModel, HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
+import { ColoredValue } from '@console/internal/components/utils/resource-link';
+import { getQueryArgument } from '@console/internal/components/utils';
 
 const kind = HelmRepositoryModel.kind;
 
@@ -85,6 +87,7 @@ const HelmRepositoryExtendTableRow = (t, data) => {
 };
 
 const HelmRepositoryTableRow = (obj, itemCount) => {
+  const query = getQueryArgument('name');
   const options: KebabOption[] = [
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
@@ -113,7 +116,7 @@ const HelmRepositoryTableRow = (obj, itemCount) => {
   ];
   return [
     {
-      title: <Link to={`/helmrepositories/${obj.name}`}>{obj.name}</Link>,
+      title: <Link to={`/helmrepositories/${obj.name}`}>{query ? <ColoredValue query={query} value={obj.name} /> : obj.name}</Link>,
       textValue: obj?.name,
     },
     {

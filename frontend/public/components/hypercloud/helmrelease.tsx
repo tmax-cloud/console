@@ -17,6 +17,8 @@ import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
 import { HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { CreateHelmRelease } from '../hypercloud/form/helmreleases/create-helmrelease';
+import { ColoredValue } from '@console/internal/components/utils/resource-link';
+import { getQueryArgument } from '@console/internal/components/utils';
 
 const kind = HelmReleaseModel.kind;
 const getHost = async () => {
@@ -95,6 +97,7 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: any) => {
+    const query = getQueryArgument('name');
     const options: KebabOption[] = [
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
@@ -117,7 +120,7 @@ const tableProps: TableProps = {
     ];
     return [
       {
-        children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
+        children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{query ? <ColoredValue query={query} value={obj.name} /> : obj.name}</Link>,
       },
       {
         className: 'co-break-word',
