@@ -220,7 +220,8 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
     };
     newData?.sort((a, b) => {
       const lang = navigator.languages[0] || navigator.language;
-      // Use `localCompare` with `numeric: true` for a natural sort order (e.g., pv-1, pv-9, pv-10)
+
+      // name filter 적용되며, 이름이 정렬 기준인 경우에는 검색단어가 완전히 포함하면 따라서 상위로 이동하며, 위치 순서로 정렬되며, 완전히 일치하지않고 fuzzysearch 만 만족하면 하위에 정렬된다.
       if (allFilters.name && currentSortField === ('metadata.name' || 'name')) {
         const afterFuzzySort = (a, b, value) => {
           let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
@@ -235,6 +236,7 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
         }
       }
 
+      // Use `localCompare` with `numeric: true` for a natural sort order (e.g., pv-1, pv-9, pv-10)
       const compareOpts = { numeric: true, ignorePunctuation: true };
       const aValue = getSortValue(a);
       const bValue = getSortValue(b);
