@@ -99,7 +99,7 @@ export const CreateHelmRepository: React.FC<CreateHelmRepositoryProps> = props =
 export const onSubmitCallback = data => {
   const returnData = {
     nonK8sResource: true,
-    kind: 'HelmRepository',
+    kind: HelmRepositoryModel.kind,
     postUrl: data.postUrl,
     name: data.name,
     repoURL: data.repoURL,
