@@ -187,6 +187,15 @@ const sorts = {
   helmResourcesNumber: Helmreleases => (Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0),
 };
 
+const afterFuzzySort = (a, b, value) => {
+  const sortLengthLimit = 20000;  //리소스 이름 규칙 이상의 충분히 큰 수로 임의로 설정
+  let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
+  resultA = resultA === -1 ? sortLengthLimit : resultA;
+  let resultB = b.metadata?.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
+  resultB = resultB === -1 ? sortLengthLimit : resultB;
+  return resultA - resultB;
+};
+
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {
   const allFilters = staticFilters ? Object.assign({}, filters, ...staticFilters) : filters;
   const newData = getFilteredRows(allFilters, rowFilters, data);
@@ -223,13 +232,6 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
 
       // name filter 적용되며, 이름이 정렬 기준인 경우에는 검색단어가 완전히 포함하면 따라서 상위로 이동하며, 위치 순서로 정렬되며, 완전히 일치하지않고 fuzzysearch 만 만족하면 하위에 정렬된다.
       if (allFilters.name && currentSortField === ('metadata.name' || 'name')) {
-        const afterFuzzySort = (a, b, value) => {
-          let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
-          resultA = resultA === -1 ? 20000 : resultA;
-          let resultB = b.metadata?.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
-          resultB = resultB === -1 ? 20000 : resultB;
-          return resultA - resultB;
-        };
         const afterFuzzySortResult = afterFuzzySort(a, b, allFilters.name);
         if (afterFuzzySortResult !== 0) {
           return afterFuzzySortResult;
