@@ -165,21 +165,26 @@ const Details_ = ({ flags, obj: pvc }) => {
 
 const Details = connectToFlags(FLAGS.CAN_LIST_PV)(Details_);
 
-const allPhases = ['Pending', 'Bound', 'Lost', 'Terminating'];
+export const PERSISTENTVOLUMECLAIM_STATUS_QUERY_PARAM = 'pvc-status';
+
+export const PERSISTENTVOLUMECLAIM_STATUS = { PENDING: 'Pending', BOUND: 'Bound', LOST: 'Lost', TERMINATING: 'Terminating' };
+
 const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
-    type: 'pvc-status',
+    type: PERSISTENTVOLUMECLAIM_STATUS_QUERY_PARAM,
     reducer: pvc => {
       if (pvc?.metadata?.deletionTimestamp) {
         return 'Terminating';
       }
       return pvc.status.phase;
     },
-    items: _.map(allPhases, phase => ({
-      id: phase,
-      title: phase,
-    })),
+    items: [
+      { id: PERSISTENTVOLUMECLAIM_STATUS.PENDING, title: PERSISTENTVOLUMECLAIM_STATUS.PENDING },
+      { id: PERSISTENTVOLUMECLAIM_STATUS.BOUND, title: PERSISTENTVOLUMECLAIM_STATUS.BOUND },
+      { id: PERSISTENTVOLUMECLAIM_STATUS.LOST, title: PERSISTENTVOLUMECLAIM_STATUS.LOST },
+      { id: PERSISTENTVOLUMECLAIM_STATUS.TERMINATING, title: PERSISTENTVOLUMECLAIM_STATUS.TERMINATING },
+    ],
   },
 ];
 

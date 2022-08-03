@@ -145,14 +145,21 @@ type NodesTableProps = React.ComponentProps<typeof Table> & {
   data: NodeKind[];
 };
 
+export const NODE_STATUS_QUERY_PARAM = 'node-status';
+
+export enum NODE_STATUS {
+  READY = 'Ready',
+  NOTREADY = 'Not Ready',
+}
+
 const filters = [
   {
     filterGroupName: 'Status',
-    type: 'node-status',
+    type: NODE_STATUS_QUERY_PARAM,
     reducer: nodeStatus,
     items: [
-      { id: 'Ready', title: 'Ready' },
-      { id: 'Not Ready', title: 'Not Ready' },
+      { id: NODE_STATUS.READY, title: NODE_STATUS.READY },
+      { id: NODE_STATUS.NOTREADY, title: NODE_STATUS.NOTREADY },
     ],
   },
   {

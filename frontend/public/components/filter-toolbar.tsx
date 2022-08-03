@@ -233,7 +233,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     if (location.search.indexOf('rowFilter-pod-status') >= 0) {
       defaultRowFilterSetting(location.search.split('rowFilter-pod-status=')[1].split('%2C'));
     }
-  }, []);
+  }, [location.search]);
 
   React.useEffect(() => {
     if (_.isEmpty(selectedRowFilters) && storeSelectedRows.size > 0) {
