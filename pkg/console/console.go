@@ -112,6 +112,7 @@ type Console struct {
 }
 
 func New(cfg *v1.Config) (*Console, error) {
+
 	log.WithField("FILE", "routes.go").Infoln("Create Router based on *v1.Config")
 	config := cfg.DeepCopy()
 

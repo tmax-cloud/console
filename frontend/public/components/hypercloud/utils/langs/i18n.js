@@ -1,8 +1,14 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { coFetchJSON } from '@console/internal/co-fetch';
 
-import en from './en.json';
-import ko from './ko.json';
+import en from './k8s-v1.19/en.json';
+import ko from './k8s-v1.19/ko.json';
+
+const DEFAULT_K8S_VERSION = 'v1.19';
+const VERSION = ['v1.19', 'v1.22'];
+const LANG = ['en', 'ko'];
+const NS = ['COMMON', 'SINGLE', 'MULTI', 'DESCRIPTION'];
 
 export const LANGUAGE_LOCAL_STORAGE_KEY = 'i18nextLng';
 
@@ -13,6 +19,20 @@ export const getLanguage = () => {
     setLanguage('ko'); // 기본 언어는 ko
   }
   return localStorage.getItem(LANGUAGE_LOCAL_STORAGE_KEY);
+};
+
+export const getI18nResources = async () => {
+  const data = await coFetchJSON('/api/hypercloud/version');
+  const k8sVersion = data.find(item => item.name === 'Kubernetes')?.version;
+  const version = k8sVersion && k8sVersion.split('.').length > 1 ? `${k8sVersion.split('.')[0]}.${k8sVersion.split('.')[1]}` : DEFAULT_K8S_VERSION;
+  if (VERSION.includes(version) && version !== DEFAULT_K8S_VERSION) {
+    const en = await import(`./k8s-${version}/${LANG[0]}.json`);
+    const ko = await import(`./k8s-${version}/${LANG[1]}.json`);
+    NS.forEach(ns => {
+      i18n.addResourceBundle(LANG[0], ns, en[ns] || {});
+      i18n.addResourceBundle(LANG[1], ns, ko[ns] || {});
+    });
+  }
 };
 
 const options = {
@@ -43,6 +63,9 @@ i18n
     debug: true,
     detection: options,
     resources: resource,
+    fallbackLng: LANG,
+    defaultNS: NS[0],
+    ns: NS,
     keySeparator: false,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

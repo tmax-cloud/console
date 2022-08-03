@@ -49,3 +49,6 @@ echo $id_token
     --app.customProductName="hypercloud" \
     --clusterInfo.kubeAPIServerURL=https://$k8sIP:6443 \
     --clusterInfo.kubeToken="$id_token" \
+    --logInfo.logLevel="debug" \
+    --logInfo.logType="pretty"
+

@@ -1,6 +1,7 @@
 import * as models from '../../../models';
 import { CustomResourceDefinitionModel } from '../../../models';
 import { allModels, getK8sAPIPath, K8sKind } from '../../../module/k8s';
+import * as helmModels from '@console/internal/models/hypercloud/helm-model';
 
 enum SCHEMA_DIRECTORY {
   MANAGEMENT = 'management',
@@ -39,7 +40,7 @@ export const resourceSchemaBasedMenuMap = new Map([
   [models.StatefulSetModel.kind, { directory: SCHEMA_DIRECTORY.WORKLOAD, file: 'StatefulSet.json' }],
 ]);
 
-const isCreateManualSet = new Set([models.RoleModel.kind, models.ClusterRoleModel.kind, models.ServiceInstanceModel.kind, models.TemplateInstanceModel.kind, models.TaskModel.kind, models.ClusterTaskModel.kind, models.TaskRunModel.kind, models.PipelineRunModel.kind, models.PipelineResourceModel.kind, models.RoleBindingModel.kind, models.ClusterRoleBindingModel.kind, models.RoleBindingClaimModel.kind, models.PipelineModel.kind, models.SecretModel.kind]);
+const isCreateManualSet = new Set([models.RoleModel.kind, models.ClusterRoleModel.kind, models.ServiceInstanceModel.kind, models.TemplateInstanceModel.kind, models.TaskModel.kind, models.ClusterTaskModel.kind, models.TaskRunModel.kind, models.PipelineRunModel.kind, models.PipelineResourceModel.kind, models.RoleBindingModel.kind, models.ClusterRoleBindingModel.kind, models.RoleBindingClaimModel.kind, models.PipelineModel.kind, models.SecretModel.kind, helmModels.HelmReleaseModel.kind]);
 
 export const pluralToKind = (plural: string) => allModels().find(model => model.plural === plural)?.kind;
 
