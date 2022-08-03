@@ -82,7 +82,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
     const getUrl = async () => {
       const tempHost = await getHost();
       const namespace = getNamespace(window.location.pathname);
-      setPostUrl(`${tempHost}/helm/ns/${namespace}/releases`);
+      setPostUrl(defaultReleaseName ? `${tempHost}/helm/ns/${namespace}/releases/${defaultReleaseName}` : `${tempHost}/helm/ns/${namespace}/releases`);
     };
     getUrl();
     const fetchHelmChart = async () => {
