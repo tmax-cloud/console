@@ -17,7 +17,7 @@ import { AboutModal } from './about-modal';
 import { clusterVersionReference, getReportBugLink } from '../module/k8s/cluster-settings';
 import * as redhatLogoImg from '../imgs/logos/redhat.svg';
 import { ExpTimer } from './hypercloud/exp-timer';
-import { setAccessToken, setIdToken } from '../hypercloud/auth';
+import { createAccountUrl, logout as _logout, tokenRefresh } from '../hypercloud/auth';
 import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
@@ -43,6 +43,7 @@ class MastheadToolbarContents_ extends React.Component {
       isLanguageDropdownOpen: false,
       isKebabDropdownOpen: false,
       statuspageData: null,
+      username: null,
       isKubeAdmin: false,
       showAboutModal: false,
     };
@@ -67,6 +68,16 @@ class MastheadToolbarContents_ extends React.Component {
     this._tokenRefresh = this._tokenRefresh.bind(this);
   }
 
+  componentDidMount() {
+    this._updateUser();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(this.props.user, prevProps.user)) {
+      this._updateUser();
+    }
+  }
+
   _getStatuspageData(statuspageID) {
     fetch(`https://${statuspageID}.statuspage.io/api/v2/summary.json`, {
       headers: { Accept: 'application/json' },
@@ -85,7 +96,7 @@ class MastheadToolbarContents_ extends React.Component {
       this.setState({ username: authSvc.name() });
     }
     this.setState({
-      username: _.get(user, 'fullName') || _.get(user, 'metadata.name', ''),
+      username: _.get(user, 'id') || _.get(user, 'metadata.name', ''),
       isKubeAdmin: _.get(user, 'metadata.name') === 'kube:admin',
     });
   }
@@ -284,24 +295,26 @@ class MastheadToolbarContents_ extends React.Component {
   }
 
   _renderMenu(mobile) {
-    const { flags, consoleLinks, keycloak, t } = this.props;
-    const username = !!keycloak.idTokenParsed.preferred_username ? keycloak.idTokenParsed.preferred_username : keycloak.idTokenParsed.email;
-    const { isUserDropdownOpen, isKebabDropdownOpen } = this.state;
+    const { flags, consoleLinks, t } = this.props;
+    const { isUserDropdownOpen, isKebabDropdownOpen, username } = this.state;
     const additionalUserActions = this._getAdditionalActions(this._getAdditionalLinks(consoleLinks, 'UserMenu'));
     const helpActions = this._helpActions(this._getAdditionalActions(this._getAdditionalLinks(consoleLinks, 'HelpMenu')));
+
+    if (!username) {
+      return null;
+    }
 
     const actions = [];
     const userActions = [];
 
     const openAccountConsole = e => {
       e.preventDefault();
-      window.open(keycloak.createAccountUrl());
+      window.open(createAccountUrl());
     };
 
     const logout = e => {
       e.preventDefault();
-      sessionStorage.clear();
-      keycloak.logout();
+      _logout();
     };
 
     userActions.push({
@@ -357,7 +370,7 @@ class MastheadToolbarContents_ extends React.Component {
     return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher co-user-menu" onSelect={this._onUserDropdownSelect} onToggle={this._onUserDropdownToggle} isOpen={isUserDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={userToggle} isGrouped />;
   }
   _renderLanguageMenu(mobile) {
-    const { flags, consoleLinks, keycloak, t } = this.props;
+    const { flags, consoleLinks, t } = this.props;
     const { isLanguageDropdownOpen } = this.state;
 
     const actions = [];
@@ -421,33 +434,18 @@ class MastheadToolbarContents_ extends React.Component {
   }
 
   _tokenRefresh = () => {
-    const { keycloak } = this.props;
-    const curTime = new Date();
-    const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
-    const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
-    keycloak
-      .updateToken(Math.ceil(logoutTime))
-      .then(refreshed => {
-        console.log('refreshed', refreshed);
-        if (refreshed) {
-          // TODO: 토큰 설정
-          setIdToken(keycloak.idToken);
-          setAccessToken(keycloak.token);
-          this.timerRef.tokRefresh();
-        } else {
-          // expired time > 60
-          console.log('Token is still valid');
-        }
+    tokenRefresh()
+      .then(() => {
+        this.timerRef.tokRefresh();
       })
       .catch(() => {
-        // refresh token 없음
-        console.log('Failed to refresh the token, or the session has expired');
+        console.error('Failed to refresh the token, or the session has expired');
       });
   };
 
   render() {
     const { isApplicationLauncherDropdownOpen, isHelpDropdownOpen, showAboutModal, statuspageData } = this.state;
-    const { consoleLinks, drawerToggle, notificationsRead, canAccessNS, keycloak, t } = this.props;
+    const { consoleLinks, drawerToggle, notificationsRead, canAccessNS, t } = this.props;
     // TODO: notificatoin 기능 완료 되면 추가하기.
     const alertAccess = false; //canAccessNS && !!window.SERVER_FLAGS.prometheusBaseURL;
     return (
@@ -462,9 +460,8 @@ class MastheadToolbarContents_ extends React.Component {
                 ref={input => {
                   this.timerRef = input;
                 }}
-                logout={keycloak.logout}
+                logout={_logout}
                 tokenRefresh={this._tokenRefresh}
-                keycloak={keycloak}
               />
             </ToolbarItem>
             <ToolbarItem>
@@ -542,7 +539,7 @@ const MastheadToolbarContents = connect(mastheadToolbarStateToProps, {
   drawerToggle: UIActions.notificationDrawerToggleExpanded,
 })(connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.CONSOLE_CLI_DOWNLOAD, FLAGS.OPENSHIFT)(withTranslation()(MastheadToolbarContents_)));
 
-export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags, keycloak }) => {
+export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags }) => {
   const resources = flags[FLAGS.CLUSTER_VERSION]
     ? [
         {
@@ -555,7 +552,7 @@ export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags, k
     : [];
   return (
     <Firehose resources={resources}>
-      <MastheadToolbarContents keycloak={keycloak} />
+      <MastheadToolbarContents />
     </Firehose>
   );
 });
