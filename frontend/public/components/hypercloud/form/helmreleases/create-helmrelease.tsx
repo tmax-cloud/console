@@ -52,7 +52,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   const defaultChartName = queryChartName ? queryChartName : defaultValues ? defaultValues.chart.metadata.name : '';
   const defaultReleaseName = defaultValues ? defaultValues.name : '';
   const defaultVersion = defaultValues ? defaultValues.chart.metadata.version : '';
-  const defaultYamlValues = defaultValues ? defaultValues.chart.values : null;
+  const defaultYamlValues = defaultValues ? defaultValues.config : null;
   const defaultRepoName = queryChartRepo ? queryChartRepo : '';
 
   const [loading, setLoading] = React.useState(false);
@@ -62,6 +62,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   const [chartNameList, setChartNameList] = React.useState({});
   const [versions, setVersions] = React.useState([]);
   const [selectRepoName, setSelectRepoName] = React.useState(defaultRepoName);
+  const [editLoading, setEditLoading] = React.useState(defaultValues.name !== '');
 
   const [host, setHost] = React.useState('');
 
@@ -82,7 +83,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
     const getUrl = async () => {
       const tempHost = await getHost();
       const namespace = getNamespace(window.location.pathname);
-      setPostUrl(`${tempHost}/helm/ns/${namespace}/releases`);
+      setPostUrl(defaultReleaseName ? `${tempHost}/helm/ns/${namespace}/releases/${defaultReleaseName}` : `${tempHost}/helm/ns/${namespace}/releases`);
     };
     getUrl();
     const fetchHelmChart = async () => {
@@ -162,7 +163,8 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
       await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
         const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
         methods.setValue('packageURL', entryValue[0].urls[0]);
-        setYamlValues(safeDump(_.get(res, 'values')));
+        !editLoading && setYamlValues(safeDump(_.get(res, 'values')));
+        setEditLoading(false);
       });
     };
     versions.length > 0 ? setChartVersion() : methods.setValue('version', { value: defaultVersion, label: defaultVersion });

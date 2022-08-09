@@ -73,15 +73,25 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
           setProgress(true);
           const { postUrl } = inDo;
           const payload = _.omit(inDo, ['nonK8sResource', 'kind', 'postUrl']);
-          coFetchJSON
-            .post(postUrl, payload)
-            .then(() => {
-              history.goBack();
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(`error : ${e.json.error}\ndescription : ${e.json.description}`);
-            });
+          isCreatePage(defaultValues, !!NonK8sKindModel)
+            ? coFetchJSON
+                .post(postUrl, payload)
+                .then(() => {
+                  history.goBack();
+                })
+                .catch(e => {
+                  setProgress(false);
+                  setError(`error : ${e.json.error}\ndescription : ${e.json.description}`);
+                })
+            : coFetchJSON
+                .put(postUrl, payload)
+                .then(() => {
+                  history.goBack();
+                })
+                .catch(e => {
+                  setProgress(false);
+                  setError(`error : ${e.json.error}\ndescription : ${e.json.description}`);
+                });
         } else {
           const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
           setProgress(true);
