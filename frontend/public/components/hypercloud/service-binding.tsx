@@ -197,7 +197,7 @@ const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: sb }
 const { details, editResource } = navFactory;
 
 export const ServiceBindingsDetailsPage: React.FC<DetailsPageProps> = props => {
-  return <DetailsPage {...props} kind={kind} menuActions={serviceBindingMenuActions} pages={[details(detailsPage(ServiceBindingDetails)), editResource()]} />;
+  return <DetailsPage {...props} getResourceStatus={ServiceBindingStatusReducer} kind={kind} menuActions={serviceBindingMenuActions} pages={[details(detailsPage(ServiceBindingDetails)), editResource()]} />;
 };
 
 
