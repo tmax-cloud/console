@@ -1533,7 +1533,7 @@ export const ClusterMenuPolicyModel: K8sKind = {
   label: 'Cluster Menu Policy',
   labelPlural: 'Cluster Menu Policies',
   apiVersion: 'v1',
-  apiGroup: 'ui.tmax.io',
+  apiGroup: 'console.tmax.io',
   plural: 'clustermenupolicies',
   abbr: 'CMP',
   kind: 'ClusterMenuPolicy',

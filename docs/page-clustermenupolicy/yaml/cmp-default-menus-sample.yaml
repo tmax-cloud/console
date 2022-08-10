@@ -1,4 +1,4 @@
-apiVersion: ui.tmax.io/v1
+apiVersion: console.tmax.io/v1
 kind: ClusterMenuPolicy
 metadata:
   name: default-menus-sample
