@@ -125,7 +125,11 @@ export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps>
       </DetailsItem>
       {/* 배후 서비스 */}
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_2')} obj={sb}>
-        {sb.spec.services[0].name}
+        {
+          sb.spec.services?.map((service) => {
+            return <div>{service.name} ({(service.namespace) ? service.namespace : sb.metadata.namespace})</div>
+          })
+        }
       </DetailsItem>
       {/* 바인딩 리소스 */}
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_3')} obj={sb}>
