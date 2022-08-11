@@ -333,8 +333,9 @@ spec:
                       - MULTI
                       - SINGLE
                       - DEVELOPER
+                      - BAREMETAL
                       - CUSTOM
-                    pattern: ^(MASTER|MULTI|SINGLE|DEVELOPER|CUSTOM)$
+                    pattern: ^(MASTER|MULTI|SINGLE|DEVELOPER|BAREMETAL|CUSTOM)$
                     type: string
                 type: object
               required:
