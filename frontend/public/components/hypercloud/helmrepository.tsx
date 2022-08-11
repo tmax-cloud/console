@@ -2,9 +2,8 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { sortable, compoundExpand } from '@patternfly/react-table';
-import { SectionHeading, Timestamp, detailsPage, navFactory, Kebab, KebabOption, KebabAction, Page } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, detailsPage, navFactory, Kebab, KebabOption, KebabAction, Page, ResourceLink } from '@console/internal/components/utils';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps, Table } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
@@ -113,7 +112,7 @@ const HelmRepositoryTableRow = (obj, itemCount) => {
   ];
   return [
     {
-      title: <Link to={`/helmrepositories/${obj.name}`}>{obj.name}</Link>,
+      title: <ResourceLink manualPath={`/helmrepositories/${obj.name}`} kind={HelmRepositoryModel.kind} name={obj.name} />,
       textValue: obj?.name,
     },
     {
@@ -154,7 +153,7 @@ const InnerTableRow = repoName => {
   return obj => {
     return [
       {
-        title: <Link to={`/helmcharts/${repoName}/${obj.name}`}>{obj.name}</Link>,
+        title: <ResourceLink manualPath={`/helmcharts/${repoName}/${obj.name}`} kind={HelmChartModel.kind} name={obj.name} />,
         textValue: obj?.name,
       },
       {
@@ -227,7 +226,7 @@ const chartTableProps = (repoName: string): TableProps => {
     row: (obj: any) => {
       return [
         {
-          children: <Link to={`/helmcharts/${repoName}/${obj.name}`}>{obj.name}</Link>,
+          children: <ResourceLink manualPath={`/helmcharts/${repoName}/${obj.name}`} kind={HelmChartModel.kind} name={obj.name} />,
         },
         {
           children: obj.version,

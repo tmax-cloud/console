@@ -196,6 +196,17 @@ export default (state: K8sState, action: K8sAction): K8sState => {
       break;
     case ActionType.UpdateListFromWS:
       newList = state.getIn([action.payload.id, 'data']);
+      // HelmRelease WS update
+      if(action.payload.id === 'HelmRelease') {
+        const listObject: any = action.payload.k8sObjects[0];
+        newList = newList.clear();
+        listObject.release.forEach(r => {
+          const qualifiedName = (r.namespace ? `(${r.namespace})-` : '') + r.name;
+          const next = fromJS(r);
+          newList = newList.set(qualifiedName, next);
+        });        
+        break;
+      }
       // k8sObjects is an array of k8s WS Events
       for (const { type, object } of action.payload.k8sObjects) {
         switch (type) {

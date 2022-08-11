@@ -8,10 +8,12 @@ import * as MultiClusterIcon from '@console/internal/imgs/hypercloud/lnb/multi_c
 import * as MasterClusterIcon from '@console/internal/imgs/hypercloud/lnb/master_cluster.svg';
 import * as SingleClusterIcon from '@console/internal/imgs/hypercloud/lnb/single_cluster.svg';
 import * as DeveloperIcon from '@console/internal/imgs/hypercloud/lnb/developer.svg';
+import * as BaremetalIcon from '@console/internal/imgs/hypercloud/lnb/baremetal.svg';
 import * as SelectedMultiClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/multi_cluster_filled.svg';
 import * as SelectedMasterClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/master_cluster_filled.svg';
 import * as SelectedSingleClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/single_cluster_filled.svg';
 import * as SelectedDeveloperIcon from '@console/internal/imgs/hypercloud/lnb/filled/developer_filled.svg';
+import * as SelectedBaremetalIcon from '@console/internal/imgs/hypercloud/lnb/filled/baremetal_filled.svg';
 
 export enum PerspectiveType {
   MASTER = 'MASTER',
@@ -109,8 +111,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           properties: {
             id: PerspectiveType.BAREMETAL,
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.BAREMETAL]) : 'Baremetal',
-            icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-            selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
+            icon: <img src={BaremetalIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+            selectedIcon: <img src={SelectedBaremetalIcon} className="font-icon" />,
             default: true,
             getLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
             getK8sLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),

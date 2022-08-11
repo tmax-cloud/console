@@ -1,4 +1,6 @@
 import { history } from '@console/internal/components/utils';
+import { allModels } from '@console/internal/module/k8s/k8s-models';
+import { getResourceStatus } from './status';
 import { Config, Message, MessageName, PayloadType, QuickReplyPayload } from './types';
 
 export class ActionFactory {
@@ -79,14 +81,26 @@ class RouteActionHandler implements ActionHandler {
   }
 
   setupRoute(): void {
-    switch (this.payload?.payload) {
-      case 'PENDINGPVCVIEW':
-        // 임시 URL. JSON payload 값에 대해 서버담당자와 논의 필요
-        this.path = '/k8s/all-namespaces/persistentvolumeclaims?rowFilter-pvc-status=Pending';
-        break;
-      default:
-        break;
+    const data = this.payload?.statusView;
+    if (!data) {
+      return;
     }
+
+    const namespaced = allModels().find(model => model.plural === data.resource)?.namespaced;
+    let _path = `/k8s/${data?.namespace ? `ns/${data.namespace}` : namespaced ? 'all-namespaces' : 'cluster'}/${data.resource}`;
+
+    // make a search query
+    if (data.status) {
+      const status = getResourceStatus(data?.resource);
+      if (status) {
+        let query = '';
+        let params = status[data.status].join(',');
+        query = `rowFilter-${status.queryParam}=` + encodeURIComponent(params);
+        _path = [_path, query].join('?');
+      }
+    }
+
+    this.path = _path;
   }
 
   execute(): void {

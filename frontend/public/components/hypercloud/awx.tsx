@@ -56,7 +56,7 @@ const tableProps: TableProps = {
     },
     {
       className: Kebab.columnClass,
-      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'URL', url: obj.spec?.tower_hostname ? `https://${obj.spec?.tower_hostname}` : null }} />,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'URL', url: obj.spec?.hostname ? `https://${obj.spec?.hostname}` : null }} />,
     },
   ],
 };
@@ -75,7 +75,7 @@ const filters = (t: TFunction) => [
 ];
 
 const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
-  const images = [obj.spec?.tower_image, ...(obj.spec?.tower_ee_images?.map(item => item.image) || []), obj.spec?.tower_redis_image, obj.spec?.tower_postgres_image].filter(item => !!item);
+  const images = [obj.spec?.image, ...(obj.spec?.ee_images?.map(item => item.image) || []), obj.spec?.redis_image, obj.spec?.postgres_image].filter(item => !!item);
 
   if (images.length === 0) {
     images.push('-');
@@ -97,10 +97,10 @@ export const AWXDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
         <Status status={AwxStatusReducer(awx)} />
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
-        {awx.spec?.tower_hostname ? (
-          <a href={`https://${awx.spec?.tower_hostname}`} target="_blank">
-            {awx.spec.tower_hostname}
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.hostname">
+        {awx.spec?.hostname ? (
+          <a href={`https://${awx.spec?.hostname}`} target="_blank">
+            {awx.spec.hostname}
           </a>
         ) : (
           <div>-</div>
@@ -141,7 +141,7 @@ export const AWXsPage: React.FC = props => {
 
 export const AWXsDetailsPage: React.FC<DetailsPageProps> = props => {
   const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(AWXDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(AWXDetails)), editResource()]} />;
 };
 
 type ImageSummaryProps = {
