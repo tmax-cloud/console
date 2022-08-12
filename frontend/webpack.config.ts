@@ -77,7 +77,7 @@ const config: Configuration = {
       },
       {
         test: /\.s?css$/,
-        exclude: /node_modules\/(?!(@patternfly|react-datepicker)\/).*/,
+        exclude: /node_modules\/(?!(@patternfly|react-datepicker|react-datetime-picker|react-calendar|react-clock)\/).*/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,

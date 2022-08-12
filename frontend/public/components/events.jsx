@@ -19,6 +19,11 @@ import { FLAGS } from '@console/shared/src/constants';
 import { Box, Dropdown, Loading, PageHeading, pluralize, ResourceIcon, ResourceLink, resourcePathFromModel, Timestamp, TogglePlay } from './utils';
 import { EventStreamList } from './utils/event-stream';
 import { useTranslation, withTranslation } from 'react-i18next';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import DateTimePicker from 'react-datetime-picker';
+import 'react-datetime-picker/dist/DateTimePicker.css'
+// import 'react-clock/dist/Clock.css'
 
 const maxMessages = 500;
 const flushInterval = 500;
@@ -127,6 +132,8 @@ class _EventsList extends React.Component {
       textFilter: '',
       selected: new Set(['All']),
     };
+    this.onChangeStartDate = e => this.onChangeStartDate_(e);
+    this.onChangeEndDate = e => this.onChangeEndDate_(e);
   }
 
   toggleSelected = selection => {
@@ -143,8 +150,57 @@ class _EventsList extends React.Component {
     this.setState({ selected: new Set(['All']) });
   };
 
+  onChangeStartDate_(value) {
+    let date = new Date(value);
+    let date_ = new Date(value);
+    this.setState({
+      start: date,
+    });
+
+    this.setState({ offset: 0 });
+  }
+  onChangeEndDate_(value) {
+    let date = new Date(value);
+    let date_ = new Date(value);
+    this.setState({
+      end: date,
+    });
+
+    this.setState({ offset: 0 });
+  }
+  onIconClick = e => {
+    const datePickerElem = e.target.previousElementSibling.firstChild.firstChild;
+    datePickerElem.focus();
+  };
+  onStartTimeChange = (time, hour, minute) => {
+    const updatedStartDate = new Date(start);
+    updatedStartDate.setHours(hour);
+    updatedStartDate.setMinutes(minute);
+    this.setState({
+      start: updatedStartDate,
+    });    
+  };
+  onEndTimeChange = (time, hour, minute) => {
+    const updatedEndDate = new Date(start);
+    updatedEndDate.setHours(hour);
+    updatedEndDate.setMinutes(minute);
+    this.setState({
+      start: updatedEndDate,
+    });    
+  };
+  onStartChange = (value) => {
+    this.setState({
+      start: value,
+    });    
+  };
+  onEndChange = (value) => {
+    this.setState({
+      end: value,
+    });    
+  };
+
   render() {
-    const { type, selected, textFilter } = this.state;
+    const { type, selected, textFilter, start, end } = this.state;
     const { autoFocus = true, t } = this.props;
 
     const eventTypes = { all: t('SINGLE:MSG_EVENTS_MAIN_TYPES_1'), normal: t('SINGLE:MSG_EVENTS_MAIN_TYPES_2'), warning: t('SINGLE:MSG_EVENTS_MAIN_TYPES_3') };
@@ -156,6 +212,18 @@ class _EventsList extends React.Component {
             <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" />
             <Dropdown className="btn-group co-search-group__resource" items={eventTypes} onChange={v => this.setState({ type: v })} selectedKey={type} title={selectedType} />
             <TextFilter autoFocus={autoFocus} label={t('SINGLE:MSG_EVENTS_MAIN_PLACEHOLDER_1')} onChange={val => this.setState({ textFilter: val || '' })} />
+            <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
+            <div className="co-datepicker-wrapper">
+              {/* <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
+              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i> */}
+              <DateTimePicker  onChange={this.onStartChange} value={start} />
+            </div>
+            <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
+            <div className="co-datepicker-wrapper">
+              {/* <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
+              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i> */}
+              <DateTimePicker onChange={this.onEndChange} value={end} /> 
+            </div>
           </div>
           <div className="form-group">
             <ChipGroup withToolbar defaultIsOpen={false}>
@@ -177,7 +245,7 @@ class _EventsList extends React.Component {
             </ChipGroup>
           </div>
         </PageHeading>
-        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} />
+        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} start={start} end={end} />
       </>
     );
   }
@@ -240,6 +308,8 @@ class _EventStream extends React.Component {
       error: null,
       loading: true,
       oldestTimestamp: new Date(),
+      start: props.start,
+      end: props.end,
     };
     this.toggleStream = this.toggleStream_.bind(this);
   }
@@ -400,7 +470,7 @@ class _EventStream extends React.Component {
   }
 
   render() {
-    const { mock, resourceEventStream, t } = this.props;
+    const { mock, resourceEventStream, t, start, end } = this.props;
     const { active, error, loading, filteredEvents, sortedMessages } = this.state;
     const count = filteredEvents.length;
     const allCount = sortedMessages.length;
@@ -433,6 +503,9 @@ class _EventStream extends React.Component {
     // const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
     const messageCount = count < maxMessages ? t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count }) : t('SINGLE:MSG_EVENTS_MAIN_2', { something1: count, something2: allCount });
 
+    const isInterval = !!start && !!end;
+    const apiEvents = [];
+
     return (
       <div className="co-m-pane__body">
         <div className="co-sysevent-stream">
@@ -447,8 +520,12 @@ class _EventStream extends React.Component {
               {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
             </div>
           </div>
-          {count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}
+          {count > 0 && <EventStreamList events={isInterval ? apiEvents : filteredEvents} EventComponent={Inner} />}
           {sysEventStatus}
+          start
+          {start && <p>{start.toString()}</p>}
+          end
+          {end && <p>{end.toString()}</p>}
         </div>
       </div>
     );
