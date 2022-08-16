@@ -1,11 +1,6 @@
 import * as _ from 'lodash-es';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
-import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { coFetchJSON } from '../../co-fetch';
-const getHelmHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
+export const helmAPI = '/api/kubernetes/apis/helmapi.tmax.io/v1';
 
 export const getKind = (id: string) => {
   return id.split('~~')[0];
@@ -16,17 +11,16 @@ const getHelmRepo = (id: string) => {
 
 //get object api url 반환
 export const nonK8sObjectUrl = async (id: string, namespace: string, name: string) => {
-  const helmHost = await getHelmHost();
   const kind = getKind(id);
   const helmRepo = getHelmRepo(id);
 
   switch (kind) {
     case 'HelmRepository':
-      return `${helmHost}/helm/repos/${name}`;
+      return `${helmAPI}/repos/${name}`;
     case 'HelmRelease':
-      return `${helmHost}/helm/ns/${namespace}/releases/${name}`;
+      return `${helmAPI}/namespaces/${namespace}/releases/${name}`;
     case 'HelmChart':
-      return `${helmHost}/helm/charts/${helmRepo}_${name}`;
+      return `${helmAPI}/charts/${helmRepo}_${name}`;
     default:
       return '';
   }
@@ -49,17 +43,16 @@ export const nonK8sObjectResult = (kind: string, response: any) => {
 
 //get list api url 반환
 export const nonK8sListUrl = async (id: string, query: any) => {
-  const helmHost = await getHelmHost();
   const kind = getKind(id);
   const helmRepo = getHelmRepo(id);
 
   switch (kind) {
     case 'HelmRepository':
-      return `${helmHost}/helm/repos`;
+      return `${helmAPI}/repos`;
     case 'HelmRelease':
-      return query?.ns ? `${helmHost}/helm/ns/${query.ns}/releases` : `${helmHost}/helm/all-namespaces/releases`;
+      return query?.ns ? `${helmAPI}/namespaces/${query.ns}/releases` : `${helmAPI}/releases`;
     case 'HelmChart':
-      return helmRepo ? `${helmHost}/helm/charts?repository=${helmRepo}` : `${helmHost}/helm/charts`;
+      return helmRepo ? `${helmAPI}/charts?repository=${helmRepo}` : `${helmAPI}/charts`;
     default:
       return '';
   }
@@ -72,8 +65,7 @@ export const nonK8sListResult = async (id: string, response: any) => {
       await (async () => {
         await Promise.all(
           response.repoInfo.map(async repoinfo => {
-            const helmHost = await getHelmHost();
-            const response = await coFetchJSON(`${helmHost}/helm/charts?repository=${repoinfo.name}`);
+            const response = await coFetchJSON(`${helmAPI}/charts?repository=${repoinfo.name}`);
             let tempList = [];
             let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
             entriesvalues.map(value => {

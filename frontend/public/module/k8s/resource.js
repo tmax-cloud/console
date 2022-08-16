@@ -7,6 +7,7 @@ import { PerspectiveType, isSingleClusterPerspective, getSingleClusterFullBasePa
 import { getActivePerspective, getActiveCluster } from '../../actions/ui';
 import { getId, getUserGroup } from '../../hypercloud/auth';
 import { resourceSchemaBasedMenuMap } from '../../components/hypercloud/form'
+import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
 
 
 const getDynamicProxyPath = cluster => {
@@ -330,7 +331,7 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
 
   // Helm 리소스는 api-server 별도로 존재
   if (isHelmRelease(kind)) {
-    wsOptions.path = `/helm/${query.ns ? `ns/${query.ns}` : 'all-namespaces'}/releases/websocket`;
+    wsOptions.path = query.ns ? `${helmAPI}/namespaces/${query.ns}/releases/websocket` : `${helmAPI}/releases/websocket`;
   }
   return new WSFactory(path, wsOptions);
 };
