@@ -325,13 +325,14 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   if (isNamespace(kind)) {
     opts.customPath = resourceNamespaceURL(kind, true);
   }
+  // Helm 리소스는 api-server 별도로 존재
+  if (isHelmRelease(kind)) {
+    opts.customPath = query.ns ? `/api/kubernetes/apis/helmapi.tmax.io/v1/namespaces/${query.ns}/releases/websocket` : '/api/kubernetes/apis/helmapi.tmax.io/v1/releases/websocket';
+    opts.queryParams = null;
+  }
 
   const path = resourceURL(kind, opts);
   wsOptions.path = path;
 
-  // Helm 리소스는 api-server 별도로 존재
-  if (isHelmRelease(kind)) {
-    wsOptions.path = query.ns ? `${helmAPI}/namespaces/${query.ns}/releases/websocket` : `${helmAPI}/releases/websocket`;
-  }
   return new WSFactory(path, wsOptions);
 };
