@@ -18,6 +18,7 @@ import { connectToFlags } from '../reducers/features';
 import { FLAGS } from '@console/shared/src/constants';
 import { Box, Dropdown, Loading, PageHeading, pluralize, ResourceIcon, ResourceLink, resourcePathFromModel, Timestamp, TogglePlay } from './utils';
 import { EventStreamList } from './utils/event-stream';
+import { coFetchJSON } from '@console/internal/co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -181,11 +182,11 @@ class _EventsList extends React.Component {
     });    
   };
   onEndTimeChange = (time, hour, minute) => {
-    const updatedEndDate = new Date(start);
+    const updatedEndDate = new Date(end);
     updatedEndDate.setHours(hour);
     updatedEndDate.setMinutes(minute);
     this.setState({
-      start: updatedEndDate,
+      end: updatedEndDate,
     });    
   };
   onStartChange = (value) => {
@@ -310,6 +311,7 @@ class _EventStream extends React.Component {
       oldestTimestamp: new Date(),
       start: props.start,
       end: props.end,
+      apiEvents: [],
     };
     this.toggleStream = this.toggleStream_.bind(this);
   }
@@ -469,9 +471,17 @@ class _EventStream extends React.Component {
     });
   }
 
+  getEvent = async (start, end) => {
+    const startTime = Date.parse(start);
+    const endTime = Date.parse(end);
+
+    const response = await coFetchJSON(`/api/hypercloud/event?namesapce=helm-ns&sort=-first_timestamp&startTime=1642195653&endTime=1685772106&offset=1&limit=3&kind=Pod&host=ck-minion-2`);
+    this.setState({apiEvents: response});
+  }
+
   render() {
     const { mock, resourceEventStream, t, start, end } = this.props;
-    const { active, error, loading, filteredEvents, sortedMessages } = this.state;
+    const { active, error, loading, filteredEvents, sortedMessages, apiEvents } = this.state;
     const count = filteredEvents.length;
     const allCount = sortedMessages.length;
     const noEvents = allCount === 0 && this.ws && this.ws.bufferSize() === 0;
@@ -504,7 +514,9 @@ class _EventStream extends React.Component {
     const messageCount = count < maxMessages ? t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count }) : t('SINGLE:MSG_EVENTS_MAIN_2', { something1: count, something2: allCount });
 
     const isInterval = !!start && !!end;
-    const apiEvents = [];
+    if (isInterval) {
+      this.getEvent(start, end);
+    }
 
     return (
       <div className="co-m-pane__body">
@@ -520,7 +532,7 @@ class _EventStream extends React.Component {
               {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
             </div>
           </div>
-          {count > 0 && <EventStreamList events={isInterval ? apiEvents : filteredEvents} EventComponent={Inner} />}
+          {isInterval ? <EventStreamList events={apiEvents} EventComponent={Inner} /> : count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}
           {sysEventStatus}
           start
           {start && <p>{start.toString()}</p>}
