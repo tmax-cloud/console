@@ -22,7 +22,7 @@ export const getLanguage = () => {
 };
 
 export const getI18nResources = async () => {
-  const data = await coFetchJSON('/api/hypercloud/version').catch(e=>console.log(e));
+  const data = await coFetchJSON('/api/hypercloud/version').catch(e => console.error(e));
   const k8sVersion = data ? data.find(item => item.name === 'Kubernetes')?.version : DEFAULT_K8S_VERSION;
   const version = k8sVersion && k8sVersion.split('.').length > 1 && k8sVersion !== DEFAULT_K8S_VERSION ? `${k8sVersion.split('.')[0]}.${k8sVersion.split('.')[1]}` : DEFAULT_K8S_VERSION;
   if (VERSION.includes(version) && version !== DEFAULT_K8S_VERSION) {
