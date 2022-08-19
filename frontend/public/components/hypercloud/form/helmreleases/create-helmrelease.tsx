@@ -11,18 +11,12 @@ import { Dropdown } from '@console/internal/components/utils';
 import { DropdownWithRef } from '../../utils/dropdown-new';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { getQueryArgument } from '@console/internal/components/utils';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
-import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { WithCommonForm } from '../create-form';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
 import { getNamespace } from '@console/internal/components/utils/link';
-
-const getHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
+import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils'
 
 const defaultValuesTemplate = {
   name: '',
@@ -81,13 +75,13 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
 
   React.useEffect(() => {
     const getUrl = async () => {
-      const tempHost = await getHost();
+      const tempHost = await getHelmHost();
       const namespace = getNamespace(window.location.pathname);
       setPostUrl(defaultReleaseName ? `${tempHost}/helm/v1/namespaces/${namespace}/releases/${defaultReleaseName}` : `${tempHost}/helm/v1/namespaces/${namespace}/releases`);
     };
     getUrl();
     const fetchHelmChart = async () => {
-      const tempHost = await getHost();
+      const tempHost = await getHelmHost();
       if (!tempHost || tempHost === '') {
         methods.setValue('error', 'Helm Server is not found');
       }
@@ -125,7 +119,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
 
   React.useEffect(() => {
     const getVersions = async () => {
-      const tempHost = await getHost();
+      const tempHost = await getHelmHost();
       await coFetchJSON(`${tempHost}/helm/v1/charts/${selectRepoName}_${selectChartName}`).then(res => {
         const tempVersionsList = _.get(res, 'versions');
         if (tempVersionsList) {

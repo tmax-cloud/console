@@ -2,10 +2,12 @@ import * as _ from 'lodash-es';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { coFetchJSON } from '../../co-fetch';
-const getHelmHost = async () => {
+
+export const getHelmHost = async () => {
   const mapUrl = (CustomMenusMap as any).Helm.url;
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
+
 export const helmAPI = '/api/kubernetes/apis/helmapi.tmax.io/v1';
 
 export const getKind = (id: string) => {

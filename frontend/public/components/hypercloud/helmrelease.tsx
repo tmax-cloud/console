@@ -10,18 +10,13 @@ import { modelFor } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import { deleteModal } from '../modals';
 import { TableProps } from './utils/default-list-component';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { getIngressUrl } from './utils/ingress-utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { HelmChartModel, HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { CreateHelmRelease } from '../hypercloud/form/helmreleases/create-helmrelease';
+import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils'
 
 const kind = HelmReleaseModel.kind;
-const getHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
 
 const capitalize = (text: string) => {
   return typeof text === 'string' ? text.charAt(0).toUpperCase() + text.slice(1) : text;
@@ -102,7 +97,7 @@ const tableProps: TableProps = {
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
         callback: async () => {
-          const host = await getHost();
+          const host = await getHelmHost();
           deleteModal({
             nonk8sProps: {
               deleteServiceURL: `${host}/helm/v1/namespaces/${obj.namespace}/releases/${obj.name}`,
@@ -162,7 +157,7 @@ export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
     () => ({
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
       callback: async () => {
-        const host = await getHost();
+        const host = await getHelmHost();
         deleteModal({
           nonk8sProps: {
             deleteServiceURL: `${host}/helm/v1/namespaces/${props.namespace}/releases/${name}`,
