@@ -18,7 +18,7 @@ import { coFetch, coFetchJSON } from '../../co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
 import * as noResourceImg from '../../imgs/hypercloud/img_no_resource.svg';
 import { Link } from 'react-router-dom';
-import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 export const CatalogPageType = {
   SERVICE_INSTANCE: 'ServiceInstance',
@@ -407,7 +407,8 @@ export const Catalog = connectToFlags<CatalogProps>(
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetch(`${helmAPI}/charts`).then(async res => {
+      const serverURL = (CustomMenusMap as any).Helm.url + '/helm/v1/charts';
+      await coFetch(serverURL).then(async res => {
         const yaml = await res.text();
         const json = safeLoad(yaml);
         setHelmCharts(json.indexfile.entries);

@@ -8,7 +8,7 @@ import { getIdToken } from '../hypercloud/auth';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../actions/ui';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
-import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 function createURL(host, path) {
   let url;
@@ -46,11 +46,12 @@ function createURL(host, path) {
     }
   }
 
-  if (path.includes(helmAPI) === true) {
+  if (path.split('/')[1] === 'helm') {
+    const mapUrl = CustomMenusMap.Helm.url;
     if (location.protocol === 'https:') {      
-      url = `wss://${location.origin.replace('https://', '').replace('http://', '') + path}`;
+      url = `wss://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
     } else {
-      url = `ws://${location.origin.replace('https://', '').replace('http://', '') + path}`;
+      url = `ws://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
     }
   }
 

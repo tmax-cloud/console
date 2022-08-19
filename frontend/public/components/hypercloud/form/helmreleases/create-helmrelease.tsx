@@ -11,12 +11,18 @@ import { Dropdown } from '@console/internal/components/utils';
 import { DropdownWithRef } from '../../utils/dropdown-new';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { getQueryArgument } from '@console/internal/components/utils';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { WithCommonForm } from '../create-form';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
 import { getNamespace } from '@console/internal/components/utils/link';
-import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
+
+const getHost = async () => {
+  const mapUrl = (CustomMenusMap as any).Helm.url;
+  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
+};
 
 const defaultValuesTemplate = {
   name: '',
@@ -48,9 +54,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   const defaultVersion = defaultValues ? defaultValues.chart.metadata.version : '';
   const defaultYamlValues = defaultValues ? defaultValues.config : null;
   const defaultRepoName = queryChartRepo ? queryChartRepo : '';
-  const namespace = getNamespace(window.location.pathname);
-  const defaultPostUrl = defaultReleaseName ? `${helmAPI}/namespaces/${namespace}/releases/${defaultReleaseName}` : `${helmAPI}/namespaces/${namespace}/releases`;
-  
+
   const [loading, setLoading] = React.useState(false);
   const [selectChartName, setSelectChartName] = React.useState(defaultChartName);
   const [yamlValues, setYamlValues] = React.useState(defaultYamlValues ? safeDump(defaultYamlValues) : null);
@@ -59,6 +63,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   const [versions, setVersions] = React.useState([]);
   const [selectRepoName, setSelectRepoName] = React.useState(defaultRepoName);
   const [editLoading, setEditLoading] = React.useState(defaultValues.name !== '');
+  const [host, setHost] = React.useState('');
 
   const version = useWatch<{ value: string; label: string }>({
     control: methods.control,
@@ -72,9 +77,22 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
 
   // const noEntryMessageTest = 'This chart is not on the server';
 
+  const [postUrl, setPostUrl] = React.useState('');
+
   React.useEffect(() => {
+    const getUrl = async () => {
+      const tempHost = await getHost();
+      const namespace = getNamespace(window.location.pathname);
+      setPostUrl(defaultReleaseName ? `${tempHost}/helm/v1/namespaces/${namespace}/releases/${defaultReleaseName}` : `${tempHost}/helm/v1/namespaces/${namespace}/releases`);
+    };
+    getUrl();
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmAPI}/charts`).then(res => {
+      const tempHost = await getHost();
+      if (!tempHost || tempHost === '') {
+        methods.setValue('error', 'Helm Server is not found');
+      }
+      setHost(tempHost);
+      await coFetchJSON(`${tempHost}/helm/v1/charts`).then(res => {
         let tempEntriesList = [];
         let tempChartObject = {};
         const entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
@@ -107,7 +125,8 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
 
   React.useEffect(() => {
     const getVersions = async () => {
-      await coFetchJSON(`${helmAPI}/charts/${selectRepoName}_${selectChartName}`).then(res => {
+      const tempHost = await getHost();
+      await coFetchJSON(`${tempHost}/helm/v1/charts/${selectRepoName}_${selectChartName}`).then(res => {
         const tempVersionsList = _.get(res, 'versions');
         if (tempVersionsList) {
           let tempVersionsObjectList = [];
@@ -141,7 +160,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
           })[0].value
         : '';
     const setChartVersion = async () => {
-      await coFetchJSON(`${helmAPI}/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
+      await coFetchJSON(`${host}/helm/v1/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
         const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
         methods.setValue('packageURL', entryValue[0].urls[0]);
         !editLoading && setYamlValues(safeDump(_.get(res, 'values')));
@@ -159,6 +178,10 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   React.useEffect(() => {
     methods.setValue('values', yamlValues);
   }, [yamlValues]);
+
+  React.useEffect(() => {
+    methods.setValue('postUrl', postUrl);
+  }, [postUrl]);
 
   return (
     <>
@@ -207,7 +230,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
       {yamlValues !== undefined && yamlValues !== null && <YAMLEditor value={yamlValues} minHeight="300px" onChange={updateYamlValues} showShortcuts={true} />}
       <TextInput inputClassName="pf-c-form-control" id="packageURL" name="packageURL" defaultValue="" hidden={true} />
       <TextArea inputClassName="pf-c-form-control" id="values" name="values" defaultValue="" hidden={true} />
-      <TextInput inputClassName="pf-c-form-control" id="postUrl" name="postUrl" defaultValue={defaultPostUrl} hidden={true} />
+      <TextInput inputClassName="pf-c-form-control" id="postUrl" name="postUrl" defaultValue="" hidden={true} />
     </>
   );
 };
