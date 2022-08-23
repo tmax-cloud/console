@@ -11,17 +11,12 @@ import { Status } from '@console/shared';
 import { deleteModal } from '../modals';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { resourceSortFunction } from './utils/resource-sort';
-import { getIngressUrl } from './utils/ingress-utils';
 import { HelmChartModel, HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { CreateHelmRelease } from '../hypercloud/form/helmreleases/create-helmrelease';
+import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils'
 
 const kind = HelmReleaseModel.kind;
-const getHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
 
 const capitalize = (text: string) => {
   return typeof text === 'string' ? text.charAt(0).toUpperCase() + text.slice(1) : text;
@@ -102,10 +97,10 @@ const tableProps: TableProps = {
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
         callback: async () => {
-          const host = await getHost();
+          const host = await getHelmHost();
           deleteModal({
             nonk8sProps: {
-              deleteServiceURL: `${host}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+              deleteServiceURL: `${host}/helm/v1/namespaces/${obj.namespace}/releases/${obj.name}`,
               stringKey: 'COMMON:MSG_LNB_MENU_203',
               namespace: obj.namespace,
               name: obj.name,
@@ -162,10 +157,10 @@ export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
     () => ({
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
       callback: async () => {
-        const host = await getHost();
+        const host = await getHelmHost();
         deleteModal({
           nonk8sProps: {
-            deleteServiceURL: `${host}/helm/ns/${props.namespace}/releases/${name}`,
+            deleteServiceURL: `${host}/helm/v1/namespaces/${props.namespace}/releases/${name}`,
             stringKey: 'COMMON:MSG_LNB_MENU_203',
             namespace: props.namespace,
             name: name,
