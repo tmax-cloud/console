@@ -72,6 +72,9 @@ export const nonK8sListResult = async (id: string, response: any) => {
   const kind = getKind(id);
   switch (kind) {
     case 'HelmRepository':
+      if (response.error) {
+        return [];
+      }
       await (async () => {
         await Promise.all(
           response.repoInfo.map(async repoinfo => {
@@ -88,8 +91,14 @@ export const nonK8sListResult = async (id: string, response: any) => {
       })();
       return response.repoInfo;
     case 'HelmRelease':
+      if (response.error) {
+        return [];
+      }
       return response.release;
     case 'HelmChart':
+      if (response.error) {
+        return [];
+      }
       let tempList = [];
       let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
       entriesvalues.map(value => {
