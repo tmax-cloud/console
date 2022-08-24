@@ -330,7 +330,8 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
 
   // Helm 리소스는 api-server 별도로 존재
   if (isHelmRelease(kind)) {
-    wsOptions.path = `/helm/${query.ns ? `ns/${query.ns}` : 'all-namespaces'}/releases/websocket`;
+    wsOptions.path = `/helm/v1/${query.ns ? `namespaces/${query.ns}/` : ''}releases/websocket`;
   }
+
   return new WSFactory(path, wsOptions);
 };

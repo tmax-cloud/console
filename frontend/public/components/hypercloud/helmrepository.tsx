@@ -6,19 +6,13 @@ import { sortable, compoundExpand } from '@patternfly/react-table';
 import { SectionHeading, Timestamp, detailsPage, navFactory, Kebab, KebabOption, KebabAction, Page, ResourceLink } from '@console/internal/components/utils';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps, Table } from '../factory';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
-import { getIngressUrl } from './utils/ingress-utils';
 import { deleteModal, helmrepositoryUpdateModal } from '../modals';
 import { TFunction } from 'i18next';
 import { ExpandableInnerTable } from './utils/expandable-inner-table';
 import { HelmRepositoryModel, HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
+import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
 
 const kind = HelmRepositoryModel.kind;
-
-const getHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
 
 type HelmrepositoryPageProps = {
   match?: any;
@@ -88,9 +82,8 @@ const HelmRepositoryTableRow = (obj, itemCount) => {
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
       callback: async () => {
-        const host = await getHost();
         helmrepositoryUpdateModal({
-          updateServiceURL: `${host}/helm/repos/${obj.name}`,
+          updateServiceURL: `${helmAPI}/repos/${obj.name}`,
           stringKey: 'COMMON:MSG_LNB_MENU_241',
           name: obj.name,
         });
@@ -99,10 +92,9 @@ const HelmRepositoryTableRow = (obj, itemCount) => {
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_241',
       callback: async () => {
-        const host = await getHost();
         deleteModal({
           nonk8sProps: {
-            deleteServiceURL: `${host}/helm/repos/${obj.name}`,
+            deleteServiceURL: `${helmAPI}/repos/${obj.name}`,
             stringKey: 'COMMON:MSG_LNB_MENU_241',
             name: obj.name,
           },
@@ -251,9 +243,8 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
     () => ({
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
       callback: async () => {
-        const host = await getHost();
         helmrepositoryUpdateModal({
-          updateServiceURL: `${host}/helm/repos/${name}`,
+          updateServiceURL: `${helmAPI}/repos/${name}`,
           stringKey: 'COMMON:MSG_LNB_MENU_241',
           name: name,
         });
@@ -262,10 +253,9 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
     () => ({
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_241',
       callback: async () => {
-        const host = await getHost();
         deleteModal({
           nonk8sProps: {
-            deleteServiceURL: `${host}/helm/repos/${name}`,
+            deleteServiceURL: `${helmAPI}/repos/${name}`,
             stringKey: 'COMMON:MSG_LNB_MENU_241',
             name: name,
             listPath: '/helmrepositories',

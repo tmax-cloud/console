@@ -33,37 +33,30 @@ export const serviceBindingMenuActions = [...Kebab.getExtensionsActionsForKind(S
 // table
 const tableProps: TableProps = {
   header: [
-    // 이름
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
     },
-    // 네임스페이스
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
     },
-    // 상태
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
       sortFunc: 'ServiceBindingStatusReducer',
     },
-    // 애플리케이션
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_143',
       sortField: 'spec.application.name',
     },
-    // 배후 서비스
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_144',
       sortField: 'spec.services[0].name',
     },
-    // 생성 시간
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
     },
-    // action menu
     {
       title: '',
       transforms: null,
@@ -71,33 +64,26 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: K8sResourceKind) => [
-    // 이름
     {
       children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
     },
-    // 네임스페이스
     {
       className: 'co-break-word',
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
-    // 상태
     {
       className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
       children: <Status status={ServiceBindingStatusReducer(obj)} />,
     },
-    // 애플리케이션
     {
       children: obj.spec.application.name
     },
-    // 배후 서비스
     {
       children: obj.spec.services[0].name
     },
-    // 생성 시간
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
     },
-    // menu actions
     {
       className: Kebab.columnClass,
       children: <ResourceKebab actions={serviceBindingMenuActions} kind={kind} resource={obj} />,
@@ -110,20 +96,16 @@ export const ServiceBindingsPage: React.FC = props => {
   return <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />;
 };
 
-// 디테일 페이지
 export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps> = ({ obj: sb }) => {
   const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
-      {/* 상태 */}
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={sb}>
         <Status status={ServiceBindingStatusReducer(sb)} />
       </DetailsItem>
-      {/* 애플리케이션 */}
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_1')} obj={sb}>
         {sb.spec.application.name}
       </DetailsItem>
-      {/* 배후 서비스 */}
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_2')} obj={sb}>
         {
           sb.spec.services?.map((service) => {
@@ -131,9 +113,7 @@ export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps>
           })
         }
       </DetailsItem>
-      {/* 바인딩 리소스 */}
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_3')} obj={sb}>
-        {/* 데이터 찾기 */}
         <div>
           {
             `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_4')} : ${sb.spec.detectBindingResources ?
@@ -142,11 +122,9 @@ export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps>
               t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_6')}`
           }
         </div>
-        {/* 네이밍 방식 */}
         <div>
           {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_7')} : \'${sb.spec.namingStrategy}\'`}
         </div>
-        {/* 데이터 저장 타입 */}
         <div>
           {
             `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_8')} : ${sb.spec.bindAsFiles ?
@@ -155,7 +133,6 @@ export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps>
               t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_10')}`
           }
         </div>
-        {/* 사용자 입력 데이터 */}
         <div>
           <table>
             <tr>
