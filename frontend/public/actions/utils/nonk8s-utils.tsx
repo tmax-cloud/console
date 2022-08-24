@@ -1,11 +1,13 @@
 import * as _ from 'lodash-es';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+//import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { coFetchJSON } from '../../co-fetch';
 
 export const getHelmHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
+  //const mapUrl = (CustomMenusMap as any).Helm.url;
+  //return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
+  const testUrl = await getIngressUrl('helm-apiserver');
+  return testUrl;
 };
 
 export const helmAPI = '/api/kubernetes/apis/helmapi.tmax.io/v1';
@@ -19,17 +21,19 @@ const getHelmRepo = (id: string) => {
 
 //get object api url 반환
 export const nonK8sObjectUrl = async (id: string, namespace: string, name: string) => {
-  const helmHost = await getHelmHost();
   const kind = getKind(id);
-  const helmRepo = getHelmRepo(id);
+  let host = '';
 
   switch (kind) {
     case 'HelmRepository':
       return `${helmAPI}/repos/${name}`;
     case 'HelmRelease':
-      return `${helmHost}/helm/v1/namespaces/${namespace}/releases/${name}`;
+      host = await getHelmHost();
+      return `${host}/helm/v1/namespaces/${namespace}/releases/${name}`;
     case 'HelmChart':
-      return `${helmHost}/helm/v1/charts/${helmRepo}_${name}`;
+      host = await getHelmHost();
+      const helmRepo = getHelmRepo(id);
+      return `${host}/helm/v1/charts/${helmRepo}_${name}`;
     default:
       return '';
   }
@@ -52,17 +56,19 @@ export const nonK8sObjectResult = (kind: string, response: any) => {
 
 //get list api url 반환
 export const nonK8sListUrl = async (id: string, query: any) => {
-  const helmHost = await getHelmHost();
   const kind = getKind(id);
-  const helmRepo = getHelmRepo(id);
+  let host = '';
 
   switch (kind) {
     case 'HelmRepository':
       return `${helmAPI}/repos`;
     case 'HelmRelease':
-      return query?.ns ? `${helmHost}/helm/v1/namespaces/${query.ns}/releases` : `${helmHost}/helm/v1/releases`;
+      host = await getHelmHost();
+      return query?.ns ? `${host}/helm/v1/namespaces/${query.ns}/releases` : `${host}/helm/v1/releases`;
     case 'HelmChart':
-      return helmRepo ? `${helmHost}/helm/v1/charts?repository=${helmRepo}` : `${helmHost}/helm/v1/charts`;
+      host = await getHelmHost();
+      const helmRepo = getHelmRepo(id);
+      return helmRepo ? `${host}/helm/v1/charts?repository=${helmRepo}` : `${host}/helm/v1/charts`;
     default:
       return '';
   }
