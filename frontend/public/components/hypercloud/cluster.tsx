@@ -12,6 +12,7 @@ import { configureClusterNodesModal } from './modals';
 import { MembersPage, RowMemberData } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { TableProps } from './utils/default-list-component';
+import { Link } from 'react-router-dom';
 
 const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
   const { t } = useTranslation();
@@ -120,7 +121,12 @@ const tableProps: TableProps = {
         children: <TypeColumnItem type={type} />,
       },
       {
-        children: cluster.status?.phase,
+        children: cluster.status?.phase==='Sync Needed' ?
+          <Link to={cluster.status.applicationLink}>
+            {cluster.status?.phase}
+          </Link>
+          :
+          cluster.status?.phase,
       },
       {
         children: cluster.spec.version,

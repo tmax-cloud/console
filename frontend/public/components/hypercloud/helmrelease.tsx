@@ -242,7 +242,7 @@ const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release })
                   .map(k => {
                     return (
                       <tr key={'row-' + k}>
-                        <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
+                        <td style={{ padding: '5px' }}>{modelFor(k) ? ResourceLabel(modelFor(k), t) : k}</td>
                         <td style={{ padding: '5px' }}>
                           <ResourceLink kind={k} name={release.objects[k] as string} namespace={release.namespace} />
                         </td>
