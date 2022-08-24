@@ -78,6 +78,9 @@ export const NavSection = connect(navSectionStateToProps)(
         if (resourcePath.includes('rolebindingclaims')) {
           resourcePath = 'rolebindings';
         }
+        if (resourcePath.includes('clusterclaims') || resourcePath.includes('clusterregistrations')) {
+          resourcePath = 'clustermanagers'
+        }
         //current bug? - we should be checking if children is a single item or .filter is undefined
         return (children as any[])
           .filter(c => {
