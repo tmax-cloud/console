@@ -2,18 +2,12 @@ import * as React from 'react';
 import { match as RMatch } from 'react-router';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
-import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { WithCommonForm } from '../create-form';
 import { RadioGroup } from '../../utils/radio';
 import { TextInput } from '../../utils/text-input';
 import { HelmRepositoryModel } from '@console/internal/models/hypercloud/helm-model';
-
-const getHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
+import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils'
 
 const typeItems = [
   // RadioGroup 컴포넌트에 넣어줄 items
@@ -52,17 +46,6 @@ const CreateHelmRepositoryComponent: React.FC<HelmRepositoryFormProps> = props =
     name: 'type',
     defaultValue: 'Public',
   });
-  const [postUrl, setPostUrl] = React.useState('');
-  React.useEffect(() => {
-    const getUrl = async () => {
-      const tempHost = await getHost();
-      setPostUrl(`${tempHost}/helm/repos`);
-    };
-    getUrl();
-  }, []);
-  React.useEffect(() => {
-    methods.setValue('postUrl', postUrl);
-  }, [postUrl]);
 
   return (
     <>
@@ -85,7 +68,6 @@ const CreateHelmRepositoryComponent: React.FC<HelmRepositoryFormProps> = props =
           </Section>
         </>
       )}
-      <TextInput inputClassName="pf-c-form-control" id="postUrl" name="postUrl" defaultValue="" hidden={true} />
     </>
   );
 };
@@ -100,7 +82,7 @@ export const onSubmitCallback = data => {
   const returnData = {
     nonK8sResource: true,
     kind: HelmRepositoryModel.kind,
-    postUrl: data.postUrl,
+    postUrl: `${helmAPI}/repos`,
     name: data.name,
     repoURL: data.repoURL,
   };
