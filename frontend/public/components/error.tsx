@@ -114,6 +114,20 @@ export const ErrorBoundaryFallback: React.SFC<ErrorBoundaryFallbackProps> = prop
   );
 };
 
+export const IngressCheckPage: React.SFC<ErrorPageProps> = () => {
+  //const { t } = useTranslation();
+  const ingressLabelValue = getQueryArgument('ingresslabelvalue')
+  
+  return (
+    <div>
+      <Helmet>
+        <title>인그레스를 확인해 주세요</title>
+      </Helmet>
+      <ErrorComponent title='인그레스를 확인해 주세요' message={ingressLabelValue + '인그레스를 확인해 주세요'} errMessage={ingressLabelValue + '인그레스를 확인해 주세요'} />
+    </div>
+  );
+};
+
 export type ErrorComponentProps = {
   title: string;
   message?: string;

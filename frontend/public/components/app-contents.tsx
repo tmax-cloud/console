@@ -258,6 +258,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <Route path="/k8s/all-namespaces/:plural/:name" component={ResourceDetailsPage} />
           <LazyRoute path="/create-sample" loader={() => import('./hypercloud/create-sample').then(m => m.CreateSample)} />
           <LazyRoute path="/error" exact loader={() => import('./error' /* webpackChunkName: "error" */).then(m => m.ErrorPage)} />
+          <LazyRoute path="/ingress-check" exact loader={() => import('./error' /* webpackChunkName: "ingress-check" */).then(m => m.IngressCheckPage)} />
           <Route path="/" exact component={DefaultPage} />
           <LazyRoute loader={() => import('./error' /* webpackChunkName: "error" */).then(m => m.ErrorPage404)} />
         </Switch>

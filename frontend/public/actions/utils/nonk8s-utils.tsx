@@ -2,6 +2,7 @@ import * as _ from 'lodash-es';
 //import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { coFetchJSON } from '../../co-fetch';
+import { history } from '@console/internal/components/utils/router';
 
 export const getHelmHost = async () => {
   //const mapUrl = (CustomMenusMap as any).Helm.url;
@@ -85,6 +86,9 @@ export const nonK8sListResult = async (id: string, response: any) => {
         await Promise.all(
           response.repoInfo.map(async repoinfo => {
             const helmHost = await getHelmHost();
+            if (helmHost === null) {
+              history.push('/ingress-check?ingresslabelvalue=helm-apiserver');
+            }
             const response = await coFetchJSON(`${helmHost}/helm/v1/charts?repository=${repoinfo.name}`);
             let tempList = [];
             let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));

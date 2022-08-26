@@ -9,7 +9,7 @@ import { APIServiceModel } from '../models';
 import { coFetchJSON } from '../co-fetch';
 import { referenceForModel, K8sResourceKind, K8sKind } from '../module/k8s';
 import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult, getKind } from './utils/nonk8s-utils'
-import { history } from '@console/internal/components/utils';
+import { history } from '@console/internal/components/utils/router';
 
 export enum ActionType {
   ReceivedResources = 'resources',
@@ -78,8 +78,8 @@ export const watchK8sObject = (id: string, name: string, namespace: string, quer
   const poller = async () => {
     if (nonK8SResource) {
       const url = await nonK8sObjectUrl(id, query.ns, query.name);
-      if (url.indexOf('/helm') === 0) {
-        history.push('/helm/no-ingress');
+      if (url.includes('null') === true) {
+        history.push('/ingress-check?ingresslabelvalue=helm-apiserver');
       }
       coFetchJSON(url).then(
         o => dispatch(modifyObject(id, nonK8sObjectResult(getKind(id), o))),
@@ -152,8 +152,8 @@ export const watchK8sList = (
     }
 
     const url = nonK8SResource ? await nonK8sListUrl(id, query) : '';
-    if (url.indexOf('/helm') === 0) {
-      history.push('/helm/no-ingress');
+    if (url.includes('null') === true) {
+      history.push('/ingress-check?ingresslabelvalue=helm-apiserver');
     }
 
     const response = nonK8SResource ? await coFetchJSON(url) : await k8sList(
