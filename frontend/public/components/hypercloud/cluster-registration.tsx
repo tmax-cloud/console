@@ -51,7 +51,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children: <ErrorPopoverStatus error={ClusterRegistrationStatusReducer(obj) === 'Failed'} status={ClusterRegistrationStatusReducer(obj)} reason={obj.status?.reason} />,
+      children: <ErrorPopoverStatus error={obj.status.phase === 'Error'} status={obj.status.phase} reason={obj.status?.reason} />,
     },
     {
       children: obj.spec.clusterName,

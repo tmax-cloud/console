@@ -14,6 +14,7 @@ import * as SelectedMasterClusterIcon from '@console/internal/imgs/hypercloud/ln
 import * as SelectedSingleClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/single_cluster_filled.svg';
 import * as SelectedDeveloperIcon from '@console/internal/imgs/hypercloud/lnb/filled/developer_filled.svg';
 import * as SelectedBaremetalIcon from '@console/internal/imgs/hypercloud/lnb/filled/baremetal_filled.svg';
+import { LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 
 export enum PerspectiveType {
   MASTER = 'MASTER',
@@ -41,7 +42,7 @@ export const isMasterClusterPerspective = () => {
   return getActivePerspective() == PerspectiveType.MASTER;
 };
 export const getSingleClusterFullBasePath = () => {
-  return `${window.SERVER_FLAGS.singleClusterBasePath}api/${getActiveCluster()}`;
+  return `${sessionStorage.getItem(LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY)}api/${getActiveCluster()}`;
 };
 
 /* 임시 */

@@ -407,7 +407,7 @@ export const Catalog = connectToFlags<CatalogProps>(
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      const serverURL = (CustomMenusMap as any).Helm.url + '/helm/charts';
+      const serverURL = (CustomMenusMap as any).Helm.url + '/helm/v1/charts';
       await coFetch(serverURL).then(async res => {
         const yaml = await res.text();
         const json = safeLoad(yaml);

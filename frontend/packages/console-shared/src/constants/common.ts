@@ -37,6 +37,7 @@ export const COMMUNITY_PROVIDERS_WARNING_LOCAL_STORAGE_KEY = `${STORAGE_PREFIX}/
 export const DEV_CATALOG_FILTER_KEY = `${STORAGE_PREFIX}/dev-catalog-filters`;
 export const PINNED_RESOURCES_LOCAL_STORAGE_KEY = `${STORAGE_PREFIX}/pinned-resources`;
 export const LAST_CLUSTER_LOCAL_STORAGE_KEY = `${STORAGE_PREFIX}/last-cluster`;
+export const LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY = `${STORAGE_PREFIX}/last-cluster-host`;
 
 // Bootstrap user for OpenShift 4.0 clusters
 export const KUBE_ADMIN_USERNAME = 'kube:admin';
