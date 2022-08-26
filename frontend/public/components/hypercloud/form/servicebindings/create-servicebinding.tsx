@@ -31,19 +31,19 @@ const defaultValuesTemplate = {
   }
 };
 
-const defaultDetectBindingResources = [
-  { name: 'detectBindingResources', label: '백업 서비스 내 리소스의 바인딩 데이터를 자동으로 감지합니다' }
+const defaultDetectBindingResources = t => [
+  { name: 'detectBindingResources', label: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_27') }
 ];
 
 const methodItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
-    title: '리소스 선택',
+    title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_2'),
     desc: '',
     value: 'Auto',
   },
   {
-    title: '직접 입력',
+    title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_3'),
     desc: '',
     value: 'Manual',
   },
@@ -52,12 +52,12 @@ const methodItems = t => [
 const bindAsFilesItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
-    title: '환경 변수',
+    title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_23'),
     desc: '',
     value: 'false',
   },
   {
-    title: '파일',
+    title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_24'),
     desc: '',
     value: 'true',
   },
@@ -70,34 +70,35 @@ const servicebindingFormFactory = (params, obj) => {
 };
 
 const BackupServiceItem = props => {
+  const { t } = useTranslation()
   const { item, name, index, onDeleteClick, methods } = props;
 
   return(
     <>
       <div className="co-form-section__separator" />
       <div className="row" key={item.id}>
-        <Section label="백업 서비스" id={`${name}[${index}]`} description="">
+        <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_9')} id={`${name}[${index}]`} description="">
           <div className="col-xs-12 pairs-list__value-field">
-            <Section label="네임스페이스" id={`${name}[${index}].namespace`} description="" isRequired>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_10')} id={`${name}[${index}].namespace`} description="" isRequired>
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].namespace`} name={`${name}[${index}].namespace`} defaultValue={item.namespace}/>
             </Section>
-            <Section label="그룹" id={`${name}[${index}].group`} description="" isRequired>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_14')} id={`${name}[${index}].group`} description="" isRequired>
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].group`} name={`${name}[${index}].group`} defaultValue={item.group}/>
             </Section>
-            <Section label="버젼" id={`${name}[${index}].version`} description="" isRequired>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_15')} id={`${name}[${index}].version`} description="" isRequired>
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].version`} name={`${name}[${index}].version`} defaultValue={item.version}/>
             </Section>
-            <Section label="리소스" id={`${name}[${index}].kind`} description="" isRequired>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id={`${name}[${index}].kind`} description="" isRequired>
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].kind`} name={`${name}[${index}].kind`} defaultValue={item.kind}/>
             </Section>
-            <Section label="리소스 이름" id={`${name}[${index}].name`} description="" isRequired>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id={`${name}[${index}].name`} description="" isRequired>
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`} defaultValue={item.name}/>
             </Section>
           </div>
           <div className="col-xs-1 pairs-list__action">
             <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
               <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
-              <span>{"백업 서비스 삭제"}</span>
+              <span>{t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_13')}</span>
             </Button>
           </div>
         </Section>
@@ -118,6 +119,7 @@ const backupServiceItemRenderer = (methods, name, item, index, ListActions, List
 };
 
 const BindingDataItem = props => {
+  const { t } = useTranslation()
   const { item, name, index, onDeleteClick, methods } = props;
 
   return(
@@ -126,17 +128,17 @@ const BindingDataItem = props => {
       <div className="row" key={item.id}>
         <Section id={`${name}[${index}]`} description="">
           <div className="col-xs-12 pairs-list__value-field">
-            <Section label="키" id={`${name}[${index}].name`} description="" >
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_20')} id={`${name}[${index}].name`} description="" >
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`}/>
             </Section>
-            <Section label="값" id={`${name}[${index}].value`} description="" >
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_21')} id={`${name}[${index}].value`} description="" >
               <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].value`} name={`${name}[${index}].value`}/>
             </Section>
           </div>
           <div className="col-xs-1 pairs-list__action">
             <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
               <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
-              <span>{"바인딩 데이터 제거"}</span>
+              <span>{t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_19')}</span>
             </Button>
           </div>
         </Section>
@@ -175,7 +177,6 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
       defaultValuesRef: { current: defaultValues },
     },
   } = methods;
-
   return (
     <>
       <Section label="Labels" id="label" description="">
@@ -184,25 +185,25 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
 
       <div className="co-form-section__separator" />
 
-      <Section label="바인딩 리소스 추가 방식" id="name" description="">
+      <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_1')} id="name" description="">
         <RadioGroup name="method" items={methodItems.bind(null, t)()} inline={false} initValue={methodToggle} />
       </Section>
 
       {methodToggle === 'Manual' && (
         <>
           <div className="row">
-            <Section label="애플리케이션" id="application" description="">
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_4')} id="application" description="">
               <div className="col-xs-12 pairs-list__value-field">
-                <Section label="그룹" id="application" description="" isRequired>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_14')} id="application" description="" isRequired>
                   <TextInput inputClassName="pf-c-form-control" id="spec.application.group" name="spec.application.group"/>
                 </Section>
-                <Section label="버젼" id="application" description="" isRequired>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_15')} id="application" description="" isRequired>
                   <TextInput inputClassName="pf-c-form-control" id="spec.application.version" name="spec.application.version"/>
                 </Section>
-                <Section label="리소스" id="application" description="" isRequired>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="application" description="" isRequired>
                   <TextInput inputClassName="pf-c-form-control" id="spec.application.kind" name="spec.application.kind"/>
                 </Section>
-                <Section label="리소스 이름" id="application" description="" isRequired>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="application" description="" isRequired>
                   <TextInput inputClassName="pf-c-form-control" id="spec.application.name" name="spec.application.name"/>
                 </Section>
               </div>
@@ -210,25 +211,25 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
           </div>
 
           <Section id="services" isRequired={true}>
-            <ListView methods={methods} name={`spec.services`} addButtonText={"백업 서비스 추가"} headerFragment={<></>} itemRenderer={backupServiceItemRenderer} defaultItem={{ namespace: '', group: '', version: '', kind: '', name: '' }} defaultValues={defaultValues.spec.services}/>
+            <ListView methods={methods} name={`spec.services`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_12')} headerFragment={<></>} itemRenderer={backupServiceItemRenderer} defaultItem={{ namespace: '', group: '', version: '', kind: '', name: '' }} defaultValues={defaultValues.spec.services}/>
           </Section>
 
           <div className="co-form-section__separator" />
 
-          <Section label="바인딩 데이터" id="mappings" isRequired={false}>
-            <ListView methods={methods} name={`spec.mappings`} addButtonText={"바인딩 데이터 추가"} headerFragment={<></>} itemRenderer={bindingDataItemRenderer}/>
+          <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_16')} id="mappings" isRequired={false} description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_17')}>
+            <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer}/>
           </Section>
 
-          <Section label="데이터 저장 방식" id="name" description="애플리케이션 내 바인딩 데이터 저장 방식을 선택합니다">
+          <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_22')} id="name" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_25')}>
             <RadioGroup name="bindAsFiles" items={bindAsFilesItems.bind(null, t)()} inline={false} initValue={bindAsFilesToggle} />
           </Section>
 
-          <Section label="바인딩 데이터 감지" id="detectBindingResources" description="">
-            <CheckboxGroup name="spec.detectBindingResources" items={defaultDetectBindingResources} methods={methods} />
+          <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_26')} id="detectBindingResources" description="">
+            <CheckboxGroup name="spec.detectBindingResources" items={defaultDetectBindingResources.bind(null, t)()} methods={methods} />
           </Section>
 
-          <Section label="네이밍 전략" id="namingStrategy" description="백업 서비스는 ~~~">
-            <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder='예: {{ .service'/>
+          <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_28')} id="namingStrategy" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_29')}>
+            <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder=''/>
           </Section>
         </>
       )}
@@ -241,7 +242,7 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
   const { t } = useTranslation();
   const formComponent = servicebindingFormFactory(props.match.params, props.obj);
   const ServiceBindingFormComponent = formComponent;
-  return <ServiceBindingFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('SINGLE:MSG_ROLES_CREATEFORM_DIV1_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true}/>;
+  return <ServiceBindingFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('MSG_COMMON_CREATEFORM_DESCRIPTION_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true}/>;
 };
 
 export const onSubmitCallback = data => {
