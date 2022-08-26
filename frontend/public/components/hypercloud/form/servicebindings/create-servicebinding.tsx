@@ -12,6 +12,7 @@ import { ListView } from '../../utils/list-view';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { ServiceBindingModel } from '../../../../models';
+import { CheckboxGroup } from '../../utils/checkbox';
 
 const defaultValuesTemplate = {
   metadata: {
@@ -30,7 +31,11 @@ const defaultValuesTemplate = {
   }
 };
 
-const kindItems = t => [
+const defaultDetectBindingResources = [
+  { name: 'detectBindingResources', label: '백업 서비스 내 리소스의 바인딩 데이터를 자동으로 감지합니다' }
+];
+
+const methodItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
     title: '리소스 선택',
@@ -41,6 +46,20 @@ const kindItems = t => [
     title: '직접 입력',
     desc: '',
     value: 'Manual',
+  },
+];
+
+const bindAsFilesItems = t => [
+  // RadioGroup 컴포넌트에 넣어줄 items
+  {
+    title: '환경 변수',
+    desc: '',
+    value: 'false',
+  },
+  {
+    title: '파일',
+    desc: '',
+    value: 'true',
   },
 ];
 
@@ -98,12 +117,56 @@ const backupServiceItemRenderer = (methods, name, item, index, ListActions, List
   return <BackupServiceItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} methods={methods} ListActions={ListActions} key={index} />;
 };
 
+const BindingDataItem = props => {
+  const { item, name, index, onDeleteClick, methods } = props;
+
+  return(
+    <>
+      {/* <div className="co-form-section__separator" /> */}
+      <div className="row" key={item.id}>
+        <Section id={`${name}[${index}]`} description="">
+          <div className="col-xs-12 pairs-list__value-field">
+            <Section label="키" id={`${name}[${index}].name`} description="" >
+              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`}/>
+            </Section>
+            <Section label="값" id={`${name}[${index}].value`} description="" >
+              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].value`} name={`${name}[${index}].value`}/>
+            </Section>
+          </div>
+          <div className="col-xs-1 pairs-list__action">
+            <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
+              <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
+              <span>{"바인딩 데이터 제거"}</span>
+            </Button>
+          </div>
+        </Section>
+      </div>
+    </>
+  )
+}
+
+const bindingDataItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
+  const onDeleteClick = () => {
+    const values = _.get(ListActions.getValues(), name);
+    if (!!values && values.length > 0) {
+      ListActions.remove(index);
+    }
+  };
+
+  return <BindingDataItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} methods={methods} ListActions={ListActions} key={index} />;
+};
+
+
 const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props => {
   const { t } = useTranslation();
   const { control } = useFormContext();
-  const kindToggle = useWatch({
+  const methodToggle = useWatch({
     name: 'method',
     defaultValue: 'Manual',
+  });
+  const bindAsFilesToggle = useWatch({
+    name: 'bindAsFiles',
+    defaultValue: 'false',
   });
   const methods = useFormContext();
 
@@ -122,10 +185,10 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
       <div className="co-form-section__separator" />
 
       <Section label="바인딩 리소스 추가 방식" id="name" description="">
-        <RadioGroup name="method" items={kindItems.bind(null, t)()} inline={false} initValue={kindToggle} />
+        <RadioGroup name="method" items={methodItems.bind(null, t)()} inline={false} initValue={methodToggle} />
       </Section>
 
-      {kindToggle === 'Manual' && (
+      {methodToggle === 'Manual' && (
         <>
           <div className="row">
             <Section label="애플리케이션" id="application" description="">
@@ -143,7 +206,7 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
                   <TextInput inputClassName="pf-c-form-control" id="spec.application.name" name="spec.application.name"/>
                 </Section>
               </div>
-            </Section>
+          </Section>
           </div>
 
           <Section id="services" isRequired={true}>
@@ -152,8 +215,20 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
 
           <div className="co-form-section__separator" />
 
-          <Section label="Mappings" id="mappings" description="">
-            <></>
+          <Section label="바인딩 데이터" id="mappings" isRequired={false}>
+            <ListView methods={methods} name={`spec.mappings`} addButtonText={"바인딩 데이터 추가"} headerFragment={<></>} itemRenderer={bindingDataItemRenderer}/>
+          </Section>
+
+          <Section label="데이터 저장 방식" id="name" description="애플리케이션 내 바인딩 데이터 저장 방식을 선택합니다">
+            <RadioGroup name="bindAsFiles" items={bindAsFilesItems.bind(null, t)()} inline={false} initValue={bindAsFilesToggle} />
+          </Section>
+
+          <Section label="바인딩 데이터 감지" id="detectBindingResources" description="">
+            <CheckboxGroup name="spec.detectBindingResources" items={defaultDetectBindingResources} methods={methods} />
+          </Section>
+
+          <Section label="네이밍 전략" id="namingStrategy" description="백업 서비스는 ~~~">
+            <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder='예: {{ .service'/>
           </Section>
         </>
       )}
@@ -178,8 +253,15 @@ export const onSubmitCallback = data => {
   let name = data.metadata.name;
   delete data.metadata.labels;
 
-  data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels}}, data);
-  console.log('**', data)
+  let bindAsFiles: boolean
+
+  bindAsFiles = (data.bindAsFiles==='false') ? false:true
+
+  let detectBindingResources = SelectorInput.objectify(data.spec.detectBindingResources)
+  detectBindingResources = ('detectBindingResources' in detectBindingResources) ? true:false
+  delete data.spec.detectBindingResources;
+
+  data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels}, spec: {bindAsFiles: bindAsFiles, detectBindingResources: detectBindingResources}}, data);
   return data;
 };
 
