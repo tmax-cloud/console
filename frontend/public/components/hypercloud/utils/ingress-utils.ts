@@ -5,6 +5,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { selectorToString } from '@console/internal/module/k8s/selector';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { getServicePort } from '@console/internal/actions/ui';
+import { LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 
 export const DEFAULT_INGRESS_LABEL_KEY = 'ingress.tmaxcloud.org/name';
 
@@ -46,7 +47,7 @@ export const getIngressUrl = async (label: string, endPoint?: string) => {
 const setSingleClusterBasePath = async () => {
   const host = await getIngressHost('multicluster');
   if (host) {
-    window.SERVER_FLAGS.singleClusterBasePath = `https://${host}/`;
+    sessionStorage.setItem(LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY, `https://${host}/`);
   }
 };
 
