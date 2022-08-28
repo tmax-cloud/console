@@ -122,7 +122,7 @@ const tableProps: TableProps = {
       },
       {
         children: cluster.status?.phase==='Sync Needed' ?
-          <Link to={cluster.status.applicationLink}>
+          <Link to={{pathname: cluster.status?.applicationLink}} target="_blank">
             {cluster.status?.phase}
           </Link>
           :
