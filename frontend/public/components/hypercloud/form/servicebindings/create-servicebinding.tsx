@@ -41,6 +41,7 @@ const methodItems = t => [
     title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_2'),
     desc: '',
     value: 'Auto',
+    disabled: true,
   },
   {
     title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_3'),
