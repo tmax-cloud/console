@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { RedisClusterModel } from '../../models';
-import { DetailsItem, detailsPage, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { DetailsItem, detailsPage, ExternalLink, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { TableProps } from './utils/default-list-component';
 import { K8sResourceKind } from 'public/module/k8s';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
@@ -95,7 +95,11 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_7')} :`}&nbsp;
             </td>
             <td>
-              <ResourceLink kind={'ConfigMap'} name={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisLeader.redisConfig?.additionalRedisConfig}/>
+              {(obj.spec.redisLeader.redisConfig) ?
+                  <ResourceLink kind={'ConfigMap'} name={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisLeader.redisConfig?.additionalRedisConfig}/>
+                  :
+                  <></>
+                }
             </td>
           </tr>
           <tr>
@@ -103,7 +107,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_8')} :`}&nbsp;
             </td>
             <td>
-              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${leadr_pvc_name}-${x}`}/>)}
+              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${leadr_pvc_name}-${x}`} title={`${leadr_pvc_name}-${x}`}/>)}
             </td>
           </tr>
         </table>
@@ -115,7 +119,11 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_7')} :`}&nbsp;
             </td>
             <td>
-              <ResourceLink kind={'ConfigMap'} name={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisFollower.redisConfig?.additionalRedisConfig}/>
+              {(obj.spec.redisFollower.redisConfig) ?
+                <ResourceLink kind={'ConfigMap'} name={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisFollower.redisConfig?.additionalRedisConfig}/>
+                :
+                <></>
+              }
             </td>
           </tr>
           <tr>
@@ -123,7 +131,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_8')} :`}&nbsp;
             </td>
             <td>
-              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${follower_pvc_name}-${x}`}/>)}
+              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${follower_pvc_name}-${x}`} title={`${follower_pvc_name}-${x}`} />)}
             </td>
           </tr>
         </table>
@@ -131,6 +139,25 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
       <DetailsItem label={t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_9')} obj={obj}>
         {obj.spec.kubernetesConfig.image}
       </DetailsItem>
+      <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_2')} obj={obj}>
+        {(obj.spec.redisExporter.enabled) ?
+          t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_5'):t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_6')}
+      </DetailsItem>
+      {(obj.spec.redisExporter.enabled) ?
+        <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
+          <ExternalLink href={'https://Grafana.tmaxcloud.org'} text={'Grafana.tmaxcloud.org'} />
+        </DetailsItem>
+        :
+        <></>}
+      <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>
+        {(obj.spec.kubernetesConfig.redisSecret) ?
+          t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_9') : t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_10')}
+      </DetailsItem>
+      {(obj.spec.kubernetesConfig.redisSecret) ?
+        <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_11')} obj={obj}>
+          <ResourceLink kind="Secret" name={obj.spec.kubernetesConfig.redisSecret.name} title={obj.spec.kubernetesConfig.redisSecret.name} />
+        </DetailsItem>
+        : <></>}
     </dl>
   );
 };
