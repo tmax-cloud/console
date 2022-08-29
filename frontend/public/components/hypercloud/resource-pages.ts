@@ -83,6 +83,7 @@ import {
   KafkaBridgeModel,
   KafkaConnectorModel,
   KafkaConnectModel,
+  RedisModel,
 } from '../../models';
 
 type ResourceMapKey = GroupVersionKind | string;
@@ -169,7 +170,8 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(KafkaMirrorMaker2Model), () => import('./kafkamirrormaker2' /* webpackChunkName: "kafkamirrormaker2" */).then(m => m.KafkaMirrorMaker2sDetailsPage))
   .set(referenceForModel(KafkaBridgeModel), () => import('./kafkabridge' /* webpackChunkName: "kafkabridge" */).then(m => m.KafkaBridgesDetailsPage))
   .set(referenceForModel(KafkaConnectorModel), () => import('./kafka-connector' /* webpackChunkName: "kafka-connector" */).then(m => m.KafkaConnectorsDetailsPage))
-  .set(referenceForModel(KafkaConnectModel), () => import('./kafka-connect' /* webpackChunkName: "kafka-connect" */).then(m => m.KafkaConnectsDetailsPage));
+  .set(referenceForModel(KafkaConnectModel), () => import('./kafka-connect' /* webpackChunkName: "kafka-connect" */).then(m => m.KafkaConnectsDetailsPage))
+  .set(referenceForModel(RedisModel), () => import('./redis' /* webpackChunkName: "kafka-connect" */).then(m => m.RedisDetailsPage));
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -251,4 +253,5 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(KafkaMirrorMaker2Model), () => import('./kafkamirrormaker2' /* webpackChunkName: "kafkamirrormaker2" */).then(m => m.KafkaMirrorMaker2sPage))
   .set(referenceForModel(KafkaBridgeModel), () => import('./kafkabridge' /* webpackChunkName: "kafkabridge" */).then(m => m.KafkaBridgesPage))
   .set(referenceForModel(KafkaConnectorModel), () => import('./kafka-connector' /* webpackChunkName: "kafka-connector" */).then(m => m.KafkaConnectorsPage))
-  .set(referenceForModel(KafkaConnectModel), () => import('./kafka-connect' /* webpackChunkName: "kafka-connect" */).then(m => m.KafkaConnectsPage));
+  .set(referenceForModel(KafkaConnectModel), () => import('./kafka-connect' /* webpackChunkName: "kafka-connect" */).then(m => m.KafkaConnectsPage))
+  .set(referenceForModel(RedisModel), () => import('./redis' /* webpackChunkName: "kafka-connect" */).then(m => m.RedisPage));

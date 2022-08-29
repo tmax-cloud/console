@@ -1733,3 +1733,24 @@ export const KafkaConnectModel: K8sKind = {
     labelPlural: 'COMMON:MSG_LNB_MENU_230',
   },
 };
+
+export const RedisModel: K8sKind = {
+  label: 'Redis',
+  labelPlural: 'Redis',
+  apiVersion: 'v1beta1',
+  apiGroup: 'redis.redis.opstreelabs.in',
+  plural: 'redis',
+  abbr: 'RDS',
+  kind: 'Redis',
+  id: 'redis',
+  namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_242',
+    labelPlural: 'COMMON:MSG_LNB_MENU_243',
+  },
+};
