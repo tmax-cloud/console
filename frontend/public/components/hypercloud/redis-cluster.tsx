@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RedisClusterModel } from '../../models';
-import { DetailsItem, detailsPage, ExternalLink, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { DetailsItem, detailsPage, ExternalLink, FieldLevelHelp, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { TableProps } from './utils/default-list-component';
 import { K8sResourceKind } from 'public/module/k8s';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
@@ -83,9 +83,20 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
   const follower_pvc_name = `${obj.metadata.name}-follower-${obj.metadata.name}-follower`
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_1')} obj={obj}>
-        {obj.spec.clusterSize}
-      </DetailsItem>
+      <table>
+        <tr>
+          <td style={{'verticalAlign': 'top'}}>
+          <DetailsItem label={t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_1')} obj={obj}>
+            {obj.spec.clusterSize+1}
+          </DetailsItem>
+          </td>
+          <td style={{'verticalAlign': 'top'}}>
+            <FieldLevelHelp>
+              {t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_10')}
+            </FieldLevelHelp>
+          </td>
+        </tr>
+      </table>
       <DetailsItem label={t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_5')} obj={obj}>
         <table>
           <tr>
