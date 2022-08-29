@@ -107,7 +107,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_8')} :`}&nbsp;
             </td>
             <td>
-              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${leadr_pvc_name}-${x}`} title={`${leadr_pvc_name}-${x}`}/>)}
+              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${leadr_pvc_name}-${x}`} namespace={obj.metadata.namespace} title={`${leadr_pvc_name}-${x}`}/>)}
             </td>
           </tr>
         </table>
@@ -131,7 +131,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_8')} :`}&nbsp;
             </td>
             <td>
-              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${follower_pvc_name}-${x}`} title={`${follower_pvc_name}-${x}`} />)}
+              {cluster_array.map( (x, key) => <ResourceLink key={key} kind={'PersistentVolumeClaim'} name={`${follower_pvc_name}-${x}`} namespace={obj.metadata.namespace} title={`${follower_pvc_name}-${x}`} />)}
             </td>
           </tr>
         </table>

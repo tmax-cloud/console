@@ -69,10 +69,12 @@ export const RedisDetailsList: React.FC<RedisDetailsListProps> = ({ obj }) => {
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_1')} obj={obj}>
-        {obj.spec.redisConfig?.additionalRedisConfig}
+        {(obj.spec.redisConfig) ?
+          <ResourceLink kind={'ConfigMap'} name={obj.spec.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisConfig?.additionalRedisConfig}/>
+          : <></>}
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_3')} obj={obj}>
-        {}
+        <ResourceLink kind={'PersistentVolumeClaim'} name={`${obj.metadata.name}-${obj.metadata.name}-0`} namespace={obj.metadata.namespace} title={`${obj.metadata.name}-${obj.metadata.name}-0`} />
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_4')} obj={obj}>
         {obj.spec.kubernetesConfig.image}
