@@ -6,7 +6,6 @@ import { K8sResourceKind } from 'public/module/k8s';
 import { useTranslation } from 'react-i18next';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { Link } from 'react-router-dom';
 
 
 const kind = RedisModel.kind;
@@ -26,7 +25,7 @@ const tableProps: TableProps = {
     },
     // 컨피그 맵
     {
-      title: 'SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_1',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_145',
       sortField: 'obj.spec.redisConfig.additionalRedisConfig',
     },
     {
