@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
 import { RedisClusterModel } from '../../models';
 import { DetailsItem, detailsPage, ExternalLink, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { TableProps } from './utils/default-list-component';
@@ -7,7 +6,6 @@ import { K8sResourceKind } from 'public/module/k8s';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { ServiceBindingStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 
 const kind = RedisClusterModel.kind;
