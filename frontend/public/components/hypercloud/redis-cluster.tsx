@@ -87,7 +87,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
         <tr>
           <td style={{'verticalAlign': 'top'}}>
           <DetailsItem label={t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_1')} obj={obj}>
-            {obj.spec.clusterSize+1}
+            {obj.spec.clusterSize}
           </DetailsItem>
           </td>
           <td style={{'verticalAlign': 'top'}}>
