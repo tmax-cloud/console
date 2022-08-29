@@ -79,17 +79,14 @@ const DeveloperNavMenus = [
     innerMenus: [Models.KafkaClusterModel.kind, Models.KafkaConnectModel.kind, Models.KafkaConnectorModel.kind, Models.KafkaBridgeModel.kind, Models.KafkaMirrorMaker2Model.kind, Models.KafkaRebalanceModel.kind],
   },
   {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.redis,
+    innerMenus: [Models.RedisModel.kind, Models.RedisClusterModel.kind],
+  },
+  {
     menuType: MenuType.REGISTERED_MENU,
     kind: Models.ServiceBindingModel.kind
   },
-  {
-    menuType: MenuType.REGISTERED_MENU,
-    kind: Models.RedisModel.kind
-  },
-  {
-    menuType: MenuType.REGISTERED_MENU,
-    kind: Models.RedisClusterModel.kind
-  }
 ];
 
 const MultiNavMenus = [
