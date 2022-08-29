@@ -1753,4 +1753,25 @@ export const RedisModel: K8sKind = {
     label: 'COMMON:MSG_LNB_MENU_242',
     labelPlural: 'COMMON:MSG_LNB_MENU_243',
   },
+}
+
+export const RedisClusterModel: K8sKind = {
+  label: 'Redis Cluster',
+  labelPlural: 'Redis Clusters',
+  apiVersion: 'v1beta1',
+  apiGroup: 'redis.redis.opstreelabs.in',
+  plural: 'redisclusters',
+  abbr: 'RC',
+  kind: 'RedisCluster',
+  id: 'rediscluster',
+  namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_246',
+    labelPlural: 'COMMON:MSG_LNB_MENU_245',
+  },
 };
