@@ -169,7 +169,7 @@ const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: sb }
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_CONDITIONS_1')} />
-        <ServiceBindingConditions conditions={sb.status.conditions} />
+        <ServiceBindingConditions conditions={sb.status?.conditions} />
       </div>
     </>
   );
