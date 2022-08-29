@@ -81,6 +81,10 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.REGISTERED_MENU,
     kind: Models.ServiceBindingModel.kind
+  },
+  {
+    menuType: MenuType.REGISTERED_MENU,
+    kind: Models.RedisClusterModel.kind
   }
 ];
 
