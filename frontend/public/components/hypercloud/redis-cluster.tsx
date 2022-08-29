@@ -159,12 +159,12 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
         :
         <></>}
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>
-        {(obj.spec.kubernetesConfig.redisSecret) ?
+        {(obj.spec.TLS?.secret.secretName) ?
           t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_9') : t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_10')}
       </DetailsItem>
-      {(obj.spec.kubernetesConfig.redisSecret) ?
+      {(obj.spec.TLS?.secret.secretName) ?
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_11')} obj={obj}>
-          <ResourceLink kind="Secret" name={obj.spec.kubernetesConfig.redisSecret.name} title={obj.spec.kubernetesConfig.redisSecret.name} />
+          <ResourceLink kind="Secret" name={obj.spec.TLS.secret.secretName} namespace={obj.metadata.namespace} title={obj.spec.TLS.secret.secretName} />
         </DetailsItem>
         : <></>}
     </dl>
