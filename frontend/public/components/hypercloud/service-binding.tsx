@@ -98,7 +98,7 @@ const tableProps: TableProps = {
 }
 
 export const ServiceBindingsPage: React.FC = props => {
-  const [_, setReady] = React.useState(false)
+  const [ready, setReady] = React.useState(false)
   React.useEffect(() => {
     const getBindables = async () => {
       bindables = await coFetchJSON('api/hypercloud/bindableResources')
@@ -107,7 +107,14 @@ export const ServiceBindingsPage: React.FC = props => {
     getBindables()
   }, [])
   const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />;
+  return (
+    <>
+      {(ready) ?
+        <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />
+        : <></>}
+    </>
+
+  )
 };
 
 export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps> = ({ obj: sb }) => {
