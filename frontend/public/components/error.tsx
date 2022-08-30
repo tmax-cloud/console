@@ -116,14 +116,15 @@ export const ErrorBoundaryFallback: React.SFC<ErrorBoundaryFallbackProps> = prop
 
 export const IngressCheckPage: React.SFC<ErrorPageProps> = () => {
   //const { t } = useTranslation();
-  const ingressLabelValue = getQueryArgument('ingresslabelvalue')
+  const ingressLabelValue = getQueryArgument('ingresslabelvalue');
+  const message = ingressLabelValue ? '레이블이 ingress.tamxcloud.org/name=' + ingressLabelValue + ' 인그레스를 확인해 주세요' : '인그레스를 확인해 주세요';
   
   return (
     <div>
       <Helmet>
         <title>인그레스를 확인해 주세요</title>
       </Helmet>
-      <ErrorComponent title='인그레스를 확인해 주세요' message={ingressLabelValue + '인그레스를 확인해 주세요'} errMessage={ingressLabelValue + '인그레스를 확인해 주세요'} />
+      <ErrorComponent title='인그레스를 확인해 주세요' message={message} errMessage={message} />
     </div>
   );
 };
