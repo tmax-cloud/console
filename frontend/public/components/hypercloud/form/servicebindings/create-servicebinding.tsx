@@ -72,7 +72,7 @@ const servicebindingFormFactory = (params, obj) => {
 
 const BackupServiceItem = props => {
   const { t } = useTranslation()
-  const { item, name, index, onDeleteClick, methods } = props;
+  const { item, name, index, onDeleteClick } = props;
 
   return(
     <>
@@ -121,7 +121,7 @@ const backupServiceItemRenderer = (methods, name, item, index, ListActions, List
 
 const BindingDataItem = props => {
   const { t } = useTranslation()
-  const { item, name, index, onDeleteClick, methods } = props;
+  const { item, name, index, onDeleteClick } = props;
 
   return(
     <>
