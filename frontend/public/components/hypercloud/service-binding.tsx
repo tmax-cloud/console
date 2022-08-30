@@ -11,9 +11,15 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ServiceBindingStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { ServiceBindingConditions } from './service-binding_conditions';
 import { TFunction } from 'i18next';
+import { coFetchJSON } from '../../co-fetch';
 
 
 const kind = ServiceBindingModel.kind;
+let bindables = {}
+
+const check_bindable = (obj: BindableProps) => {
+  return (obj.kind in bindables && bindables[obj.kind]==`${obj.group}/${obj.version}`)
+}
 
 const filters = (t: TFunction) => [
   {
@@ -76,10 +82,10 @@ const tableProps: TableProps = {
       children: <Status status={ServiceBindingStatusReducer(obj)} />,
     },
     {
-      children: obj.spec.application.name
+      children: (check_bindable(obj.spec.application)) ? <ResourceLink kind={obj.spec.application.kind} name={obj.spec.application.name} namespace={obj.metadata.namespace} title={obj.spec.application.name}/> : obj.spec.application.name
     },
     {
-      children: obj.spec.services[0].name
+      children: (check_bindable(obj.spec.services[0])) ? <ResourceLink kind={obj.spec.services[0].kind} name={obj.spec.services[0].name} namespace={obj.spec.services[0].namespace} title={obj.spec.services[0].name} /> : obj.spec.services[0].name
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -92,8 +98,23 @@ const tableProps: TableProps = {
 }
 
 export const ServiceBindingsPage: React.FC = props => {
+  const [ready, setReady] = React.useState(false)
+  React.useEffect(() => {
+    const getBindables = async () => {
+      bindables = await coFetchJSON('api/hypercloud/bindableResources')
+      setReady(true)
+    }
+    getBindables()
+  }, [])
   const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />;
+  return (
+    <>
+      {(ready) ?
+        <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />
+        : <></>}
+    </>
+
+  )
 };
 
 export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps> = ({ obj: sb }) => {
@@ -104,12 +125,20 @@ export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps>
         <Status status={ServiceBindingStatusReducer(sb)} />
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_1')} obj={sb}>
-        {sb.spec.application.name}
+        {(check_bindable(sb.spec.application)) ?
+          <ResourceLink kind={sb.spec.application.kind} name={sb.spec.application.name} namespace={sb.metadata.namespace} title={sb.spec.application.name}/>
+          : sb.spec.application.name}
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_2')} obj={sb}>
         {
           sb.spec.services?.map((service) => {
-            return <div>{service.name} ({(service.namespace) ? service.namespace : sb.metadata.namespace})</div>
+            return (
+              <>
+                {(check_bindable(service)) ?
+                    <ResourceLink kind={service.kind} name={service.name} namespace={sb.metadata.namespace} title={service.name}/>
+                    : service.name}
+              </>
+            )
           })
         }
       </DetailsItem>
@@ -169,7 +198,7 @@ const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: sb }
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_CONDITIONS_1')} />
-        <ServiceBindingConditions conditions={sb.status.conditions} />
+        <ServiceBindingConditions conditions={sb.status?.conditions} />
       </div>
     </>
   );
@@ -189,3 +218,9 @@ type ServiceBindingDetailsListProps = {
 type ServiceBindingDetailsProps = {
   obj: K8sResourceKind;
 };
+
+type BindableProps = {
+  kind: string,
+  group: string,
+  version: string
+}

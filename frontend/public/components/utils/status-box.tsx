@@ -97,8 +97,16 @@ const Data: React.FC<DataProps> = props => {
 Data.displayName = 'Data';
 
 export const StatusBox: React.FC<StatusBoxProps> = props => {
-  const { loadError, loaded, skeleton, ...dataProps } = props;
+  const { loadError, loaded, skeleton, noCrd, ...dataProps } = props;
   const { t } = useTranslation();
+
+  if (noCrd) {
+    return (
+      <div className="co-m-pane__body">
+        <h1 className="co-m-pane__heading co-m-pane__heading--center">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_42')}</h1>
+      </div>
+    );
+  }
 
   if (loadError) {
     const status = _.get(loadError, 'response.status');
@@ -187,4 +195,5 @@ type StatusBoxProps = {
   NoDataEmptyMsg?: React.ComponentType;
   EmptyMsg?: React.ComponentType;
   children?: React.ReactNode;
+  noCrd?: boolean;
 };

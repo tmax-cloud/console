@@ -235,18 +235,24 @@ export const HelmReleaseStatusReducer = (hr: any): string => {
 };
 
 export const ServiceBindingStatusReducer = (sb: any): string => {
-  for (const c of sb.status.conditions) {
-    if (c.type=="Ready") {
-      if (c.status=="True") {
-        return "Succeeded"
-      }
-      else if (c.status=="False") {
-        return "Failed"
-      }
-      else {
-        return "Unknown"
+  if (sb.status) {
+    for (const c of sb.status.conditions) {
+      if (c.type=="Ready") {
+        if (c.status=="True") {
+          return "Succeeded"
+        }
+        else if (c.status=="False") {
+          return "Failed"
+        }
+        else {
+          return "Unknown"
+        }
       }
     }
   }
+  else {
+    return "Unknown"
+  }
+
 
 }

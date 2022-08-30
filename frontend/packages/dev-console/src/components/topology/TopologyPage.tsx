@@ -3,12 +3,12 @@ import { Helmet } from 'react-helmet';
 import { matchPath, match as RMatch, Redirect } from 'react-router-dom';
 import { Popover, Button } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
-import { StatusBox, Firehose, HintBlock, AsyncComponent, removeQueryArgument } from '@console/internal/components/utils';
+import { StatusBox, Firehose, HintBlock, AsyncComponent, removeQueryArgument, PageHeading } from '@console/internal/components/utils';
 
 import EmptyState from '../EmptyState';
 import NamespacedPage, { NamespacedPageVariants } from '../NamespacedPage';
 import ProjectsExistWrapper from '../ProjectsExistWrapper';
-import ProjectListPage from '../projects/ProjectListPage';
+//import ProjectListPage from '../projects/ProjectListPage';
 import ConnectedTopologyDataController, { RenderProps } from './TopologyDataController';
 import Topology from './Topology';
 import TopologyShortcuts from './TopologyShortcuts';
@@ -16,6 +16,7 @@ import { LAST_TOPOLOGY_VIEW_LOCAL_STORAGE_KEY } from './components/const';
 
 import './TopologyPage.scss';
 import { TOPOLOGY_SEARCH_FILTER_KEY } from './filters';
+import { useTranslation } from 'react-i18next';
 
 export interface TopologyPageProps {
   match: RMatch<{
@@ -31,16 +32,19 @@ const getTopologyActiveView = () => {
   return localStorage.getItem(LAST_TOPOLOGY_VIEW_LOCAL_STORAGE_KEY);
 };
 
-const EmptyMsg = () => (
-  <EmptyState
-    title="Topology"
-    hintBlock={
-      <HintBlock title="No workloads found">
-        <p>To add content to your project, create an application, component or service using one of these options.</p>
-      </HintBlock>
-    }
-  />
-);
+const EmptyMsg = () => {
+  const { t } = useTranslation();
+  return (
+    <EmptyState
+      title={t('COMMON:MSG_LNB_MENU_191')}
+      hintBlock={
+        <HintBlock title={t('SINGLE:MSG_ADD_CREATFORM_3')}>
+          <p>{t('SINGLE:MSG_ADD_CREATFORM_4')}</p>
+        </HintBlock>
+      }
+    />
+  );
+};
 
 export function renderTopology({ loaded, loadError, data, namespace }: RenderProps) {
   return (
@@ -51,6 +55,18 @@ export function renderTopology({ loaded, loadError, data, namespace }: RenderPro
     </StatusBox>
   );
 }
+
+const SelectNamespacePage = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="odc-empty-state__title">
+        <PageHeading title={t('COMMON:MSG_LNB_MENU_191')} />
+        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('COMMON:MSG_LNB_MENU_DESCRIPTION_1')}</div>
+      </div>
+    </>
+  );
+};
 
 export const TopologyPage: React.FC<TopologyPageProps> = ({ match }) => {
   const namespace = match.params.name;
@@ -103,7 +119,7 @@ export const TopologyPage: React.FC<TopologyPageProps> = ({ match }) => {
       >
         <Firehose resources={[{ kind: 'Namespace', prop: 'projects', isList: true }]}>
           <ProjectsExistWrapper title="Topology">
-            {namespace ? showListView ? <AsyncComponent mock={false} match={match} title="" EmptyMsg={EmptyMsg} emptyBodyClass="odc-namespaced-page__content" loader={() => import('@console/internal/components/overview' /* webpackChunkName: "topology-overview" */).then(m => m.Overview)} /> : <ConnectedTopologyDataController match={match} render={renderTopology} /> : <ProjectListPage title="Topology">Select a project to view the topology</ProjectListPage>}
+            {namespace ? showListView ? <AsyncComponent mock={false} match={match} title="" EmptyMsg={EmptyMsg} emptyBodyClass="odc-namespaced-page__content" loader={() => import('@console/internal/components/overview' /* webpackChunkName: "topology-overview" */).then(m => m.Overview)} /> : <ConnectedTopologyDataController match={match} render={renderTopology} /> : <SelectNamespacePage />}
           </ProjectsExistWrapper>
         </Firehose>
       </NamespacedPage>
