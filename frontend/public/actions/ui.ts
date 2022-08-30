@@ -12,6 +12,7 @@ import { allModels } from '../module/k8s/k8s-models';
 import { detectFeatures, clearSSARFlags } from './features';
 import { OverviewSpecialGroup } from '../components/overview/constants';
 import { setClusterID, setCreateProjectMessage, setUser, setConsoleLinks } from './common';
+import { getI18nResources } from '@console/internal/components/hypercloud/utils/langs/i18n';
 
 export enum ActionType {
   DismissOverviewDetails = 'dismissOverviewDetails',
@@ -209,6 +210,7 @@ export const setActivePerspective = (perspective: string) => {
   // selected when returning to the console
   //localStorage.setItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, perspective);
   sessionStorage.setItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, perspective);
+  getI18nResources();
   return action(ActionType.SetActivePerspective, { perspective });
 };
 
@@ -217,7 +219,7 @@ export const getActiveCluster = (): string => store.getState().UI.get('activeClu
 export const setActiveCluster = (cluster: string) => {
   //localStorage.setItem(LAST_CLUSTER_LOCAL_STORAGE_KEY, cluster);
   sessionStorage.setItem(LAST_CLUSTER_LOCAL_STORAGE_KEY, cluster);
-
+  getI18nResources();
   return action(ActionType.SetActiveCluster, { cluster });
 };
 
