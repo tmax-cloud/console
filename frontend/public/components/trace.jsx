@@ -6,6 +6,7 @@ import { SectionHeading } from './utils';
 import { coFetch } from '../co-fetch';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+import { history } from '@console/internal/components/utils/router';
 
 const DoneMessage = 'done';
 
@@ -97,6 +98,9 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
 };
 
 const Trace = ({ serviceName, limit, statusCode, display, jaegerURL }) => {
+  if (jaegerURL === '') {
+    history.push('/ingress-check?ingresslabelvalue=jaeger');
+  }
   const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${serviceName}`;
   const jaegerURLwithQuery = `${jaegerURL}/search${query}`;
 
