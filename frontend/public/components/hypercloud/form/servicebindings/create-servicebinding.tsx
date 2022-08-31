@@ -41,6 +41,7 @@ const methodItems = t => [
     title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_2'),
     desc: '',
     value: 'Auto',
+    disabled: true,
   },
   {
     title: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_3'),
@@ -71,7 +72,7 @@ const servicebindingFormFactory = (params, obj) => {
 
 const BackupServiceItem = props => {
   const { t } = useTranslation()
-  const { item, name, index, onDeleteClick, methods } = props;
+  const { item, name, index, onDeleteClick } = props;
 
   return(
     <>
@@ -120,7 +121,7 @@ const backupServiceItemRenderer = (methods, name, item, index, ListActions, List
 
 const BindingDataItem = props => {
   const { t } = useTranslation()
-  const { item, name, index, onDeleteClick, methods } = props;
+  const { item, name, index, onDeleteClick } = props;
 
   return(
     <>
