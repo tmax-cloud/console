@@ -101,7 +101,6 @@ export const RedisDetailsList: React.FC<RedisDetailsListProps> = ({ obj }) => {
 const RedisDetails: React.FC<RedisDetailsProps> = ({ obj: sb }) => {
   const { t } = useTranslation();
   return (
-    <>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
         <div className="row">
@@ -113,7 +112,6 @@ const RedisDetails: React.FC<RedisDetailsProps> = ({ obj: sb }) => {
           </div>
         </div>
       </div>
-    </>
   );
 };
 

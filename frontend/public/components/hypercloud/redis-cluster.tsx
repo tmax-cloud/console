@@ -170,19 +170,17 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
 const RedisClusterDetails: React.FC<RedisClusterDetailsProps> = ({ obj: sb }) => {
   const { t } = useTranslation();
   return (
-    <>
-      <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
-        <div className="row">
-          <div className="col-sm-6">
-            <ResourceSummary resource={sb} showOwner={false} />
-          </div>
-          <div className="col-sm-6">
-            <RedisClusterDetailsList obj={sb} />
-          </div>
+    <div className="co-m-pane__body">
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
+      <div className="row">
+        <div className="col-sm-6">
+          <ResourceSummary resource={sb} showOwner={false} />
+        </div>
+        <div className="col-sm-6">
+          <RedisClusterDetailsList obj={sb} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
