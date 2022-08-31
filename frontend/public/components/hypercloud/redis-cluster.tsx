@@ -108,11 +108,8 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_7')} :`}&nbsp;
             </td>
             <td>
-              {(obj.spec.redisLeader.redisConfig) ?
-                  <ResourceLink kind={'ConfigMap'} name={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisLeader.redisConfig?.additionalRedisConfig}/>
-                  :
-                  <></>
-                }
+              {(obj.spec.redisLeader.redisConfig) &&
+                  <ResourceLink kind={'ConfigMap'} name={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisLeader.redisConfig?.additionalRedisConfig}/>}
             </td>
           </tr>
           <tr>
@@ -132,11 +129,8 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
               {`${t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_7')} :`}&nbsp;
             </td>
             <td>
-              {(obj.spec.redisFollower.redisConfig) ?
-                <ResourceLink kind={'ConfigMap'} name={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisFollower.redisConfig?.additionalRedisConfig}/>
-                :
-                <></>
-              }
+              {(obj.spec.redisFollower.redisConfig) &&
+                <ResourceLink kind={'ConfigMap'} name={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisFollower.redisConfig?.additionalRedisConfig}/>}
             </td>
           </tr>
           <tr>
@@ -156,21 +150,18 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
         {(obj.spec.redisExporter?.enabled) ?
           t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_5'):t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_6')}
       </DetailsItem>
-      {(obj.spec.redisExporter?.enabled) ?
+      {(obj.spec.redisExporter?.enabled) &&
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
           <ExternalLink href={'https://Grafana.tmaxcloud.org'} text={'Grafana.tmaxcloud.org'} />
-        </DetailsItem>
-        :
-        <></>}
+        </DetailsItem>}
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>
         {(obj.spec.TLS?.secret.secretName) ?
           t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_9') : t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_10')}
       </DetailsItem>
-      {(obj.spec.TLS?.secret.secretName) ?
+      {(obj.spec.TLS?.secret.secretName) &&
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_11')} obj={obj}>
           <ResourceLink kind="Secret" name={obj.spec.TLS.secret.secretName} namespace={obj.metadata.namespace} title={obj.spec.TLS.secret.secretName} />
-        </DetailsItem>
-        : <></>}
+        </DetailsItem>}
     </dl>
   );
 };
