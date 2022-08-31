@@ -153,10 +153,10 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
         {obj.spec.kubernetesConfig.image}
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_2')} obj={obj}>
-        {(obj.spec.redisExporter.enabled) ?
+        {(obj.spec.redisExporter?.enabled) ?
           t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_5'):t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_6')}
       </DetailsItem>
-      {(obj.spec.redisExporter.enabled) ?
+      {(obj.spec.redisExporter?.enabled) ?
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
           <ExternalLink href={'https://Grafana.tmaxcloud.org'} text={'Grafana.tmaxcloud.org'} />
         </DetailsItem>
