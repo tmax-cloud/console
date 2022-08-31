@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { RedisClusterModel } from '../../models';
-import { DetailsItem, detailsPage, ExternalLink, FieldLevelHelp, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { DetailsItem, detailsPage, ExternalLink, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { TableProps } from './utils/default-list-component';
 import { K8sResourceKind } from 'public/module/k8s';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { Button, Tooltip } from '@patternfly/react-core';
+import { QuestionCircleIcon } from '@patternfly/react-icons';
 
 
 const kind = RedisClusterModel.kind;
@@ -91,9 +93,11 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
           </DetailsItem>
           </td>
           <td style={{'verticalAlign': 'top'}}>
-            <FieldLevelHelp>
-              {t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_10')}
-            </FieldLevelHelp>
+            <Tooltip aria-label="Help" content={t('SINGLE:MSG_REDISCLUSTERS_REDISCLUSTERDETAILS_TABDETAILS_10')} enableFlip>
+              <Button variant="link" isInline className="co-field-level-help">
+                <QuestionCircleIcon className="co-field-level-help__icon" />
+              </Button>
+            </Tooltip>
           </td>
         </tr>
       </table>
