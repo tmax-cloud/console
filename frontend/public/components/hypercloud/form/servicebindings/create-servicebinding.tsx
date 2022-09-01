@@ -27,7 +27,14 @@ const defaultValuesTemplate = {
         kind: '',
         name: ''
       }
-    ]
+    ],
+    mappings: [
+      {
+        name: '',
+        value: ''
+      }
+    ],
+    detectBindingResource: false
   }
 };
 
@@ -130,10 +137,10 @@ const BindingDataItem = props => {
         <Section id={`${name}[${index}]`} description="">
           <div className="col-xs-12 pairs-list__value-field">
             <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_20')} id={`${name}[${index}].name`} description="" >
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`}/>
+              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`} defaultValue={item.name}/>
             </Section>
             <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_21')} id={`${name}[${index}].value`} description="" >
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].value`} name={`${name}[${index}].value`}/>
+              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].value`} name={`${name}[${index}].value`} defaultValue={item.value}/>
             </Section>
           </div>
           <div className="col-xs-1 pairs-list__action">
@@ -218,10 +225,10 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
           <div className="co-form-section__separator" />
 
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_16')} id="mappings" isRequired={false} description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_17')}>
-            <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer}/>
+            <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer} defaultItem={{ name: '', value: '' }} defaultValues={defaultValues.spec.mappings}/>
           </Section>
 
-          <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_22')} id="name" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_25')}>
+          <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_22')} id="bindAsFiles" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_25')}>
             <RadioGroup name="bindAsFiles" items={bindAsFilesItems.bind(null, t)()} inline={false} initValue={bindAsFilesToggle} />
           </Section>
 
