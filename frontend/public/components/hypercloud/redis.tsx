@@ -48,7 +48,7 @@ const tableProps: TableProps = {
     },
     {
       children: obj.spec.redisConfig &&
-        <ResourceLink kind="ConfigMap" name={obj.spec.redisConfig.additionalRedisConfig} title={obj.spec.redisConfig.additionalRedisConfig} />
+        <ResourceLink kind="ConfigMap" name={obj.spec.redisConfig.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisConfig.additionalRedisConfig} />
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
