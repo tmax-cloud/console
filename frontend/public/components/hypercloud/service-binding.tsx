@@ -109,75 +109,92 @@ export const ServiceBindingsPage: React.FC = props => {
   const { t } = useTranslation();
   return (
     <>
-      {(ready) ?
-        <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />
-        : <></>}
+      {(ready) &&
+        <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />}
     </>
 
   )
 };
 
 export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps> = ({ obj: sb }) => {
+  const [ready, setReady] = React.useState(false)
+  React.useEffect(() => {
+    const getBindables = async () => {
+      bindables = await coFetchJSON('api/hypercloud/bindableResources')
+      setReady(true)
+    }
+    getBindables()
+  }, [])
   const { t } = useTranslation();
   return (
-    <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={sb}>
-        <Status status={ServiceBindingStatusReducer(sb)} />
-      </DetailsItem>
-      <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_1')} obj={sb}>
-        {(check_bindable(sb.spec.application)) ?
-          <ResourceLink kind={sb.spec.application.kind} name={sb.spec.application.name} namespace={sb.metadata.namespace} title={sb.spec.application.name}/>
-          : sb.spec.application.name}
-      </DetailsItem>
-      <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_2')} obj={sb}>
-        {
-          sb.spec.services?.map((service) => {
-            return (
-              <>
-                {(check_bindable(service)) ?
-                    <ResourceLink kind={service.kind} name={service.name} namespace={sb.metadata.namespace} title={service.name}/>
-                    : service.name}
-              </>
-            )
-          })
-        }
-      </DetailsItem>
-      <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_3')} obj={sb}>
-        <div>
-          {
-            `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_4')} : ${sb.spec.detectBindingResources ?
-              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_5')
-              :
-              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_6')}`
-          }
-        </div>
-        <div>
-          {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_7')} : \'${sb.spec.namingStrategy}\'`}
-        </div>
-        <div>
-          {
-            `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_8')} : ${sb.spec.bindAsFiles ?
-              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_9')
-              :
-              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_10')}`
-          }
-        </div>
-        <div>
-          <table>
-            <tr>
-              <td style={{'verticalAlign': 'top'}}>
-                {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_11')} :`}&nbsp;
-              </td>
-              <td>
-                {sb.spec.mappings?.map(({name, value}) => {
-                  return <div>{name}-{value}</div>
-                })}
-              </td>
-            </tr>
-          </table>
-        </div>
-      </DetailsItem>
-    </dl>
+    <>
+      {(ready) &&
+            <dl className="co-m-pane__details">
+            <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={sb}>
+              <Status status={ServiceBindingStatusReducer(sb)} />
+            </DetailsItem>
+            <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_1')} obj={sb}>
+              {(check_bindable(sb.spec.application)) ?
+                <ResourceLink kind={sb.spec.application.kind} name={sb.spec.application.name} namespace={sb.metadata.namespace} title={sb.spec.application.name}/>
+                : sb.spec.application.name}
+            </DetailsItem>
+            <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_2')} obj={sb}>
+              {
+                sb.spec.services?.map((service) => {
+                  return (
+                    <>
+                      {(check_bindable(service)) ?
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                          <ResourceLink kind={service.kind} name={service.name} namespace={service.namespace} title={service.name} />
+                          <div>
+                            &nbsp;({service.namespace})
+                          </div>
+                        </div>
+                        : `${service.name} (${service.namespace})`}
+                    </>
+                  )
+                })
+              }
+            </DetailsItem>
+            <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_3')} obj={sb}>
+              <div>
+                {
+                  `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_4')} : ${sb.spec.detectBindingResources ?
+                    t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_5')
+                    :
+                    t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_6')}`
+                }
+              </div>
+              <div>
+                {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_7')} : \'${sb.spec.namingStrategy}\'`}
+              </div>
+              <div>
+                {
+                  `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_8')} : ${sb.spec.bindAsFiles ?
+                    t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_9')
+                    :
+                    t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_10')}`
+                }
+              </div>
+              <div>
+                <table>
+                  <tr>
+                    <td style={{'verticalAlign': 'top'}}>
+                      {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_11')} :`}&nbsp;
+                    </td>
+                    <td>
+                      {sb.spec.mappings?.map(({name, value}) => {
+                        return <div>{name}-{value}</div>
+                      })}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </DetailsItem>
+          </dl>
+      }
+    </>
+
   );
 };
 
