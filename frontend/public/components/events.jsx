@@ -471,18 +471,39 @@ class _EventStream extends React.Component {
     });
   }
 
-  getEvent = async (start, end) => {
-    const startTime = Date.parse(start);
-    const endTime = Date.parse(end);
+  getEvent = async (start, end, kind, type, textFilter, namespace) => {
+    const startTime = start.getTime() / 1000;
+    const endTime = end.getTime() / 1000;
+    let url = `/api/hypercloud/event?startTime=${startTime}&endTime=${endTime}`;
+    if (namespace) {
+      url = url + `&namespace=${namespace}`;
+    }
+    if (kind) {
+      url = url + `&kind=${kind}`;
+    }
+    if (type) {
+      url = url + `&type=${type}`;
+    }
+    if (textFilter) {
+      url = url + `&namespace=${namespace}`;
+    }
+    //test
+    url = url + '&offset=1&limit=3';   
 
-    const response = await coFetchJSON(`/api/hypercloud/event?namesapce=helm-ns&sort=-first_timestamp&startTime=1642195653&endTime=1685772106&offset=1&limit=3&kind=Pod&host=ck-minion-2`);
-    this.setState({apiEvents: response});
-  }
+    const response = await coFetchJSON(url);
+    if (response) {
+      this.setState({ apiEvents: response })
+    }
+  };
 
   render() {
     const { mock, resourceEventStream, t, start, end } = this.props;
     const { active, error, loading, filteredEvents, sortedMessages, apiEvents } = this.state;
-    const count = filteredEvents.length;
+    const isInterval = !!start && !!end;
+    if (isInterval) {
+      this.getEvent(start, end, this.props.kind, this.props.type, this.props.textFilter, this.props.namespace);
+    }
+    const count = isInterval ? apiEvents.length : filteredEvents.length;
     const allCount = sortedMessages.length;
     const noEvents = allCount === 0 && this.ws && this.ws.bufferSize() === 0;
     const noMatches = allCount > 0 && count === 0;
@@ -513,31 +534,33 @@ class _EventStream extends React.Component {
     // const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
     const messageCount = count < maxMessages ? t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count }) : t('SINGLE:MSG_EVENTS_MAIN_2', { something1: count, something2: allCount });
 
-    const isInterval = !!start && !!end;
-    if (isInterval) {
-      this.getEvent(start, end);
-    }
-
     return (
       <div className="co-m-pane__body">
         <div className="co-sysevent-stream">
-          <div className="co-sysevent-stream__status">
-            <div className="co-sysevent-stream__timeline__btn-text">{statusBtnTxt}</div>
-            <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
-          </div>
-
-          <div className={klass}>
-            <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
-            <div className="co-sysevent-stream__timeline__end-message">
-              {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
-            </div>
-          </div>
-          {isInterval ? <EventStreamList events={apiEvents} EventComponent={Inner} /> : count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}
-          {sysEventStatus}
-          start
-          {start && <p>{start.toString()}</p>}
-          end
-          {end && <p>{end.toString()}</p>}
+          {isInterval ? (
+            <>
+              <EventStreamList events={apiEvents} EventComponent={Inner} />
+              start
+              {start && <p>{start.toString()}</p>}
+              end
+              {end && <p>{end.toString()}</p>}
+            </>
+          ) : (
+            <>
+              <div className="co-sysevent-stream__status">
+                <div className="co-sysevent-stream__timeline__btn-text">{statusBtnTxt}</div>
+                <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
+              </div>
+              <div className={klass}>
+                <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
+                <div className="co-sysevent-stream__timeline__end-message">
+                  {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
+                </div>
+              </div>
+              {count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}
+              {sysEventStatus}
+            </>
+          )}
         </div>
       </div>
     );
