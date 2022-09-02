@@ -29,10 +29,6 @@ const defaultValuesTemplate = {
       }
     ],
     mappings: [
-      {
-        name: '',
-        value: ''
-      }
     ],
     detectBindingResources: false
   }
@@ -221,7 +217,7 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
           <div className="co-form-section__separator" />
 
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_16')} id="mappings" isRequired={false} description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_17')}>
-            <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer} defaultItem={{ name: '', value: '' }} defaultValues={defaultValues.spec.mappings}/>
+            <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer} defaultItem={{}} defaultValues={defaultValues.spec.mappings}/>
           </Section>
 
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_22')} id="bindAsFiles" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_25')}>
