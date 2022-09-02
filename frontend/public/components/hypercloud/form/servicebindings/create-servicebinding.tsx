@@ -12,7 +12,7 @@ import { ListView } from '../../utils/list-view';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { ServiceBindingModel } from '../../../../models';
-import { CheckboxGroup } from '../../utils/checkbox';
+import { CheckboxSingle } from '../../utils/checkbox_single';
 
 const defaultValuesTemplate = {
   metadata: {
@@ -34,13 +34,9 @@ const defaultValuesTemplate = {
         value: ''
       }
     ],
-    detectBindingResource: false
+    detectBindingResources: false
   }
 };
-
-const defaultDetectBindingResources = t => [
-  { name: 'detectBindingResources', label: t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_27') }
-];
 
 const methodItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
@@ -233,7 +229,7 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
           </Section>
 
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_26')} id="detectBindingResources" description="">
-            <CheckboxGroup name="spec.detectBindingResources" items={defaultDetectBindingResources.bind(null, t)()} methods={methods} />
+            <CheckboxSingle name="detectBindingResources" label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_27')} defaultValue={defaultValues.spec.detectBindingResources} methods={methods} />
           </Section>
 
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_28')} id="namingStrategy" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_29')}>
@@ -254,6 +250,7 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
 };
 
 export const onSubmitCallback = data => {
+  console.log('**', data)
   delete data.method
 
   let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
@@ -266,8 +263,7 @@ export const onSubmitCallback = data => {
 
   bindAsFiles = (data.bindAsFiles==='false') ? false:true
 
-  let detectBindingResources = SelectorInput.objectify(data.spec.detectBindingResources)
-  detectBindingResources = ('detectBindingResources' in detectBindingResources) ? true:false
+  let detectBindingResources = data.detectBindingResources
   delete data.spec.detectBindingResources;
 
   data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels}, spec: {bindAsFiles: bindAsFiles, detectBindingResources: detectBindingResources}}, data);
