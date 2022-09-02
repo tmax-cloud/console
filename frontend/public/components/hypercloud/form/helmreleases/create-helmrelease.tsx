@@ -157,7 +157,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
       await coFetchJSON(`${host}/helm/v1/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
         const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
         methods.setValue('packageURL', entryValue[0].urls[0]);
-        !editLoading && setYamlValues(safeDump(_.get(res, 'values')));
+        !editLoading && setYamlValues(_.get(res, 'values'));
         setEditLoading(false);
       });
     };
