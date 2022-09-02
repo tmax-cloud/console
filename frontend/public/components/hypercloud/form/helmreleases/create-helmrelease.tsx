@@ -16,7 +16,7 @@ import { WithCommonForm } from '../create-form';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
 import { getNamespace } from '@console/internal/components/utils/link';
-import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils'
+import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils';
 
 const defaultValuesTemplate = {
   name: '',
