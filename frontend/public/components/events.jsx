@@ -132,6 +132,10 @@ class _EventsList extends React.Component {
       type: 'all',
       textFilter: '',
       selected: new Set(['All']),
+      getMethod: 'streaming',
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      end: new Date(),
+      getApiCalled: false,
     };
     this.onChangeStartDate = e => this.onChangeStartDate_(e);
     this.onChangeEndDate = e => this.onChangeEndDate_(e);
@@ -179,6 +183,7 @@ class _EventsList extends React.Component {
     updatedStartDate.setMinutes(minute);
     this.setState({
       start: updatedStartDate,
+      getApiCalled: false,
     });    
   };
   onEndTimeChange = (time, hour, minute) => {
@@ -187,6 +192,7 @@ class _EventsList extends React.Component {
     updatedEndDate.setMinutes(minute);
     this.setState({
       end: updatedEndDate,
+      getApiCalled: false,
     });    
   };
   onStartChange = (value) => {
@@ -201,11 +207,13 @@ class _EventsList extends React.Component {
   };
 
   render() {
-    const { type, selected, textFilter, start, end } = this.state;
+    const { type, selected, textFilter, getMethod, start, end } = this.state;
     const { autoFocus = true, t } = this.props;
 
     const eventTypes = { all: t('SINGLE:MSG_EVENTS_MAIN_TYPES_1'), normal: t('SINGLE:MSG_EVENTS_MAIN_TYPES_2'), warning: t('SINGLE:MSG_EVENTS_MAIN_TYPES_3') };
+    const getMethods = { streaming: '실시간', interval: '직접입력' };
     const selectedType = eventTypes[type];
+    const selectedGetMethod = getMethods[getMethod];
     return (
       <>
         <PageHeading detail={true} title={this.props.title}>
@@ -213,17 +221,25 @@ class _EventsList extends React.Component {
             <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" />
             <Dropdown className="btn-group co-search-group__resource" items={eventTypes} onChange={v => this.setState({ type: v })} selectedKey={type} title={selectedType} />
             <TextFilter autoFocus={autoFocus} label={t('SINGLE:MSG_EVENTS_MAIN_PLACEHOLDER_1')} onChange={val => this.setState({ textFilter: val || '' })} />
-            <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
-            <div className="co-datepicker-wrapper">
-              {/* <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
-              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i> */}
-              <DateTimePicker  onChange={this.onStartChange} value={start} />
+            {/* <div className="co-datepicker-wrapper">
+              <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
+              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
             </div>
             <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
             <div className="co-datepicker-wrapper">
-              {/* <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
-              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i> */}
-              <DateTimePicker onChange={this.onEndChange} value={end} /> 
+              <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
+              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
+            </div> */}
+            <div className='co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter'>
+              <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethods: v })} selectedKey={getMethod} title={selectedGetMethod} />
+              <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
+              <div className="co-datepicker-wrapper">
+                <DateTimePicker onChange={this.onStartChange} value={start} />
+              </div>
+              <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
+              <div className="co-datepicker-wrapper">
+                <DateTimePicker onChange={this.onEndChange} value={end} />
+              </div>
             </div>
           </div>
           <div className="form-group">
@@ -312,6 +328,8 @@ class _EventStream extends React.Component {
       start: props.start,
       end: props.end,
       apiEvents: [],
+      getApiCalled: false,
+      getMethod: 'streaming',
     };
     this.toggleStream = this.toggleStream_.bind(this);
   }
@@ -472,8 +490,8 @@ class _EventStream extends React.Component {
   }
 
   getEvent = async (start, end, kind, type, textFilter, namespace) => {
-    const startTime = start.getTime() / 1000;
-    const endTime = end.getTime() / 1000;
+    const startTime = parseInt(start.getTime() / 1000);
+    const endTime = parseInt(end.getTime() / 1000);
     let url = `/api/hypercloud/event?startTime=${startTime}&endTime=${endTime}`;
     if (namespace) {
       url = url + `&namespace=${namespace}`;
@@ -488,19 +506,19 @@ class _EventStream extends React.Component {
       url = url + `&namespace=${namespace}`;
     }
     //test
-    url = url + '&offset=1&limit=3';   
+    url = url + `&offset=0&limit=${Number.MAX_SAFE_INTEGER}`;
 
     const response = await coFetchJSON(url);
     if (response) {
-      this.setState({ apiEvents: response })
+      this.setState({ apiEvents: response, getApiCalled: true });
     }
   };
 
   render() {
     const { mock, resourceEventStream, t, start, end } = this.props;
-    const { active, error, loading, filteredEvents, sortedMessages, apiEvents } = this.state;
+    const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiCalled, getMethod } = this.state;
     const isInterval = !!start && !!end;
-    if (isInterval) {
+    if (getMethod === 'interval' && isInterval && getApiCalled === false) {
       this.getEvent(start, end, this.props.kind, this.props.type, this.props.textFilter, this.props.namespace);
     }
     const count = isInterval ? apiEvents.length : filteredEvents.length;
@@ -539,11 +557,15 @@ class _EventStream extends React.Component {
         <div className="co-sysevent-stream">
           {isInterval ? (
             <>
+              <div className="co-sysevent-stream__status">
+                <div className="co-sysevent-stream__timeline__btn-text"><span></span></div>
+                <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
+              </div>
               <EventStreamList events={apiEvents} EventComponent={Inner} />
-              start
+              {/* start
               {start && <p>{start.toString()}</p>}
               end
-              {end && <p>{end.toString()}</p>}
+              {end && <p>{end.toString()}</p>} */}
             </>
           ) : (
             <>
