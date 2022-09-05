@@ -298,6 +298,8 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
 export const onSubmitCallback = data => {
   delete data.method
 
+  console.log('**', data)
+
   let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
   let kind = ServiceBindingModel.kind
   let labels = SelectorInput.objectify(data.metadata.labels);
