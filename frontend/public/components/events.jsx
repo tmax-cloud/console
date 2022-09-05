@@ -584,7 +584,8 @@ class _EventStream extends React.Component {
               </div>
               <EventStreamList events={filterdApiEvents} EventComponent={Inner} />
               {/* 현재 event api 에서 리소스 kind 한종류만 조회 가능 */}
-              {kind.split(',').length > 1 ? <span>리소스 하나만 선택해주세요</span> : filterdApiEvents.length === 0 && <span>{t('SINGLE:MSG_EVENTS_MAIN_RESULT_2')}</span>}
+              {kind.split(',').length > 1 && <span>리소스 하나만 선택해주세요</span>}
+              {filterdApiEvents.length === 0 && <NoMatchingEvents />}
             </>
           ) : (
             <>
