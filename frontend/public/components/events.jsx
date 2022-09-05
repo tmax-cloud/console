@@ -218,15 +218,6 @@ class _EventsList extends React.Component {
             <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" />
             <Dropdown className="btn-group co-search-group__resource" items={eventTypes} onChange={v => this.setState({ type: v })} selectedKey={type} title={selectedType} />
             <TextFilter autoFocus={autoFocus} label={t('SINGLE:MSG_EVENTS_MAIN_PLACEHOLDER_1')} onChange={val => this.setState({ textFilter: val || '' })} />
-            {/* <div className="co-datepicker-wrapper">
-              <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
-              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
-            </div>
-            <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
-            <div className="co-datepicker-wrapper">
-              <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
-              <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
-            </div> */}
             <div className='co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter'>
               <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethod: v })} selectedKey={getMethod} title={selectedGetMethod} />
               <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
