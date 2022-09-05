@@ -20,11 +20,8 @@ import { Box, Dropdown, Loading, PageHeading, pluralize, ResourceIcon, ResourceL
 import { EventStreamList } from './utils/event-stream';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css'
-// import 'react-clock/dist/Clock.css'
 
 const maxMessages = 500;
 const flushInterval = 500;
@@ -182,11 +179,11 @@ class _EventsList extends React.Component {
               <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethod: v })} selectedKey={getMethod} title={selectedGetMethod} />
               <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
               <div className="co-datepicker-wrapper">
-                <DateTimePicker onChange={this.onStartChange} value={start} disabled={getMethod==='streaming'} />
+                <DateTimePicker onChange={this.onStartChange} value={start} disabled={getMethod==='streaming'} disableClock	maxDate={end} locale='en-US' />
               </div>
               <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
               <div className="co-datepicker-wrapper">
-                <DateTimePicker onChange={this.onEndChange} value={end} disabled={getMethod==='streaming'} />
+                <DateTimePicker onChange={this.onEndChange} value={end} disabled={getMethod==='streaming'} disableClock minDate={start} maxDate={new Date()} locale='en-US' />
               </div>
             </div>
           </div>
@@ -476,7 +473,8 @@ class _EventStream extends React.Component {
   render() {
     const { mock, resourceEventStream, t, namespace, start, end, kind, type, textFilter, getMethod } = this.props;
     const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiStart, getApiEnd, getApiType, getApiKind, getAPiTextFilter } = this.state;
-    if (getMethod === 'interval' && (start !== getApiStart || end !== getApiEnd || kind !== getApiKind || type !== getApiType || textFilter !== getAPiTextFilter)) {
+    const isChanged = start !== getApiStart || end !== getApiEnd || kind !== getApiKind || type !== getApiType || textFilter !== getAPiTextFilter
+    if (getMethod === 'interval' && isChanged) {
       this.getEvent(start, end, kind, type, textFilter, namespace);
     }
     const count = getMethod === 'interval' ? apiEvents.length : filteredEvents.length;
