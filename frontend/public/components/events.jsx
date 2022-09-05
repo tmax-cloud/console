@@ -136,8 +136,6 @@ class _EventsList extends React.Component {
       start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       end: new Date(),
     };
-    this.onChangeStartDate = e => this.onChangeStartDate_(e);
-    this.onChangeEndDate = e => this.onChangeEndDate_(e);
   }
 
   toggleSelected = selection => {
@@ -154,44 +152,6 @@ class _EventsList extends React.Component {
     this.setState({ selected: new Set(['All']) });
   };
 
-  onChangeStartDate_(value) {
-    let date = new Date(value);
-    let date_ = new Date(value);
-    this.setState({
-      start: date,
-    });
-
-    this.setState({ offset: 0 });
-  }
-  onChangeEndDate_(value) {
-    let date = new Date(value);
-    let date_ = new Date(value);
-    this.setState({
-      end: date,
-    });
-
-    this.setState({ offset: 0 });
-  }
-  onIconClick = e => {
-    const datePickerElem = e.target.previousElementSibling.firstChild.firstChild;
-    datePickerElem.focus();
-  };
-  onStartTimeChange = (time, hour, minute) => {
-    const updatedStartDate = new Date(start);
-    updatedStartDate.setHours(hour);
-    updatedStartDate.setMinutes(minute);
-    this.setState({
-      start: updatedStartDate,
-    });
-  };
-  onEndTimeChange = (time, hour, minute) => {
-    const updatedEndDate = new Date(end);
-    updatedEndDate.setHours(hour);
-    updatedEndDate.setMinutes(minute);
-    this.setState({
-      end: updatedEndDate,
-    });
-  };
   onStartChange = (value) => {
     this.setState({
       start: value,
