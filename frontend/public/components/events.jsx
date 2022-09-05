@@ -490,9 +490,11 @@ class _EventStream extends React.Component {
     }
     if (kind && kind !== 'all') {
       const kinds = kind.split(',')
-      const newkinds = [];
-      kinds.forEach(k => {newkinds.push(k.split('~')[2])});
-      url = url + `&kind=${newkinds.toString()}`;
+      let kindsquery = '';
+      kinds.forEach(k => {
+        kindsquery = kindsquery + '&kind=' + k.split('~')[2];
+      });
+      url = url + kindsquery;
     }
     if (type && type !== 'all') {
       const capitalizeType = type.charAt(0).toUpperCase() + type.slice(1);
@@ -583,8 +585,6 @@ class _EventStream extends React.Component {
                 <div className="co-sysevent-stream__totals text-secondary">{t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count })}</div>
               </div>
               <EventStreamList events={filterdApiEvents} EventComponent={Inner} />
-              {/* 현재 event api 에서 리소스 kind 한종류만 조회 가능 */}
-              {kind.split(',').length > 1 && <span>리소스 하나만 선택해주세요</span>}
               {filterdApiEvents.length === 0 && <NoMatchingEvents />}
             </>
           ) : (
