@@ -135,7 +135,6 @@ class _EventsList extends React.Component {
       getMethod: 'streaming',
       start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       end: new Date(),
-      getApiCalled: false,
     };
     this.onChangeStartDate = e => this.onChangeStartDate_(e);
     this.onChangeEndDate = e => this.onChangeEndDate_(e);
@@ -183,8 +182,7 @@ class _EventsList extends React.Component {
     updatedStartDate.setMinutes(minute);
     this.setState({
       start: updatedStartDate,
-      getApiCalled: false,
-    });    
+    });
   };
   onEndTimeChange = (time, hour, minute) => {
     const updatedEndDate = new Date(end);
@@ -192,18 +190,17 @@ class _EventsList extends React.Component {
     updatedEndDate.setMinutes(minute);
     this.setState({
       end: updatedEndDate,
-      getApiCalled: false,
-    });    
+    });
   };
   onStartChange = (value) => {
     this.setState({
       start: value,
-    });    
+    });
   };
   onEndChange = (value) => {
     this.setState({
       end: value,
-    });    
+    });
   };
 
   render() {
@@ -231,14 +228,14 @@ class _EventsList extends React.Component {
               <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
             </div> */}
             <div className='co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter'>
-              <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethods: v })} selectedKey={getMethod} title={selectedGetMethod} />
+              <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethod: v })} selectedKey={getMethod} title={selectedGetMethod} />
               <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
               <div className="co-datepicker-wrapper">
-                <DateTimePicker onChange={this.onStartChange} value={start} />
+                <DateTimePicker onChange={this.onStartChange} value={start} disabled={getMethod==='streaming'} />
               </div>
               <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
               <div className="co-datepicker-wrapper">
-                <DateTimePicker onChange={this.onEndChange} value={end} />
+                <DateTimePicker onChange={this.onEndChange} value={end} disabled={getMethod==='streaming'} />
               </div>
             </div>
           </div>
@@ -262,7 +259,7 @@ class _EventsList extends React.Component {
             </ChipGroup>
           </div>
         </PageHeading>
-        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} start={start} end={end} />
+        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} start={start} end={end} getMethod={getMethod}/>
       </>
     );
   }
@@ -328,8 +325,12 @@ class _EventStream extends React.Component {
       start: props.start,
       end: props.end,
       apiEvents: [],
-      getApiCalled: false,
-      getMethod: 'streaming',
+      getMethod: props.getMethod,
+      getApiStart: null,
+      getApiEnd: null,
+      getApiType: null,
+      getApiKind: null,
+      getAPiTextFilter: null,
     };
     this.toggleStream = this.toggleStream_.bind(this);
   }
@@ -496,32 +497,36 @@ class _EventStream extends React.Component {
     if (namespace) {
       url = url + `&namespace=${namespace}`;
     }
-    if (kind) {
-      url = url + `&kind=${kind}`;
+    if (kind && kind !== 'all') {
+      const kinds = kind.split(',')
+      const newkinds = [];
+      kinds.forEach(k => {newkinds.push(k.split('~')[2])});
+      url = url + `&kind=${newkinds.toString()}`;
     }
-    if (type) {
-      url = url + `&type=${type}`;
+    if (type && type !== 'all') {
+      const capitalizeType = type.charAt(0).toUpperCase() + type.slice(1);
+      url = url + `&type=${capitalizeType}`;
     }
-    if (textFilter) {
-      url = url + `&namespace=${namespace}`;
-    }
+    // text filter 는 ui에서 처리함 추후 논의 필요
+    // if (textFilter) {
+    //   url = url + `&text=${textFilter}`;
+    // }
     //test
     url = url + `&offset=0&limit=${Number.MAX_SAFE_INTEGER}`;
 
     const response = await coFetchJSON(url);
     if (response) {
-      this.setState({ apiEvents: response, getApiCalled: true });
+      this.setState({ apiEvents: response, getApiStart: start, getApiEnd: end, getApiType: type, getApiKind: kind, getAPiTextFilter: textFilter });
     }
   };
 
   render() {
-    const { mock, resourceEventStream, t, start, end } = this.props;
-    const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiCalled, getMethod } = this.state;
-    const isInterval = !!start && !!end;
-    if (getMethod === 'interval' && isInterval && getApiCalled === false) {
-      this.getEvent(start, end, this.props.kind, this.props.type, this.props.textFilter, this.props.namespace);
+    const { mock, resourceEventStream, t, namespace, start, end, kind, type, textFilter, getMethod } = this.props;
+    const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiStart, getApiEnd, getApiType, getApiKind, getAPiTextFilter } = this.state;
+    if (getMethod === 'interval' && (start !== getApiStart || end !== getApiEnd || kind !== getApiKind || type !== getApiType || textFilter !== getAPiTextFilter)) {
+      this.getEvent(start, end, kind, type, textFilter, namespace);
     }
-    const count = isInterval ? apiEvents.length : filteredEvents.length;
+    const count = getMethod === 'interval' ? apiEvents.length : filteredEvents.length;
     const allCount = sortedMessages.length;
     const noEvents = allCount === 0 && this.ws && this.ws.bufferSize() === 0;
     const noMatches = allCount > 0 && count === 0;
@@ -552,20 +557,43 @@ class _EventStream extends React.Component {
     // const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
     const messageCount = count < maxMessages ? t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count }) : t('SINGLE:MSG_EVENTS_MAIN_2', { something1: count, something2: allCount });
 
+    const words = _.uniq(_.toLower(textFilter).match(/\S+/g)).sort((a, b) => {
+      // Sort the longest words first.
+      return b.length - a.length;
+    });
+
+    const textMatches = obj => {
+      if (_.isEmpty(words)) {
+        return true;
+      }
+      const name = _.get(obj, 'involvedObject.name', '');
+      const message = _.toLower(obj.message);
+      return _.every(words, word => name.indexOf(word) !== -1 || message.indexOf(word) !== -1);
+    };
+
+    // text filter 처리
+    const filterdApiEvents =
+      textFilter === ''
+        ? apiEvents
+        : apiEvents.filter(obj => {
+            if (!textMatches(obj)) {
+              return false;
+            }
+            return true;
+          });
+
     return (
       <div className="co-m-pane__body">
         <div className="co-sysevent-stream">
-          {isInterval ? (
+          {getMethod === 'interval' ? (
             <>
               <div className="co-sysevent-stream__status">
                 <div className="co-sysevent-stream__timeline__btn-text"><span></span></div>
-                <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
+                <div className="co-sysevent-stream__totals text-secondary">{t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count })}</div>
               </div>
-              <EventStreamList events={apiEvents} EventComponent={Inner} />
-              {/* start
-              {start && <p>{start.toString()}</p>}
-              end
-              {end && <p>{end.toString()}</p>} */}
+              <EventStreamList events={filterdApiEvents} EventComponent={Inner} />
+              {/* 현재 event api 에서 리소스 kind 한종류만 조회 가능 */}
+              {kind.split(',').length > 1 ? <span>리소스 하나만 선택해주세요</span> : filterdApiEvents.length === 0 && <span>{t('SINGLE:MSG_EVENTS_MAIN_RESULT_2')}</span>}
             </>
           ) : (
             <>
