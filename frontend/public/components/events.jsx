@@ -72,11 +72,16 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
     class Inner extends React.PureComponent {
       render() {
         const { event, flags, t } = this.props;
-        const { involvedObject: obj, source, message, reason, series } = event;
+        const { involvedObject: obj, source, message, reason, series, getMethod } = event;
         const tooltipMsg = `${reason} (${obj.kind})`;
         const isWarning = typeFilter('warning', event);
-        const firstTime = getFirstTime(event);
-        const lastTime = getLastTime(event);
+        const ksttoUTC = (kst) => {
+          let timestamp = Date.parse(kst);
+          timestamp -= 9 * 60 * 60 * 1000;
+          return new Date(timestamp).toISOString();
+        };
+        const firstTime = getMethod === 'interval' ? ksttoUTC(getFirstTime(event)) : getFirstTime(event);
+        const lastTime = getMethod === 'interval' ? ksttoUTC(getLastTime(event)) : getLastTime(event);
         const count = series ? series.count : event.count;
         return (
           <div className={classNames('co-sysevent', { 'co-sysevent--warning': isWarning })}>
@@ -466,6 +471,9 @@ class _EventStream extends React.Component {
 
     const response = await coFetchJSON(url);
     if (response) {
+      response.forEach(event => {
+        event.getMethod = 'interval';
+      });
       this.setState({ apiEvents: response, getApiStart: start, getApiEnd: end, getApiType: type, getApiKind: kind, getAPiTextFilter: textFilter });
     }
   };
