@@ -134,14 +134,14 @@ const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({ obj: app }) => 
   );
 };
 
-const { details, editResource, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const ApplicationsPage: React.FC = props => {
   return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
 };
 
 export const ApplicationsDetailsPage: React.FC<DetailsPageProps> = props => {
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ApplicationDetails)), editResource(), editYaml()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ApplicationDetails)), editResource()]} />;
 };
 
 // type ResourceTableProps = {
