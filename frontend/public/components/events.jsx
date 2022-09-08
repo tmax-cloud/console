@@ -18,7 +18,10 @@ import { connectToFlags } from '../reducers/features';
 import { FLAGS } from '@console/shared/src/constants';
 import { Box, Dropdown, Loading, PageHeading, pluralize, ResourceIcon, ResourceLink, resourcePathFromModel, Timestamp, TogglePlay } from './utils';
 import { EventStreamList } from './utils/event-stream';
+import { coFetchJSON } from '@console/internal/co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
+import DateTimePicker from 'react-datetime-picker';
+import 'react-datetime-picker/dist/DateTimePicker.css'
 
 const maxMessages = 500;
 const flushInterval = 500;
@@ -126,6 +129,9 @@ class _EventsList extends React.Component {
       type: 'all',
       textFilter: '',
       selected: new Set(['All']),
+      getMethod: 'streaming',
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      end: new Date(),
     };
   }
 
@@ -143,12 +149,25 @@ class _EventsList extends React.Component {
     this.setState({ selected: new Set(['All']) });
   };
 
+  onStartChange = (value) => {
+    this.setState({
+      start: value,
+    });
+  };
+  onEndChange = (value) => {
+    this.setState({
+      end: value,
+    });
+  };
+
   render() {
-    const { type, selected, textFilter } = this.state;
+    const { type, selected, textFilter, getMethod, start, end } = this.state;
     const { autoFocus = true, t } = this.props;
 
     const eventTypes = { all: t('SINGLE:MSG_EVENTS_MAIN_TYPES_1'), normal: t('SINGLE:MSG_EVENTS_MAIN_TYPES_2'), warning: t('SINGLE:MSG_EVENTS_MAIN_TYPES_3') };
+    const getMethods = { streaming: '실시간', interval: '직접입력' };
     const selectedType = eventTypes[type];
+    const selectedGetMethod = getMethods[getMethod];
     return (
       <>
         <PageHeading detail={true} title={this.props.title}>
@@ -156,6 +175,17 @@ class _EventsList extends React.Component {
             <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" />
             <Dropdown className="btn-group co-search-group__resource" items={eventTypes} onChange={v => this.setState({ type: v })} selectedKey={type} title={selectedType} />
             <TextFilter autoFocus={autoFocus} label={t('SINGLE:MSG_EVENTS_MAIN_PLACEHOLDER_1')} onChange={val => this.setState({ textFilter: val || '' })} />
+            <div className='co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter'>
+              <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethod: v })} selectedKey={getMethod} title={selectedGetMethod} />
+              <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
+              <div className="co-datepicker-wrapper">
+                <DateTimePicker onChange={this.onStartChange} value={start} disabled={getMethod==='streaming'} disableClock	maxDate={end} locale='en-US' />
+              </div>
+              <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
+              <div className="co-datepicker-wrapper">
+                <DateTimePicker onChange={this.onEndChange} value={end} disabled={getMethod==='streaming'} disableClock minDate={start} maxDate={new Date()} locale='en-US' />
+              </div>
+            </div>
           </div>
           <div className="form-group">
             <ChipGroup withToolbar defaultIsOpen={false}>
@@ -177,7 +207,7 @@ class _EventsList extends React.Component {
             </ChipGroup>
           </div>
         </PageHeading>
-        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} />
+        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} start={start} end={end} getMethod={getMethod}/>
       </>
     );
   }
@@ -240,6 +270,15 @@ class _EventStream extends React.Component {
       error: null,
       loading: true,
       oldestTimestamp: new Date(),
+      start: props.start,
+      end: props.end,
+      apiEvents: [],
+      getMethod: props.getMethod,
+      getApiStart: null,
+      getApiEnd: null,
+      getApiType: null,
+      getApiKind: null,
+      getAPiTextFilter: null,
     };
     this.toggleStream = this.toggleStream_.bind(this);
   }
@@ -399,10 +438,46 @@ class _EventStream extends React.Component {
     });
   }
 
+  getEvent = async (start, end, kind, type, textFilter, namespace) => {
+    const startTime = parseInt(start.getTime() / 1000);
+    const endTime = parseInt(end.getTime() / 1000);
+    let url = `/api/hypercloud/event?startTime=${startTime}&endTime=${endTime}`;
+    if (namespace) {
+      url = url + `&namespace=${namespace}`;
+    }
+    if (kind && kind !== 'all') {
+      const kinds = kind.split(',')
+      let kindsquery = '';
+      kinds.forEach(k => {
+        kindsquery = kindsquery + '&kind=' + k.split('~')[2];
+      });
+      url = url + kindsquery;
+    }
+    if (type && type !== 'all') {
+      const capitalizeType = type.charAt(0).toUpperCase() + type.slice(1);
+      url = url + `&type=${capitalizeType}`;
+    }
+    // text filter 는 ui에서 처리함 추후 논의 필요
+    // if (textFilter) {
+    //   url = url + `&text=${textFilter}`;
+    // }
+    //test
+    url = url + `&offset=0&limit=${Number.MAX_SAFE_INTEGER}`;
+
+    const response = await coFetchJSON(url);
+    if (response) {
+      this.setState({ apiEvents: response, getApiStart: start, getApiEnd: end, getApiType: type, getApiKind: kind, getAPiTextFilter: textFilter });
+    }
+  };
+
   render() {
-    const { mock, resourceEventStream, t } = this.props;
-    const { active, error, loading, filteredEvents, sortedMessages } = this.state;
-    const count = filteredEvents.length;
+    const { mock, resourceEventStream, t, namespace, start, end, kind, type, textFilter, getMethod } = this.props;
+    const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiStart, getApiEnd, getApiType, getApiKind, getAPiTextFilter } = this.state;
+    const isChanged = start !== getApiStart || end !== getApiEnd || kind !== getApiKind || type !== getApiType || textFilter !== getAPiTextFilter
+    if (getMethod === 'interval' && isChanged) {
+      this.getEvent(start, end, kind, type, textFilter, namespace);
+    }
+    const count = getMethod === 'interval' ? apiEvents.length : filteredEvents.length;
     const allCount = sortedMessages.length;
     const noEvents = allCount === 0 && this.ws && this.ws.bufferSize() === 0;
     const noMatches = allCount > 0 && count === 0;
@@ -433,22 +508,59 @@ class _EventStream extends React.Component {
     // const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
     const messageCount = count < maxMessages ? t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count }) : t('SINGLE:MSG_EVENTS_MAIN_2', { something1: count, something2: allCount });
 
+    const words = _.uniq(_.toLower(textFilter).match(/\S+/g)).sort((a, b) => {
+      // Sort the longest words first.
+      return b.length - a.length;
+    });
+
+    const textMatches = obj => {
+      if (_.isEmpty(words)) {
+        return true;
+      }
+      const name = _.get(obj, 'involvedObject.name', '');
+      const message = _.toLower(obj.message);
+      return _.every(words, word => name.indexOf(word) !== -1 || message.indexOf(word) !== -1);
+    };
+
+    // text filter 처리
+    const filterdApiEvents =
+      textFilter === ''
+        ? apiEvents
+        : apiEvents.filter(obj => {
+            if (!textMatches(obj)) {
+              return false;
+            }
+            return true;
+          });
+
     return (
       <div className="co-m-pane__body">
         <div className="co-sysevent-stream">
-          <div className="co-sysevent-stream__status">
-            <div className="co-sysevent-stream__timeline__btn-text">{statusBtnTxt}</div>
-            <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
-          </div>
-
-          <div className={klass}>
-            <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
-            <div className="co-sysevent-stream__timeline__end-message">
-              {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
-            </div>
-          </div>
-          {count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}
-          {sysEventStatus}
+          {getMethod === 'interval' ? (
+            <>
+              <div className="co-sysevent-stream__status">
+                <div className="co-sysevent-stream__timeline__btn-text"><span></span></div>
+                <div className="co-sysevent-stream__totals text-secondary">{t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count })}</div>
+              </div>
+              <EventStreamList events={filterdApiEvents} EventComponent={Inner} />
+              {filterdApiEvents.length === 0 && <NoMatchingEvents />}
+            </>
+          ) : (
+            <>
+              <div className="co-sysevent-stream__status">
+                <div className="co-sysevent-stream__timeline__btn-text">{statusBtnTxt}</div>
+                <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
+              </div>
+              <div className={klass}>
+                <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
+                <div className="co-sysevent-stream__timeline__end-message">
+                  {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
+                </div>
+              </div>
+              {count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}
+              {sysEventStatus}
+            </>
+          )}
         </div>
       </div>
     );
