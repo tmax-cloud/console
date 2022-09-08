@@ -102,11 +102,11 @@ export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListPr
           <div>{user}</div>
         ))}
       </DetailsItem>
-      { (ds.status.result === 'Rejected') &&
+      {ds.status.result === 'Rejected' && (
         <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_20')} obj={ds} path="status.reason">
           {ds.status.reason}
         </DetailsItem>
-      }
+      )}
     </dl>
   );
 };
@@ -179,7 +179,6 @@ type PipelineApprovalDetailsProps = {
 type PipelineApprovalsDetailsPageProps = {
   match: any;
 };
-
 
 type PipelineApprovalStatusProps = {
   result: any;

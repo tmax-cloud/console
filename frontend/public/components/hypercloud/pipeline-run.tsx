@@ -37,7 +37,6 @@ const tableColumnClasses = [
   Kebab.columnClass,
 ];
 
-
 const PipelineRunTableHeader = (t?: TFunction) => {
   return [
     {
@@ -84,7 +83,6 @@ const PipelineRunTableHeader = (t?: TFunction) => {
 };
 
 PipelineRunTableHeader.displayName = 'PipelineRunTableHeader';
-
 
 const PipelineRunTableRow: RowFunction<PipelineRun> = ({ obj: pipelineRun, index, key, style }) => {
   return (
@@ -139,10 +137,7 @@ const PipelineRunInPipelinePageTableRow: RowFunction<PipelineRun> = ({ obj: pipe
 
 export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ pipelineRun }) => {
   const unfilteredResources = pipelineRun.spec.resources as PipelineRunReferenceResource[];
-  const renderResources =
-    unfilteredResources
-      ?.filter(({ resourceRef }) => !!resourceRef)
-      .map((resource) => resource.resourceRef.name) || [];
+  const renderResources = unfilteredResources?.filter(({ resourceRef }) => !!resourceRef).map(resource => resource.resourceRef.name) || [];
 
   const { t } = useTranslation();
   return (
@@ -151,24 +146,16 @@ export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ 
         <dl>
           <dt>{ResourceLabel(PipelineModel, t)}</dt>
           <dd>
-            <ResourceLink
-              kind={referenceForModel(PipelineModel)}
-              name={pipelineRun.spec.pipelineRef.name}
-              namespace={pipelineRun.metadata.namespace}
-            />
+            <ResourceLink kind={referenceForModel(PipelineModel)} name={pipelineRun.spec.pipelineRef.name} namespace={pipelineRun.metadata.namespace} />
           </dd>
         </dl>
       )}
       {/* <TriggeredBySection pipelineRun={pipelineRun} /> */}
       <br />
-      <ResourceLinkList
-        model={PipelineResourceModel}
-        links={renderResources}
-        namespace={pipelineRun.metadata.namespace}
-      />
+      <ResourceLinkList model={PipelineResourceModel} links={renderResources} namespace={pipelineRun.metadata.namespace} />
     </div>
   );
-}
+};
 
 const PipelineRunDetails: React.FC<PipelineRunDetailsProps> = ({ obj: pipelineRun }) => {
   const { t } = useTranslation();
@@ -188,8 +175,7 @@ const PipelineRunDetails: React.FC<PipelineRunDetailsProps> = ({ obj: pipelineRu
       </div>
     </>
   );
-}
-
+};
 
 const { details, editYaml } = navFactory;
 
@@ -210,37 +196,39 @@ const filters = [
 export const PipelineRuns: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Pipeline Runs" Header={PipelineRunTableHeader.bind(null, t)} Row={PipelineRunTableRow} virtualize />;
-}
+};
 export const PipelineRunsInPipelinePage: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Pipeline Runs" Header={PipelineRunTableHeader.bind(null, t)} Row={PipelineRunInPipelinePageTableRow} virtualize />;
-}
+};
 
 export const PipelineRunsPage: React.FC<PipelineRunsPageProps> = props => {
   const { t } = useTranslation();
   const { inPipelinePage } = props;
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_60')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_60') })}
-    canCreate={true}
-    ListComponent={inPipelinePage ? PipelineRunsInPipelinePage : PipelineRuns}
-    kind={kind}
-    rowFilters={filters}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_60')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_60') })} canCreate={true} ListComponent={inPipelinePage ? PipelineRunsInPipelinePage : PipelineRuns} kind={kind} rowFilters={filters} {...props} />;
+};
 
 export const PipelineRunsDetailsPage: React.FC<PipelineRunsDetailsPageProps> = props => {
   const { t } = useTranslation();
-  return <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions(true)} pages={[details(detailsPage(PipelineRunDetails)), editYaml(viewYamlComponent), {
-    href: 'logs',
-    path: 'logs/:name?',
-    name: t('COMMON:MSG_DETAILS_TAB_6'),
-    component: PipelineRunLogsWithActiveTask,
-  },]} />
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      menuActions={getPipelineRunKebabActions(true)}
+      pages={[
+        details(detailsPage(PipelineRunDetails)),
+        editYaml(viewYamlComponent),
+        {
+          href: 'logs',
+          path: 'logs/:name?',
+          name: t('COMMON:MSG_DETAILS_TAB_6'),
+          component: PipelineRunLogsWithActiveTask,
+        },
+      ]}
+    />
+  );
 };
-
 
 type PipelineRunDetailsListProps = {
   pipelineRun: PipelineRun;
