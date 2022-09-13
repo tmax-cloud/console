@@ -11,13 +11,13 @@ import { RadioGroup } from '../../utils/radio';
 import { ListView } from '../../utils/list-view';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
-import { ServiceBindingModel, TaskModel } from '../../../../models';
+import { NamespaceModel, ServiceBindingModel } from '../../../../models';
 import { CheckboxSingle } from '../../utils/checkbox_single';
 import { ResourceListDropdown } from '../../utils/resource-list-dropdown';
 import { coFetchJSON } from '../../../../co-fetch';
 import * as classNames from 'classnames';
 import { k8sList, modelFor } from '../../../../../public/module/k8s';
-import { ResourceDropdown } from '../../utils/resource-dropdown';
+import { useEffect } from 'react';
 
 
 const defaultValuesTemplate = {
@@ -26,6 +26,12 @@ const defaultValuesTemplate = {
     namespace: '',
   },
   spec: {
+    application: {
+      kind: '',
+      group: '',
+      version: '',
+      name: ''
+    },
     services: [
       {
         namespace: '',
@@ -78,38 +84,118 @@ const servicebindingFormFactory = (params, obj) => {
 
 const BackupServiceItem = props => {
   const { t } = useTranslation()
-  const { item, name, index, onDeleteClick } = props;
+  const { item, name, index, onDeleteClick, methods } = props;
+  const { control } = methods;
+
+  const methodToggle = useWatch({
+    name: 'method',
+    defaultValue: 'Auto',
+  });
+
+  const selectedNS = useWatch<string>({
+    control: control,
+    name: `${name}[${index}].namespace`,
+  });
+  const selectedService = useWatch<string>({
+    control: control,
+    name: `${name}[${index}].kind`,
+  });
+
+  const [namespaces, setNamespaces] = React.useState([])
+  const [serviceList, setServiceList] = React.useState([])
+
+  React.useEffect(() => {
+    k8sList(NamespaceModel).then(list => setNamespaces(list));
+  }, [])
+
+  React.useEffect(() => {
+    if (selectedService) {
+      const model = modelFor(selectedService)
+      if (model) {
+        k8sList(model, { ns: selectedNS }).then(list => {
+          setServiceList(list)})
+      }
+      else {
+        setServiceList([])
+      }
+    }
+  }, [selectedNS, selectedService])
 
   return(
     <>
-      <div className="co-form-section__separator" />
-      <div className="row" key={item.id}>
-        <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_9')} id={`${name}[${index}]`} description="">
-          <div className="col-xs-12 pairs-list__value-field">
-            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_10')} id={`${name}[${index}].namespace`} description="" isRequired>
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].namespace`} name={`${name}[${index}].namespace`} defaultValue={item.namespace}/>
-            </Section>
-            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_14')} id={`${name}[${index}].group`} description="" isRequired>
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].group`} name={`${name}[${index}].group`} defaultValue={item.group}/>
-            </Section>
-            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_15')} id={`${name}[${index}].version`} description="" isRequired>
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].version`} name={`${name}[${index}].version`} defaultValue={item.version}/>
-            </Section>
-            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id={`${name}[${index}].kind`} description="" isRequired>
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].kind`} name={`${name}[${index}].kind`} defaultValue={item.kind}/>
-            </Section>
-            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id={`${name}[${index}].name`} description="" isRequired>
-              <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`} defaultValue={item.name}/>
+      {methodToggle === 'Manual' && (
+        <>
+          <div className="co-form-section__separator" />
+          <div className="row" key={item.id}>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_9')} id={`${name}[${index}]`} description="">
+              <div className="col-xs-12 pairs-list__value-field">
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_10')} id={`${name}[${index}].namespace`} description="" isRequired>
+                  <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].namespace`} name={`${name}[${index}].namespace`} defaultValue={item.namespace}/>
+                </Section>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_14')} id={`${name}[${index}].group`} description="" isRequired>
+                  <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].group`} name={`${name}[${index}].group`} defaultValue={item.group}/>
+                </Section>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_15')} id={`${name}[${index}].version`} description="" isRequired>
+                  <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].version`} name={`${name}[${index}].version`} defaultValue={item.version}/>
+                </Section>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id={`${name}[${index}].kind`} description="" isRequired>
+                  <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].kind`} name={`${name}[${index}].kind`} defaultValue={item.kind}/>
+                </Section>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id={`${name}[${index}].name`} description="" isRequired>
+                  <TextInput inputClassName="pf-c-form-control" id={`${name}[${index}].name`} name={`${name}[${index}].name`} defaultValue={item.name}/>
+                </Section>
+              </div>
+              <div className="col-xs-1 pairs-list__action">
+                <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
+                  <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
+                  <span>{t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_13')}</span>
+                </Button>
+              </div>
             </Section>
           </div>
-          <div className="col-xs-1 pairs-list__action">
-            <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
-              <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
-              <span>{t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_13')}</span>
-            </Button>
+        </>
+      )}
+      {methodToggle === 'Auto' && (
+        <>
+          <div className="co-form-section__separator" />
+          <div className="row" key={item.id}>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_9')} id={`${name}[${index}]`} description="">
+              <div className="col-xs-12 pairs-list__value-field">
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_10')} id={`${name}[${index}].namespace`} description="" isRequired>
+                  <Controller
+                    as={<ResourceListDropdown key={`${name}[${index}].namespace`} name={`${name}[${index}].namespace`} useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_11')} defaultValue={item.namespace} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_11')} methods={methods}/>}
+                    control={methods.control}
+                    name={`${name}[${index}].namespace`}
+                    defaultValue={item.namespace}
+                   />
+                </Section>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id={`${name}[${index}].kind`} description="" isRequired>
+                  <Controller
+                    as={<BindableResourceListDropDown name={`${name}[${index}].kind`} defaultValue={item.kind} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')} />}
+                    control={methods.control}
+                    name={`${name}[${index}].kind`}
+                    defaultValue={item.kind}
+                   />
+                </Section>
+                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id={`${name}[${index}].name`} description="" isRequired>
+                  <Controller
+                    as={<ResourceListDropdown name={`${name}[${index}].name`} useHookForm resourceList={serviceList} kind={item.kind} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={item.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods}/>}
+                    control={methods.control}
+                    name={`${name}[${index}].name`}
+                    defaultValue={item.name}
+                   />
+                </Section>
+              </div>
+              <div className="col-xs-1 pairs-list__action">
+                <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
+                  <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
+                  <span>{t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_13')}</span>
+                </Button>
+              </div>
+            </Section>
           </div>
-        </Section>
-      </div>
+      </>
+      )}
     </>
   )
 }
@@ -119,6 +205,7 @@ const backupServiceItemRenderer = (methods, name, item, index, ListActions, List
     const values = _.get(ListActions.getValues(), name);
     if (!!values && values.length > 1) {
       ListActions.remove(index);
+      console.log('!@#$$', index)
     }
   };
 
@@ -185,23 +272,16 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
     },
   } = methods;
 
-  const [bindables, setBindables] = React.useState([])
-  const [selectedApplication, setSelectedApplication] = React.useState('')
+  const selectedApplication = useWatch<string>({
+    control: control,
+    name: 'spec.application.kind',
+  });
   const [applicationList, setApplicationList] = React.useState([])
-
-  React.useEffect(() => {
-    const getBindables = async () => {
-      const data = await coFetchJSON('api/hypercloud/bindableResources')
-      const keys = Object.keys(data)
-      setBindables(keys)
-    }
-    getBindables()
-  }, [])
 
   React.useEffect(() => {
     const model = modelFor(selectedApplication)
     if (model) {
-      k8sList(modelFor(selectedApplication), { ns: defaultValues.metadata.namespace }).then(list => {
+      k8sList(model, { ns: defaultValues.metadata.namespace }).then(list => {
         setApplicationList(list)})
     }
     else {
@@ -253,14 +333,16 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
         <>
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_4')} id="application" description="">
             <div className="col-xs-12 pairs-list__value-field">
-              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="application" description="" isRequired>
-                <Dropdown menuClassName="dropdown-menu--text-wrap" className={classNames('co-type-selector')} items={bindables} title={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')} onChange={(e)=>{setSelectedApplication(bindables[e])}} type="single" />
+              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="spec.application.kind" description="" isRequired>
+                <BindableResourceListDropDown name={"spec.application.kind"} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')}/>
               </Section>
-              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="application" description="" isRequired>
-                <ResourceListDropdown name="spec.application.name" useHookForm resourceList={applicationList} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={defaultValues.metadata.namespace} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} />
-                {/* <ResourceDropdown name="spec.application.name" type="single" resources={[{kind: selectedApplication, namespace: defaultValues.metadata.namespace, prop: selectedApplication }]}/> */}
+              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="spec.application.name" description="" isRequired>
+                <ResourceListDropdown name="spec.application.name" useHookForm resourceList={applicationList} kind={selectedApplication as string} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={defaultValues.spec.application.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods} />
               </Section>
             </div>
+          </Section>
+          <Section id="services" isRequired={true}>
+            <ListView methods={methods} name={`spec.services`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_12')} headerFragment={<></>} itemRenderer={backupServiceItemRenderer} defaultItem={{ namespace: '', group: '', version: '', kind: '', name: '' }} defaultValues={defaultValues.spec.services}/>
           </Section>
         </>
       )}
@@ -292,29 +374,59 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
   const { t } = useTranslation();
   const formComponent = servicebindingFormFactory(props.match.params, props.obj);
   const ServiceBindingFormComponent = formComponent;
+
+  const [bindablesGroupVersion, setBindablesGroupVersion] = React.useState([])
+
+  React.useEffect(() => {
+    const getBindables = async () => {
+      const data = await coFetchJSON('api/hypercloud/bindableResources')
+      setBindablesGroupVersion(data)
+    }
+    getBindables()
+  }, [])
+
+  const onSubmitCallback = data => {
+    delete data.method
+
+    console.log('**', data)
+
+    let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
+    let kind = ServiceBindingModel.kind
+    let labels = SelectorInput.objectify(data.metadata.labels);
+    let name = data.metadata.name;
+    delete data.metadata.labels;
+
+    let bindAsFiles: boolean
+
+    bindAsFiles = (data.bindAsFiles==='false') ? false:true
+
+    let detectBindingResources = data.detectBindingResources
+    delete data.spec.detectBindingResources;
+
+    let application = data.spec.application;
+    delete data.spec.application;
+    application.group = application.group ?? bindablesGroupVersion[application.kind].split('/')[0]
+    application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[1]
+
+    let services = data.spec.services;
+    delete data.spec.services;
+    services.forEach((e) => {
+      e.group = e.group ?? bindablesGroupVersion[e.kind].split('/')[0]
+      e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[1]
+    })
+
+    data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels},
+      spec: {bindAsFiles: bindAsFiles,
+             detectBindingResources: detectBindingResources,
+             application: application,
+             services: services
+            }
+    }, data);
+
+    return data;
+  };
+
   return <ServiceBindingFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('MSG_COMMON_CREATEFORM_DESCRIPTION_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true}/>;
-};
-
-export const onSubmitCallback = data => {
-  delete data.method
-
-  console.log('**', data)
-
-  let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
-  let kind = ServiceBindingModel.kind
-  let labels = SelectorInput.objectify(data.metadata.labels);
-  let name = data.metadata.name;
-  delete data.metadata.labels;
-
-  let bindAsFiles: boolean
-
-  bindAsFiles = (data.bindAsFiles==='false') ? false:true
-
-  let detectBindingResources = data.detectBindingResources
-  delete data.spec.detectBindingResources;
-
-  data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels}, spec: {bindAsFiles: bindAsFiles, detectBindingResources: detectBindingResources}}, data);
-  return data;
 };
 
 type CreateServiceBindingProps = {
@@ -337,3 +449,51 @@ type ServiceBindingFormProps = {
   };
   isCreate: boolean;
 };
+
+const BindableResourceListDropDown = (props: BindableResourceListDropDownProps) => {
+  const { name, required, methods, placeholder, defaultValue } = props
+  const { register, unregister, setValue, watch} = methods ? methods : useFormContext()
+
+  React.useEffect(() => {
+    register({ name: name }, { required });
+
+    return () => {
+      unregister(name);
+    };
+  }, [name, register, unregister]);
+
+  const defaultKind = watch(name, defaultValue);
+  const [selectedKind, setSelectedKind] = React.useState(defaultKind ?? '');
+
+  useEffect(()=>{
+    setValue(name, selectedKind)
+  }, [defaultKind])
+
+  const [bindables, setBindables] = React.useState([])
+
+  React.useEffect(() => {
+    const getBindables = async () => {
+      const data = await coFetchJSON('api/hypercloud/bindableResources')
+      const keys = Object.keys(data)
+      setBindables(keys)
+    }
+    getBindables()
+  }, [])
+
+  const onSelectChange = (e: any) => {
+    setSelectedKind(bindables[e])
+    setValue(name, bindables[e])
+  }
+
+  const isSelected = !!selectedKind;
+
+  return <Dropdown menuClassName="dropdown-menu--text-wrap" className={classNames('co-type-selector')} items={bindables} title={(isSelected ? selectedKind : placeholder)} placeholder={placeholder} onChange={onSelectChange} type="single" />
+}
+
+type BindableResourceListDropDownProps = {
+  name: string;
+  required?: boolean;
+  defaultValue?: string;
+  methods?: any;
+  placeholder: string;
+}
