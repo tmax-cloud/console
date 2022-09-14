@@ -15,13 +15,7 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 
 const kind = PipelineResourceModel.kind;
 
-const tableColumnClasses = [
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-sm-4', 'hidden-xs'),
-  Kebab.columnClass,
-];
-
+const tableColumnClasses = [classNames('col-xs-6', 'col-sm-4'), classNames('col-xs-6', 'col-sm-4'), classNames('col-sm-4', 'hidden-xs'), Kebab.columnClass];
 
 const PipelineResourceTableHeader = (t?: TFunction) => {
   return [
@@ -51,7 +45,6 @@ const PipelineResourceTableHeader = (t?: TFunction) => {
 };
 
 PipelineResourceTableHeader.displayName = 'PipelineResourceTableHeader';
-
 
 const PipelineResourceTableRow: RowFunction<K8sResourceKind> = ({ obj: pipelineResource, index, key, style }) => {
   return (
@@ -86,32 +79,23 @@ const PipelineResourceDetails: React.FC<PipelineResourceDetailsProps> = ({ obj: 
       </div>
     </>
   );
-}
+};
 
-
-const { details, editResource } = navFactory;
+const { details, editResource, editYaml } = navFactory;
 
 export const PipelineResources: React.FC = props => {
   const { t } = useTranslation();
 
   return <Table {...props} aria-label="Pipeline Resources" Header={PipelineResourceTableHeader.bind(null, t)} Row={PipelineResourceTableRow} virtualize />;
-}
-
+};
 
 export const PipelineResourcesPage: React.FC<PipelineResourcesPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_62')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_62') })}
-    canCreate={true}
-    ListComponent={PipelineResources}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_62')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_62') })} canCreate={true} ListComponent={PipelineResources} kind={kind} {...props} />;
+};
 
-export const PipelineResourcesDetailsPage: React.FC<PipelineResourcesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineResourceDetails)), editResource()]} />;
+export const PipelineResourcesDetailsPage: React.FC<PipelineResourcesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineResourceDetails)), editResource(), editYaml()]} />;
 
 type PipelineResourcesPageProps = {
   showTitle?: boolean;
