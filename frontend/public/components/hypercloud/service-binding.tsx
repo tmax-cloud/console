@@ -18,7 +18,7 @@ const kind = ServiceBindingModel.kind;
 let bindables = {}
 
 const check_bindable = (obj: BindableProps) => {
-  return (obj.kind in bindables ) && ((!!obj.group) ? (bindables[obj.kind]==`${obj.group}/${obj.version}`) : (bindables[obj.kind]==obj.version))
+  return (obj.kind in bindables ) && ((!!obj.group) ? (bindables[obj.kind]===`${obj.group}/${obj.version}`) : (bindables[obj.kind]===obj.version))
 }
 
 const filters = (t: TFunction) => [
