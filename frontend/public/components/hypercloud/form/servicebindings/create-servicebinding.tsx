@@ -334,10 +334,22 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_4')} id="application" description="">
             <div className="col-xs-12 pairs-list__value-field">
               <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="spec.application.kind" description="" isRequired>
-                <BindableResourceListDropDown name={"spec.application.kind"} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')}/>
+                <Controller
+                  as={<BindableResourceListDropDown name={"spec.application.kind"} defaultValue={defaultValues.spec.application.kind} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')}/>}
+                  control={methods.control}
+                  name={'spec.application.kind'}
+                  defaultValue={defaultValues.spec.application.kind}
+                />
+                {/* <BindableResourceListDropDown name={"spec.application.kind"} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')}/> */}
               </Section>
               <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="spec.application.name" description="" isRequired>
-                <ResourceListDropdown name="spec.application.name" useHookForm resourceList={applicationList} kind={selectedApplication as string} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={defaultValues.spec.application.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods} />
+                <Controller
+                  as={<ResourceListDropdown name="spec.application.name" useHookForm resourceList={applicationList} kind={selectedApplication} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={defaultValues.spec.application.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods} />}
+                  control={methods.control}
+                  name={'spec.application.name'}
+                  defaultValue={defaultValues.spec.application.name}
+                />
+                {/* <ResourceListDropdown name="spec.application.name" useHookForm resourceList={applicationList} kind={selectedApplication} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={defaultValues.spec.application.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods} /> */}
               </Section>
             </div>
           </Section>
@@ -404,6 +416,7 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
     let application = data.spec.application;
     delete data.spec.application;
     if (bindablesGroupVersion[application.kind].split('/').length == 1) {
+      application.group = application.group ?? ''
       application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[0]
     }
     else {
