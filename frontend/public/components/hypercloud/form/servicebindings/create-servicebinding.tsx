@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { WithCommonForm } from '../create-form';
 import { match as RMatch } from 'react-router';
-import { Dropdown, SelectorInput } from '../../../utils';
+import { Dropdown, SelectorInput, ResourceIcon } from '../../../utils';
 import { useFormContext, Controller, useWatch } from 'react-hook-form';
 import { Section } from '../../utils/section';
 import { TextInput } from '../../utils/text-input';
@@ -18,6 +18,7 @@ import { coFetchJSON } from '../../../../co-fetch';
 import * as classNames from 'classnames';
 import { k8sList, modelFor } from '../../../../../public/module/k8s';
 import { useEffect } from 'react';
+import { OrderedMap } from 'immutable';
 
 
 const defaultValuesTemplate = {
@@ -386,6 +387,7 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
   }, [])
 
   const onSubmitCallback = data => {
+    console.log('***', data)
     delete data.method
 
     let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
@@ -480,6 +482,7 @@ const BindableResourceListDropDown = (props: BindableResourceListDropDownProps) 
   }, [defaultKind])
 
   const [bindables, setBindables] = React.useState([])
+  const [items, setItems] = React.useState({})
 
   React.useEffect(() => {
     const getBindables = async () => {
@@ -490,15 +493,32 @@ const BindableResourceListDropDown = (props: BindableResourceListDropDownProps) 
     getBindables()
   }, [])
 
+  React.useEffect(() => {
+    setItems(OrderedMap(_.map(bindables, resource => [resource, <DropdownItem resource={resource} />])).toJS() as { [s: string]: JSX.Element })
+  }, [bindables])
+
   const onSelectChange = (e: any) => {
-    setSelectedKind(bindables[e])
-    setValue(name, bindables[e])
+    setSelectedKind(e)
+    setValue(name, e)
   }
 
   const isSelected = !!selectedKind;
 
-  return <Dropdown menuClassName="dropdown-menu--text-wrap" className={classNames('co-type-selector')} items={bindables} title={(isSelected ? selectedKind : placeholder)} placeholder={placeholder} onChange={onSelectChange} type="single" />
+  return <Dropdown menuClassName="dropdown-menu--text-wrap" className={classNames('co-type-selector')} items={items} title={(isSelected ? items[selectedKind] : placeholder)} placeholder={placeholder} onChange={onSelectChange} type="single" />
 }
+
+const DropdownItem: React.SFC<DropdownItemProps> = ({ resource }) => (
+  <>
+    <span className={'co-resource-item'}>
+      <span className="co-resource-icon--fixed-width">
+        <ResourceIcon kind={resource} />
+      </span>
+      <span className="co-resource-item__resource-name">
+        <span>{resource}</span>
+      </span>
+    </span>
+  </>
+);
 
 type BindableResourceListDropDownProps = {
   name: string;
@@ -507,3 +527,7 @@ type BindableResourceListDropDownProps = {
   methods?: any;
   placeholder: string;
 }
+
+type DropdownItemProps = {
+  resource: string;
+};
