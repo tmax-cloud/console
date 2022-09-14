@@ -168,6 +168,12 @@
       background-image: url('../../imgs/hypercloud/lnb/filled/kafka_filled.svg');
     }
   }
+  &.redis {
+    background-image: url('../../imgs/hypercloud/lnb/redis_.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/redis_filled.svg');
+    }
+  }
   &.image {
     background-image: url('../../imgs/hypercloud/lnb/image.svg');
     &.pf-m-current {
