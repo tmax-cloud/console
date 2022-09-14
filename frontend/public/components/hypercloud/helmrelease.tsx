@@ -14,7 +14,7 @@ import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { resourceSortFunction } from './utils/resource-sort';
 import { HelmChartModel, HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 import { CreateHelmRelease } from '../hypercloud/form/helmreleases/create-helmrelease';
-import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils'
+import { getHelmHost } from '@console/internal/actions/utils/nonk8s-utils';
 
 const kind = HelmReleaseModel.kind;
 
@@ -244,7 +244,9 @@ const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release })
                       <tr key={'row-' + k}>
                         <td style={{ padding: '5px' }}>{modelFor(k) ? ResourceLabel(modelFor(k), t) : k}</td>
                         <td style={{ padding: '5px' }}>
-                          <ResourceLink kind={k} name={release.objects[k] as string} namespace={release.namespace} />
+                          {release.objects[k].map(object => {
+                            return <ResourceLink key={`resource-link-key-${k}`} kind={k} name={object} namespace={release.namespace} />;
+                          })}
                         </td>
                       </tr>
                     );
@@ -271,7 +273,7 @@ export const HelmReleaseDetailsList: React.FC<HelmReleaseDetailsListProps> = ({ 
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
       <dd>{release.chart?.metadata?.description}</dd>
       <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
-      <dd>{release.chart?.metadata?.repo ?  <ResourceLink manualPath={`/helmcharts/${release.chart?.metadata?.repo}/${release.chart?.metadata?.name}`} kind={HelmChartModel.kind} name={release.chart?.metadata?.name} /> : release.chart?.metadata?.name}</dd>
+      <dd>{release.chart?.metadata?.repo ? <ResourceLink manualPath={`/helmcharts/${release.chart?.metadata?.repo}/${release.chart?.metadata?.name}`} kind={HelmChartModel.kind} name={release.chart?.metadata?.name} /> : release.chart?.metadata?.name}</dd>
       <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_2')}</dt>
       <dd>{release.version}</dd>
     </dl>

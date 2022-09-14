@@ -18,35 +18,36 @@ import { IntegrationConfigReducer } from '@console/dev-console/src/utils/hc-stat
 
 export const IntegrationConfigStatus: React.FC<IntegrationConfigStatusProps> = ({ result }) => <Status status={IntegrationConfigReducer(result)} />;
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationConfigModel),
-//...Kebab.factory.common,
-//...[() => testWebhook(IntegrationConfigModel, integrationConfig)],  
-Kebab.factory.ModifyLabels,
-Kebab.factory.ModifyAnnotations,
-(kind, integrationConfig) => ({
-  label: 'COMMON:MSG_MAIN_POPUP_20',
-  callback: () =>
-    integrationConfigRequestModal({
-      kind,
-      request: 'push',
-      resource: integrationConfig,
-      blocking: true,
-    }),
-  accessReview: asAccessReview(kind, integrationConfig, 'patch'),
-}),
-(kind, integrationConfig) => ({
-  label: 'COMMON:MSG_MAIN_POPUP_23',
-  callback: () =>
-    integrationConfigRequestModal({
-      kind,
-      request: 'pull',
-      resource: integrationConfig,
-      blocking: true,
-    }),
-  accessReview: asAccessReview(kind, integrationConfig, 'patch'),
-}),
-Kebab.factory.Edit,
-Kebab.factory.Delete,
+export const menuActions: KebabAction[] = [
+  ...Kebab.getExtensionsActionsForKind(IntegrationConfigModel),
+  //...Kebab.factory.common,
+  //...[() => testWebhook(IntegrationConfigModel, integrationConfig)],
+  Kebab.factory.ModifyLabels,
+  Kebab.factory.ModifyAnnotations,
+  (kind, integrationConfig) => ({
+    label: 'COMMON:MSG_MAIN_POPUP_20',
+    callback: () =>
+      integrationConfigRequestModal({
+        kind,
+        request: 'push',
+        resource: integrationConfig,
+        blocking: true,
+      }),
+    accessReview: asAccessReview(kind, integrationConfig, 'patch'),
+  }),
+  (kind, integrationConfig) => ({
+    label: 'COMMON:MSG_MAIN_POPUP_23',
+    callback: () =>
+      integrationConfigRequestModal({
+        kind,
+        request: 'pull',
+        resource: integrationConfig,
+        blocking: true,
+      }),
+    accessReview: asAccessReview(kind, integrationConfig, 'patch'),
+  }),
+  Kebab.factory.Edit,
+  Kebab.factory.Delete,
 ];
 
 const kind = IntegrationConfigModel.kind;
@@ -63,7 +64,6 @@ const tableColumnClasses = [
   classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
   Kebab.columnClass,
 ];
-
 
 const IntegrationConfigTableHeader = (t?: TFunction) => {
   return [
@@ -99,7 +99,6 @@ const IntegrationConfigTableHeader = (t?: TFunction) => {
 };
 
 IntegrationConfigTableHeader.displayName = 'IntegrationConfigTableHeader';
-
 
 const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrationConfig, index, key, style }) => {
   return (
@@ -138,7 +137,7 @@ export const IntegrationConfigDetailsList: React.FC<IntegrationConfigDetailsList
       </DetailsItem>
     </dl>
   );
-}
+};
 
 const IntegrationConfigDetails: React.FC<IntegrationConfigDetailsProps> = ({ obj: integrationConfig }) => {
   const { t } = useTranslation();
@@ -157,15 +156,14 @@ const IntegrationConfigDetails: React.FC<IntegrationConfigDetailsProps> = ({ obj
       </div>
     </>
   );
-}
-
+};
 
 const { details, editResource } = navFactory;
 
 export const IntegrationConfigs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="IntegrationConfigs" Header={IntegrationConfigTableHeader.bind(null, t)} Row={IntegrationConfigTableRow} virtualize />;
-}
+};
 
 const filters = t => [
   {
@@ -182,16 +180,18 @@ const filters = t => [
 export const IntegrationConfigsPage: React.FC<IntegrationConfigsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    // title={t('COMMON:CD_MAILFORM_REQUEST_7')}
-    // createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:CD_MAILFORM_REQUEST_7') })}
-    rowFilters={filters.bind(null, t)()}
-    canCreate={true}
-    ListComponent={IntegrationConfigs}
-    kind={kind}
-    {...props}
-  />;
-}
+  return (
+    <ListPage
+      // title={t('COMMON:CD_MAILFORM_REQUEST_7')}
+      // createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:CD_MAILFORM_REQUEST_7') })}
+      rowFilters={filters.bind(null, t)()}
+      canCreate={true}
+      ListComponent={IntegrationConfigs}
+      kind={kind}
+      {...props}
+    />
+  );
+};
 
 export const IntegrationConfigsDetailsPage: React.FC<IntegrationConfigsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationConfigDetails)), editResource()]} />;
 

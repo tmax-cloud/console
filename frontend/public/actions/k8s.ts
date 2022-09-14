@@ -9,6 +9,7 @@ import { APIServiceModel } from '../models';
 import { coFetchJSON } from '../co-fetch';
 import { referenceForModel, K8sResourceKind, K8sKind } from '../module/k8s';
 import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult, getKind } from './utils/nonk8s-utils'
+import { history } from '@console/internal/components/utils/router';
 
 export enum ActionType {
   ReceivedResources = 'resources',
@@ -75,15 +76,20 @@ export const watchK8sObject = (id: string, name: string, namespace: string, quer
     delete query.name;
   }
   const poller = async () => {
-    const url = nonK8SResource ? await nonK8sObjectUrl(id, query.ns, query.name) : '';
-    nonK8SResource 
-      ? coFetchJSON(url).then(
+    if (nonK8SResource) {
+      const url = await nonK8sObjectUrl(id, query.ns, query.name);
+      if (url.includes('null') === true) {
+        history.push('/ingress-check?ingresslabelvalue=helm-apiserver');
+      }
+      coFetchJSON(url).then(
         o => dispatch(modifyObject(id, nonK8sObjectResult(getKind(id), o))),
         e => dispatch(errored(id, e)),)
-      : k8sGet(k8sType, name, namespace).then(
-      o => dispatch(modifyObject(id, o)),
-      e => dispatch(errored(id, e)),
-    );
+    } else {
+      k8sGet(k8sType, name, namespace).then(
+        o => dispatch(modifyObject(id, o)),
+        e => dispatch(errored(id, e)),
+      )
+    }
   };
   POLLs[id] = setInterval(poller, 30 * 1000);
   poller();
@@ -145,7 +151,12 @@ export const watchK8sList = (
       return;
     }
 
-    const response = nonK8SResource ? await coFetchJSON(await nonK8sListUrl(id, query)) : await k8sList(
+    const url = nonK8SResource ? await nonK8sListUrl(id, query) : '';
+    if (url.includes('null') === true) {
+      history.push('/ingress-check?ingresslabelvalue=helm-apiserver');
+    }
+
+    const response = nonK8SResource ? await coFetchJSON(url) : await k8sList(
       k8skind,
       {
         limit: paginationLimit,
