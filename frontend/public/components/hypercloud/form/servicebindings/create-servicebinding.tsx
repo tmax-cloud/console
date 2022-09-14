@@ -205,7 +205,6 @@ const backupServiceItemRenderer = (methods, name, item, index, ListActions, List
     const values = _.get(ListActions.getValues(), name);
     if (!!values && values.length > 1) {
       ListActions.remove(index);
-      console.log('!@#$$', index)
     }
   };
 
@@ -362,7 +361,7 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
       </Section>
 
       <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_28')} id="namingStrategy" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_29')}>
-        <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder=''/>
+        <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder='예: {{ .service.kind | upper}}_{{ .name | upper }}'/>
       </Section>
 
     </>
@@ -381,14 +380,13 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
     const getBindables = async () => {
       const data = await coFetchJSON('api/hypercloud/bindableResources')
       setBindablesGroupVersion(data)
+      console.log(data)
     }
     getBindables()
   }, [])
 
   const onSubmitCallback = data => {
     delete data.method
-
-    console.log('**', data)
 
     let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
     let kind = ServiceBindingModel.kind
@@ -405,14 +403,26 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
 
     let application = data.spec.application;
     delete data.spec.application;
-    application.group = application.group ?? bindablesGroupVersion[application.kind].split('/')[0]
-    application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[1]
+    if (bindablesGroupVersion[application.kind].split('/').length == 1) {
+      application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[0]
+    }
+    else {
+      application.group = application.group ?? bindablesGroupVersion[application.kind].split('/')[0]
+      application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[1]
+    }
+
 
     let services = data.spec.services;
     delete data.spec.services;
     services.forEach((e) => {
-      e.group = e.group ?? bindablesGroupVersion[e.kind].split('/')[0]
-      e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[1]
+      if (bindablesGroupVersion[e.kind].split('/').length == 1) {
+        e.group = e.group ?? ''
+        e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[0]
+      }
+      else {
+        e.group = e.group ?? bindablesGroupVersion[e.kind].split('/')[0]
+        e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[1]
+      }
     })
 
     data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels},
