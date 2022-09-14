@@ -179,7 +179,7 @@ const BackupServiceItem = props => {
                 </Section>
                 <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id={`${name}[${index}].name`} description="" isRequired>
                   <Controller
-                    as={<ResourceListDropdown name={`${name}[${index}].name`} useHookForm resourceList={serviceList} kind={item.kind} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={item.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods}/>}
+                    as={<ResourceListDropdown name={`${name}[${index}].name`} useHookForm resourceList={serviceList} kind={selectedService} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={item.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods}/>}
                     control={methods.control}
                     name={`${name}[${index}].name`}
                     defaultValue={item.name}
