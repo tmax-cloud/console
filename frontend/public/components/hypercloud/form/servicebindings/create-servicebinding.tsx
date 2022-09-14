@@ -381,13 +381,11 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props)
     const getBindables = async () => {
       const data = await coFetchJSON('api/hypercloud/bindableResources')
       setBindablesGroupVersion(data)
-      console.log(data)
     }
     getBindables()
   }, [])
 
   const onSubmitCallback = data => {
-    console.log('***', data)
     delete data.method
 
     let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
