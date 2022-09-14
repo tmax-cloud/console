@@ -109,6 +109,7 @@ export const MenuContainerLabels = {
   ansible: 'COMMON:MSG_LNB_MENU_197',
   provisioning: 'COMMON:MSG_LNB_MENU_218',
   kafka: 'COMMON:MSG_LNB_MENU_239',
+  redis: 'COMMON:MSG_LNB_MENU_242'
 };
 
 // MEMO : CustomMenusMap에 들어갈 커스텀메뉴의 이름은 K8sKind의 kind이름과 중복되면 안됨. (예: Event의 경우 EventModel이 존재함. 이렇게 이름이 겹치면 안됨 => Events로 CustomMenu이름 지정)

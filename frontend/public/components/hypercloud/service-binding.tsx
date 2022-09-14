@@ -1,146 +1,239 @@
 import * as React from 'react';
-import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
 import { ServiceBindingModel } from '../../models';
-import { K8sResourceKind } from '../../module/k8s';
+import { DetailsItem, detailsPage, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { TableProps } from './utils/default-list-component';
+import { K8sResourceKind } from 'public/module/k8s';
+import { Status } from '@console/shared';
+import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
-import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
-import { Kebab, ResourceKebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { ServiceBindingStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { ServiceBindingConditions } from './service-binding_conditions';
+import { TFunction } from 'i18next';
+import { coFetchJSON } from '../../co-fetch';
+
 
 const kind = ServiceBindingModel.kind;
 
+const filters = (t: TFunction) => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'servicebinding-status',
+    reducer: ServiceBindingStatusReducer,
+    items: [
+      { id: 'Succeeded', title: 'Succeeded' },
+      { id: 'Failed', title: 'Failed' },
+      { id: 'Unknown', title: 'Unknown' },
+    ],
+  },
+];
+
 export const serviceBindingMenuActions = [...Kebab.getExtensionsActionsForKind(ServiceBindingModel), ...Kebab.factory.common];
 
-const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: serviceBinding }) => {
+export const ServiceBindingsPage: React.FC = props => {
+  const [bindables, setBindables] = React.useState([])
+  const check_bindable = (obj: BindableProps) => {
+    return (obj.kind in bindables ) && ((!!obj.group) ? (bindables[obj.kind]===`${obj.group}/${obj.version}`) : (bindables[obj.kind]===obj.version))
+  }
+
+  // table
+  const tableProps: TableProps = {
+    header: [
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+        sortField: 'metadata.name',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+        sortField: 'metadata.namespace',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
+        sortFunc: 'ServiceBindingStatusReducer',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_143',
+        sortField: 'spec.application.name',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_144',
+        sortField: 'spec.services[0].name',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
+        sortField: 'metadata.creationTimestamp',
+      },
+      {
+        title: '',
+        transforms: null,
+        props: { className: Kebab.columnClass },
+      },
+    ],
+    row: (obj: K8sResourceKind) => [
+      {
+        children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+      },
+      {
+        className: 'co-break-word',
+        children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+      },
+      {
+        className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
+        children: <Status status={ServiceBindingStatusReducer(obj)} />,
+      },
+      {
+        children: (check_bindable(obj.spec.application)) ? <ResourceLink kind={obj.spec.application.kind} name={obj.spec.application.name} namespace={obj.metadata.namespace} title={obj.spec.application.name}/> : obj.spec.application.name
+      },
+      {
+        children: (check_bindable(obj.spec.services[0])) ? <ResourceLink kind={obj.spec.services[0].kind} name={obj.spec.services[0].name} namespace={obj.spec.services[0].namespace} title={obj.spec.services[0].name} /> : obj.spec.services[0].name
+      },
+      {
+        children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+      },
+      {
+        className: Kebab.columnClass,
+        children: <ResourceKebab actions={serviceBindingMenuActions} kind={kind} resource={obj} />,
+      },
+    ]
+  }
+
+  React.useEffect(() => {
+    const getBindables = async () => {
+      const data = await coFetchJSON('api/hypercloud/bindableResources')
+      setBindables(data)
+    }
+    getBindables()
+  }, [])
+  const { t } = useTranslation();
+  return (
+    <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />
+  )
+};
+
+export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps> = ({ obj: sb }) => {
+  const [bindables, setBindables] = React.useState([])
+  const check_bindable = (obj: BindableProps) => {
+    return (obj.kind in bindables ) && ((!!obj.group) ? (bindables[obj.kind]===`${obj.group}/${obj.version}`) : (bindables[obj.kind]===obj.version))
+  }
+
+  React.useEffect(() => {
+    const getBindables = async () => {
+      const data = await coFetchJSON('api/hypercloud/bindableResources')
+      setBindables(data)
+    }
+    getBindables()
+  }, [])
+
+  const { t } = useTranslation();
+
+  return (
+    <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={sb}>
+        <Status status={ServiceBindingStatusReducer(sb)} />
+      </DetailsItem>
+      <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_1')} obj={sb}>
+        {(check_bindable(sb.spec.application)) ?
+          <ResourceLink kind={sb.spec.application.kind} name={sb.spec.application.name} namespace={sb.metadata.namespace} title={sb.spec.application.name}/>
+          : sb.spec.application.name}
+      </DetailsItem>
+      <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_2')} obj={sb}>
+        {
+          sb.spec.services?.map((service) => {
+            return (
+              <>
+                {(check_bindable(service)) ?
+                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <ResourceLink kind={service.kind} name={service.name} namespace={service.namespace} title={service.name} />
+                    <div>
+                      &nbsp;({service.namespace})
+                    </div>
+                  </div>
+                  : `${service.name} (${service.namespace})`}
+              </>
+            )
+          })
+        }
+      </DetailsItem>
+      <DetailsItem label={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_3')} obj={sb}>
+        <div>
+          {
+            `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_4')} : ${sb.spec.detectBindingResources ?
+              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_5')
+              :
+              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_6')}`
+          }
+        </div>
+        <div>
+          {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_7')} : \'${sb.spec.namingStrategy}\'`}
+        </div>
+        <div>
+          {
+            `${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_8')} : ${sb.spec.bindAsFiles ?
+              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_9')
+              :
+              t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_10')}`
+          }
+        </div>
+        <div>
+          <table>
+            <tr>
+              <td style={{'verticalAlign': 'top'}}>
+                {`${t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_11')} :`}&nbsp;
+              </td>
+              <td>
+                {sb.spec.mappings?.map(({name, value}) => {
+                  return <div>{name}-{value}</div>
+                })}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </DetailsItem>
+    </dl>
+  );
+};
+
+const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: sb }) => {
   const { t } = useTranslation();
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceBinding, t) })} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
         <div className="row">
-          <div className="col-md-6">
-            <ResourceSummary resource={serviceBinding} showAnnotations={false}></ResourceSummary>
+          <div className="col-sm-6">
+            <ResourceSummary resource={sb} showOwner={false} />
           </div>
-          <div className="col-md-6">
-            <dl className="co-m-pane__details">
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_105')}</dt>
-              <dd>
-                <ResourceLink kind="ServiceInstance" name={serviceBinding.spec.instanceRef.name} namespace={serviceBinding.metadata.namespace} title={serviceBinding.spec.instanceRef.name} />
-              </dd>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_117')}</dt>
-              <dd>
-                <ResourceLink kind="Secret" name={serviceBinding.spec.secretName} namespace={serviceBinding.metadata.namespace} title={serviceBinding.spec.secretName} />
-              </dd>
-            </dl>
+          <div className="col-sm-6">
+            <ServiceBindingDetailsList obj={sb} />
           </div>
         </div>
       </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('SINGLE:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_CONDITIONS_1')} />
+        <ServiceBindingConditions conditions={sb.status?.conditions} />
+      </div>
     </>
   );
+};
+
+const { details, editResource } = navFactory;
+
+export const ServiceBindingsDetailsPage: React.FC<DetailsPageProps> = props => {
+  return <DetailsPage {...props} getResourceStatus={ServiceBindingStatusReducer} kind={kind} menuActions={serviceBindingMenuActions} pages={[details(detailsPage(ServiceBindingDetails)), editResource()]} />;
+};
+
+
+type ServiceBindingDetailsListProps = {
+  obj: K8sResourceKind;
 };
 
 type ServiceBindingDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editResource } = navFactory;
-const ServiceBindingsDetailsPage: React.FC<ServiceBindingsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceBindingMenuActions} pages={[details(ServiceBindingDetails), editResource()]} />;
-ServiceBindingsDetailsPage.displayName = 'ServiceBindingsDetailsPage';
-
-const tableColumnClasses = [
-  '', // NAME
-  '', // NAMESPACE
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // SERVICE INSTANCE
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // SECRET
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
-  Kebab.columnClass, // MENU ACTIONS
-];
-
-const ServiceBindingTableRow = ({ obj, index, key, style }) => {
-  return (
-    <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1])}>
-        <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <ResourceLink kind="ServiceInstance" name={obj.spec.instanceRef.name} namespace={obj.metadata.namespace} title={obj.spec.instanceRef.name} />
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <ResourceLink kind="Secret" name={obj.spec.secretName} namespace={obj.metadata.namespace} title={obj.spec.secretName} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <Timestamp timestamp={obj.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <ResourceKebab actions={serviceBindingMenuActions} kind={kind} resource={obj} />
-      </TableData>
-    </TableRow>
-  );
-};
-
-const ServiceBindingTableHeader = (t?: TFunction) => {
-  return [
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-      sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
-      sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_105'),
-      sortField: 'spec.instanceRef.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_34'),
-      sortField: 'spec.secretName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
-    },
-    {
-      title: '',
-      props: { className: tableColumnClasses[5] },
-    },
-  ];
-};
-
-ServiceBindingTableHeader.displayName = 'ServiceBindingTableHeader';
-
-const ServiceBindingsList: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Service Binding" Header={ServiceBindingTableHeader.bind(null, t)} Row={ServiceBindingTableRow} />;
-};
-ServiceBindingsList.displayName = 'ServiceBindingsList';
-
-const ServiceBindingsPage: React.FC<ServiceBindingsPageProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_18')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_18') })} canCreate={true} kind={kind} ListComponent={ServiceBindingsList} {...props} />;
-};
-ServiceBindingsPage.displayName = 'ServiceBindingsPage';
-
-export { ServiceBindingsList, ServiceBindingsPage, ServiceBindingsDetailsPage };
-
-type ServiceBindingsPageProps = {};
-
-type ServiceBindingsDetailsPageProps = {
-  match: any;
-};
+type BindableProps = {
+  kind: string,
+  group: string,
+  version: string
+}

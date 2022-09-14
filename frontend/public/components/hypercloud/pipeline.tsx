@@ -96,7 +96,6 @@ export const PipelineDetailsList: React.FC<PipelineDetailsListProps> = ({ ds: pi
   );
 };
 
-
 const PipelineDetails: React.FC<PipelineDetailsProps> = ({ obj: pipeline }) => {
   const { t } = useTranslation();
   return (
@@ -115,63 +114,59 @@ const PipelineDetails: React.FC<PipelineDetailsProps> = ({ obj: pipeline }) => {
       </div>
     </>
   );
-}
+};
 
-const { details, editResource } = navFactory;
+const { details, editResource, editYaml } = navFactory;
 
 export const Pipelines: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Pipelines" Header={PipelineTableHeader.bind(null, t)} Row={PipelineTableRow} virtualize />
+  return <Table {...props} aria-label="Pipelines" Header={PipelineTableHeader.bind(null, t)} Row={PipelineTableRow} virtualize />;
 };
 
 export const PipelinesPage: React.FC<PipelinesPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_59')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_59') })}
-    canCreate={true}
-    ListComponent={Pipelines}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_59')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_59') })} canCreate={true} ListComponent={Pipelines} kind={kind} {...props} />;
+};
 
 const PipelineRunsTab: React.FC<PipelineDetailsProps> = props => {
-  return <PipelineRunsPage showTitle={false} canCreate={false} namespace={props.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': props.obj.metadata.name, }} inPipelinePage={true} />
+  return <PipelineRunsPage showTitle={false} canCreate={false} namespace={props.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': props.obj.metadata.name }} inPipelinePage={true} />;
 };
 const PipelineParametersTab: React.FC<PipelineDetailsProps> = props => {
-  return <PipelineForm PipelineFormComponent={PipelineParametersForm} formName="parameters" validationSchema={parametersValidationSchema} obj={props.obj} {...props} />
+  return <PipelineForm PipelineFormComponent={PipelineParametersForm} formName="parameters" validationSchema={parametersValidationSchema} obj={props.obj} {...props} />;
 };
 const PipelineResourcesTab: React.FC<PipelineDetailsProps> = props => {
-  return <PipelineForm PipelineFormComponent={PipelineResourcesForm} formName="resources" validationSchema={resourcesValidationSchema} obj={props.obj} {...props} />
+  return <PipelineForm PipelineFormComponent={PipelineResourcesForm} formName="resources" validationSchema={resourcesValidationSchema} obj={props.obj} {...props} />;
 };
 
 export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props => {
-  return <DetailsPage
-    {...props}
-    kind={kind}
-    menuActions={menuActions}
-    pages={[
-      details(detailsPage(PipelineDetails)),
-      editResource(),
-      {
-        href: 'runs',
-        name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1',
-        component: PipelineRunsTab,
-      },
-      {
-        href: 'parameters',
-        name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPARAMETERS_1',
-        component: PipelineParametersTab,
-      },
-      {
-        href: 'resources',
-        name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABRESOURCES_1',
-        component: PipelineResourcesTab,
-      },
-    ]}
-  />;
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      menuActions={menuActions}
+      pages={[
+        details(detailsPage(PipelineDetails)),
+        editResource(),
+        editYaml(),
+        {
+          href: 'runs',
+          name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1',
+          component: PipelineRunsTab,
+        },
+        {
+          href: 'parameters',
+          name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPARAMETERS_1',
+          component: PipelineParametersTab,
+        },
+        {
+          href: 'resources',
+          name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABRESOURCES_1',
+          component: PipelineResourcesTab,
+        },
+      ]}
+    />
+  );
 };
 
 type PipelineDetailsListProps = {

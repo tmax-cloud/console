@@ -7,6 +7,7 @@
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../actions/ui';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 function createURL(host, path) {
   let url;
@@ -34,6 +35,15 @@ function createURL(host, path) {
 
   if (path) {
     url += path;
+  }
+
+  if (path.split('/')[1] === 'helm') {
+    const mapUrl = CustomMenusMap.Helm.url;
+    if (location.protocol === 'https:') {      
+      url = `wss://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
+    } else {
+      url = `ws://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
+    }
   }
 
   return url;

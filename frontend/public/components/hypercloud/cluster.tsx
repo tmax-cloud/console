@@ -6,7 +6,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { getId, getUserGroup } from '@console/internal/hypercloud/auth';
 import { K8sResourceKind, K8sKind } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, ExternalLink } from '../utils';
 import { ClusterManagerModel } from '../../models';
 import { configureClusterNodesModal } from './modals';
 import { MembersPage, RowMemberData } from './members';
@@ -120,7 +120,10 @@ const tableProps: TableProps = {
         children: <TypeColumnItem type={type} />,
       },
       {
-        children: cluster.status?.phase,
+        children: cluster.status?.phase==='Sync Needed' ?
+          <ExternalLink href={cluster.status.applicationLink} text={cluster.status?.phase} />
+          :
+          cluster.status?.phase,
       },
       {
         children: cluster.spec.version,

@@ -140,6 +140,10 @@ const isNamespaceClaim = (model) => {
   return model.kind === 'NamespaceClaim';
 }
 
+const isHelmRelease = (model) => {
+  return model.kind === 'HelmRelease';
+}
+
 const resourceNamespaceURL = (model, isWS) => {
   if (isSingleClusterPerspective()) {
     // MEMO : 싱글클러스터의 경우 네임스페이스 조회콜은 kubernetes 콜로 보냄
@@ -323,5 +327,11 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
 
   const path = resourceURL(kind, opts);
   wsOptions.path = path;
+
+  // Helm 리소스는 api-server 별도로 존재
+  if (isHelmRelease(kind)) {
+    wsOptions.path = `/helm/v1/${query.ns ? `namespaces/${query.ns}/` : ''}releases/websocket`;
+  }
+
   return new WSFactory(path, wsOptions);
 };

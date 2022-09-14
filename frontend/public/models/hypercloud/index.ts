@@ -1186,8 +1186,8 @@ export const ServiceInstanceModel: K8sKind = {
 export const ServiceBindingModel: K8sKind = {
   label: 'Service Binding',
   labelPlural: 'Service Bindings',
-  apiVersion: 'v1beta1',
-  apiGroup: 'servicecatalog.k8s.io',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'binding.operators.coreos.com',
   plural: 'servicebindings',
   abbr: 'SB',
   kind: 'ServiceBinding',
@@ -1533,7 +1533,7 @@ export const ClusterMenuPolicyModel: K8sKind = {
   label: 'Cluster Menu Policy',
   labelPlural: 'Cluster Menu Policies',
   apiVersion: 'v1',
-  apiGroup: 'ui.tmax.io',
+  apiGroup: 'console.tmax.io',
   plural: 'clustermenupolicies',
   abbr: 'CMP',
   kind: 'ClusterMenuPolicy',
@@ -1731,5 +1731,47 @@ export const KafkaConnectModel: K8sKind = {
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_237',
     labelPlural: 'COMMON:MSG_LNB_MENU_230',
+  },
+};
+
+export const RedisModel: K8sKind = {
+  label: 'Redis',
+  labelPlural: 'Redis',
+  apiVersion: 'v1beta1',
+  apiGroup: 'redis.redis.opstreelabs.in',
+  plural: 'redis',
+  abbr: 'RDS',
+  kind: 'Redis',
+  id: 'redis',
+  namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_242',
+    labelPlural: 'COMMON:MSG_LNB_MENU_243',
+  },
+}
+
+export const RedisClusterModel: K8sKind = {
+  label: 'Redis Cluster',
+  labelPlural: 'Redis Clusters',
+  apiVersion: 'v1beta1',
+  apiGroup: 'redis.redis.opstreelabs.in',
+  plural: 'redisclusters',
+  abbr: 'RC',
+  kind: 'RedisCluster',
+  id: 'rediscluster',
+  namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_246',
+    labelPlural: 'COMMON:MSG_LNB_MENU_245',
   },
 };

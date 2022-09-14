@@ -3,6 +3,7 @@ import 'whatwg-fetch';
 import { authSvc } from './module/auth';
 import store from './redux';
 import { isSingleClusterPerspective, getSingleClusterFullBasePath } from './hypercloud/perspectives';
+import { history } from '@console/internal/components/utils/router';
 
 const initDefaults = {
   headers: {},
@@ -147,6 +148,9 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
     // MEMO : 도메인 뒷부분만 url로 들어오는 경우, singlecluster perspective면 ingress 도메인 주소로 설정해줘야함.
     if (!url.startsWith('/')) {
       url = `/${url}`;
+    }
+    if (url.includes('null') === true) {
+      history.push('/ingress-check?ingresslabelvalue=multicluster');
     }
     url = `${getSingleClusterFullBasePath()}${url}`;
   }

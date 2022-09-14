@@ -260,6 +260,8 @@ export const tableFilters: TableFilterMap = {
 
   'awx-status': withTableFilter(reducers.AwxStatusReducer),
 
+  'servicebinding-status': withTableFilter(reducers.ServiceBindingStatusReducer),
+
   machine: (str: string, machine: MachineKind): boolean => {
     const node: string = _.get(machine, 'status.nodeRef.name');
     return fuzzyCaseInsensitive(str, machine.metadata.name) || (node && fuzzyCaseInsensitive(str, node));

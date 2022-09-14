@@ -14,6 +14,7 @@ import { getActiveNamespace } from '../../reducers/ui';
 import { NavItemSeparator } from '@patternfly/react-core';
 import * as OpenInNewIcon from '@console/internal/imgs/hypercloud/lnb/export.svg';
 import * as OpenInNewFilledIcon from '@console/internal/imgs/hypercloud/lnb/filled/export_filled.svg';
+import { history } from '@console/internal/components/utils/router';
 
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
@@ -118,7 +119,11 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
     const { name, url } = this.props;
     // MEMO : type Props가 없을 경우, default NewTabLink는 url로 들어온 값 그대로를 새탭으로 띄워주게끔 처리함.
     const onClick = () => {
-      window.open(url);
+      if (url) {
+        window.open(url);
+      } else {
+        history.push('/ingress-check');
+      }
     };
     return (
       <NavItem isActive={false} onClick={onClick}>
