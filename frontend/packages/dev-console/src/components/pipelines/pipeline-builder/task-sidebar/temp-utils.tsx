@@ -18,16 +18,25 @@ export type ParameterProps = {
 export const StringParam: React.FC<ParameterProps> = (props) => {
   const { currentValue, defaultValue, isValid, name, onChange, setDirty } = props;
 
-  var tx = document.getElementsByClassName('pf-textarea-auto-resize');
-  for (var i = 0; i < tx.length; i++) {
-    tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
-    tx[i].addEventListener("input", OnInput, false);
-  }
+  React.useEffect(() => {
+    const tx = document.getElementsByClassName('pf-textarea-auto-resize');
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+      tx[i].addEventListener("input", OnInput, false);
+    }
 
-  function OnInput(e) {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  }
+    function OnInput(e) {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    }
+
+    return ()=>{
+      for (let i = 0; i < tx.length; i++) {
+        tx[i].removeEventListener("input", OnInput);
+      }
+    }
+  }, [])
+
 
   return (
     <TextArea
