@@ -19,7 +19,7 @@ image:
   repository: docker.io/tmaxcloudck/hypercloud-console
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "5.0.80.2"
+  tag: "5.0.81.0"
 
 #imagePullSecrets:
 #- name: regcred
