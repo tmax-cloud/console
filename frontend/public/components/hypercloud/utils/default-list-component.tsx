@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Table, TableRow, TableData, RowFunctionArgs } from '../../factory';
+import { Table, TableRow, TableData, RowFunctionArgs, info } from '../../factory';
 import { sortable } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
 
@@ -24,7 +24,8 @@ const makeTableHeader = (header: Header[], t: TFunction) => {
   const _header: Header[] = header.map((value, index) => ({
     ...value,
     title: t(value.title),
-    transforms: _.isUndefined(value.transforms) ? [sortable] : value.transforms,
+    transforms: _.isUndefined(value.tooltip) ? (_.isUndefined(value.transforms) ? [sortable] : value.transforms)
+      : [info({ tooltip: t(value.tooltip) })],
     props: value.props || { className: generateTableClassName(index) },
   }));
   return () => {
@@ -65,6 +66,7 @@ type Header = {
   sortField?: string;
   sortFunc?: string;
   transforms?: any;
+  tooltip?: string;
   props?: { className: string };
 };
 

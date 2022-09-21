@@ -1,0 +1,101 @@
+.pf-c-table {
+  --pf-c-table__column-help--MarginLeft: var(--pf-global--spacer--xs);
+  --pf-c-table__column-help--TranslateY: 0.125rem;
+  --pf-c-table__column-help--c-button--MarginTop: calc(var(--pf-global--spacer--form-element) * -1);
+  --pf-c-table__column-help--c-button--MarginBottom: calc(var(--pf-global--spacer--form-element) * -1);
+  --pf-c-table__column-help--c-button--PaddingRight: var(--pf-global--spacer--sm);
+  --pf-c-table__column-help--c-button--PaddingLeft: var(--pf-global--spacer--sm);
+}
+
+.pf-c-table__button-content,
+.pf-c-table__column-help {
+  display: grid;
+  align-items: end;
+  justify-content: start;
+  grid-template-columns: auto max-content;
+}
+.pf-c-table__button-content .pf-c-table__text,
+.pf-c-table__column-help .pf-c-table__text {
+  min-width: auto;
+}
+.pf-c-table thead.pf-m-nowrap .pf-c-table__button-content, .pf-c-table tr.pf-m-nowrap .pf-c-table__button-content, .pf-c-table th.pf-m-nowrap .pf-c-table__button-content,
+.pf-c-table thead.pf-m-nowrap .pf-c-table__column-help,
+.pf-c-table tr.pf-m-nowrap .pf-c-table__column-help,
+.pf-c-table th.pf-m-nowrap .pf-c-table__column-help {
+  grid-template-columns: min-content max-content;
+}
+.pf-c-table thead.pf-m-fit-content .pf-c-table__button-content, .pf-c-table tr.pf-m-fit-content .pf-c-table__button-content, .pf-c-table th.pf-m-fit-content .pf-c-table__button-content,
+.pf-c-table thead.pf-m-fit-content .pf-c-table__column-help,
+.pf-c-table tr.pf-m-fit-content .pf-c-table__column-help,
+.pf-c-table th.pf-m-fit-content .pf-c-table__column-help {
+  grid-template-columns: fit-content max-content;
+}
+.pf-c-table thead.pf-m-wrap .pf-c-table__button-content, .pf-c-table tr.pf-m-wrap .pf-c-table__button-content, .pf-c-table th.pf-m-wrap .pf-c-table__button-content, .pf-c-table thead.pf-m-truncate .pf-c-table__button-content, .pf-c-table tr.pf-m-truncate .pf-c-table__button-content, .pf-c-table th.pf-m-truncate .pf-c-table__button-content,
+.pf-c-table thead.pf-m-wrap .pf-c-table__column-help,
+.pf-c-table tr.pf-m-wrap .pf-c-table__column-help,
+.pf-c-table th.pf-m-wrap .pf-c-table__column-help,
+.pf-c-table thead.pf-m-truncate .pf-c-table__column-help,
+.pf-c-table tr.pf-m-truncate .pf-c-table__column-help,
+.pf-c-table th.pf-m-truncate .pf-c-table__column-help {
+  grid-template-columns: auto max-content;
+}
+.pf-c-table__column-help-action {
+  margin-left: var(--pf-c-table__column-help--MarginLeft);
+  transform: translateY(var(--pf-c-table__column-help--TranslateY));
+}
+.pf-c-table__column-help-action .pf-c-button {
+  --pf-c-button--PaddingRight: var(--pf-c-table__column-help--c-button--PaddingRight);
+  --pf-c-button--PaddingLeft: var(--pf-c-table__column-help--c-button--PaddingLeft);
+  margin-top: var(--pf-c-table__column-help--c-button--MarginTop);
+  margin-bottom: var(--pf-c-table__column-help--c-button--MarginBottom);
+  font-size: inherit;
+  line-height: 1;
+}
+.pf-c-table tr > *.pf-m-help {
+  --pf-c-table--cell--MinWidth: var(--pf-c-table--cell--m-help--MinWidth);
+}
+.pf-c-table .pf-m-help {
+  min-width: var(--pf-c-table--th--m-help--MinWidth);
+}
+.pf-c-table__sort.pf-m-help {
+  --pf-c-table--th--m-help--MinWidth: var(--pf-c-table__sort--m-help--MinWidth);
+}
+
+.pf-c-table__text {
+  --pf-c-table--cell--MaxWidth: 100%;
+  position: relative;
+  display: block;
+  width: var(--pf-c-table--cell--Width);
+  min-width: var(--pf-c-table--cell--MinWidth);
+  max-width: var(--pf-c-table--cell--MaxWidth);
+  overflow: var(--pf-c-table--cell--Overflow);
+  text-overflow: var(--pf-c-table--cell--TextOverflow);
+  word-break: var(--pf-c-table--cell--WordBreak);
+  white-space: var(--pf-c-table--cell--WhiteSpace);
+}
+.pf-c-table__text.pf-m-truncate {
+  --pf-c-table--cell--MinWidth: 100%;
+}
+.pf-c-table__text.pf-m-truncate > * {
+  overflow: var(--pf-c-table--cell--Overflow);
+  text-overflow: var(--pf-c-table--cell--TextOverflow);
+  white-space: var(--pf-c-table--cell--WhiteSpace);
+}
+.pf-c-table__sort .pf-c-table__text,
+.pf-c-table__compound-expansion-toggle .pf-c-table__text {
+  display: block;
+  width: auto;
+  overflow: var(--pf-c-table--cell--Overflow);
+  text-overflow: var(--pf-c-table--cell--TextOverflow);
+  white-space: var(--pf-c-table--cell--WhiteSpace);
+}
+.pf-c-table__sort .pf-c-table__text {
+  --pf-c-table--cell--MinWidth: 0;
+}
+.pf-c-table__button-content .pf-c-table__text,
+.pf-c-table__column-help .pf-c-table__text {
+  min-width: auto;
+}
+.pf-c-table__sort .pf-c-table__button .pf-c-table__text {
+  color: var(--pf-c-table__sort__button__text--Color);
+}

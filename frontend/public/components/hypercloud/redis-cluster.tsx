@@ -28,6 +28,7 @@ const tableProps: TableProps = {
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_146',
       sortField: 'spec.clusterSize',
+      tooltip: 'COMMON:MSG_MAIN_TABLEHEADER_149',
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_147',
