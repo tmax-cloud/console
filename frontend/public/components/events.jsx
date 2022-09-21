@@ -284,6 +284,7 @@ class _EventStream extends React.Component {
       getApiType: null,
       getApiKind: null,
       getAPiTextFilter: null,
+      getNamespace: props.namespace,
     };
     this.toggleStream = this.toggleStream_.bind(this);
   }
@@ -474,14 +475,16 @@ class _EventStream extends React.Component {
       response.forEach(event => {
         event.getMethod = 'interval';
       });
-      this.setState({ apiEvents: response, getApiStart: start, getApiEnd: end, getApiType: type, getApiKind: kind, getAPiTextFilter: textFilter });
+      this.setState({ apiEvents: response, getApiStart: start, getApiEnd: end, getApiType: type, getApiKind: kind, getAPiTextFilter: textFilter, getNamespace: namespace });
+    } else {
+      this.setState({ apiEvents: [], getApiStart: start, getApiEnd: end, getApiType: type, getApiKind: kind, getAPiTextFilter: textFilter, getNamespace: namespace });
     }
   };
 
   render() {
     const { mock, resourceEventStream, t, namespace, start, end, kind, type, textFilter, getMethod } = this.props;
-    const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiStart, getApiEnd, getApiType, getApiKind, getAPiTextFilter } = this.state;
-    const isChanged = start !== getApiStart || end !== getApiEnd || kind !== getApiKind || type !== getApiType || textFilter !== getAPiTextFilter
+    const { active, error, loading, filteredEvents, sortedMessages, apiEvents, getApiStart, getApiEnd, getApiType, getApiKind, getAPiTextFilter, getNamespace } = this.state;
+    const isChanged = start !== getApiStart || end !== getApiEnd || kind !== getApiKind || type !== getApiType || textFilter !== getAPiTextFilter || namespace !== getNamespace;
     if (getMethod === 'interval' && isChanged) {
       this.getEvent(start, end, kind, type, textFilter, namespace);
     }
