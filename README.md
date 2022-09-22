@@ -1,4 +1,4 @@
-# HyperCloud Console 5.0
+# HyperCloud Console
 
 ### Docs Page
 
