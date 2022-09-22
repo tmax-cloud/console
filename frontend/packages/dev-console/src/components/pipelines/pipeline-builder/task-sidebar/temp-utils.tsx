@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { global_disabled_color_200 as disabledColor } from '@patternfly/react-tokens';
-import { Flex, FlexItem, FlexModifiers, TextInput } from '@patternfly/react-core';
+import { Flex, FlexItem, FlexModifiers, TextArea } from '@patternfly/react-core';
 import MultiColumnFieldFooter from '@console/shared/src/components/formik-fields/multi-column-field/MultiColumnFieldFooter';
 
 export type ParamValueType = string | string[];
@@ -18,8 +18,29 @@ export type ParameterProps = {
 export const StringParam: React.FC<ParameterProps> = (props) => {
   const { currentValue, defaultValue, isValid, name, onChange, setDirty } = props;
 
+  React.useEffect(() => {
+    const tx = document.getElementsByClassName('pf-textarea-auto-resize');
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+      tx[i].addEventListener("input", OnInput, false);
+    }
+
+    function OnInput(e) {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    }
+
+    return ()=>{
+      for (let i = 0; i < tx.length; i++) {
+        tx[i].removeEventListener("input", OnInput);
+      }
+    }
+  }, [])
+
+
   return (
-    <TextInput
+    <TextArea
+      className='pf-textarea-auto-resize'
       id={name}
       isValid={isValid}
       isRequired={!defaultValue}

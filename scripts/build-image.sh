@@ -5,7 +5,7 @@ DOCKER_REGISTRY="docker.io"
 DOCKER_IMAGE="tmaxcloudck/hypercloud-console"
 MAJOR_VERSION="5"
 MINOR_VERSION="2"
-PATCH_VERSION="0"
+PATCH_VERSION="1"
 HOTFIX_VERSION="0"
 
 #build docker image 
