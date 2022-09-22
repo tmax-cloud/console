@@ -12,7 +12,7 @@ import { useDocumentListener, KEYBOARD_SHORTCUTS } from '@console/shared';
 import { filterList } from '../../actions/k8s';
 import { storagePrefix } from '../row-filter';
 import { ErrorPage404, ErrorBoundaryFallback } from '../error';
-import { referenceForModel } from '../../module/k8s';
+import { kindForReference, referenceForModel } from '../../module/k8s';
 import { Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
@@ -72,8 +72,12 @@ ListPageWrapper_.propTypes = {
   tableProps: PropTypes.any,
 };
 
-/** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode, unclickableMsg?: String, multiNavBaseURL?: String}> }*/
-export const FireMan_ = connect(null, { filterList })(
+const mapStateToProps = state => ({
+  k8s: state.k8s,
+});
+
+/** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode, unclickableMsg?: String, multiNavBaseURL?: String, kind: string}> }*/
+export const FireMan_ = connect(mapStateToProps, { filterList })(
   class ConnectedFireMan extends React.PureComponent {
     constructor(props) {
       super(props);
@@ -143,8 +147,7 @@ export const FireMan_ = connect(null, { filterList })(
     };
 
     render() {
-      const { canCreate, createAccessReview, createButtonText, createProps = {}, helpText, resources, badge, title, displayTitleRow, unclickableMsg, multiNavPages, baseURL, basePath } = this.props;
-
+      const { canCreate, createAccessReview, createButtonText, createProps = {}, helpText, resources, badge, title, displayTitleRow, unclickableMsg, multiNavPages, baseURL, basePath, k8s, kind } = this.props;
       let createLink;
       if (canCreate) {
         if (createProps.to) {
@@ -182,7 +185,10 @@ export const FireMan_ = connect(null, { filterList })(
         // }
       }
 
-      const buttonComponent = createLink && (
+      // CRD가 없을 경우 생성 버튼 감춤
+      const kindObj = !_.isEmpty(kind) ? k8s.getIn(['RESOURCES', 'models', kind]) || k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null;
+
+      const buttonComponent = createLink && kindObj && (
         <div
           className={classNames('co-m-pane__createLink', {
             'co-m-pane__createLink--no-title': !title,
@@ -368,15 +374,16 @@ export const ListPage = withFallback(props => {
       defaultSelectedRows={defaultSelectedRows}
       tableProps={tableProps}
       items={items}
+      kind={kind}
     />
   );
 }, ErrorBoundaryFallback);
 
 ListPage.displayName = 'ListPage';
 
-/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, displayTitleRow?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent?: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[] } >} */
+/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, displayTitleRow?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent?: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[], kind: string } >} */
 export const MultiListPage = props => {
-  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, displayTitleRow = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows, tableProps, items } = props;
+  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, displayTitleRow = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows, tableProps, items, kind } = props;
 
   const { t } = useTranslation();
 
@@ -410,6 +417,7 @@ export const MultiListPage = props => {
       unclickableMsg={unclickableMsg}
       multiNavPages={multiNavPages}
       baseURL={multiNavBaseURL}
+      kind={kind}
     >
       <Firehose resources={mock ? [] : resources}>{listPageWrapper}</Firehose>
     </FireMan_>

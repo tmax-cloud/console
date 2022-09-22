@@ -4,8 +4,10 @@ import * as classNames from 'classnames';
 import { Alert, Button } from '@patternfly/react-core';
 
 import * as restrictedSignImg from '../../imgs/restricted-sign.svg';
+import * as imgNoResource from '../../imgs/hypercloud/img_no_resource.svg';
 import { TimeoutError } from '../../co-fetch';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 export const Box: React.FC<BoxProps> = ({ children, className }) => <div className={classNames('cos-status-box', className)}>{children}</div>;
 
@@ -83,6 +85,25 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
 };
 AccessDenied.displayName = 'AccessDenied';
 
+export const CrdNotFound: React.FC<CrdNotFoundProps> = ({ message }) => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <Box className="text-center">
+        <img className="cos-status-box__access-denied-icon" src={imgNoResource} />
+        <MsgBox title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_29')} detail={t('COMMON:MSG_COMMON_ERROR_MESSAGE_42')} className="co-pre-wrap" />
+        <Link to={'/k8s/cluster/customresourcedefinitions'}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_43')}</Link>
+      </Box>
+      {_.isString(message) && (
+        <Alert isInline className="co-alert co-alert-space" variant="danger" title={t('COMMON:MSG_MAIN_POPOVER_1')}>
+          {message}
+        </Alert>
+      )}
+    </div>
+  );
+};
+CrdNotFound.displayName = 'CrdNotFound';
+
 const Data: React.FC<DataProps> = props => {
   const { NoDataEmptyMsg, EmptyMsg, label, data, unfilteredData, children } = props;
   if (NoDataEmptyMsg && _.isEmpty(unfilteredData)) {
@@ -101,11 +122,7 @@ export const StatusBox: React.FC<StatusBoxProps> = props => {
   const { t } = useTranslation();
 
   if (noCrd) {
-    return (
-      <div className="co-m-pane__body">
-        <h1 className="co-m-pane__heading co-m-pane__heading--center">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_42')}</h1>
-      </div>
-    );
+    return <CrdNotFound message={loadError?.message} />;
   }
 
   if (loadError) {
@@ -173,6 +190,10 @@ type MsgBoxProps = {
 };
 
 type AccessDeniedProps = {
+  message?: string;
+};
+
+type CrdNotFoundProps = {
   message?: string;
 };
 
