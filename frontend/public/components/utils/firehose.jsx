@@ -270,7 +270,10 @@ export const Firehose = connect(
         );
         return <ConnectToState reduxes={reduxes}>{children}</ConnectToState>;
       }
-      return <StatusBox noCrd={true} />;
+      if (this.state.firehoses.length === 0) {
+        return <StatusBox noCrd={true} />
+      }
+      return null;
     }
   },
 );
