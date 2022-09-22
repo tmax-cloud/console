@@ -94,7 +94,7 @@ description: >-
 # 🖥️ 개발 가이드 리스트
 
 - openshift console 코드 원본 - [github](https://github.com/openshift/console/tree/release-4.5)
-- 메인 작업은 **hc-dev-5.1** Branch에서 진행 됩니다.
+- 메인 작업은 **master** Branch에서 진행 됩니다.
 
 - ### [(WSL2) Linux 개발환경 구축 가이드]({{'/page-wsl' | relative_url}})
 - ### [Helm 가이드]({{'/page-helm' | relative_url}})
