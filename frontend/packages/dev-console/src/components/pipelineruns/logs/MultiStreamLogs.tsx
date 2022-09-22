@@ -148,22 +148,25 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
           ref={scrollPane}
           onScroll={handleScrollCallback}
         >
-          {containers.map((container, idx) => {
-            const resourceStatus = containerToLogSourceStatus(containerStatus[idx]);
-            return (
-              resourceStatus !== LOG_SOURCE_WAITING && (
-                <Logs
-                  key={container.name}
-                  resource={resource}
-                  container={container}
-                  resourceStatus={resourceStatus}
-                  onComplete={handleComplete}
-                  render={renderToCount >= idx}
-                  autoScroll={autoScroll}
-                />
-              )
-            );
-          })}
+          {containers.length > 0 ?
+            (containers.map((container, idx) => {
+              const resourceStatus = containerToLogSourceStatus(containerStatus[idx]);
+              return (
+                resourceStatus !== LOG_SOURCE_WAITING && (
+                  <Logs
+                    key={container.name}
+                    resource={resource}
+                    container={container}
+                    resourceStatus={resourceStatus}
+                    onComplete={handleComplete}
+                    render={renderToCount >= idx}
+                    autoScroll={autoScroll}
+                  />
+                )
+              );
+            })) : (
+              <p>Pod가 삭제되어 로그를 조회할 수 없습니다.</p>
+            )}
         </div>
       </div>
     </div>
