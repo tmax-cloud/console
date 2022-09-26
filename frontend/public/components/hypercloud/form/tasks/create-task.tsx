@@ -2,10 +2,12 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { match as RMatch } from 'react-router';
 import { useFormContext, Controller } from 'react-hook-form';
+import { EditorType } from '@console/shared/src/components/synced-editor/editor-toggle';
+import { K8sResourceKindReference } from '@console/internal/module/k8s';
+import { defaultTemplateMap } from '@console/internal/components/hypercloud/form';
 import { WithCommonForm } from '../create-form';
 import { Section } from '../../utils/section';
 import { SelectorInput } from '../../../utils';
-import { useSetTaskHook } from '../utils/useInitData';
 import { ModalLauncher, ModalList, useInitModal, handleModalData, removeModalData } from '../utils';
 import { InputResourceModal } from './input-resource-modal';
 import { OutputResourceModal } from './output-resource-modal';
@@ -16,38 +18,32 @@ import { StepModal } from './step-modal';
 import { TaskModel } from '../../../../models';
 import { volumeValidCallback, stepValidCallback } from '../utils/validCallback';
 import { useTranslation } from 'react-i18next';
-
-const defaultValuesTemplate = {
-  metadata: {
-    name: 'example-name',
-  },
-};
-
-const taskFormFactory = (params, obj) => {
-  const defaultValues = obj || defaultValuesTemplate;
-  return WithCommonForm(CreateTaskComponent, params, defaultValues);
-};
+import { convertToForm, onSubmitCallback } from './sync-form-data';
+import { CreateDefault } from '../../crd/create-pinned-resource';
+import { EditDefault } from '../../crd/edit-resource';
 
 const CreateTaskComponent: React.FC<TaskFormProps> = props => {
+  const { formData } = props;
   const methods = useFormContext();
   const {
     control,
+    /* not used
     control: {
       defaultValuesRef: { current: defaultValues },
-    },
+    }, */
   } = methods;
   const { t } = useTranslation();
 
-  const [labels, setLabels] = React.useState([]);
-  const [inputResource, setInputResource] = React.useState([]);
-  const [outputResource, setOutputResource] = React.useState([]);
-  const [taskParameter, setTaskParameter] = React.useState([]);
-  const [workSpace, setWorkSpace] = React.useState([]);
-  const [volume, setVolume] = React.useState([]);
-  const [step, setStep] = React.useState([]);
+  const [labels] = React.useState(formData?.metadata?.labels || []);
+  const [inputResource, setInputResource] = React.useState(formData?.spec?.resources?.inputs || []);
+  const [outputResource, setOutputResource] = React.useState(formData?.spec?.resources?.outputs || []);
+  const [taskParameter, setTaskParameter] = React.useState(formData?.spec?.params || []);
+  const [workSpace, setWorkSpace] = React.useState(formData?.spec?.workspaces || []);
+  const [volume, setVolume] = React.useState(formData?.spec?.volumes || []);
+  const [step, setStep] = React.useState(formData?.spec?.steps || []);
 
-  // 각 필드 별 default value 세팅
-  useSetTaskHook({ defaultValues, setLabels, setInputResource, setOutputResource, setTaskParameter, setWorkSpace, setVolume, setStep });
+  // 각 필드 별 default value 세팅 (not used - convertToForm()으로 대체)
+  // useSetTaskHook({ defaultValues, setLabels, setInputResource, setOutputResource, setTaskParameter, setWorkSpace, setVolume, setStep });
 
   // Modal Form 초기 세팅위한 Hook들 Custom Hook으로 정리
   useInitModal(methods, inputResource, 'spec.resources.inputs');
@@ -243,139 +239,27 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   );
 };
 
-export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, obj, kind }) => {
-  const formComponent = taskFormFactory(params, obj);
-  const TaskFormComponent = formComponent;
-  return <TaskFormComponent fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
+  const { formData, onChange } = props;
+  const _formData = React.useMemo(() => convertToForm(formData), [formData]);
+  const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
+  const watchFieldNames = ['metadata.labels', 'spec.resources.inputs', 'spec.resources.outputs', 'spec.params', 'spec.workspaces', 'spec.volumes', 'spec.steps'];
+  return <Form {...props} fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 
-export const onSubmitCallback = data => {
-  let labels = {};
-  if (_.isArray(data.metadata.labels)) {
-    data.metadata.labels.forEach(cur => {
-      labels = typeof cur === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
-    });
-  } else {
-    labels = typeof data.metadata.labels === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+export const CreateTask: React.FC<CreateTaskProps> = props => {
+  const { match, obj, kind } = props;
+  const Form = WithCommonForm(CreateTaskComponent, match.params, obj || defaultTemplateMap.get(kind), null, true);
+  if (obj) {
+    // edit form
+    return <EditDefault initialEditorType={EditorType.Form} create={false} model={TaskModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: false })} obj={obj} />;
   }
-  delete data.metadata.labels;
-  data = _.defaultsDeep({ metadata: { labels: labels } }, data);
-  // apiVersion, kind
-  data.kind = TaskModel.kind;
-  data.apiVersion = `${TaskModel.apiGroup}/${TaskModel.apiVersion}`;
-  // resources
-  if (data.spec.resources.inputs.length === 0 && data.spec.resources.outputs.length === 0) {
-    delete data.spec.resources;
-  }
-
-  //parameter
-  data.spec.params = data?.spec?.params?.map((cur, idx) => {
-    const stringDefault = cur?.defaultStr;
-    const arrayDefault = cur.defaultArr?.map(cur => cur.value)?.filter(cur => !!cur);
-    if (cur.type === 'string' && !!stringDefault) {
-      data.spec.params[idx].default = stringDefault;
-    } else if (arrayDefault?.length > 0) {
-      data.spec.params[idx].default = arrayDefault;
-    }
-    delete data.spec.params[idx].defaultStr;
-    delete data.spec.params[idx].defaultArr;
-    return cur;
-  });
-  // workspace
-  data.spec.workspaces = data?.spec?.workspaces?.map((cur, idx) => {
-    let isReadOnly = cur.accessMode === 'readOnly' ? true : false;
-    delete data.spec.workspaces[idx].accessMode;
-
-    if (cur.mountPath === '') {
-      cur.mountPath = `/workspace/${cur.name}`;
-    }
-
-    if (isReadOnly) {
-      return { ...cur, readOnly: true };
-    } else {
-      return { ...cur, readOnly: false };
-    }
-  });
-  // volume
-  data.spec.volumes = data?.spec?.volumes?.map(cur => {
-    if (cur.type === 'emptyDir') {
-      return {
-        name: cur?.name,
-        emptyDir: {},
-      };
-    } else if (cur.type === 'configMap') {
-      return {
-        name: cur?.name,
-        configMap: {
-          name: cur?.configMap,
-        },
-      };
-    } else if (cur.type === 'secret') {
-      return {
-        name: cur?.name,
-        secret: {
-          secretName: cur?.secret,
-        },
-      };
-    }
-  });
-  // step
-  data.spec.steps = data?.spec?.steps?.map((cur, idx) => {
-    // image
-    if (cur.registryTypeToggle === 'internal' && cur.registryRegistry) {
-      cur.image = `${cur.registryRegistry}/${cur.registryImage}:${cur.registryTag}`;
-    }
-    delete cur.registryRegistry;
-    delete cur.registryImage;
-    delete cur.registryTag;
-    delete cur.registryTypeToggle;
-    delete cur.isFirstTimeEdit;
-    // command
-    cur.command = cur?.command?.map(curCommand => curCommand?.value);
-    //args
-    cur.args = cur?.args?.map(curArg => curArg?.value);
-    //env
-    cur.env = cur?.env?.map(curEnv =>
-      curEnv.envType === 'normal'
-        ? { name: curEnv?.envKey, value: curEnv?.envValue }
-        : {
-            name: curEnv?.envKey,
-            valueFrom: {
-              [`${curEnv.envType}KeyRef`]: {
-                key: curEnv.resourceKey,
-                name: curEnv.envValue,
-              },
-            },
-          },
-    );
-    if (cur.commandTypeToggle === 'command') {
-      delete data.spec.steps[idx].script;
-    } else {
-      delete data.spec.steps[idx].command;
-      delete data.spec.steps[idx].args;
-    }
-    delete data.spec.steps[idx].commandTypeToggle;
-
-    if (cur.mountArr) {
-      let volumeMounts = cur.mountArr?.map(cur => ({
-        mountPath: cur.mountPath,
-        name: cur.mountName.value,
-      }));
-      data.spec.steps[idx].volumeMounts = volumeMounts;
-      delete data.spec.steps[idx].mountArr;
-    }
-
-    return cur;
-  });
-
-  return data;
+  // create form
+  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={TaskModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: true })} />;
 };
 
 type CreateTaskProps = {
-  match: RMatch<{
-    type?: string;
-    ns?: string;
-  }>;
+  match: RMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   kind: string;
   fixed: object;
   explanation: string;
@@ -391,4 +275,5 @@ type TaskFormProps = {
     [key: string]: string;
   };
   isCreate: boolean;
+  formData: any;
 };
