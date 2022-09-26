@@ -62,3 +62,18 @@ export const getResourceSchemaUrl = (model: K8sKind, isCustomResourceType: boole
   }
   return url;
 };
+
+// 폼 생성 시 기본값으로 포함되어야할 템플릿 정의
+export const defaultTemplateMap = new Map([
+  [
+    models.TaskModel.kind,
+    {
+      metadata: {
+        name: 'example-name',
+      },
+    },
+  ],
+]);
+
+// 빈 값으로 정의되어야 하는 것들 정의
+export const shouldNotPruneMap = new Map([[models.TaskModel.kind, ['emptyDir']]]);

@@ -15,7 +15,7 @@ const isNotAllowedStatus = (statusList, currentStatus) => {
 };
 
 export const isSaveButtonDisabled = obj => {
-  let kind = obj.kind;
+  let kind = obj?.kind;
   let status = ''; // 리소스마다 status 위치 다름
   switch (kind) {
     case TFApplyClaimModel.kind:

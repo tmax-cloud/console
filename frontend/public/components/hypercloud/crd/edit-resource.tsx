@@ -14,13 +14,13 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, getResourceSchemaUrl } from '../form';
+import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, getResourceSchemaUrl, shouldNotPruneMap } from '../form';
 import { AsyncComponent } from '../../utils/async';
 import { isSaveButtonDisabled } from '../utils/button-state';
 import { OnlyYamlEditorKinds } from './create-pinned-resource';
 import { coFetchJSON } from '../../../co-fetch';
 
-export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, obj, create }) => {
+export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, obj, create, customFormEditor }) => {
   const [loaded, setLoaded] = React.useState(false);
   const [template, setTemplate] = React.useState({} as any);
 
@@ -41,7 +41,8 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
     const baseSchema = (template?.spec?.versions?.[0]?.schema?.openAPIV3Schema as JSONSchema7) ?? (template?.spec?.validation?.openAPIV3Schema as JSONSchema7) ?? template;
     return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
   }, [template]);
-  const pruneFunc = React.useCallback(data => prune(data, obj), [obj]);
+  const keysForsholdNotPrune = React.useMemo(() => shouldNotPruneMap.get(model.kind), [model]);
+  const pruneFunc = React.useCallback(data => prune(data, obj, keysForsholdNotPrune), [obj, keysForsholdNotPrune]);
 
   const onChangeEditorType = React.useCallback(newMethod => {
     setHelpText(newMethod === EditorType.Form ? FORM_HELP_TEXT : YAML_HELP_TEXT);
@@ -79,7 +80,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
               formContext: { match, model, next, schema, create },
               yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
             }}
-            FormEditor={FormComponent}
+            FormEditor={customFormEditor || FormComponent}
             initialData={obj}
             initialType={initialEditorType}
             onChangeEditorType={onChangeEditorType}
@@ -134,7 +135,7 @@ export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProp
 });
 
 export type EditDefaultProps = {
-  activePerspective: string;
+  activePerspective?: string;
   initialEditorType: EditorType;
   loaded: boolean;
   loadError?: any;
@@ -142,6 +143,7 @@ export type EditDefaultProps = {
   model: K8sKind;
   obj?: K8sResourceKind;
   create: boolean;
+  customFormEditor?: React.FC<any>;
 };
 
 export type EditDefaultPageProps = {
