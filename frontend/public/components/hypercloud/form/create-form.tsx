@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
@@ -34,13 +35,19 @@ export const kindToggle = (kindPlural, methods) => {
   return kindPlural;
 };
 
-export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?: NonK8sKind) => {
+export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?: NonK8sKind, hideTitle?: boolean) => {
   const { t } = useTranslation();
 
   const isButtonDisabled = defaultValues.status && isSaveButtonDisabled(defaultValues);
 
   const FormComponent: React.FC<CommonFormProps_> = props => {
-    const methods = useForm({ defaultValues: defaultValues });
+    const { formData, setFormData, onChange, watchFieldNames = [] } = props;
+    const methods = useForm({ defaultValues: formData || defaultValues });
+    const watchedValue = useWatch({ control: methods.control, name: ['metadata.name', ...watchFieldNames] });
+
+    React.useEffect(() => {
+      onChange && onChange(setFormData ? setFormData(methods.getValues()) : methods.getValues());
+    }, [watchedValue]);
 
     const kind = NonK8sKindModel ? NonK8sKindModel.kind : pluralToKind(kindToggle(params.plural, methods));
     //const kind = pluralToKind(params.plural);
@@ -117,14 +124,16 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
     });
     return (
       <FormProvider {...methods}>
-        <div className="co-m-pane__body">
+        <div className={classNames('co-m-pane__body', { 'co-m-pane__body--no-top-margin': hideTitle })}>
           <Helmet>
             <title>{title}</title>
           </Helmet>
           <form className="co-m-pane__body-group co-m-pane__form">
-            <h1 className="co-m-pane__heading co-m-pane__heading--baseline">
-              <div className="co-m-pane__name">{title}</div>
-            </h1>
+            {!hideTitle && (
+              <h1 className="co-m-pane__heading co-m-pane__heading--baseline">
+                <div className="co-m-pane__name">{title}</div>
+              </h1>
+            )}
             <p className="co-m-pane__explanation">{props.explanation}</p>
             {props.useDefaultForm && (
               <fieldset>
@@ -133,7 +142,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
                 </Section>
               </fieldset>
             )}
-            <SubForm isCreate={props.isCreate} />
+            <SubForm isCreate={props.isCreate} onChange={onChange} formData={formData} />
             <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
               <ActionGroup className="pf-c-form">
                 {!!isButtonDisabled ? (
@@ -172,10 +181,14 @@ type CommonFormProps_ = {
   obj?: K8sResourceKind;
   fixed: object;
   isCreate: boolean;
-  titleVerb: string;
+  titleVerb?: string;
   onSubmitCallback: Function;
   saveButtonText?: string;
   explanation?: string;
   useDefaultForm?: boolean;
   nameSectionTitle?: string;
+  formData?: any;
+  setFormData?: (formData: any) => {};
+  onChange?: (data: K8sResourceKind) => void;
+  watchFieldNames?: string[];
 };
