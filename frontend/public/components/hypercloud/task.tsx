@@ -82,7 +82,7 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({ obj: task }) => {
   );
 };
 
-const { details, editResource, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const Tasks: React.FC = props => {
   const { t } = useTranslation();
@@ -95,7 +95,7 @@ export const TasksPage: React.FC<TasksPageProps> = props => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_57')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_57') })} canCreate={true} ListComponent={Tasks} kind={kind} {...props} />;
 };
 
-export const TasksDetailsPage: React.FC<TasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskDetails)), editResource(), editYaml()]} />;
+export const TasksDetailsPage: React.FC<TasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskDetails)), editResource()]} />;
 
 type TasksPageProps = {
   showTitle?: boolean;
