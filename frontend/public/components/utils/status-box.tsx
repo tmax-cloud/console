@@ -118,12 +118,8 @@ const Data: React.FC<DataProps> = props => {
 Data.displayName = 'Data';
 
 export const StatusBox: React.FC<StatusBoxProps> = props => {
-  const { loadError, loaded, skeleton, noCrd, ...dataProps } = props;
+  const { loadError, loaded, skeleton, ...dataProps } = props;
   const { t } = useTranslation();
-
-  if (noCrd) {
-    return <CrdNotFound message={loadError?.message} />;
-  }
 
   if (loadError) {
     const status = _.get(loadError, 'response.status');
@@ -216,5 +212,4 @@ type StatusBoxProps = {
   NoDataEmptyMsg?: React.ComponentType;
   EmptyMsg?: React.ComponentType;
   children?: React.ReactNode;
-  noCrd?: boolean;
 };
