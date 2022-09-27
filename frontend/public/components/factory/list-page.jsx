@@ -13,7 +13,7 @@ import { filterList } from '../../actions/k8s';
 import { storagePrefix } from '../row-filter';
 import { ErrorPage404, ErrorBoundaryFallback } from '../error';
 import { kindForReference, referenceForModel } from '../../module/k8s';
-import { Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
+import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
@@ -85,8 +85,8 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
       this.applyFilter = this.applyFilter.bind(this);
 
       const reduxIDs = props.resources.map(r => makeReduxID(kindObj(r.kind), makeQuery(r.namespace, r.selector, r.fieldSelector, r.name)));
-      const isCrdExist = _.map(props.resources, 'kind').every(kind => ((!_.isEmpty(kind) ? props.k8s.getIn(['RESOURCES', 'models', kind]) || props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null)));
-      this.state = { reduxIDs, isCrdExist };
+      const modelExists = _.map(props.resources, 'kind').every(kind => ((!_.isEmpty(kind) ? props.k8s.getIn(['RESOURCES', 'models', kind]) || props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null)));
+      this.state = { reduxIDs, modelExists };
     }
 
     UNSAFE_componentWillReceiveProps({ resources }) {
@@ -188,7 +188,7 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
       }
 
       // CRD가 없을 경우 생성 버튼 감춤
-      const buttonComponent = createLink && this.state.isCrdExist && (
+      const buttonComponent = createLink && this.state.modelExists && (
         <div
           className={classNames('co-m-pane__createLink', {
             'co-m-pane__createLink--no-title': !title,
@@ -221,15 +221,21 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
             </div>
           )}
           {multiNavPages && <div style={{ paddingLeft: '30px', paddingBottom: '10px', width: 'fit-content' }}>{buttonComponent}</div>}
-          {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
-          <div className="co-m-pane__body co-m-pane__body--no-top-margin">
-            {inject(this.props.children, {
-              resources,
-              expand: this.state.expand,
-              reduxIDs: this.state.reduxIDs,
-              applyFilter: this.applyFilter,
-            })}
-          </div>
+          {this.state.modelExists ? (
+            <>
+              {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
+              <div className="co-m-pane__body co-m-pane__body--no-top-margin">
+                {inject(this.props.children, {
+                  resources,
+                  expand: this.state.expand,
+                  reduxIDs: this.state.reduxIDs,
+                  applyFilter: this.applyFilter,
+                })}
+              </div>
+            </>
+          ) : (
+            <CrdNotFound />
+          )}
         </>
       );
     }

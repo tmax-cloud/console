@@ -8,7 +8,6 @@ import { inject } from './inject';
 import { makeReduxID, makeQuery, makeReduxIDforNonK8sResource } from './k8s-watcher';
 import * as k8sActions from '../../actions/k8s';
 import { kindObj } from '.';
-import { StatusBox } from './status-box';
 
 const shallowMapEquals = (a, b) => {
   if (a === b || (a.size === 0 && b.size === 0)) {
@@ -270,7 +269,7 @@ export const Firehose = connect(
         );
         return <ConnectToState reduxes={reduxes}>{children}</ConnectToState>;
       }
-      return <StatusBox noCrd={true} />;
+      return null;
     }
   },
 );
