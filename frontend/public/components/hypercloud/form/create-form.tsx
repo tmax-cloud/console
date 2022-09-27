@@ -142,7 +142,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
                 </Section>
               </fieldset>
             )}
-            <SubForm isCreate={props.isCreate} onChange={onChange} formData={formData} />
+            <SubForm isCreate={props.isCreate} formData={formData} />
             <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
               <ActionGroup className="pf-c-form">
                 {!!isButtonDisabled ? (
