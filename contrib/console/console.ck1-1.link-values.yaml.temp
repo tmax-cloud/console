@@ -2,7 +2,7 @@ deploy:
   global:
     serviceAccount: "console"
     domain: "ck1-1.link"
-    consoleDomain: "console-test"
+    consoleDomain: "console"
     hyperAuth:
       address: "hyperauth.tmaxcloud.org"
       realm: "tmax"
@@ -13,7 +13,7 @@ deploy:
     clientID: "hypercloud5"
 
   image:
-    tag: "5.2.1.1"
+    tag: "@@VER@@"
 
   oauth2proxy:
     config:
