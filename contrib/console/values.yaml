@@ -20,5 +20,5 @@ deploy:
       clientID: "hypercloud5"
       clientSecret: ""
       cookieSecret: ""
-      redis:
-        enabled: false
+    redis:
+      enabled: false
