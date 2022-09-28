@@ -27,4 +27,3 @@ dependencies:
   - name: console
     repository: https://tmax-cloud.github.io/charts
     version: 1.0.2
-    alias: deploy
