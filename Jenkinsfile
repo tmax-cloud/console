@@ -91,9 +91,9 @@ spec:
     stage('Build') {
       steps{
         container('kaniko'){
-          sh '''
+          sh """
             /kaniko/executor --context `pwd` --destination ${DOCKER_REGISTRY}/${PRODUCT}:${VER}
-          '''
+          """
         }
       }
     }
@@ -144,33 +144,33 @@ spec:
       }
     }
 
-    stage('Email'){
-      when {
-        anyOf {
-          environment name: 'BUILD_MODE', value: 'PATCH'
-          environment name: 'BUILD_MODE', value: 'HOTFIX'
-        }
-      }
-      steps {
-        withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
-          sh """
-            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH} --tags
-            git add -A
-            git commit -m 'Added changelog and updated history'
-            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
-          """        
-        }
-        emailext (
-          to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
-          subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
-          attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
-          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 타 모듈과의 버전을 맞추기위해 기존 5.1에서 5.0으로 변경했습니다. (PATCH, HOTFIX 는 기존 번호 유지)" + 
-          "\n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
-                "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} ",
-          mimeType: 'text/plain'  
-        )
-      }
-    }
+    // stage('Email'){
+    //   when {
+    //     anyOf {
+    //       environment name: 'BUILD_MODE', value: 'PATCH'
+    //       environment name: 'BUILD_MODE', value: 'HOTFIX'
+    //     }
+    //   }
+    //   steps {
+    //     withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
+    //       sh """
+    //         git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH} --tags
+    //         git add -A
+    //         git commit -m 'Added changelog and updated history'
+    //         git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
+    //       """        
+    //     }
+    //     emailext (
+    //       to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
+    //       subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
+    //       attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
+    //       body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 타 모듈과의 버전을 맞추기위해 기존 5.1에서 5.0으로 변경했습니다. (PATCH, HOTFIX 는 기존 번호 유지)" + 
+    //       "\n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
+    //             "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} ",
+    //       mimeType: 'text/plain'  
+    //     )
+    //   }
+    // }
 
   }
 
