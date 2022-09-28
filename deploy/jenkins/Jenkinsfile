@@ -1,8 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      cloud 'team-k8s'
-      // yamlFile './KubernetesPod.yaml'
+      cloud 'docker-cluster'
       yaml '''
         apiVersion: v1
         kind: Pod
@@ -12,8 +11,6 @@ pipeline {
           labels:
             class: KubernetesDeclarativeAgentTest
         spec:
-          imagePullSecretes:
-          - name: regcred
           containers:
           - name: docker 
             image: docker:20.10.12
@@ -33,12 +30,6 @@ pipeline {
   }  
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
-  
-    string(name: 'HYPERAUTH', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
-    string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
-    string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
-    string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')
-    string(name: 'CHATBOT_EMBED', defaultValue: 'false', description: 'Enable chatbot')
   }
   triggers {
     // ref https://plugins.jenkins.io/parameterized-scheduler/
@@ -46,13 +37,13 @@ pipeline {
     parameterizedCron('H 9 * * 4 %BUILD_MODE=PATCH')
   }
   environment {
-    BRANCH = "hc-dev-v5.1"
+    BRANCH = "master"
     BUILD_MODE = "${params.BUILD_MODE}"
   
     DOCKER_REGISTRY="tmaxcloudck"
     PRODUCT = "hypercloud-console"
     MAJOR_VER="5"
-    MINOR_VER="0"
+    MINOR_VER="2"
     PATCH_VER="0"
     HOTFIX_VER="0"
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
@@ -184,7 +175,7 @@ pipeline {
           to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
-          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 타 모듈과의 버전을 맞추기위해 기존 5.1에서 5.0으로 변경했습니다. (PATCH, HOTFIX 는 기존 번호 유지)" + 
+          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 5.2.x.x 버전은 5.0 버전과 호환이 안됩니다. 재 설치 하시길 바랍니다." +
           "\n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
                 "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} ",
           mimeType: 'text/plain'  

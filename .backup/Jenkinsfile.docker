@@ -1,8 +1,17 @@
 pipeline {
+  parameters {
+    choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
+  }
+  triggers {
+    // ref https://plugins.jenkins.io/parameterized-scheduler/
+    // trigger at 9:00 every Thursday
+    parameterizedCron('''
+    H 9 * * 4 %BUILD_MODE=PATCH
+    ''')
+  }
   agent {
     kubernetes {
-      cloud 'team-k8s'
-      // yamlFile './KubernetesPod.yaml'
+      cloud 'docker-cluster'
       yaml '''
         apiVersion: v1
         kind: Pod
@@ -12,55 +21,34 @@ pipeline {
           labels:
             class: KubernetesDeclarativeAgentTest
         spec:
-          imagePullSecretes:
-          - name: regcred
           containers:
-          - name: docker 
+          - name: docker
             image: docker:20.10.12
-            command: 
-            - cat 
+            command:
+            - cat
             tty: true
-            volumeMounts: 
+            volumeMounts:
             - mountPath: /var/run/docker.sock
               name: docker-volume
           volumes:
-          - name: docker-volume 
-            hostPath: 
-              path: /var/run/docker.sock 
-              type: ""  
-        '''.stripIndent()
+          - name: docker-volume
+            hostPath:
+              path: /var/run/docker.sock
+              type: ""
+        '''
     }
-  }  
-  parameters {
-    choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
-  
-    string(name: 'HYPERAUTH', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
-    string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
-    string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
-    string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')
-    string(name: 'CHATBOT_EMBED', defaultValue: 'false', description: 'Enable chatbot')
-  }
-  triggers {
-    // ref https://plugins.jenkins.io/parameterized-scheduler/
-    // trigger at 9:00 every Thursday 
-    parameterizedCron('H 9 * * 4 %BUILD_MODE=PATCH')
   }
   environment {
-    BRANCH = "hc-dev-v5.1"
+    BRANCH = "master"
     BUILD_MODE = "${params.BUILD_MODE}"
-  
+
     DOCKER_REGISTRY="tmaxcloudck"
     PRODUCT = "hypercloud-console"
     MAJOR_VER="5"
-    MINOR_VER="0"
+    MINOR_VER="2"
     PATCH_VER="0"
     HOTFIX_VER="0"
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-
-    KEYCLOAK = "${params.KEYCLOAK}"
-    REALM = "${params.REALM}"
-    CLIENTID = "${params.CLIENTID}"
-    MC_MODE = "${params.MC_MODE}"
 
     GUIDE_URL = "https://github.com/tmax-cloud/install-console/blob/5.0/README.md"
     
@@ -98,7 +86,7 @@ pipeline {
           sh """
           git tag ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
-          git tag --list "5.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
+          git tag --list "5.2.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
       }
     }
