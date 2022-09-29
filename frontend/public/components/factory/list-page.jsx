@@ -13,7 +13,7 @@ import { filterList } from '../../actions/k8s';
 import { storagePrefix } from '../row-filter';
 import { ErrorPage404, ErrorBoundaryFallback } from '../error';
 import { kindForReference, referenceForModel } from '../../module/k8s';
-import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, LoadingBox, PageHeading, RequireCreatePermission } from '../utils';
+import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
