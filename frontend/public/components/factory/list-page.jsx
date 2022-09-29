@@ -236,7 +236,6 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
             </div>
           )}
           {multiNavPages && <div style={{ paddingLeft: '30px', paddingBottom: '10px', width: 'fit-content' }}>{buttonComponent}</div>}
-          {this.state.kindsInFlight && <LoadingBox />}
           {this.state.modelExists ? (
             <>
               {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
