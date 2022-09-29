@@ -105,8 +105,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
           setLoaded(true);
         });
     }, []);
-    const formHelpText = t('COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1');
-    const yamlHelpText = t('COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1');
+    const formHelpText = 'COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1';
+    const yamlHelpText = 'COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1';
     const [helpText, setHelpText] = React.useState(formHelpText);
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
@@ -133,7 +133,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
                 <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
               </div>
               <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
-              <p className="help-block">{helpText}</p>
+              <p className="help-block">{t(helpText)}</p>
             </div>
             <SyncedEditor
               context={{

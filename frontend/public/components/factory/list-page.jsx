@@ -131,7 +131,13 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
     }
 
     updateModelExists() {
-      const modelExists = _.map(this.props.resources, 'kind').every(kind => ((!_.isEmpty(kind) ? this.props.k8s.getIn(['RESOURCES', 'models', kind]) || this.props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null)));
+      const modelExists = _.map(this.props.resources).every(resource => {
+        if (resource.nonK8SResource) {
+          return !!resource.kindObj;
+        }
+        const { kind } = resource;
+        return (!_.isEmpty(kind) ? this.props.k8s.getIn(['RESOURCES', 'models', kind]) || this.props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null);
+      });
       const kindsInFlight = this.props.k8s.getIn(['RESOURCES', 'inFlight']);
       this.setState({ modelExists, kindsInFlight });
     }
@@ -236,8 +242,9 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
             </div>
           )}
           {multiNavPages && <div style={{ paddingLeft: '30px', paddingBottom: '10px', width: 'fit-content' }}>{buttonComponent}</div>}
-          {this.state.kindsInFlight && <LoadingBox />}
-          {this.state.modelExists ? (
+          {this.state.kindsInFlight ? (
+            <LoadingBox />
+          ) : this.state.modelExists ? (
             <>
               {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
               <div className="co-m-pane__body co-m-pane__body--no-top-margin">
