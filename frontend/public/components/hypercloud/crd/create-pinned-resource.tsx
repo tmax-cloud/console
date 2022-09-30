@@ -20,6 +20,7 @@ import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl, shouldNo
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { coFetchJSON } from '@console/internal/co-fetch';
+import { resourceSchemaMap } from '../utils/schemas'
 // import { safeDump } from 'js-yaml';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
@@ -98,12 +99,18 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
 
     React.useEffect(() => {
       const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
-      const url = getResourceSchemaUrl(model, isCustomResourceType);
-      url &&
-        coFetchJSON(url).then(template => {
-          setTemplate(template);
-          setLoaded(true);
-        });
+      if (isCustomResourceType) {
+        const url = getResourceSchemaUrl(model, isCustomResourceType);
+        url &&
+          coFetchJSON(url).then(template => {
+            setTemplate(template);
+            setLoaded(true);
+          });
+      } else {     
+        const schema = resourceSchemaMap.get(model.kind);
+        setTemplate(schema);
+        setLoaded(true);
+      }
     }, []);
     const formHelpText = t('COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1');
     const yamlHelpText = t('COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1');
