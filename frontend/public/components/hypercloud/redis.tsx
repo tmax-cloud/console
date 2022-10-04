@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-
 const kind = RedisModel.kind;
 
 export const redisMenuActions = [...Kebab.getExtensionsActionsForKind(RedisModel), ...Kebab.factory.common];
@@ -47,8 +46,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children: obj.spec.redisConfig &&
-        <ResourceLink kind="ConfigMap" name={obj.spec.redisConfig.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisConfig.additionalRedisConfig} />
+      children: obj.spec.redisConfig && <ResourceLink kind="ConfigMap" name={obj.spec.redisConfig.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisConfig.additionalRedisConfig} />,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -57,8 +55,8 @@ const tableProps: TableProps = {
       className: Kebab.columnClass,
       children: <ResourceKebab actions={redisMenuActions} kind={kind} resource={obj} />,
     },
-  ]
-}
+  ],
+};
 
 export const RedisPage: React.FC = props => {
   return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
@@ -69,8 +67,7 @@ export const RedisDetailsList: React.FC<RedisDetailsListProps> = ({ obj }) => {
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_1')} obj={obj}>
-        {(obj.spec.redisConfig) &&
-          <ResourceLink kind={'ConfigMap'} name={obj.spec.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisConfig?.additionalRedisConfig}/>}
+        {obj.spec.redisConfig && <ResourceLink kind={'ConfigMap'} name={obj.spec.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisConfig?.additionalRedisConfig} />}
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_3')} obj={obj}>
         <ResourceLink kind={'PersistentVolumeClaim'} name={`${obj.metadata.name}-${obj.metadata.name}-0`} namespace={obj.metadata.namespace} title={`${obj.metadata.name}-${obj.metadata.name}-0`} />
@@ -79,21 +76,21 @@ export const RedisDetailsList: React.FC<RedisDetailsListProps> = ({ obj }) => {
         {obj.spec.kubernetesConfig.image}
       </DetailsItem>
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_2')} obj={obj}>
-        {(obj.spec.redisExporter?.enabled) ?
-          t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_5'):t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_6')}
+        {obj.spec.redisExporter?.enabled ? t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_5') : t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_6')}
       </DetailsItem>
-      {(obj.spec.redisExporter?.enabled) &&
+      {obj.spec.redisExporter?.enabled && (
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
-          <ExternalLink href={'https://Grafana.tmaxcloud.org'} text={'Grafana.tmaxcloud.org'} />
-        </DetailsItem>}
+          <ExternalLink href={`https://grafana.tmaxcloud.org/api/grafana/login/generic_oauth`} text={'Grafana.tmaxcloud.org'} />
+        </DetailsItem>
+      )}
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>
-        {(obj.spec.TLS?.secret.secretName) ?
-          t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_9') : t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_10')}
+        {obj.spec.TLS?.secret.secretName ? t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_9') : t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_10')}
       </DetailsItem>
-      {(obj.spec.TLS?.secret.secretName) &&
+      {obj.spec.TLS?.secret.secretName && (
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_11')} obj={obj}>
           <ResourceLink kind="Secret" name={obj.spec.TLS.secret.secretName} namespace={obj.metadata.namespace} title={obj.spec.TLS.secret.secretName} />
-        </DetailsItem>}
+        </DetailsItem>
+      )}
     </dl>
   );
 };
@@ -101,17 +98,17 @@ export const RedisDetailsList: React.FC<RedisDetailsListProps> = ({ obj }) => {
 const RedisDetails: React.FC<RedisDetailsProps> = ({ obj: sb }) => {
   const { t } = useTranslation();
   return (
-      <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
-        <div className="row">
-          <div className="col-sm-6">
-            <ResourceSummary resource={sb} showOwner={false} />
-          </div>
-          <div className="col-sm-6">
-            <RedisDetailsList obj={sb} />
-          </div>
+    <div className="co-m-pane__body">
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
+      <div className="row">
+        <div className="col-sm-6">
+          <ResourceSummary resource={sb} showOwner={false} />
+        </div>
+        <div className="col-sm-6">
+          <RedisDetailsList obj={sb} />
         </div>
       </div>
+    </div>
   );
 };
 
