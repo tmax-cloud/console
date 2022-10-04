@@ -5,7 +5,7 @@ import { sortable } from '@patternfly/react-table';
 
 import { referenceForModel } from '@console/internal/module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, viewYamlComponent } from '../utils';
+import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { PipelineRunModel, PipelineModel, PipelineResourceModel } from '../../models';
 import { pipelineRunDuration } from '../../../packages/dev-console/src/utils/pipeline-utils';
 import { PipelineRun, pipelineRefExists, PipelineRunReferenceResource } from '../../../packages/dev-console/src/utils/pipeline-augment';
@@ -177,7 +177,7 @@ const PipelineRunDetails: React.FC<PipelineRunDetailsProps> = ({ obj: pipelineRu
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 const filters = [
   {
@@ -218,7 +218,8 @@ export const PipelineRunsDetailsPage: React.FC<PipelineRunsDetailsPageProps> = p
       menuActions={getPipelineRunKebabActions(true)}
       pages={[
         details(detailsPage(PipelineRunDetails)),
-        editYaml(viewYamlComponent),
+        editResource(),
+        // editYaml(viewYamlComponent),
         {
           href: 'logs',
           path: 'logs/:name?',
