@@ -6,6 +6,7 @@ import { K8sResourceKind } from 'public/module/k8s';
 import { useTranslation } from 'react-i18next';
 import { DetailsPage, DetailsPageProps, ListPage } from '../factory';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { CustomMenusMap } from '../../../public/hypercloud/menu/menu-types';
 
 const kind = RedisModel.kind;
 
@@ -80,7 +81,7 @@ export const RedisDetailsList: React.FC<RedisDetailsListProps> = ({ obj }) => {
       </DetailsItem>
       {obj.spec.redisExporter?.enabled && (
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
-          <ExternalLink href={`https://grafana.tmaxcloud.org/api/grafana/login/generic_oauth`} text={'Grafana.tmaxcloud.org'} />
+          <ExternalLink href={CustomMenusMap.Grafana['url']} text={'Grafana.tmaxcloud.org'} />
         </DetailsItem>
       )}
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
+import { CustomMenusMap } from '../../../public/hypercloud/menu/menu-types';
 
 const kind = RedisClusterModel.kind;
 
@@ -140,7 +141,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
       </DetailsItem>
       {obj.spec.redisExporter?.enabled && (
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
-          <ExternalLink href={`https://grafana.tmaxcloud.org/api/grafana/login/generic_oauth`} text={'Grafana.tmaxcloud.org'} />
+          <ExternalLink href={CustomMenusMap.Grafana['url']} text={'Grafana.tmaxcloud.org'} />
         </DetailsItem>
       )}
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>
