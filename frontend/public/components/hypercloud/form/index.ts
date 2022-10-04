@@ -57,7 +57,7 @@ export const getResourceSchemaUrl = (model: K8sKind, isCustomResourceType: boole
     // github에 저장해둔거로 해야하는 거
     const { directory, file } = resourceSchemaBasedMenuMap.get(model.kind);
     if (directory && file) {
-      url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
+      url = `https://raw.githubusercontent.com/tmax-cloud/resource-schema/main/${directory}/key-mapping/${file}`;
     }
   }
   return url;
