@@ -29,7 +29,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
     const url = getResourceSchemaUrl(model, isCustomResourceType);
     url &&
       coFetchJSON(url).then(template => {
-        setTemplate(template);
+        setTemplate(isCustomResourceType ? template : JSON.parse(template));
         setLoaded(true);
       });
   }, [model.apiGroup, model.kind, model.plural]);
