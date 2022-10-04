@@ -122,7 +122,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             style={{ display: 'block', marginLeft: '5px', right: 0, position: 'absolute' }}
             buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
             itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-            defaultValue={item.envType || 'normal'}
+            defaultValue={env[index].envType || 'normal'}
             callback={selectItem => {
               const { envValue, envKey, resourceKey } = methods.getValues().env[index];
               setEnv(
@@ -143,6 +143,9 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             className="pairs-list__span-btns"
             onClick={() => {
               ListActions.remove(index);
+              const newEnv = env.filter((cur, idx) => idx !== index);
+              setEnv(newEnv);
+              methods.setValue('env', newEnv);
             }}
             variant="plain"
           >
