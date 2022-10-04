@@ -12,8 +12,8 @@ import { useDocumentListener, KEYBOARD_SHORTCUTS } from '@console/shared';
 import { filterList } from '../../actions/k8s';
 import { storagePrefix } from '../row-filter';
 import { ErrorPage404, ErrorBoundaryFallback } from '../error';
-import { referenceForModel } from '../../module/k8s';
-import { Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
+import { kindForReference, referenceForModel } from '../../module/k8s';
+import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, LoadingBox, PageHeading, RequireCreatePermission } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
@@ -72,8 +72,12 @@ ListPageWrapper_.propTypes = {
   tableProps: PropTypes.any,
 };
 
+const mapStateToProps = state => ({
+  k8s: state.k8s,
+});
+
 /** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode, unclickableMsg?: String, multiNavBaseURL?: String}> }*/
-export const FireMan_ = connect(null, { filterList })(
+export const FireMan_ = connect(mapStateToProps, { filterList })(
   class ConnectedFireMan extends React.PureComponent {
     constructor(props) {
       super(props);
@@ -81,7 +85,7 @@ export const FireMan_ = connect(null, { filterList })(
       this.applyFilter = this.applyFilter.bind(this);
 
       const reduxIDs = props.resources.map(r => makeReduxID(kindObj(r.kind), makeQuery(r.namespace, r.selector, r.fieldSelector, r.name)));
-      this.state = { reduxIDs };
+      this.state = { reduxIDs, modelExists: true, kindsInFlight: false };
     }
 
     UNSAFE_componentWillReceiveProps({ resources }) {
@@ -126,10 +130,32 @@ export const FireMan_ = connect(null, { filterList })(
       this.updateURL(filterName, options);
     }
 
+    updateModelExists() {
+      const modelExists = _.map(this.props.resources).every(resource => {
+        if (resource.nonK8SResource) {
+          return !!resource.kindObj;
+        }
+        const { kind } = resource;
+        return (!_.isEmpty(kind) ? this.props.k8s.getIn(['RESOURCES', 'models', kind]) || this.props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null);
+      });
+      const kindsInFlight = this.props.k8s.getIn(['RESOURCES', 'inFlight']);
+      this.setState({ modelExists, kindsInFlight });
+    }
+
     UNSAFE_componentWillMount() {
       const params = new URLSearchParams(window.location.search);
       this.defaultValue = params.get(this.props.textFilter);
       params.forEach((v, k) => this.applyFilter(k, v));
+    }
+
+    componentDidMount() {
+      this.updateModelExists();
+    }
+
+    componentDidUpdate(prevProps) {
+      if (!_.isEqual(this.props.k8s, prevProps.k8s)) {
+        this.updateModelExists();
+      }
     }
 
     runOrNavigate = itemName => {
@@ -182,7 +208,8 @@ export const FireMan_ = connect(null, { filterList })(
         // }
       }
 
-      const buttonComponent = createLink && (
+      // CRD가 없을 경우 생성 버튼 감춤
+      const buttonComponent = createLink && this.state.modelExists && (
         <div
           className={classNames('co-m-pane__createLink', {
             'co-m-pane__createLink--no-title': !title,
@@ -215,15 +242,23 @@ export const FireMan_ = connect(null, { filterList })(
             </div>
           )}
           {multiNavPages && <div style={{ paddingLeft: '30px', paddingBottom: '10px', width: 'fit-content' }}>{buttonComponent}</div>}
-          {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
-          <div className="co-m-pane__body co-m-pane__body--no-top-margin">
-            {inject(this.props.children, {
-              resources,
-              expand: this.state.expand,
-              reduxIDs: this.state.reduxIDs,
-              applyFilter: this.applyFilter,
-            })}
-          </div>
+          {this.state.kindsInFlight ? (
+            <LoadingBox />
+          ) : this.state.modelExists ? (
+            <>
+              {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
+              <div className="co-m-pane__body co-m-pane__body--no-top-margin">
+                {inject(this.props.children, {
+                  resources,
+                  expand: this.state.expand,
+                  reduxIDs: this.state.reduxIDs,
+                  applyFilter: this.applyFilter,
+                })}
+              </div>
+            </>
+          ) : (
+            <CrdNotFound />
+          )}
         </>
       );
     }

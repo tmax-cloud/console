@@ -16,7 +16,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl } from '../form';
+import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl, shouldNotPruneMap } from '../form';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { coFetchJSON } from '@console/internal/co-fetch';
@@ -48,7 +48,7 @@ export const OnlyYamlEditorKinds = [
   models.CustomResourceDefinitionModel.kind,
 ];
 
-export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
+export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create, customFormEditor }) => {
   const { t } = useTranslation();
   if (!model) {
     return null;
@@ -105,8 +105,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
           setLoaded(true);
         });
     }, []);
-    const formHelpText = t('COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1');
-    const yamlHelpText = t('COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1');
+    const formHelpText = 'COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1';
+    const yamlHelpText = 'COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1';
     const [helpText, setHelpText] = React.useState(formHelpText);
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
@@ -117,8 +117,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
     }, [template, definition, model]);
 
     const sample = React.useMemo<K8sResourceKind>(() => exampleForModel(definition, model), [definition, model]);
+    const keysForsholdNotPrune = React.useMemo(() => shouldNotPruneMap.get(model.kind), [model]);
 
-    const pruneFunc = React.useCallback(data => prune(data, sample), [sample]);
+    const pruneFunc = React.useCallback(data => prune(data, sample, keysForsholdNotPrune), [sample, keysForsholdNotPrune]);
 
     const onChangeEditorType = React.useCallback(newMethod => {
       setHelpText(newMethod === EditorType.Form ? formHelpText : yamlHelpText);
@@ -132,14 +133,14 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
                 <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
               </div>
               <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
-              <p className="help-block">{helpText}</p>
+              <p className="help-block">{t(helpText)}</p>
             </div>
             <SyncedEditor
               context={{
                 formContext: { match, model, next, schema, create },
                 yamlContext: { next, match, create },
               }}
-              FormEditor={FormComponent}
+              FormEditor={customFormEditor || FormComponent}
               initialData={sample}
               initialType={initialEditorType}
               onChangeEditorType={onChangeEditorType}
@@ -179,16 +180,17 @@ export const CreateDefaultPage = connect(stateToProps)((props: CreateDefaultPage
 });
 
 export type CreateDefaultProps = {
-  activePerspective: string;
+  activePerspective?: string;
   initialEditorType: EditorType;
   loaded: boolean;
   loadError?: any;
-  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  match: RouterMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
   create: boolean;
+  customFormEditor?: React.FC<any>;
 };
 
 export type CreateDefaultPageProps = {
-  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  match: RouterMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
 };

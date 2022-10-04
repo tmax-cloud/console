@@ -19,6 +19,7 @@ import * as TerraformClaimIcon from '@console/internal/imgs/hypercloud/lnb/fille
 import * as FederationIcon from '@console/internal/imgs/hypercloud/lnb/filled/ferderation_filled.svg';
 import * as AnsibleIcon from '@console/internal/imgs/hypercloud/lnb/filled/ansible_filled_lnb.svg';
 import * as RedisIcon from '@console/internal/imgs/hypercloud/lnb/filled/redis_filled.svg';
+import * as ServiceBindingIcon from '@console/internal/imgs/hypercloud/lnb/filled/service_binding_filled.svg';
 import * as DefaultIcon from '@console/internal/imgs/hypercloud/lnb/filled/add_menu_filled.svg';
 
 const MenuIconContainer = (props: MenuIconContainerProps) => {
@@ -77,8 +78,10 @@ export const MenuIconTitle = (props: MenuIconTitleProps) => {
       return <MenuIconContainer title={title} icon={FederationIcon} />;
     case 'ansible':
       return <MenuIconContainer title={title} icon={AnsibleIcon} />;
-    case 'redis':
-      return <MenuIconContainer title={title} icon={RedisIcon} />;
+      case 'redis':
+        return <MenuIconContainer title={title} icon={RedisIcon} />;
+        case 'service_binding':
+          return <MenuIconContainer title={title} icon={ServiceBindingIcon} />;
     default:
       return <MenuIconContainer title={title} icon={DefaultIcon} />;
   }

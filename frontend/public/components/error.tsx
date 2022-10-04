@@ -124,7 +124,7 @@ export const IngressCheckPage: React.SFC<ErrorPageProps> = () => {
       <Helmet>
         <title>인그레스를 확인해 주세요</title>
       </Helmet>
-      <ErrorComponent title='인그레스를 확인해 주세요' message={message} errMessage={message} />
+      <ErrorComponent title='인그레스를 확인해 주세요' message={message} />
     </div>
   );
 };

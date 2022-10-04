@@ -39,11 +39,10 @@ func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	r.Mount(s.App.BasePath, http.HandlerFunc(s.App.indexHandler))
-	//r.Use(middleware.PageRoute("/*",s.App.indexHandler))
-	//r.Get(s.App.BasePath, s.App.indexHandler)
 
-	r.Get("/api/", http.NotFound)
-	//r.NotFound(s.App.redirectHandler)?
+	r.Mount("/api/hypercloud", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "501 StatusNotFound", http.StatusNotImplemented)
+	}))
 
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/static"), http.Dir(s.App.PublicDir))
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/api/resource"), http.Dir("./api"))

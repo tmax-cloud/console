@@ -29,12 +29,11 @@ class NoticeExpirationModal extends Component {
 
   tick() {
     this.setState({ time: Math.floor(this.state.time - 1) });
-    if (Math.floor(this.state.time) === 0) {
+    if (Math.floor(this.state.time) < 1) {
       this._logout();
     }
   }
-  _logout(e) {
-    e.preventDefault();
+  _logout() {
     this.props.logout();
     this._cancel();
   }
@@ -49,7 +48,7 @@ class NoticeExpirationModal extends Component {
       <Translation>
         {t => (
           <>
-            <form name="form" className="modal-content">
+            <form id="notice-expiration-modal-content" name="form" className="modal-content">
               <ModalTitle>{t('COMMON:MSG_GNB_SESSION_9')}</ModalTitle>
               <ModalBody>
                 <div className="form-group">

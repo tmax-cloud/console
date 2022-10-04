@@ -189,7 +189,7 @@ const sorts = {
 };
 
 const afterFuzzySort = (a, b, value) => {
-  const sortLengthLimit = 20000;  //리소스 이름 규칙 이상의 충분히 큰 수로 임의로 설정
+  const sortLengthLimit = 20000; //리소스 이름 규칙 이상의 충분히 큰 수로 임의로 설정
   let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
   resultA = resultA === -1 ? sortLengthLimit : resultA;
   let resultB = b.metadata?.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
@@ -380,7 +380,7 @@ export type TableProps = {
   reduxIDs?: string[];
   label?: string;
   expandable?: boolean;
-  expandableRows?: (...args) => any[];
+  expandableRows?: (...args) => any;
 };
 
 type TablePropsFromState = {};
