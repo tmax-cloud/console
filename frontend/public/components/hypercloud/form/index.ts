@@ -73,7 +73,21 @@ export const defaultTemplateMap = new Map([
       },
     },
   ],
+  [
+    models.PipelineResourceModel.kind,
+    {
+      metadata: {
+        name: 'example-name',
+      },
+      spec: {
+        type: 'git',
+      },
+    },
+  ],
 ]);
 
 // 빈 값으로 정의되어야 하는 것들 정의
-export const shouldNotPruneMap = new Map([[models.TaskModel.kind, ['emptyDir']]]);
+export const shouldNotPruneMap = new Map([
+  [models.TaskModel.kind, ['emptyDir']],
+  [models.PipelineResourceModel.kind, ['emptyDir']],
+]);
