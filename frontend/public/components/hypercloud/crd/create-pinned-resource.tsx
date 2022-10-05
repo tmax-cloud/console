@@ -101,7 +101,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       const url = getResourceSchemaUrl(model, isCustomResourceType);
       url &&
         coFetchJSON(url).then(template => {
-          setTemplate(template);
+          setTemplate(isCustomResourceType ? template : JSON.parse(template));
           setLoaded(true);
         });
     }, []);
