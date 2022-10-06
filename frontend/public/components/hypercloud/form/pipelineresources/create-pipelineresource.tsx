@@ -9,20 +9,12 @@ import { SelectorInput } from '../../../utils';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { useTranslation } from 'react-i18next';
-
-const defaultValuesTemplate = {
-  metadata: {
-    name: 'example-name',
-  },
-  spec: {
-    type: 'git'
-  }
-};
-
-const pipelineResourceFormFactory = (params, obj) => {
-  const defaultValues = obj || defaultValuesTemplate;
-  return WithCommonForm(CreatePipelineResourceComponent, params, defaultValues);
-};
+import { EditDefault } from '../../crd/edit-resource';
+import { CreateDefault } from '../../crd/create-pinned-resource';
+import { EditorType } from '@console/shared/src/components/synced-editor/editor-toggle';
+import { K8sResourceKindReference } from 'public/module/k8s';
+import { convertToForm, onSubmitCallback } from './sync-form-data';
+import { defaultTemplateMap } from '@console/internal/components/hypercloud/form';
 
 const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = props => {
   const { control } = useFormContext();
@@ -38,13 +30,13 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
   const methods = useFormContext();
   const {
     control: {
-      defaultValuesRef: { current: defaultValues }
+      defaultValuesRef: { current: defaultValues },
     },
   } = methods;
   let defaultRevision = '';
   let defaultUrl = '';
 
-  if (defaultValues.spec.params !== undefined) {
+  if (defaultValues.spec?.params !== undefined) {
     defaultValues.spec.params.forEach(element => {
       if (element.name === 'revision') {
         defaultRevision = element.value;
@@ -54,7 +46,7 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
       }
     });
   }
-  
+
   return (
     <>
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_2')} id="label" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_3')}>
@@ -62,13 +54,13 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
       </Section>
 
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id="type" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_10')}>
-        <Dropdown name="spec.type" items={typeList} defaultValue={defaultValues.spec.type} />
+        <Dropdown name="spec.type" items={typeList} defaultValue={defaultValues.spec?.type} />
       </Section>
 
       {type === 'git' && (
         <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id="revision" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_11')}>
           <TextInput inputClassName="pf-c-form-control" id="spec.revision" name="spec.revision" defaultValue={defaultRevision} />
-        </Section>        
+        </Section>
       )}
       {type === 'git' && (
         <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_12')}>
@@ -77,7 +69,7 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
       )}
 
       {type === 'image' && (
-        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url" description='참조할 이미지 주소 또는 이미지가 저장될 주소'>
+        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url" description="참조할 이미지 주소 또는 이미지가 저장될 주소">
           <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" defaultValue={defaultUrl} />
         </Section>
       )}
@@ -85,39 +77,28 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
   );
 };
 
-export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = ({ match: { params }, kind, obj }) => {
-  const formComponent = pipelineResourceFormFactory(params, obj);
-  const PipelineResourceFormComponent = formComponent;
-  return <PipelineResourceFormComponent fixed={{ apiVersion: `${PipelineResourceModel.apiGroup}/${PipelineResourceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
+  const { formData, onChange } = props;
+  const _formData = React.useMemo(() => convertToForm(formData), [formData]);
+  const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
+  const watchFieldNames = ['metadata.labels', 'spec.revision', 'spec.url', 'spec.type'];
+  return <Form {...props} fixed={{ apiVersion: `${PipelineResourceModel.apiGroup}/${PipelineResourceModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 
-export const onSubmitCallback = data => {
-  let labels = SelectorInput.objectify(data.metadata.labels);
-  if (_.isArray(data.metadata.labels)) {
-    data.metadata.labels.forEach(cur => {
-      labels = typeof cur === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
-    });
-  } else {
-    labels = typeof data.metadata.labels === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = props => {
+  const { match, kind, obj } = props;
+  const Form = WithCommonForm(CreatePipelineResourceComponent, match.params, obj || defaultTemplateMap.get(kind), null, true);
+
+  if (obj) {
+    // edit form
+    return <EditDefault initialEditorType={EditorType.Form} create={false} model={PipelineResourceModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: false })} obj={obj} />;
   }
-
-  let params = [];
-  data.spec.revision && params.push({ name: 'revision', value: data.spec.revision });
-  params.push({ name: 'url', value: data.spec.url });
-
-  delete data.metadata.labels;
-  delete data.spec.params;
-  delete data.spec.revision;
-  delete data.spec.url;
-
-  data = _.defaultsDeep({ metadata: { labels: labels }, spec: { params: params } }, data);
-  return data;
+  // create form
+  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineResourceModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: true })} />;
 };
 
 type CreatePipelineResourceProps = {
-  match: RMatch<{
-    ns?: string;
-  }>;
+  match: RMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   kind: string;
   fixed: object;
   explanation: string;

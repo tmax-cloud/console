@@ -57,7 +57,7 @@ export const getResourceSchemaUrl = (model: K8sKind, isCustomResourceType: boole
     // github에 저장해둔거로 해야하는 거
     const { directory, file } = resourceSchemaBasedMenuMap.get(model.kind);
     if (directory && file) {
-      url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
+      url = `https://raw.githubusercontent.com/tmax-cloud/resource-schema/main/${directory}/key-mapping/${file}`;
     }
   }
   return url;
@@ -74,6 +74,17 @@ export const defaultTemplateMap = new Map([
     },
   ],
   [
+    models.PipelineResourceModel.kind,
+    {
+      metadata: {
+        name: 'example-name',
+      },
+      spec: {
+        type: 'git',
+      },
+    },
+  ],
+  [
     models.ClusterTaskModel.kind,
     {
       metadata: {
@@ -86,5 +97,6 @@ export const defaultTemplateMap = new Map([
 // 빈 값으로 정의되어야 하는 것들 정의
 export const shouldNotPruneMap = new Map([
   [models.TaskModel.kind, ['emptyDir']],
+  [models.PipelineResourceModel.kind, ['emptyDir']],
   [models.ClusterTaskModel.kind, ['emptyDir']],
 ]);
