@@ -60,6 +60,18 @@ export const convertToForm = (data: any) => {
     resources[obj.name] = { resourceRef: { name: obj.resourceRef?.name } };
   });
 
+  _.forEach(_data.spec?.workspaces, workspace => {
+    let _name = workspace.name;
+
+    let type = 'emptyDir' in workspace ? 'EmptyDirectory' : 'VolumeClaimTemplate';
+    if (type === 'VolumeClaimTemplate') {
+      workspace.volumeClaimTemplate.spec.accessModes = workspace.volumeClaimTemplate.spec.accessModes[0];
+    }
+
+    workspace.name = {};
+    workspace.name[_name] = type;
+  });
+
   const omittedData = _.omit(_data, ['metadata.labels', 'spec.resources', 'spec.params']);
 
   const convertedData = _.merge(omittedData, { metadata: { labels }, spec: { resources, params } });
