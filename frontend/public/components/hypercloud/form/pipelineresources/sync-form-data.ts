@@ -1,15 +1,13 @@
 import * as _ from 'lodash-es';
 import { SelectorInput } from '@console/internal/components/utils';
+import { PipelineResourceModel } from '@console/internal/models/hypercloud';
 
 export const onSubmitCallback = data => {
-  let labels = SelectorInput.objectify(data.metadata.labels);
-  if (_.isArray(data.metadata.labels)) {
-    data.metadata.labels.forEach(cur => {
-      labels = typeof cur === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
-    });
-  } else {
-    labels = typeof data.metadata.labels === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+  if (_.isEmpty(data)) {
+    return data;
   }
+
+  let labels = SelectorInput.objectify(data.metadata.labels);
 
   let params = [];
   data.spec.revision && params.push({ name: 'revision', value: data.spec.revision });
@@ -19,6 +17,9 @@ export const onSubmitCallback = data => {
   delete data.spec.params;
   delete data.spec.revision;
   delete data.spec.url;
+
+  data.kind = PipelineResourceModel.kind;
+  data.apiVersion = `${PipelineResourceModel.apiGroup}/${PipelineResourceModel.apiVersion}`;
 
   data = _.defaultsDeep({ metadata: { labels: labels }, spec: { params: params } }, data);
   return data;

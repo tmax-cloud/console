@@ -17,8 +17,11 @@ import { convertToForm, onSubmitCallback } from './sync-form-data';
 import { defaultTemplateMap } from '@console/internal/components/hypercloud/form';
 
 const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = props => {
+  const { formData } = props;
   const { control } = useFormContext();
   const { t } = useTranslation();
+
+  const [labels] = React.useState(formData?.metadata?.labels || []);
 
   const typeList = { git: t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_7'), image: t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_8') };
   const type = useWatch({
@@ -50,7 +53,7 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
   return (
     <>
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_2')} id="label" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_3')}>
-        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={labels} />
       </Section>
 
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id="type" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_10')}>
@@ -114,4 +117,5 @@ type PipelineResourceFormProps = {
     [key: string]: string;
   };
   isCreate: boolean;
+  formData: any;
 };
