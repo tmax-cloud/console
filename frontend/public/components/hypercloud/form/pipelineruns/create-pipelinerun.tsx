@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next';
 import { k8sGet, k8sList, K8sResourceKindReference } from '../../../../module/k8s';
 import { Button } from '@patternfly/react-core';
 import { Workspace } from '../utils/workspaces';
-import { EditDefault } from '../../crd/edit-resource';
 import { CreateDefault } from '../../crd/create-pinned-resource';
 import { EditorType } from '../../../../../packages/console-shared/src/components/synced-editor/editor-toggle';
 import { convertToForm, onSubmitCallback } from './sync-form-data';
@@ -185,10 +184,6 @@ export const CreatePipelineRun: React.FC<CreatePipelineRunProps> = props => {
   const { match, kind, obj } = props;
   const formComponent = WithCommonForm(CreatePipelineRunComponent, match.params, obj || defaultTemplateMap.get(kind), null, true);
 
-  if (obj) {
-    // edit form
-    return <EditDefault initialEditorType={EditorType.Form} create={false} model={PipelineRunModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form: formComponent, isCreate: false })} obj={obj} />;
-  }
   // create form
   return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineRunModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form: formComponent, isCreate: true })} />;
 };
