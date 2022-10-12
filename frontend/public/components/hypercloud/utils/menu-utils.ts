@@ -13,12 +13,12 @@ import store from '@console/internal/redux';
 
 const en = i18next.getFixedT('en');
 
-const INGRESS_LABEL_VALUES = [
-  { labelValue: 'hyperregistry', menuKey: CustomMenusMap.Harbor.kind },
-  { labelValue: 'argocd', menuKey: CustomMenusMap.ArgoCD.kind },
+const INGRESS_LABEL_VALUES: IngressLabelValue[] = [
+  { labelValue: 'hyperregistry', menuKey: CustomMenusMap.Harbor.kind, endPoint: '/c/oidc/login' },
+  { labelValue: 'argocd', menuKey: CustomMenusMap.ArgoCD.kind, endPoint: '/auth/login' },
   { labelValue: 'gitlab', menuKey: CustomMenusMap.Git.kind },
-  { labelValue: 'grafana', menuKey: CustomMenusMap.Grafana.kind },
-  { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind },
+  { labelValue: 'grafana', menuKey: CustomMenusMap.Grafana.kind, endPoint: '/login/generic_oauth' },
+  { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind, endPoint: '/api/kiali/api/auth/openid_redirect' },
   { labelValue: 'opensearch-dashboards', menuKey: CustomMenusMap.OpenSearch.kind },
   { labelValue: 'jaeger', menuKey: CustomMenusMap.Trace.kind },
   { labelValue: 'helm-apiserver', menuKey: CustomMenusMap.Helm.kind },
@@ -53,7 +53,7 @@ const initializeCmpFlag = () => {
 };
 
 const initializeMenuUrl = async (label: string, menuKey: string) => {
-  const ingressUrl = menuKey === CustomMenusMap.Grafana.kind ? await getIngressUrl(label, '/login/generic_oauth') : await getIngressUrl(label);
+  const ingressUrl = await getIngressUrl(label, INGRESS_LABEL_VALUES.find(v => v.menuKey === menuKey)?.endPoint);
   const url = ingressUrl || '';
   const menu = _.get(CustomMenusMap, menuKey);
   !!menu && _.assign(menu, { url });
@@ -133,3 +133,9 @@ export const getContainerLabel = (label, t: TFunction) => {
   }
   return { containerLabel, type };
 };
+
+interface IngressLabelValue {
+  labelValue: string;
+  menuKey: string;
+  endPoint?: string;
+}

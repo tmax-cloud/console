@@ -85,6 +85,14 @@ export const defaultTemplateMap = new Map([
     },
   ],
   [
+    models.ClusterTaskModel.kind,
+    {
+      metadata: {
+        name: 'example-name',
+      },
+    },
+  ],
+  [
     models.PipelineRunModel.kind,
     {
       metadata: {
@@ -98,5 +106,6 @@ export const defaultTemplateMap = new Map([
 export const shouldNotPruneMap = new Map([
   [models.TaskModel.kind, ['emptyDir']],
   [models.PipelineResourceModel.kind, ['emptyDir']],
+  [models.ClusterTaskModel.kind, ['emptyDir']],
   [models.PipelineRunModel.kind, ['emptyDir']],
 ]);
