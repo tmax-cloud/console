@@ -9,7 +9,6 @@ import { SelectorInput } from '../../../utils';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { useTranslation } from 'react-i18next';
-import { EditDefault } from '../../crd/edit-resource';
 import { CreateDefault } from '../../crd/create-pinned-resource';
 import { EditorType } from '@console/shared/src/components/synced-editor/editor-toggle';
 import { K8sResourceKindReference } from 'public/module/k8s';
@@ -89,10 +88,6 @@ export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = pro
   const { match, kind, obj } = props;
   const Form = WithCommonForm(CreatePipelineResourceComponent, match.params, obj || defaultTemplateMap.get(kind), null, true);
 
-  if (obj) {
-    // edit form
-    return <EditDefault initialEditorType={EditorType.Form} create={false} model={PipelineResourceModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: false })} obj={obj} />;
-  }
   // create form
   return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineResourceModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: true })} />;
 };
