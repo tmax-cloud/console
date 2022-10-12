@@ -84,10 +84,19 @@ export const defaultTemplateMap = new Map([
       },
     },
   ],
+  [
+    models.ClusterTaskModel.kind,
+    {
+      metadata: {
+        name: 'example-name',
+      },
+    },
+  ],
 ]);
 
 // 빈 값으로 정의되어야 하는 것들 정의
 export const shouldNotPruneMap = new Map([
   [models.TaskModel.kind, ['emptyDir']],
   [models.PipelineResourceModel.kind, ['emptyDir']],
+  [models.ClusterTaskModel.kind, ['emptyDir']],
 ]);
