@@ -1,0 +1,25 @@
+#ref. https://github.com/argoproj/argocd-example-apps/tree/master/helm-dependency
+deploy:
+  global:
+    serviceAccount: "console"
+    domain: ""
+    consoleDomain: ""
+    hyperAuth:
+      address: ""
+      realm: ""
+
+  fullnameOverride: "console"
+
+  console:
+    clientID: ""
+
+  image:
+    tag: ""
+
+  oauth2proxy:
+    config:
+      clientID: ""
+      clientSecret: ""
+      cookieSecret: ""
+    redis:
+      enabled: false

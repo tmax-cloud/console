@@ -95,12 +95,12 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
   const onSelectPipeline = (selection: string) => {
     k8sGet(PipelineModel, selection, namespace)
       .then(pipeline => {
-        let newParamList = pipeline.spec.params?.map(param => ({ name: param.name, type: param.type, default: param.default, value: '' })) ?? [];
-        let newResourceList = pipeline.spec.resources?.map(resource => ({ name: resource.name, type: resource.type })) ?? [];
+        let newParamList = pipeline.spec?.params?.map(param => ({ name: param.name, type: param.type, default: param.default, value: '' })) ?? [];
+        let newResourceList = pipeline.spec?.resources?.map(resource => ({ name: resource.name, type: resource.type })) ?? [];
 
         setParamList(newParamList);
         setResourceList(newResourceList);
-        setWorkspaceList(pipeline.spec.workspaces);
+        setWorkspaceList(pipeline.spec?.workspaces);
       })
       .catch(err => {
         console.error('Fail to get Pipeline Detail', err);

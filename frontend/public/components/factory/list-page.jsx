@@ -13,7 +13,7 @@ import { filterList } from '../../actions/k8s';
 import { storagePrefix } from '../row-filter';
 import { ErrorPage404, ErrorBoundaryFallback } from '../error';
 import { kindForReference, referenceForModel } from '../../module/k8s';
-import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
+import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, LoadingBox, PageHeading, RequireCreatePermission } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
@@ -85,8 +85,7 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
       this.applyFilter = this.applyFilter.bind(this);
 
       const reduxIDs = props.resources.map(r => makeReduxID(kindObj(r.kind), makeQuery(r.namespace, r.selector, r.fieldSelector, r.name)));
-      const modelExists = _.map(props.resources, 'kind').every(kind => ((!_.isEmpty(kind) ? props.k8s.getIn(['RESOURCES', 'models', kind]) || props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null)));
-      this.state = { reduxIDs, modelExists };
+      this.state = { reduxIDs, modelExists: true, kindsInFlight: false };
     }
 
     UNSAFE_componentWillReceiveProps({ resources }) {
@@ -131,10 +130,32 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
       this.updateURL(filterName, options);
     }
 
+    updateModelExists() {
+      const modelExists = _.map(this.props.resources).every(resource => {
+        if (resource.nonK8SResource) {
+          return !!resource.kindObj;
+        }
+        const { kind } = resource;
+        return (!_.isEmpty(kind) ? this.props.k8s.getIn(['RESOURCES', 'models', kind]) || this.props.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null);
+      });
+      const kindsInFlight = this.props.k8s.getIn(['RESOURCES', 'inFlight']);
+      this.setState({ modelExists, kindsInFlight });
+    }
+
     UNSAFE_componentWillMount() {
       const params = new URLSearchParams(window.location.search);
       this.defaultValue = params.get(this.props.textFilter);
       params.forEach((v, k) => this.applyFilter(k, v));
+    }
+
+    componentDidMount() {
+      this.updateModelExists();
+    }
+
+    componentDidUpdate(prevProps) {
+      if (!_.isEqual(this.props.k8s, prevProps.k8s)) {
+        this.updateModelExists();
+      }
     }
 
     runOrNavigate = itemName => {
@@ -221,7 +242,9 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
             </div>
           )}
           {multiNavPages && <div style={{ paddingLeft: '30px', paddingBottom: '10px', width: 'fit-content' }}>{buttonComponent}</div>}
-          {this.state.modelExists ? (
+          {this.state.kindsInFlight ? (
+            <LoadingBox />
+          ) : this.state.modelExists ? (
             <>
               {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
               <div className="co-m-pane__body co-m-pane__body--no-top-margin">
