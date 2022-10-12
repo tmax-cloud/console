@@ -81,7 +81,7 @@ const PipelineResourceDetails: React.FC<PipelineResourceDetailsProps> = ({ obj: 
   );
 };
 
-const { details, editResource, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const PipelineResources: React.FC = props => {
   const { t } = useTranslation();
@@ -95,7 +95,7 @@ export const PipelineResourcesPage: React.FC<PipelineResourcesPageProps> = props
   return <ListPage title={t('COMMON:MSG_LNB_MENU_62')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_62') })} canCreate={true} ListComponent={PipelineResources} kind={kind} {...props} />;
 };
 
-export const PipelineResourcesDetailsPage: React.FC<PipelineResourcesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineResourceDetails)), editResource(), editYaml()]} />;
+export const PipelineResourcesDetailsPage: React.FC<PipelineResourcesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineResourceDetails)), editResource()]} />;
 
 type PipelineResourcesPageProps = {
   showTitle?: boolean;
