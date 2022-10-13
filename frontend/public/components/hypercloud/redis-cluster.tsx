@@ -141,7 +141,7 @@ export const RedisClusterDetailsList: React.FC<RedisClusterDetailsListProps> = (
       </DetailsItem>
       {obj.spec.redisExporter?.enabled && (
         <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_7')} obj={obj}>
-          <ExternalLink href={CustomMenusMap.Grafana['url']} text={'Grafana.tmaxcloud.org'} />
+          <ExternalLink href={CustomMenusMap.Grafana['url']} text={CustomMenusMap.Grafana['url']} />
         </DetailsItem>
       )}
       <DetailsItem label={t('SINGLE:MSG_REDIS_REDISDETAILS_TABDETAILS_8')} obj={obj}>
