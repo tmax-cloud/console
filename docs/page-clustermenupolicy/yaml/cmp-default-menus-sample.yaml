@@ -13,15 +13,17 @@ menuTabs:
             menuType: REGISTERED_MENU
           - kind: Audit
             menuType: REGISTERED_MENU
-          - kind: Event
+          - kind: Events
             menuType: REGISTERED_MENU
           - kind: Grafana
             menuType: REGISTERED_MENU
-          - kind: Kibana
+          - kind: OpenSearch
             menuType: REGISTERED_MENU
           - kind: Git
             menuType: REGISTERED_MENU
           - kind: Harbor
+            menuType: REGISTERED_MENU
+          - kind: ArgoCD
             menuType: REGISTERED_MENU
         label: Home
         menuType: CONTAINER
@@ -47,11 +49,6 @@ menuTabs:
           - kind: CronJob
             menuType: REGISTERED_MENU
         label: Workload
-        menuType: CONTAINER
-      - innerMenus:
-          - kind: HelmRelease
-            menuType: REGISTERED_MENU
-        label: Helm
         menuType: CONTAINER
       - innerMenus:
           - kind: Service
@@ -102,42 +99,6 @@ menuTabs:
         menuType: REGISTERED_MENU
       - kind: TFApplyClaim
         menuType: REGISTERED_MENU
-      - innerMenus:
-          - kind: FederatedPod
-            menuType: REGISTERED_MENU
-          - kind: FederatedDeployment
-            menuType: REGISTERED_MENU
-          - kind: FederatedReplicaSet
-            menuType: REGISTERED_MENU
-          - kind: FederatedHorizontalPodAutoscaler
-            menuType: REGISTERED_MENU
-          - kind: FederatedDaemonSet
-            menuType: REGISTERED_MENU
-          - kind: FederatedStatefulSet
-            menuType: REGISTERED_MENU
-          - kind: FederatedConfigMap
-            menuType: REGISTERED_MENU
-          - kind: FederatedSecret
-            menuType: REGISTERED_MENU
-          - kind: FederatedJob
-            menuType: REGISTERED_MENU
-          - kind: FederatedCronJob
-            menuType: REGISTERED_MENU
-          - menuType: SEPERATOR
-          - kind: FederatedIngress
-            menuType: REGISTERED_MENU
-          - kind: FederatedService
-            menuType: REGISTERED_MENU
-          - menuType: SEPERATOR
-          - kind: FederatedNamespace
-            menuType: REGISTERED_MENU
-        label: Federation
-        menuType: CONTAINER
-      - innerMenus:
-          - kind: AWX
-            menuType: REGISTERED_MENU
-        label: Ansible
-        menuType: CONTAINER
     name: MULTI
   - menus:
       - innerMenus:
@@ -146,6 +107,8 @@ menuTabs:
           - kind: Search
             menuType: REGISTERED_MENU
           - kind: Event
+            menuType: REGISTERED_MENU
+          - kind: Namespace
             menuType: REGISTERED_MENU
         label: Home
         menuType: CONTAINER
@@ -171,11 +134,6 @@ menuTabs:
           - kind: CronJob
             menuType: REGISTERED_MENU
         label: Workload
-        menuType: CONTAINER
-      - innerMenus:
-          - kind: HelmRelease
-            menuType: REGISTERED_MENU
-        label: Helm
         menuType: CONTAINER
       - innerMenus:
           - kind: Service
@@ -237,8 +195,6 @@ menuTabs:
             menuType: REGISTERED_MENU
           - kind: ServiceInstance
             menuType: REGISTERED_MENU
-          - kind: ServiceBinding
-            menuType: REGISTERED_MENU
           - kind: ClusterTemplateClaim
             menuType: REGISTERED_MENU
           - kind: Template
@@ -283,13 +239,15 @@ menuTabs:
             menuType: REGISTERED_MENU
           - kind: PipelineRun
             menuType: REGISTERED_MENU
-          - kind: PipelineApproval
+          - kind: Approval
             menuType: REGISTERED_MENU
           - kind: PipelineResource
             menuType: REGISTERED_MENU
           - kind: IntegrationJob
             menuType: REGISTERED_MENU
           - kind: IntegrationConfig
+            menuType: REGISTERED_MENU
+          - kind: Application
             menuType: REGISTERED_MENU
         label: CI/CD
         menuType: CONTAINER
@@ -307,22 +265,38 @@ menuTabs:
         label: AIDevOps
         menuType: CONTAINER
       - innerMenus:
-          - kind: Registry
+          - kind: HelmRepository
             menuType: REGISTERED_MENU
-          - kind: ExternalRegistry
+          - kind: HelmChart
             menuType: REGISTERED_MENU
-          - kind: ImageSigner
+          - kind: HelmRelease
             menuType: REGISTERED_MENU
-          - kind: ImageSignRequest
-            menuType: REGISTERED_MENU
-          - kind: ImageScanRequest
-            menuType: REGISTERED_MENU
-          - kind: SignerPolicy
-            menuType: REGISTERED_MENU
-          - kind: ImageReplicate
-            menuType: REGISTERED_MENU
-        label: Image
+        label: Helm
         menuType: CONTAINER
+      - innerMenus:
+          - kind: Kafka
+            menuType: REGISTERED_MENU
+          - kind: KafkaConnect
+            menuType: REGISTERED_MENU
+          - kind: KafkaConnector
+            menuType: REGISTERED_MENU
+          - kind: KafkaBridge
+            menuType: REGISTERED_MENU
+          - kind: KafkaMirrorMaker2
+            menuType: REGISTERED_MENU
+          - kind: KafkaRebalance
+            menuType: REGISTERED_MENU
+        label: Kafka
+        menuType: CONTAINER
+      - innerMenus:
+          - kind: Redis
+            menuType: REGISTERED_MENU
+          - kind: RedisCluster
+            menuType: REGISTERED_MENU
+        label: Redis
+        menuType: CONTAINER
+      - kind: ServiceBinding
+        menuType: REGISTERED_MENU
     name: DEVELOPER
   - menus:
       - innerMenus:
@@ -339,4 +313,11 @@ menuTabs:
       - kind: Node
         menuType: REGISTERED_MENU
     name: CUSTOM
+  - menus:
+      - innerMenus:
+          - kind: AWX
+            menuType: REGISTERED_MENU
+        label: Ansible
+        menuType: CONTAINER
+    name: BAREMETAL
 showCustomPerspective: true
