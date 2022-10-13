@@ -35,7 +35,7 @@ const queries = {
   [NodeQueries.MEMORY_TOTAL]: _.template(`node_memory_MemTotal_bytes{instance='<%= node %>'}`),
   [NodeQueries.POD_COUNT]: _.template(`sum(kube_pod_info{host_ip='<%= hostIp %>'})`),
   [NodeQueries.FILESYSTEM_USAGE]: _.template(`instance:node_filesystem_usage:sum{instance='<%= node %>'}`),
-  [NodeQueries.FILESYSTEM_TOTAL]: _.template(`node_filesystem_size_bytes{instance='<%= node %>'}`),
+  [NodeQueries.FILESYSTEM_TOTAL]: _.template(`node_filesystem_size_bytes{instance='<%= node %>',mountpoint='/'}`),
   [NodeQueries.NETWORK_IN_UTILIZATION]: _.template(`instance:node_network_receive_bytes:rate:sum{instance='<%= node %>'}`),
   [NodeQueries.NETWORK_OUT_UTILIZATION]: _.template(`instance:node_network_transmit_bytes:rate:sum{instance='<%= node %>'}`),
 };
@@ -131,7 +131,7 @@ export const getUtilizationQueries = (node: string, ipAddress: string) => {
     [NodeQueries.FILESYSTEM_TOTAL]: queries[NodeQueries.FILESYSTEM_TOTAL]({
       node,
     }),
-  }
+  };
 };
 
 export const getTopConsumerQueries = (ipAddress: string) => ({

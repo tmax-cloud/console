@@ -13,19 +13,13 @@ import { ListView } from '../../utils/list-view';
 import { getActiveNamespace } from '../../../../reducers/ui';
 import store from '../../../../redux';
 import { useTranslation } from 'react-i18next';
-import { k8sGet, k8sList } from '../../../../module/k8s';
+import { k8sGet, k8sList, K8sResourceKindReference } from '../../../../module/k8s';
 import { Button } from '@patternfly/react-core';
 import { Workspace } from '../utils/workspaces';
-
-const defaultValues = {
-  metadata: {
-    name: 'example-name',
-  },
-};
-
-const pipelineRunFormFactory = params => {
-  return WithCommonForm(CreatePipelineRunComponent, params, defaultValues);
-};
+import { CreateDefault } from '../../crd/create-pinned-resource';
+import { EditorType } from '../../../../../packages/console-shared/src/components/synced-editor/editor-toggle';
+import { convertToForm, onSubmitCallback } from './sync-form-data';
+import { defaultTemplateMap } from '..';
 
 const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
   return (
@@ -63,10 +57,11 @@ const ParamsListComponent = props => {
 
 const ResourceListComponent = props => {
   const { t } = useTranslation();
+  const { formData } = props;
   return props.resourceList.map(cur => (
     <ul>
       <Section label={cur.name} id={cur.name}>
-        <ResourceListDropdown name={`spec.resources.${cur.name}.resourceRef.name`} resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)} type="single" useHookForm placeholder={t('SINGLE:MSG_PIPELINES_CREATEFORM_29')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} />
+        <ResourceListDropdown name={`spec.resources.${cur.name}.resourceRef.name`} resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)} type="single" useHookForm placeholder={t('SINGLE:MSG_PIPELINES_CREATEFORM_29')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} defaultValue={formData?.spec?.resources?.[cur.name]?.resourceRef.name} />
       </Section>
     </ul>
   ));
@@ -77,29 +72,34 @@ const WorkspaceListComponent = props => {
 };
 
 const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
+  const { formData } = props;
   const methods = useFormContext();
   const { control } = methods;
 
   const namespace = getActiveNamespace(store.getState());
 
+  const [labels] = React.useState(formData?.metadata?.labels || []);
   const [paramList, setParamList] = React.useState([]);
-  const [resourceList, setResourceList] = React.useState([]);
+  const [resourceList, setResourceList] = React.useState(Object.keys(formData?.spec?.resources)?.map(name => ({ name: name })) || []);
   const [resourceRefList, setResourceRefList] = React.useState([]);
-  const [workspaceList, setWorkspaceList] = React.useState([]);
+  const [workspaceList, setWorkspaceList] = React.useState(formData?.spec?.workspaces || []);
 
   React.useEffect(() => {
     k8sList(PipelineResourceModel, { ns: namespace }).then(list => setResourceRefList(list));
+    if (!!formData) {
+      onSelectPipeline(formData?.spec?.pipelineRef?.name);
+    }
   }, []);
 
   const onSelectPipeline = (selection: string) => {
     k8sGet(PipelineModel, selection, namespace)
       .then(pipeline => {
-        let newParamList = pipeline.spec.params?.map(param => ({ name: param.name, type: param.type, default: param.default, value: '' })) ?? [];
-        let newResourceList = pipeline.spec.resources?.map(resource => ({ name: resource.name, type: resource.type })) ?? [];
+        let newParamList = pipeline.spec?.params?.map(param => ({ name: param.name, type: param.type, default: param.default, value: '' })) ?? [];
+        let newResourceList = pipeline.spec?.resources?.map(resource => ({ name: resource.name, type: resource.type })) ?? [];
 
         setParamList(newParamList);
         setResourceList(newResourceList);
-        setWorkspaceList(pipeline.spec.workspaces);
+        setWorkspaceList(pipeline.spec?.workspaces);
       })
       .catch(err => {
         console.error('Fail to get Pipeline Detail', err);
@@ -111,7 +111,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
   return (
     <>
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_1')} id="label" description={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_2')}>
-        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={labels} />
       </Section>
 
       <div className="co-form-section__separator" />
@@ -130,6 +130,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
           type="single"
           useHookForm
           onChange={onSelectPipeline}
+          defaultValue={formData?.spec?.pipelineRef?.name}
         />
       </Section>
 
@@ -140,7 +141,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       )}
       {!_.isEmpty(resourceList) && (
         <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_6')} id="resource">
-          <ResourceListComponent resourceList={resourceList} resourceRefList={resourceRefList} />
+          <ResourceListComponent resourceList={resourceList} resourceRefList={resourceRefList} formData={formData} />
         </Section>
       )}
       {!_.isEmpty(workspaceList) && (
@@ -151,7 +152,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
       <div className="co-form-section__separator" />
 
-      <Section label={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_17')} id="serviceaccount" >
+      <Section label={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_17')} id="serviceaccount">
         <ResourceDropdown
           name="spec.serviceAccountName"
           placeholder={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_18')}
@@ -164,53 +165,35 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
           ]}
           type="single"
           useHookForm
+          defaultValue={formData?.spec?.serviceAccountName}
         />
       </Section>
     </>
   );
 };
 
-export const CreatePipelineRun: React.FC<CreatePipelineRunProps> = ({ match: { params }, kind }) => {
-  const formComponent = pipelineRunFormFactory(params);
-  const PipelineRunFormComponent = formComponent;
-  return <PipelineRunFormComponent fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
+  const { formData, onChange } = props;
+  const _formData = React.useMemo(() => convertToForm(formData), [formData]);
+  const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
+  const watchFieldNames = ['metadata.labels', 'spec.params', 'spec.resources'];
+  return <Form fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 
-export const onSubmitCallback = data => {
-  let labels = SelectorInput.objectify(data.metadata.labels);
+export const CreatePipelineRun: React.FC<CreatePipelineRunProps> = props => {
+  const { match, kind, obj } = props;
+  const formComponent = WithCommonForm(CreatePipelineRunComponent, match.params, obj || defaultTemplateMap.get(kind), null, true);
 
-  let params = [];
-  _.forEach(data.spec.params, (obj, name) => {
-    params.push({ name: name, value: obj.value ?? obj.arrayValue.map(subObj => subObj.value) });
-  });
-
-  let resources = [];
-  _.forEach(data.spec.resources, (obj, name) => {
-    resources.push({ name: name, resourceRef: obj.resourceRef });
-  });
-
-  _.forEach(data.spec.workspaces, workspace => {
-    _.forEach(workspace.name, (type, name) => {
-      workspace.name = name;
-      if (type === 'EmptyDirectory') {
-        workspace.emptyDir = {};
-      } else if (type === 'VolumeClaimTemplate') {
-        workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
-      }
-    });
-  });
-
-  delete data.metadata.labels;
-  delete data.spec.params;
-  delete data.spec.resources;
-
-  data = _.defaultsDeep({ metadata: { labels: labels }, spec: { params: params, resources: resources } }, data);
-  return data;
+  // create form
+  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineRunModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form: formComponent, isCreate: true })} />;
 };
 
 type CreatePipelineRunProps = {
   match: RMatch<{
-    ns?: string;
+    name: string;
+    appName: string;
+    ns: string;
+    plural: K8sResourceKindReference;
   }>;
   kind: string;
   fixed: object;
@@ -218,6 +201,7 @@ type CreatePipelineRunProps = {
   titleVerb: string;
   saveButtonText?: string;
   isCreate: boolean;
+  obj: any;
 };
 
 type PipelineRunFormProps = {
@@ -226,4 +210,5 @@ type PipelineRunFormProps = {
     [key: string]: string;
   };
   isCreate: boolean;
+  formData: any;
 };

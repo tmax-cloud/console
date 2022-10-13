@@ -143,6 +143,8 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - Application (어플리케이션)
 - NodeConfig(노드 컨피그)
 - BareMetalHost (베어메탈 호스트)
+- Redis (레디스)
+- RedisCluster (레디스 클러스터)
 </div>
 </div>
 

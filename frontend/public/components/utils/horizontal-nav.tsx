@@ -247,7 +247,7 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
       const url = getResourceSchemaUrl(model, isCustomResourceType);
       url &&
         coFetchJSON(url).then(template => {
-          template = isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template;
+          template = isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : JSON.parse(template);
           props.setActiveSchema(template);
         });
     }
