@@ -190,13 +190,11 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     const selectedNew = _.xor(selectedRowFilters, id);
     applyRowFilter(selectedNew);
     setQueryParameters(selectedNew);
-    setOpen(false);
   };
 
   const defaultRowFilterSetting = (filterList: string[]) => {
     applyRowFilter(filterList);
     setQueryParameters(filterList);
-    setOpen(false);
   };
 
   const clearAllRowFilter = (f: string) => {
