@@ -17,8 +17,6 @@ menuTabs:
             menuType: REGISTERED_MENU
           - kind: Grafana
             menuType: REGISTERED_MENU
-          - kind: OpenSearch
-            menuType: REGISTERED_MENU
           - kind: Git
             menuType: REGISTERED_MENU
           - kind: Harbor
