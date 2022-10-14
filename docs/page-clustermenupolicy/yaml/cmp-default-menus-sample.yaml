@@ -245,8 +245,6 @@ menuTabs:
             menuType: REGISTERED_MENU
           - kind: IntegrationConfig
             menuType: REGISTERED_MENU
-          - kind: Application
-            menuType: REGISTERED_MENU
         label: CI/CD
         menuType: CONTAINER
       - innerMenus:
