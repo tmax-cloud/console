@@ -14,7 +14,15 @@ const workspaceType = {
   EmptyDirectory: 'Empty Directory',
   ConfigMap: 'Config Map',
   Secret: 'Secret',
-}
+};
+
+export const workspaceTypeKeys = {
+  volumeClaimTemplate: 'VolumeClaimTemplate',
+  persistentVolumeClaim: 'PVC',
+  emptyDir: 'EmptyDirectory',
+  configmap: 'ConfigMap',
+  secret: 'Secret',
+};
 
 const accessItems = [
   {
@@ -41,19 +49,20 @@ export const Workspace = props => {
   const workspaceDetail = {
     VolumeClaimTemplate: (
       <>
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_14')} id='accessMode'>
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_14')} id="accessMode">
           <RadioGroup name={`${props.id}.volumeClaimTemplate.spec.accessModes`} items={accessItems} methods={props.methods} />
         </Section>
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_12')} id='storage'>
-          <TextInput className='pf-c-form-control' id={`${props.id}.volumeClaimTemplate.spec.resources.requests.storage`} methods={props.methods} />
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_12')} id="storage">
+          <TextInput className="pf-c-form-control" id={`${props.id}.volumeClaimTemplate.spec.resources.requests.storage`} methods={props.methods} />
         </Section>
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_13')} id='storageClass'>
-          <TextInput className='pf-c-form-control' id={`${props.id}.volumeClaimTemplate.spec.storageClassName`} methods={props.methods} />
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_13')} id="storageClass">
+          <TextInput className="pf-c-form-control" id={`${props.id}.volumeClaimTemplate.spec.storageClassName`} methods={props.methods} />
         </Section>
-      </>),
+      </>
+    ),
     PVC: (
       <>
-        <Section label={t('COMMON:MSG_LNB_MENU_141')} id='pvc'>
+        <Section label={t('COMMON:MSG_LNB_MENU_141')} id="pvc">
           <ResourceDropdown
             name={`${props.id}.persistentVolumeClaim.claimName`}
             resources={[
@@ -72,7 +81,7 @@ export const Workspace = props => {
     ),
     ConfigMap: (
       <>
-        <Section label={t('COMMON:MSG_LNB_MENU_120')} id='configmap'>
+        <Section label={t('COMMON:MSG_LNB_MENU_120')} id="configmap">
           <ResourceDropdown
             name={`${props.id}.configmap.name`}
             resources={[
@@ -91,7 +100,7 @@ export const Workspace = props => {
     ),
     Secret: (
       <>
-        <Section label={t('COMMON:MSG_LNB_MENU_119')} id='secret'>
+        <Section label={t('COMMON:MSG_LNB_MENU_119')} id="secret">
           <ResourceDropdown
             name={`${props.id}.secret.secretName`}
             resources={[
@@ -108,17 +117,15 @@ export const Workspace = props => {
         </Section>
       </>
     ),
-    EmptyDirectory: null
+    EmptyDirectory: null,
   }[workspace];
 
-  return (<ul>
-    <Section label={props.name} id={props.name}>
-      <Dropdown
-        name={`${props.id}.name.${props.name}`}
-        title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')}
-        items={workspaceType}
-      />
-    </Section>
-    {workspaceDetail}
-  </ul>);
-}
+  return (
+    <ul>
+      <Section label={props.name} id={props.name}>
+        <Dropdown name={`${props.id}.name.${props.name}`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={props.type} />
+      </Section>
+      {workspaceDetail}
+    </ul>
+  );
+};
