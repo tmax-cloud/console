@@ -2,463 +2,136 @@ package main
 
 import (
 	"console/internal/console"
-	"console/internal/server"
-	"context"
+	"console/internal/logger"
 	"crypto/tls"
 	"fmt"
-	"github.com/rs/zerolog/log"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
+	flag "github.com/spf13/pflag"
+	"golang.org/x/net/context"
 	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
-
-	oscrypto "github.com/openshift/library-go/pkg/crypto"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 )
-
-const (
-	defaultConfigFileName = "config"
-	defaultConfigFilePath = "./configs"
-	envPrefix             = "CONSOLE"
-)
-
-type ServingInfo struct {
-	Listen       string `yaml:"listen"`
-	BaseAddress  string `yaml:"baseAddress"`
-	CertFile     string `yaml:"cert,omitempty"`
-	KeyFile      string `yaml:"key,omitempty"`
-	RedirectPort int    `yaml:"redirectPort,omitempty"`
-}
 
 func main() {
-	cmd := NewConsoleCommand()
-	cobra.CheckErr(cmd.Execute())
-}
-
-var (
-	servingInfo = &ServingInfo{}
-	app         = server.NewAppConfig()
-	logInfo     = NewLogInfo()
-
-	rootCmd = &cobra.Command{
-		Use:   "console",
-		Short: "web console for supercloud & hypercloud",
-		Long: `The console has three major features, 
-First, we provide a react app for supercloud UI. 
-Second, we provide the index.html for react app operation. 
-Finally, we provide a proxy function for querying the kubernetes resource API`,
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return initializeConfig(cmd)
-		},
-		Run: func(cmd *cobra.Command, args []string) {
-			fs := cmd.Flags()
-
-			// backward compatibility
-			if fBaseAddress, _ := fs.GetString("base-address"); fBaseAddress != "" {
-				servingInfo.BaseAddress = fBaseAddress
-			}
-			if fListen, _ := fs.GetString("listen"); fListen != "" {
-				servingInfo.Listen = fListen
-			}
-			if fKeycloakRealm, _ := fs.GetString("keycloak-realm"); fKeycloakRealm != "" {
-				app.KeycloakRealm = fKeycloakRealm
-			}
-			if fKeycloakAuthURL, _ := fs.GetString("keycloak-auth-url"); fKeycloakAuthURL != "" {
-				app.KeycloakAuthURL = fKeycloakAuthURL
-			}
-			if fKeycloakClientId, _ := fs.GetString("keycloak-client-id"); fKeycloakClientId != "" {
-				app.KeycloakClientId = fKeycloakClientId
-			}
-			if fPublicDir, _ := fs.GetString("public-dir"); fPublicDir != "" {
-				app.PublicDir = fPublicDir
-			}
-			if fMcMode, _ := fs.GetBool("mc-mode"); fMcMode == true {
-				app.McMode = fMcMode
-			}
-			if fChatbotEmbed, _ := fs.GetBool("mc-mode"); fChatbotEmbed == true {
-				app.ChatbotEmbed = fChatbotEmbed
-			}
-			if fCustomProductName, _ := fs.GetString("custom-product-name"); fCustomProductName != "" {
-				app.CustomProductName = fCustomProductName
-			}
-
-			var (
-				k8sApi, _ = fs.GetString("clusterInfo.kubeAPIServerURL")
-				token, _  = fs.GetString("clusterInfo.kubeToken")
-			)
-			k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
-			fmt.Printf("%v \n", app)
-
-			//var logger zerolog.Logger
-			//logInfo := LogInfo{
-			//	logLevel: "info",
-			//	logType:  "pretty",
-			//}
-			//logInfo.LogType=fs.GetString
-			logger := logInfo.getLogger()
-
-			//logger = level.NewFilter(logger, level.AllowNone())
-
-			//var leveltest level.Value
-
-			app.AddLogger(logger)
-			k8sHandler.AddLogger(logger)
-
-			httpHandler := server.NewServer(app, k8sHandler)
-
-			listenURL := console.ValidateFlagIsURL("listen", servingInfo.Listen)
-			baseURL := console.ValidateFlagIsURL("baseAddress", servingInfo.BaseAddress)
-			switch listenURL.Scheme {
-			case "http":
-			case "https":
-				console.ValidateFlagNotEmpty("tls-cert-file", servingInfo.CertFile)
-				console.ValidateFlagNotEmpty("tls-key-file", servingInfo.KeyFile)
-			default:
-				console.FlagFatalf("listen", "scheme must be one of: http, https")
-			}
-			httpsrv := &http.Server{
-				Addr:    listenURL.Host,
-				Handler: httpHandler,
-				// Disable HTTP/2, which breaks WebSockets.
-				TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
-				TLSConfig:    oscrypto.SecureTLSConfig(&tls.Config{}),
-			}
-			//Run the server
-			go func() {
-				if listenURL.Scheme == "https" {
-					err := httpsrv.ListenAndServeTLS(servingInfo.CertFile, servingInfo.KeyFile)
-					if err != nil && err != http.ErrServerClosed {
-						//log.Log("Error", err)
-						log.Error().Err(err)
-						os.Exit(1)
-					}
-				} else {
-					err := httpsrv.ListenAndServe()
-					if err != nil && err != http.ErrServerClosed {
-						//logger.Log("Error", err)
-						log.Error().Err(err)
-						os.Exit(1)
-					}
-				}
-			}()
-
-			redirectServer := &http.Server{}
-			if servingInfo.RedirectPort != 0 {
-				mux := http.NewServeMux()
-				mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-					redirectURL := &url.URL{
-						Scheme:   baseURL.Scheme,
-						Host:     baseURL.Host,
-						RawQuery: r.URL.RawQuery,
-						Path:     r.URL.Path,
-					}
-					http.Redirect(w, r, redirectURL.String(), http.StatusMovedPermanently)
-				})
-				redirectPort := fmt.Sprintf(":%d", servingInfo.RedirectPort)
-				redirectServer = &http.Server{
-					Addr:    redirectPort,
-					Handler: mux,
-				}
-				go func() {
-					err := redirectServer.ListenAndServe()
-					if err != nil && err != http.ErrServerClosed {
-						log.Error().Err(err)
-						os.Exit(1)
-					}
-				}()
-			}
-
-			serverCtx, serverStopCtx := context.WithCancel(context.Background())
-			sig := make(chan os.Signal, 1)
-			signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-			go func() {
-				<-sig
-				log.Info().Msg("Shutdown signal received")
-				//logger.Log("msg", "Shutdown signal received")
-				// Shutdown signal with grace period of 30 seconds
-				shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
-
-				go func() {
-					<-shutdownCtx.Done()
-					if shutdownCtx.Err() == context.DeadlineExceeded {
-						log.Error().Msg("graceful shutdown timed out.. forcing exit.")
-						os.Exit(1)
-					}
-				}()
-
-				// Trigger graceful shutdown
-				log.Info().Msg("Shutdown signal received")
-				//logger.Log("msg", "graceful Shutdown httpsrv")
-				err := httpsrv.Shutdown(shutdownCtx)
-				if err != nil {
-					log.Error().Err(err).Msg("graceful shutdown timed out.. forcing exit.")
-					//logger.Log("Error", err)
-					os.Exit(1)
-				}
-				log.Info().Msg("graceful Shutdown redirectServer")
-				//logger.Log("msg", "graceful Shutdown redirectServer")
-				if servingInfo.RedirectPort != 0 {
-					err := redirectServer.Shutdown(shutdownCtx)
-					if err != nil {
-						log.Error().Err(err)
-						//logger.Log("Error", err)
-						os.Exit(1)
-					}
-				}
-				serverStopCtx()
-			}()
-
-			<-serverCtx.Done()
-		},
+	fs := flag.NewFlagSet("console", flag.ExitOnError)
+	listen := fs.String("listen", "https://0.0.0.0:9000", "listen URL")
+	baseAddress := fs.String("baseAddress", "https://0.0.0.0:9000", "Base Address")
+	certFile := fs.String("certFile", "", "TLS cert")
+	keyFile := fs.String("keyFile", "", "TLS key")
+	redirectPort := fs.Int("redirectPort", 0, "redirect port http to https")
+	server := console.New(fs)
+	zlog := logger.New(fs)
+	fs.SortFlags = false
+	if err := fs.Parse(os.Args[1:]); err != nil {
+		panic(fmt.Errorf("Error parsing params %s, error: %v", os.Args[1:], err))
 	}
-)
 
-func init() {
-	rootCmd.AddCommand(serverCmd)
+	if err := server.ValidateConfig(); err != nil {
+		panic(fmt.Errorf("Error validating config, error: %v", err))
+	}
 
-}
+	log := zlog.GetLogger()
+	server.AddLogger(log)
+	router := server.CreateRouter()
 
-var serverCmd = &cobra.Command{
-	Use:   "server",
-	Short: "consider of backwardcompatability",
-	Run: func(cmd *cobra.Command, args []string) {
-		fs := cmd.Flags()
+	listenURL := console.ValidateFlagIsURL("listen", *listen)
+	baseURL := console.ValidateFlagIsURL("baseAddress", *baseAddress)
 
-		// backward compatibility
-		if fBaseAddress, _ := fs.GetString("base-address"); fBaseAddress != "" {
-			servingInfo.BaseAddress = fBaseAddress
-		}
-		if fListen, _ := fs.GetString("listen"); fListen != "" {
-			servingInfo.Listen = fListen
-		}
-		if fKeycloakRealm, _ := fs.GetString("keycloak-realm"); fKeycloakRealm != "" {
-			app.KeycloakRealm = fKeycloakRealm
-		}
-		if fKeycloakAuthURL, _ := fs.GetString("keycloak-auth-url"); fKeycloakAuthURL != "" {
-			app.KeycloakAuthURL = fKeycloakAuthURL
-		}
-		if fKeycloakClientId, _ := fs.GetString("keycloak-client-id"); fKeycloakClientId != "" {
-			app.KeycloakClientId = fKeycloakClientId
-		}
-		if fPublicDir, _ := fs.GetString("public-dir"); fPublicDir != "" {
-			app.PublicDir = fPublicDir
-		}
-		if fMcMode, _ := fs.GetBool("mc-mode"); fMcMode == true {
-			app.McMode = fMcMode
-		}
-		if fChatbotEmbed, _ := fs.GetBool("mc-mode"); fChatbotEmbed == true {
-			app.ChatbotEmbed = fChatbotEmbed
-		}
-		if fCustomProductName, _ := fs.GetString("custom-product-name"); fCustomProductName != "" {
-			app.CustomProductName = fCustomProductName
-		}
-
-		var (
-			k8sApi, _ = fs.GetString("clusterInfo.kubeAPIServerURL")
-			token, _  = fs.GetString("clusterInfo.kubeToken")
-		)
-		k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
-		fmt.Printf("%v \n", app)
-
-		//var logger zerolog.Logger
-		//logInfo := LogInfo{
-		//	logLevel: "debug",
-		//	logType:  "pretty",
-		//}
-		logger := logInfo.getLogger()
-
-		//logger = level.NewFilter(logger, level.AllowNone())
-
-		//var leveltest level.Value
-
-		app.AddLogger(logger)
-		k8sHandler.AddLogger(logger)
-
-		httpHandler := server.NewServer(app, k8sHandler)
-
-		listenURL := console.ValidateFlagIsURL("listen", servingInfo.Listen)
-		baseURL := console.ValidateFlagIsURL("baseAddress", servingInfo.BaseAddress)
-		switch listenURL.Scheme {
-		case "http":
-		case "https":
-			console.ValidateFlagNotEmpty("tls-cert-file", servingInfo.CertFile)
-			console.ValidateFlagNotEmpty("tls-key-file", servingInfo.KeyFile)
-		default:
-			console.FlagFatalf("listen", "scheme must be one of: http, https")
-		}
-		httpsrv := &http.Server{
-			Addr:    listenURL.Host,
-			Handler: httpHandler,
-			// Disable HTTP/2, which breaks WebSockets.
-			TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
-			TLSConfig:    oscrypto.SecureTLSConfig(&tls.Config{}),
-		}
-		//Run the server
-		go func() {
-			if listenURL.Scheme == "https" {
-				err := httpsrv.ListenAndServeTLS(servingInfo.CertFile, servingInfo.KeyFile)
-				if err != nil && err != http.ErrServerClosed {
-					logger.Error().Err(err).Msg("fail to listen https server")
-					os.Exit(1)
-				}
-			} else {
-				err := httpsrv.ListenAndServe()
-				if err != nil && err != http.ErrServerClosed {
-					logger.Error().Err(err).Msg("fail to listen https server")
-					os.Exit(1)
-				}
+	switch listenURL.Scheme {
+	case "http":
+	case "https":
+		console.ValidateFlagNotEmpty("certFile", *certFile)
+		console.ValidateFlagNotEmpty("keyFile", *keyFile)
+	default:
+		console.FlagFatalf("listen", "scheme must be one of: http, https")
+	}
+	httpsrv := &http.Server{
+		Addr:    listenURL.Host,
+		Handler: router,
+		// Disable HTTP/2, which breaks WebSockets.
+		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
+		TLSConfig:    oscrypto.SecureTLSConfig(&tls.Config{}),
+	}
+	//Run the server
+	go func() {
+		if listenURL.Scheme == "https" {
+			err := httpsrv.ListenAndServeTLS(*certFile, *keyFile)
+			if err != nil && err != http.ErrServerClosed {
+				log.Panic().Err(err)
 			}
-		}()
-
-		redirectServer := &http.Server{}
-		if servingInfo.RedirectPort != 0 {
-			mux := http.NewServeMux()
-			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				redirectURL := &url.URL{
-					Scheme:   baseURL.Scheme,
-					Host:     baseURL.Host,
-					RawQuery: r.URL.RawQuery,
-					Path:     r.URL.Path,
-				}
-				http.Redirect(w, r, redirectURL.String(), http.StatusMovedPermanently)
-			})
-			redirectPort := fmt.Sprintf(":%d", servingInfo.RedirectPort)
-			redirectServer = &http.Server{
-				Addr:    redirectPort,
-				Handler: mux,
+		} else {
+			err := httpsrv.ListenAndServe()
+			if err != nil && err != http.ErrServerClosed {
+				log.Panic().Err(err)
 			}
-			go func() {
-				err := redirectServer.ListenAndServe()
-				if err != nil && err != http.ErrServerClosed {
-					logger.Error().Err(err).Msg("fail to listen redirect server")
-					os.Exit(1)
-				}
-			}()
 		}
+	}()
 
-		serverCtx, serverStopCtx := context.WithCancel(context.Background())
-		sig := make(chan os.Signal, 1)
-		signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	redirectServer := &http.Server{}
+	if *redirectPort != 0 {
+		mux := http.NewServeMux()
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			redirectURL := &url.URL{
+				Scheme:   baseURL.Scheme,
+				Host:     baseURL.Host,
+				RawQuery: r.URL.RawQuery,
+				Path:     r.URL.Path,
+			}
+			http.Redirect(w, r, redirectURL.String(), http.StatusMovedPermanently)
+		})
+		redirectPort := fmt.Sprintf(":%d", *redirectPort)
+		redirectServer = &http.Server{
+			Addr:    redirectPort,
+			Handler: mux,
+		}
 		go func() {
-			<-sig
-
-			logger.Info().Msgf("Shutdown signal received")
-			// Shutdown signal with grace period of 30 seconds
-			shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
-
-			go func() {
-				<-shutdownCtx.Done()
-				if shutdownCtx.Err() == context.DeadlineExceeded {
-					logger.Error().Msgf("graceful shutdown timed out.. forcing exit.")
-					os.Exit(1)
-				}
-			}()
-
-			// Trigger graceful shutdown
-			logger.Info().Msgf("graceful Shutdown httpsrv")
-			//logger.Log("msg", "graceful Shutdown httpsrv")
-			err := httpsrv.Shutdown(shutdownCtx)
-			if err != nil {
-				logger.Error().Err(err)
+			err := redirectServer.ListenAndServe()
+			if err != nil && err != http.ErrServerClosed {
+				log.Error().Err(err)
 				os.Exit(1)
 			}
-			logger.Info().Msgf("graceful Shutdown redirectServer")
-			if servingInfo.RedirectPort != 0 {
-				err := redirectServer.Shutdown(shutdownCtx)
-				if err != nil {
-					logger.Error().Err(err)
-					os.Exit(1)
-				}
-			}
-			serverStopCtx()
 		}()
-
-		<-serverCtx.Done()
-	},
-}
-
-func NewConsoleCommand() *cobra.Command {
-	rootCmd.PersistentFlags().StringVar(&servingInfo.Listen, "servingInfo.listen", "http://0.0.0.0:9000", "listen Address")
-	rootCmd.PersistentFlags().StringVar(&servingInfo.BaseAddress, "servingInfo.baseAddress", "http://0.0.0.0:9000", "Format: <http | https>://domainOrIPAddress[:port]. Example: https://console.hypercloud.com.")
-	rootCmd.PersistentFlags().StringVar(&servingInfo.CertFile, "servingInfo.certFile", "./tls/tls.crt", "TLS certificate. If the certificate is signed by a certificate authority, the certFile should be the concatenation of the server's certificate followed by the CA's certificate.")
-	rootCmd.PersistentFlags().StringVar(&servingInfo.KeyFile, "servingInfo.keyFile", "./tls/tls.key", "The TLS certificate key.")
-	rootCmd.PersistentFlags().IntVar(&servingInfo.RedirectPort, "servingInfo.redirectPort", 0, "Port number under which the console should listen for custom hostname redirect.")
-
-	rootCmd.PersistentFlags().StringVar(&app.KeycloakRealm, "app.keycloakRealm", "tmax", "Keycloak Realm Name")
-	//rootCmd.MarkPersistentFlagRequired("app.keycloakRealm")
-	rootCmd.PersistentFlags().StringVar(&app.KeycloakClientId, "app.keycloakClientId", "hypercloud5", "Keycloak Client Id")
-	//rootCmd.MarkPersistentFlagRequired("app.keycloakClientId")
-	rootCmd.PersistentFlags().StringVar(&app.KeycloakAuthURL, "app.keycloakAuthUrl", "https://hyperauth.tmaxcloud.org/auth", "URL of the Keycloak Auth server.")
-	//rootCmd.MarkPersistentFlagRequired("app.keycloakAuthUrl")
-	rootCmd.PersistentFlags().BoolVar(&app.KeycloakUseHiddenIframe, "app.keycloakUseHiddenIframe", false, "Use keycloak Hidden Iframe")
-
-	rootCmd.PersistentFlags().StringVar(&app.BasePath, "app.basePath", "/", "basePath")
-	rootCmd.PersistentFlags().StringVar(&app.PublicDir, "app.publicDir", "./frontend/public/dist", "listen Address")
-	rootCmd.PersistentFlags().BoolVar(&app.McMode, "app.mcMode", false, "Choose Cluster Mode (multi | single)")
-	rootCmd.PersistentFlags().BoolVar(&app.ChatbotEmbed, "app.chatbotEmbed", false, "when true, enable chatbot")
-	rootCmd.PersistentFlags().BoolVar(&app.ReleaseMode, "app.releaseMode", true, "when true, use jwt token given by keycloak")
-	rootCmd.PersistentFlags().StringVar(&app.CustomProductName, "app.customProductName", "hypercloud", "prduct name for console | default hypercloud")
-
-	rootCmd.PersistentFlags().StringVar(&logInfo.LogLevel, "logInfo.logLevel", "info", "trace | debug | info | warn | crit, default info")
-	rootCmd.PersistentFlags().StringVar(&logInfo.LogType, "logInfo.logType", "pretty", "json | pretty , default pretty")
-
-	//rootCmd.PersistentFlags().StringVar(&k8sHandler.KubeAPIServerURL, "k8sHandler.kubeAPIServerURL", "kubernetes.default.svc", "kube api server hostname")
-	rootCmd.PersistentFlags().String("clusterInfo.kubeAPIServerURL", "https://kubernetes.default.svc", "kube api server hostname")
-	rootCmd.PersistentFlags().String("clusterInfo.kubeToken", "", "kubernetes token for API")
-
-	rootCmd.PersistentFlags().String("base-address", "", "backward compatibility for servingInfo.baseAddress")
-	rootCmd.PersistentFlags().String("listen", "", "backward compatibility for servingInfo.listen")
-	rootCmd.PersistentFlags().String("keycloak-realm", "", "backward compatibility for app.keycloakRealm")
-	rootCmd.PersistentFlags().String("keycloak-auth-url", "", "backward compatibility for app.keycloakAuthUrl")
-	rootCmd.PersistentFlags().String("keycloak-client-id", "", "backward compatibility for app.keycloakClientId")
-	rootCmd.PersistentFlags().Bool("mc-mode", false, "backward compatibility for app.mcMode")
-	rootCmd.PersistentFlags().Bool("chatbot-embed", false, "backward compatibility for app.chatbotEmbed")
-	rootCmd.PersistentFlags().String("public-dir", "", "backward compatibility for app.publicDir")
-	rootCmd.PersistentFlags().String("custom-product-name", "", "backward compatibility for app.customProductName")
-
-	return rootCmd
-}
-
-func initializeConfig(cmd *cobra.Command) error {
-	v := viper.New()
-
-	v.SetConfigName(defaultConfigFileName)
-	v.AddConfigPath(defaultConfigFilePath)
-
-	if err := v.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			return err
-		}
 	}
 
-	v.SetEnvPrefix(envPrefix)
-	v.AutomaticEnv()
+	serverCtx, serverStopCtx := context.WithCancel(context.Background())
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	go func() {
+		<-sig
+		log.Info().Msg("Shutdown signal received")
+		// Shutdown signal with grace period of 30 seconds
+		shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
 
-	bindFlags(cmd, v)
+		go func() {
+			<-shutdownCtx.Done()
+			if shutdownCtx.Err() == context.DeadlineExceeded {
+				log.Error().Msg("graceful shutdown timed out.. forcing exit.")
+				os.Exit(1)
+			}
+		}()
 
-	return nil
-}
-
-// Bind each cobra flag to its associated viper configuration (config file and environment variable)
-func bindFlags(cmd *cobra.Command, v *viper.Viper) {
-	cmd.Flags().VisitAll(func(f *pflag.Flag) {
-		// Environment variables can't have dashes in them, so bind them to their equivalent
-		// keys with underscores, e.g. --favorite-color to STING_FAVORITE_COLOR
-		if strings.Contains(f.Name, "-") || strings.Contains(f.Name, ".") {
-			envVarSuffix := strings.ToUpper(strings.ReplaceAll(f.Name, "-", "_"))
-			envVarSuffix = strings.ReplaceAll(envVarSuffix, ".", "_")
-			v.BindEnv(f.Name, fmt.Sprintf("%s_%s", envPrefix, envVarSuffix))
+		// Trigger graceful shutdown
+		log.Info().Msg("Shutdown signal received")
+		err := httpsrv.Shutdown(shutdownCtx)
+		if err != nil {
+			log.Error().Err(err).Msg("graceful shutdown timed out.. forcing exit.")
+			os.Exit(1)
 		}
-
-		// Apply the viper config value to the flag when the flag is not set and viper has a value
-		if !f.Changed && v.IsSet(f.Name) {
-			val := v.Get(f.Name)
-			cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
+		log.Info().Msg("graceful Shutdown redirectServer")
+		if *redirectPort != 0 {
+			err := redirectServer.Shutdown(shutdownCtx)
+			if err != nil {
+				log.Error().Err(err)
+				//logger.Log("Error", err)
+				os.Exit(1)
+			}
 		}
-	})
+		serverStopCtx()
+	}()
+
+	<-serverCtx.Done()
 }

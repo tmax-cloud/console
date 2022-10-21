@@ -5,7 +5,8 @@ export
 BUILD_ID ?= console
 REGISTRY ?= docker.io
 CONSOLE_VERSION ?= 5.0.40.0
-CONSOLE_IMG ?= $(REGISTRY)/tmax-cloud/hypercloud-console:$(CONSOLE_VERSION)
+DOCKER_IMAGE ?= tmaxcloudck/hypercloud-console:$(CONSOLE_VERSION)
+CONSOLE_IMG ?= $(REGISTRY)/tmaxcloudck/hypercloud-console:$(CONSOLE_VERSION)
 DOCKER_ID ?= test
 DOCKER_PW ?= test
 
@@ -41,7 +42,7 @@ run-traefik-linux:
 	@./traefik-linux --configfile ./configs/traefik-static.yaml
 
 docker-build:
-	@docker build --rm=true --build-arg=BUILD_ID=$(BUILD_ID) -t $(REGISTRY)/$(DOCKER_IMAGE) -f ./Dockerfile .
+	@docker build --rm=true --build-arg=BUILD_ID=$(BUILD_ID) -t $(REGISTRY)/$(DOCKER_IMAGE) -f Dockerfile .
 	@yes | docker image prune --filter label=stage=builder --filter label=build=$(BUILD_ID)
 
 docker-push:
