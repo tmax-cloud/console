@@ -46,7 +46,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
           <DropdownItem data-test-row-filter={item.id} key={item.id} id={item.id} className="co-filter-dropdown__item" listItemClassName="co-filter-dropdown__list-item">
             <div className="co-filter-dropdown-item">
               <span className="co-filter-dropdown-item__checkbox">
-                <Checkbox isChecked={selectedItems.includes(item.id)} id={`${item.id}-checkbox`} />
+                <Checkbox checked={selectedItems.includes(item.id)} id={`${item.id}-checkbox`} />
               </span>
               <span className="co-filter-dropdown-item__name">{item.title}</span>
               <Badge key={item.id} isRead>
