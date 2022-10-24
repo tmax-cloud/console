@@ -47,6 +47,10 @@ $drag-column-width: 28px;
   }
 }
 
+.pairs-list__row-flex-start {
+  align-items: flex-start;
+}
+
 .pairs-list__value-field,
 .pairs-list__name-field {
   padding-right: 0;
@@ -61,6 +65,10 @@ $drag-column-width: 28px;
 .pairs-list__value-ro-field {
   flex-grow: 1;
   padding-top: 5px;
+}
+
+.pairs-list__value-textarea {
+  resize: vertical;
 }
 
 .pairs-list__side-btn {

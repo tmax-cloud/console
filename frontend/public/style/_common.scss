@@ -607,3 +607,33 @@ $co-external-link-padding-right: 15px;
 .co-datepicker:active {
   border: 0px;
 }
+
+.co-text-center {
+  text-align: center;
+}
+
+.co-memo {
+  display: flex;
+  justify-content: center;
+  padding: 0.375rem 0.5rem;
+}
+
+.co-memo > svg {
+  cursor: pointer;
+}
+
+.co-memo-new-icon {
+  fill: var(--pf-global--link--Color);
+}
+
+.co-memo-new-icon:hover {
+  fill: var(--pf-global--link--Color--hover);
+}
+
+.co-memo-edit-icon {
+  fill: var(--pf-global--palette--black-600);
+}
+
+.co-memo-edit-icon:hover {
+  fill: var(--pf-global--palette--black-900);
+}

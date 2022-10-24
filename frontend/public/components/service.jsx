@@ -7,7 +7,8 @@ import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { DetailsItem, Kebab, LabelList, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, navFactory } from './utils';
 import { ServiceModel } from '../models';
 import { useTranslation } from 'react-i18next';
-import { TracePage } from './trace'
+import { TracePage } from './trace';
+import Memo from './hypercloud/utils/memo';
 
 export const menuActions = [Kebab.factory.ModifyPodSelector, ...Kebab.getExtensionsActionsForKind(ServiceModel), ...Kebab.factory.common];
 
@@ -26,7 +27,17 @@ const ServiceIP = ({ s }) => {
 
 const kind = 'Service';
 
-const tableColumnClasses = [classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'hidden-xs'), classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'), classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
+const tableColumnClasses = [
+  classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'col-xs-6'),
+  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'),
+  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'hidden-xs'),
+  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'hidden-xs'),
+  classNames('col-lg-3', 'col-md-3', 'hidden-sm', 'hidden-xs'),
+  classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'),
+  classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'),
+  classNames('col-lg-1', 'col-md-3', 'col-sm-4', 'col-xs-2', 'co-text-center'), // 메모 컬럼 classname
+  Kebab.columnClass,
+];
 
 const ServiceTableHeader = t => {
   return [
@@ -73,8 +84,13 @@ const ServiceTableHeader = t => {
       props: { className: tableColumnClasses[6] },
     },
     {
-      title: '',
+      title: '메모',
+      transforms: null,
       props: { className: tableColumnClasses[7] },
+    },
+    {
+      title: '',
+      props: { className: tableColumnClasses[8] },
     },
   ];
 };
@@ -101,6 +117,9 @@ const ServiceTableRow = ({ obj: s, index, key, style }) => {
         <ServiceIP s={s} />
       </TableData>
       <TableData className={tableColumnClasses[7]}>
+        <Memo model={ServiceModel} resource={s} />
+      </TableData>
+      <TableData className={tableColumnClasses[8]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={s} />
       </TableData>
     </TableRow>
@@ -232,16 +251,26 @@ const Details = ({ obj: s }) => {
   );
 };
 const TraceTab = props => {
-  return <TracePage namespace={props.obj.metadata.namespace} name={props.obj.metadata.name} />
+  return <TracePage namespace={props.obj.metadata.namespace} name={props.obj.metadata.name} />;
 };
 
 const { details, pods, editResource } = navFactory;
-const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods(),
-{
-  href: 'trace',
-  name: 'COMMON:MSG_DETAILS_TABTRACE_1',
-  component: TraceTab,
-},]} />;
+const ServicesDetailsPage = props => (
+  <DetailsPage
+    {...props}
+    menuActions={menuActions}
+    pages={[
+      details(Details),
+      editResource(),
+      pods(),
+      {
+        href: 'trace',
+        name: 'COMMON:MSG_DETAILS_TABTRACE_1',
+        component: TraceTab,
+      },
+    ]}
+  />
+);
 
 const ServicesList = props => {
   const { t } = useTranslation();
