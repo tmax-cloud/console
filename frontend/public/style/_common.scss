@@ -618,7 +618,8 @@ $co-external-link-padding-right: 15px;
   padding: 0.375rem 0.5rem;
 }
 
-.co-memo > svg {
+.co-memo > svg, 
+.co-memo > img {
   cursor: pointer;
 }
 
@@ -631,9 +632,7 @@ $co-external-link-padding-right: 15px;
 }
 
 .co-memo-edit-icon {
-  fill: var(--pf-global--palette--black-600);
-}
-
-.co-memo-edit-icon:hover {
-  fill: var(--pf-global--palette--black-900);
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
 }
