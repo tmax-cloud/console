@@ -1,32 +1,29 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { match as RMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { EditorType } from '@console/shared/src/components/synced-editor/editor-toggle';
+import { defaultTemplateMap } from '@console/internal/components/hypercloud/form';
 import { WithCommonForm } from '../create-form';
 import { Section } from '../../utils/section';
 import { ListView } from '../../utils/list-view';
 import { ResourceListDropdown } from '../../utils/resource-list-dropdown';
-import { k8sGet, k8sList } from '../../../../module/k8s';
+import { CreateDefault } from '../../crd/create-pinned-resource';
+import { k8sGet, k8sList, K8sResourceKindReference } from '../../../../module/k8s';
 import { ClusterTaskModel, TaskModel, PipelineResourceModel, ServiceAccountModel, TaskRunModel } from '../../../../models';
 import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
 import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
 import { Workspace } from '../utils/workspaces';
+import { convertToForm, onSubmitCallback } from './sync-form-data';
 
-const defaultValues = {
-  metadata: {
-    name: 'example-name',
-  },
-};
 let defaultArrayLength = 0;
-const taskRunFormFactory = params => {
-  return WithCommonForm(CreateTaskRunComponent, params, defaultValues);
-};
 
 const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
+  methods.watch([`${name}[${index}].value`]);
   return (
     <div className="row" key={item.id}>
       <div className="col-xs-4 pairs-list__value-field">
@@ -53,6 +50,7 @@ const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultI
 };
 
 const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
+  const { formData } = props;
   const { t } = useTranslation();
   const methods = useFormContext();
   const [lists, setLists] = useState({
@@ -80,8 +78,10 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   const selectedTask = useWatch({
     control: methods.control,
     name: 'taskRef.name',
-    defaultValue: '',
+    defaultValue: formData?.taskRef?.name || '',
   });
+
+  const selectedTaskRef = useRef();
 
   const getTaskDetails = async (taskKind, taskName) => {
     let task;
@@ -109,7 +109,10 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         };
       });
 
-      const paramValueListData = task.spec?.params?.map(param => {
+      const useDefaultValue = _.isEmpty(formData?.params) ? true : !!(selectedTaskRef.current && selectedTask !== selectedTaskRef.current);
+      selectedTaskRef.current = selectedTask;
+
+      const paramValueListData = task.spec?.params?.map((param, index) => {
         if (param.type === 'array') {
           defaultArrayLength = param.default?.length;
           const valueList = param.default?.map(value => {
@@ -117,9 +120,9 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
               value: value,
             };
           });
-          return { value: valueList };
+          return { value: useDefaultValue ? valueList : formData?.params[index]?.value };
         } else {
-          return { value: param.default };
+          return { value: useDefaultValue ? param.default : formData?.params[index]?.value };
         }
       });
 
@@ -133,10 +136,11 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         };
       });
 
-      const workspacesData = task.spec?.workspaces?.map(workspace => {
+      const workspacesData = task.spec?.workspaces?.map((workspace, index) => {
         return {
           name: workspace.name,
           description: workspace.description,
+          type: useDefaultValue ? undefined : formData?.spec?.workspaces[index]?.[workspace.name],
         };
       });
 
@@ -156,7 +160,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         return (
           <Section label={`${item.name} (${item.type})`} id={`input_${index}`} key={`input_${index}`} isRequired={item.required} description={item.description}>
             <>
-              <ResourceListDropdown name={`spec.resources.inputs.${item.name}.resourceRef.name`} type="single" resourceList={pipelineList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} useHookForm />
+              <ResourceListDropdown name={`spec.resources.inputs.${item.name}.resourceRef.name`} type="single" resourceList={pipelineList} methods={methods} defaultValue={formData?.spec?.resources?.inputs?.[item.name]?.resourceRef?.name} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} useHookForm />
             </>
           </Section>
         );
@@ -171,7 +175,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         return (
           <Section label={`${item.name} (${item.type})`} id={`output_${index}`} key={`output_${index}`} isRequired={item.required} description={item.description}>
             <>
-              <ResourceListDropdown name={`spec.resources.outputs.${item.name}.resourceRef.name`} type="single" resourceList={pipelineList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} useHookForm />
+              <ResourceListDropdown name={`spec.resources.outputs.${item.name}.resourceRef.name`} type="single" resourceList={pipelineList} methods={methods} defaultValue={formData?.spec?.resources?.outputs?.[item.name]?.resourceRef?.name} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} useHookForm />
             </>
           </Section>
         );
@@ -189,7 +193,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
             <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
               <>
                 <input ref={methods.register} type="hidden" id={`params.${index}.name`} name={`params.${index}.name`} value={item.name} />
-                <ListView name={`params.${index}.value`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={lists.paramValueListData[index]?.value || [{value: ''}]} />
+                <ListView name={`params.${index}.value`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={lists.paramValueListData[index]?.value} />
               </>
             </Section>
           );
@@ -211,6 +215,13 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   const workspaces = lists.workspaceList.length > 0 ? lists.workspaceList.map((item, index) => <Workspace namespace={namespace} methods={methods} id={`spec.workspaces[${index}]`} {...item} />) : <div className="help-block">{t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')}</div>;
 
   React.useEffect(() => {
+    setLists({
+      inputList: [],
+      outputList: [],
+      paramValueListData: [],
+      paramList: [],
+      workspaceList: [],
+    });
     const taskKind = selectedTask.split('~~')[0];
     const taskName = selectedTask.split('~~')[1];
     getTaskDetails(taskKind, taskName);
@@ -219,7 +230,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   return (
     <>
       <hr />
-      <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} id="task" isRequired={true} >
+      <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} id="task" isRequired={true}>
         <ResourceDropdown
           name="taskRef.name"
           type="single"
@@ -235,7 +246,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
             },
           ]}
           methods={methods}
-          defaultValue=""
+          defaultValue={formData?.taskRef?.name || ''}
           placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')}
           idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
           useHookForm
@@ -263,98 +274,28 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         </div>
       </Section>
       <Section label={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_17')} id="serviceaccount" description={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_16')}>
-        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_18')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} useHookForm />
+        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue={formData?.spec?.serviceAccountName || ''} placeholder={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_18')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} useHookForm />
       </Section>
     </>
   );
 };
 
-export const CreateTaskRun: React.FC<CreateTaskRunProps> = ({ match: { params }, kind }) => {
-  const formComponent = taskRunFormFactory(params);
-  const TaskRunFormComponent = formComponent;
-
-  return <TaskRunFormComponent fixed={{ apiVersion: `${TaskRunModel.apiGroup}/${TaskRunModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm />;
+const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
+  const { formData, onChange } = props;
+  const _formData = React.useMemo(() => convertToForm(formData), [formData]);
+  const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
+  const watchFieldNames = ['metadata.labels', 'taskRef', 'params', 'spec.resources.inputs', 'spec.resources.outputs', 'spec.workspaces', 'spec.volumes', 'spec.steps', 'spec.timeout', 'spec.serviceAccountName'];
+  return <Form {...props} fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} onSubmitCallback={onSubmitCallback} isCreate={isCreate} useDefaultForm formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 
-const changeTimeoutFormat = timeout => {
-  timeout = Number(timeout);
-  if (timeout == 0 || isNaN(timeout)) {
-    return '0';
-  }
-  if (timeout >= 60) {
-    return `${(timeout - (timeout % 60)) / 60}h${timeout % 60}m`;
-  } else return `${timeout}m`;
-};
-
-export const onSubmitCallback = data => {
-  // MEMO : task name data
-  const task = data.taskRef?.name;
-  const taskKind = task.split('~~')[0];
-  const taskName = task.split('~~')[1];
-  delete data.taskRef;
-
-  // MEMO : timeout data
-  const formattedTimeout = changeTimeoutFormat(data.spec?.timeout);
-  delete data.spec?.timeout;
-
-  // MEMO : inputs data
-  const inputs = data.spec?.resources?.inputs;
-  let formattedInputs = [];
-  for (const inputName in inputs) {
-    const inputObj = {
-      name: inputName,
-      ...inputs[inputName],
-    };
-    formattedInputs.push(inputObj);
-  }
-  delete data.spec?.resources?.inputs;
-
-  // MEMO : outputs data
-  const outputs = data.spec?.resources?.outputs;
-  let formattedOutputs = [];
-  for (const outputName in outputs) {
-    const outputObj = {
-      name: outputName,
-      ...outputs[outputName],
-    };
-    formattedOutputs.push(outputObj);
-  }
-  delete data.spec?.resources?.outputs;
-
-  // MEMO : paramters data
-  const params = _.cloneDeep(data.params);
-  const formattedParams = params?.map(param => {
-    if (Array.isArray(param.value)) {
-      const valueList = param.value.map(obj => {
-        return obj.value;
-      });
-      return { name: param.name, value: valueList };
-    } else {
-      return { name: param.name, value: param.value };
-    }
-  });
-  delete data.params;
-
-  _.forEach(data.spec.workspaces, workspace => {
-    _.forEach(workspace.name, (type, name) => {
-      workspace.name = name;
-      if (type === 'EmptyDirectory') {
-        workspace.emptyDir = {};
-      } else if (type === 'VolumeClaimTemplate') {
-        workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
-      }
-    });
-  });
-
-  data = _.defaultsDeep({ kind: TaskRunModel.kind, spec: { taskRef: { kind: taskKind, name: taskName }, params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } }, data);
-  // console.log('data? ', data);
-  return data;
+export const CreateTaskRun: React.FC<CreateTaskRunProps> = props => {
+  const { match, kind } = props;
+  const Form = WithCommonForm(CreateTaskRunComponent, match.params, defaultTemplateMap.get(kind), null, true);
+  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={TaskRunModel} match={match} loaded={false} customFormEditor={getCustomFormEditor({ match, kind, Form, isCreate: true })} />;
 };
 
 type CreateTaskRunProps = {
-  match: RMatch<{
-    ns?: string;
-  }>;
+  match: RMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   kind: string;
   fixed: object;
   explanation: string;
@@ -363,4 +304,6 @@ type CreateTaskRunProps = {
   isCreate: boolean;
 };
 
-type TaskRunFormProps = {};
+type TaskRunFormProps = {
+  formData: any;
+};

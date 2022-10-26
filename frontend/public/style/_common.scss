@@ -374,6 +374,17 @@ $co-external-link-padding-right: 15px;
   }
 }
 
+.co-toolbar-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.co-toolbar-item-container {
+  display: flex;
+}
+
 .co-component-label {
   color: $color-pf-black-600;
   text-transform: uppercase;
@@ -606,6 +617,27 @@ $co-external-link-padding-right: 15px;
 }
 .co-datepicker:active {
   border: 0px;
+}
+
+.co-datepicker-container {
+  display: flex;
+}
+
+.co-datepicker-wrapper-space {
+  margin: auto;
+  padding: 0.325rem 0.5rem;
+}
+
+.co-datepicker-title {
+  display: flex;
+  align-items: center;
+  margin: 0 10px 0 0;
+}
+
+.co-datepicker-spacer {
+  display: flex;
+  align-items: center;
+  margin: 0 10px; 
 }
 
 .co-text-center {
