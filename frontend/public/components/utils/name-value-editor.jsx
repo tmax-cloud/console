@@ -67,12 +67,12 @@ export const NameValueEditor = withDragDropContext(
     }
 
     render() {
-      const { nameString, valueString, addString, addSecondString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets, addConfigMapSecret } = this.props;
+      const { nameString, valueString, addString, addSecondString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets, addConfigMapSecret, useTextAreaValueField } = this.props;
       const pairElems = nameValuePairs.map((pair, i) => {
         const key = _.get(pair, [NameValueEditorPair.Index], i);
         const isEmpty = nameValuePairs.length === 1 && nameValuePairs[0].every(value => !value);
 
-        return <PairElement onChange={this._change} index={i} nameString={nameString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} onMove={this._move} rowSourceId={nameValueId} configMaps={configMaps} secrets={secrets} isEmpty={isEmpty} disableReorder={nameValuePairs.length === 1} />;
+        return <PairElement onChange={this._change} index={i} nameString={nameString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} onMove={this._move} rowSourceId={nameValueId} configMaps={configMaps} secrets={secrets} isEmpty={isEmpty} disableReorder={nameValuePairs.length === 1} useTextAreaValueField={useTextAreaValueField} />;
       });
       return (
         <>
@@ -121,6 +121,7 @@ NameValueEditor.propTypes = {
   configMaps: PropTypes.object,
   secrets: PropTypes.object,
   addConfigMapSecret: PropTypes.bool,
+  useTextAreaValueField: PropTypes.bool,
 };
 NameValueEditor.defaultProps = {
   nameString: 'Key',
@@ -131,6 +132,7 @@ NameValueEditor.defaultProps = {
   readOnly: false,
   nameValueId: 0,
   addConfigMapSecret: false,
+  useTextAreaValueField: false,
 };
 
 NameValueEditor.displayName = 'Name Value Editor';
@@ -340,7 +342,7 @@ const PairElement = DragSource(
       }
 
       render() {
-        const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, nameString, valueString, allowSorting, readOnly, pair, configMaps, secrets, isEmpty, disableReorder } = this.props;
+        const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, nameString, valueString, allowSorting, readOnly, pair, configMaps, secrets, isEmpty, disableReorder, useTextAreaValueField } = this.props;
         const deleteIcon = (
           <>
             <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon" />
@@ -357,7 +359,7 @@ const PairElement = DragSource(
 
         return connectDropTarget(
           connectDragPreview(
-            <div className={classNames('row', isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row')} ref={node => (this.node = node)}>
+            <div className={classNames('row', isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row', { 'pairs-list__row-flex-start': useTextAreaValueField })} ref={node => (this.node = node)}>
               {allowSorting && !readOnly && <div className="col-xs-1 pairs-list__action">{disableReorder ? dragButton : connectDragSource(dragButton)}</div>}
               <div className="col-xs-5 pairs-list__name-field">
                 <input type="text" className="pf-c-form-control" placeholder={nameString.toLowerCase()} value={pair[NameValueEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
@@ -367,9 +369,7 @@ const PairElement = DragSource(
                   <ValueFromPair pair={pair[NameValueEditorPair.Value]} configMaps={configMaps} secrets={secrets} onChange={this._onChangeValue} disabled={readOnly} />
                 </div>
               ) : (
-                <div className="col-xs-5 pairs-list__value-field">
-                  <input type="text" className="pf-c-form-control" placeholder={valueString.toLowerCase()} value={pair[NameValueEditorPair.Value] || ''} onChange={this._onChangeValue} disabled={readOnly} />
-                </div>
+                <div className="col-xs-5 pairs-list__value-field">{useTextAreaValueField ? <textarea className="pf-c-form-control pairs-list__value-textarea" placeholder={valueString.toLowerCase()} value={pair[NameValueEditorPair.Value] || ''} onChange={this._onChangeValue} disabled={readOnly} /> : <input type="text" className="pf-c-form-control" placeholder={valueString.toLowerCase()} value={pair[NameValueEditorPair.Value] || ''} onChange={this._onChangeValue} disabled={readOnly} />}</div>
               )}
               {!readOnly && (
                 <div className="col-xs-1 pairs-list__action">
@@ -409,6 +409,7 @@ PairElement.propTypes = {
   rowSourceId: PropTypes.number.isRequired,
   configMaps: PropTypes.object,
   secrets: PropTypes.object,
+  useTextAreaValueField: PropTypes.bool,
 };
 
 const EnvFromPairElement = DragSource(

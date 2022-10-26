@@ -5,6 +5,9 @@ import { sortable } from '@patternfly/react-table';
 import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { Kebab, SectionHeading, LabelList, ResourceKebab, ResourceIcon, detailsPage, EmptyBox, navFactory, ResourceLink, ResourceSummary } from './utils';
 import { useTranslation } from 'react-i18next';
+import { IngressModel } from '../models';
+import Memo from './hypercloud/utils/memo';
+
 export const menuActions = Kebab.factory.common;
 
 export const ingressValidHosts = ingress => _.map(_.get(ingress, 'spec.rules', []), 'host').filter(_.isString);
@@ -43,7 +46,14 @@ const getTLSCert = ingress => {
   );
 };
 
-const tableColumnClasses = [classNames('col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-md-3', 'col-sm-4', 'hidden-xs'), classNames('col-md-3', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
+const tableColumnClasses = [
+  classNames('col-md-6', 'col-sm-4', 'col-xs-6'),
+  classNames('col-md-6', 'col-sm-4', 'col-xs-6'),
+  classNames('col-md-6', 'col-sm-4', 'hidden-xs'),
+  classNames('col-md-4', 'hidden-sm', 'hidden-xs'),
+  classNames('col-md-2', 'col-sm-2', 'col-xs-2', 'co-text-center'), // memo 컬럼 classname
+  Kebab.columnClass,
+];
 
 const kind = 'Ingress';
 
@@ -74,8 +84,13 @@ const IngressTableHeader = t => {
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: '',
+      title: '메모',
+      transforms: null,
       props: { className: tableColumnClasses[4] },
+    },
+    {
+      title: '',
+      props: { className: tableColumnClasses[5] },
     },
   ];
 };
@@ -95,6 +110,9 @@ const IngressTableRow = ({ obj: ingress, index, key, style }) => {
       </TableData>
       <TableData className={tableColumnClasses[3]}>{getHosts(ingress)}</TableData>
       <TableData className={tableColumnClasses[4]}>
+        <Memo model={IngressModel} resource={ingress} />
+      </TableData>
+      <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={ingress} />
       </TableData>
     </TableRow>
