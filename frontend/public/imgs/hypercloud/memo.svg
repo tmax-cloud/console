@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>table_status/memo</title>
+    <g id="Page-4:-Component" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0_2_08_Form-Editor" transform="translate(-411.000000, -1001.000000)">
+            <g id="+Table-Status-Icon" transform="translate(372.000000, 515.000000)">
+                <g id="+Icon_1" transform="translate(37.000000, 64.000000)">
+                    <g id="memo" transform="translate(0.000000, 420.000000)">
+                        <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                        <path d="M20.0522289,14.5442659 L22.4546418,16.9466788 L16.2394659,23.1618547 L13.0960169,23.9028908 L13.837053,20.7594419 L20.0522289,14.5442659 Z M20,2 L20,12.757 L17.5,15.257 L17.5,4.5 L4.5,4.5 L4.5,19.5 L13.256,19.5 L13.0473658,19.7099935 L12.475,22 L2,22 L2,2 L20,2 Z M15,14.9166667 L15,17.4166667 L7,17.4166667 L7,14.9166667 L15,14.9166667 Z M22.7015782,13.3091302 L23.6897775,14.2973295 C24.0803018,14.6878538 24.0803018,15.3210188 23.6897775,15.7115431 L22.8430903,16.5582303 L20.4406774,14.1558174 L21.2873646,13.3091302 C21.6778889,12.9186059 22.3110539,12.9186059 22.7015782,13.3091302 Z M15,10.75 L15,13.25 L7,13.25 L7,10.75 L15,10.75 Z M15,6.58333333 L15,9.08333333 L7,9.08333333 L7,6.58333333 L15,6.58333333 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

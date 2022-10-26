@@ -6,6 +6,7 @@ import { Kebab, SectionHeading, navFactory, ResourceKebab, ResourceLink, Resourc
 import { ConfigMapModel } from '../models';
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import Memo, { memoColumnClass } from './hypercloud/utils/memo';
 
 const menuActions = [...Kebab.getExtensionsActionsForKind(ConfigMapModel), ...Kebab.factory.common];
 
@@ -30,6 +31,11 @@ const tableProps = {
       sortField: 'metadata.creationTimestamp',
     },
     {
+      title: '메모',
+      transforms: null,
+      props: { className: memoColumnClass },
+    },
+    {
       title: '',
       transforms: null,
       props: { className: Kebab.columnClass },
@@ -48,6 +54,10 @@ const tableProps = {
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+    },
+    {
+      className: memoColumnClass,
+      children: <Memo model={ConfigMapModel} resource={obj} />,
     },
     {
       className: Kebab.columnClass,

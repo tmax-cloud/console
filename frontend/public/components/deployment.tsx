@@ -12,10 +12,11 @@ import { Conditions } from './conditions';
 import { ResourceEventStream } from './events';
 import { VolumesTable } from './volumes-table';
 import { DetailsPage, ListPage } from './factory';
-import { AsyncComponent, DetailsItem, Kebab, KebabAction, ContainerTable, navFactory, pluralize, ResourceSummary, SectionHeading, togglePaused, WorkloadPausedAlert, LoadingInline } from './utils';
+import { AsyncComponent, DetailsItem, Kebab, KebabAction, ContainerTable, navFactory, pluralize, ResourceSummary, SectionHeading, togglePaused, WorkloadPausedAlert, LoadingInline, ResourceLink, LabelList, Selector, ResourceKebab } from './utils';
 import { ReplicaSetsPage } from './replicaset';
-import { WorkloadTableProps } from './workload-table';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import Memo, { memoColumnClass } from './hypercloud/utils/memo';
+import { PodStatus } from './hypercloud/utils/pod-status';
 
 const kind = DeploymentModel.kind;
 const { ModifyCount, AddStorage, common } = Kebab.factory;
@@ -51,6 +52,67 @@ const PauseAction: KebabAction = (kind: K8sKind, obj: DeploymentKind) => {
 };
 
 export const menuActions = [ModifyCount, PauseAction, AddHealthChecks, AddStorage, UpdateStrategy, ...Kebab.getExtensionsActionsForKind(DeploymentModel), EditHealthChecks, ...common];
+
+const tableProps = {
+  header: [
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+      sortField: 'metadata.name',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+      sortField: 'metadata.namespace',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
+      sortFunc: 'numReplicas',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
+      sortField: 'metadata.labels',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_16',
+      sortField: 'spec.selector',
+    },
+    {
+      title: '메모',
+      transforms: null,
+      props: { className: memoColumnClass },
+    },
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
+  ],
+  row: obj => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      className: 'co-break-word',
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
+      children: <PodStatus resource={obj} kind={kind} desired={obj.spec.replicas} ready={obj.status.replicas} />,
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    {
+      children: <Selector selector={obj.spec.selector} namespace={obj.metadata.namespace} />,
+    },
+    {
+      className: memoColumnClass,
+      children: <Memo model={DeploymentModel} resource={obj} />,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
+};
 
 export const DeploymentDetailsList: React.FC<DeploymentDetailsListProps> = ({ deployment }) => {
   const { t } = useTranslation();
@@ -179,7 +241,7 @@ type DeploymentDetailsProps = {
 };
 
 export const DeploymentsPage: React.FC = props => {
-  return <ListPage canCreate={true} kind={kind} tableProps={WorkloadTableProps({ kind: kind, menuActions: menuActions })} {...props} />;
+  return <ListPage canCreate={true} kind={kind} tableProps={tableProps} {...props} />;
 };
 DeploymentsPage.displayName = 'DeploymentsPage';
 
