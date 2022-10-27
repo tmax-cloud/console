@@ -18,7 +18,7 @@ import { k8sList, modelFor } from '../../../../../public/module/k8s';
 import { BackupServiceItem } from './backup-service-item';
 import { BindingDataItem } from './binding-data-item';
 import { BindableResourceListDropDown } from './bindable-resource-list-drop-down';
-
+import { useState } from 'react';
 
 const defaultValuesTemplate = {
   metadata: {
@@ -30,7 +30,7 @@ const defaultValuesTemplate = {
       kind: '',
       group: '',
       version: '',
-      name: ''
+      name: '',
     },
     services: [
       {
@@ -38,13 +38,12 @@ const defaultValuesTemplate = {
         group: '',
         version: '',
         kind: '',
-        name: ''
-      }
+        name: '',
+      },
     ],
-    mappings: [
-    ],
-    detectBindingResources: false
-  }
+    mappings: [],
+    detectBindingResources: false,
+  },
 };
 
 const methodItems = t => [
@@ -76,8 +75,8 @@ const bindAsFilesItems = t => [
 ];
 
 const servicebindingFormFactory = (params, obj) => {
-  defaultValuesTemplate.metadata.namespace = params.ns
-  const defaultValues = obj || defaultValuesTemplate
+  defaultValuesTemplate.metadata.namespace = params.ns;
+  const defaultValues = obj || defaultValuesTemplate;
 
   return WithCommonForm(CreateServiceBindingComponent, params, defaultValues);
 };
@@ -127,19 +126,32 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
     control: control,
     name: 'spec.application.kind',
   });
-  const [applicationList, setApplicationList] = React.useState([])
+  const [applicationList, setApplicationList] = React.useState([]);
 
   React.useEffect(() => {
-    const model = modelFor(selectedApplication)
+    const model = modelFor(selectedApplication);
     if (model) {
+      methods.setValue('spec.application.group', model.apiGroup);
+      methods.setValue('spec.application.version', model.apiVersion);
       k8sList(model, { ns: defaultValues.metadata.namespace }).then(list => {
-        setApplicationList(list)})
+        setApplicationList(list);
+      });
+    } else {
+      setApplicationList([]);
     }
-    else {
-      setApplicationList([])
-    }
+  }, [selectedApplication]);
 
-  }, [selectedApplication])
+  const [manualVis, setManualVis] = useState(false);
+  const [autoVis, setAutoVis] = useState(true);
+  React.useEffect(() => {
+    if (methodToggle === 'Manual') {
+      setManualVis(true);
+      setAutoVis(false);
+    } else if (methodToggle === 'Auto') {
+      setManualVis(false);
+      setAutoVis(true);
+    }
+  }, [methodToggle]);
 
   return (
     <>
@@ -153,65 +165,48 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
         <RadioGroup name="method" items={methodItems.bind(null, t)()} inline={false} initValue={methodToggle} />
       </Section>
 
-      {methodToggle === 'Manual' && (
-        <>
-          <div className="row">
-            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_4')} id="application" description="">
-              <div className="col-xs-12 pairs-list__value-field">
-                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_14')} id="application" description="" isRequired>
-                  <TextInput inputClassName="pf-c-form-control" id="spec.application.group" name="spec.application.group"/>
-                </Section>
-                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_15')} id="application" description="" isRequired>
-                  <TextInput inputClassName="pf-c-form-control" id="spec.application.version" name="spec.application.version"/>
-                </Section>
-                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="application" description="" isRequired>
-                  <TextInput inputClassName="pf-c-form-control" id="spec.application.kind" name="spec.application.kind"/>
-                </Section>
-                <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="application" description="" isRequired>
-                  <TextInput inputClassName="pf-c-form-control" id="spec.application.name" name="spec.application.name"/>
-                </Section>
-              </div>
-          </Section>
-          </div>
-
-          <Section id="services" isRequired={true}>
-            <ListView methods={methods} name={`spec.services`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_12')} headerFragment={<></>} itemRenderer={backupServiceItemRenderer} defaultItem={{ namespace: '', group: '', version: '', kind: '', name: '' }} defaultValues={defaultValues.spec.services}/>
-          </Section>
-        </>
-      )}
-
-      {methodToggle === 'Auto' && (
-        <>
+      <div style={{ display: manualVis ? 'block' : 'none' }}>
+        <div className="row">
           <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_4')} id="application" description="">
             <div className="col-xs-12 pairs-list__value-field">
-              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="spec.application.kind" description="" isRequired>
-                <Controller
-                  as={<BindableResourceListDropDown name={"spec.application.kind"} defaultValue={defaultValues.spec.application.kind} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')}/>}
-                  control={methods.control}
-                  name={'spec.application.kind'}
-                  defaultValue={defaultValues.spec.application.kind}
-                />
+              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_14')} id="application" description="" isRequired>
+                <TextInput inputClassName="pf-c-form-control" id="spec.application.group" name="spec.application.group" />
               </Section>
-              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="spec.application.name" description="" isRequired>
-                <Controller
-                  as={<ResourceListDropdown name="spec.application.name" useHookForm resourceList={applicationList} kind={selectedApplication} type="single" placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} defaultValue={defaultValues.spec.application.name} autocompletePlaceholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} methods={methods} />}
-                  control={methods.control}
-                  name={'spec.application.name'}
-                  defaultValue={defaultValues.spec.application.name}
-                />
+              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_15')} id="application" description="" isRequired>
+                <TextInput inputClassName="pf-c-form-control" id="spec.application.version" name="spec.application.version" />
+              </Section>
+              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="application" description="" isRequired>
+                <TextInput inputClassName="pf-c-form-control" id="spec.application.kind" name="spec.application.kind" />
+              </Section>
+              <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="application" description="" isRequired>
+                <TextInput inputClassName="pf-c-form-control" id="spec.application.name" name="spec.application.name" />
               </Section>
             </div>
           </Section>
-          <Section id="services" isRequired={true}>
-            <ListView methods={methods} name={`spec.services`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_12')} headerFragment={<></>} itemRenderer={backupServiceItemRenderer} defaultItem={{ namespace: '', group: '', version: '', kind: '', name: '' }} defaultValues={defaultValues.spec.services}/>
-          </Section>
-        </>
-      )}
+        </div>
+      </div>
+
+      <div style={{ display: autoVis ? 'block' : 'none' }}>
+        <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_4')} id="application" description="">
+          <div className="col-xs-12 pairs-list__value-field">
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_5')} id="spec.application.kind" description="" isRequired>
+              <Controller as={<BindableResourceListDropDown name={'spec.application.kind'} defaultValue={defaultValues.spec.application.kind} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_6')} watchedFieldName={'spec.application.kind'} />} control={methods.control} name={'spec.application.kind'} defaultValue={defaultValues.spec.application.kind} />
+            </Section>
+            <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_7')} id="spec.application.name" description="" isRequired>
+              <Controller as={<ResourceListDropdown name="spec.application.name" defaultValue={defaultValues.spec.application.name} methods={methods} placeholder={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_8')} resourceList={applicationList} kind={selectedApplication} type="single" watchedFieldName={'spec.application.name'} />} control={methods.control} name={'spec.application.name'} defaultValue={defaultValues.spec.application.name} />
+            </Section>
+          </div>
+        </Section>
+      </div>
+
+      <Section id="services" isRequired={true}>
+        <ListView methods={methods} name={`spec.services`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_12')} headerFragment={<></>} itemRenderer={backupServiceItemRenderer} defaultItem={{ namespace: '', group: '', version: '', kind: '', name: '' }} defaultValues={defaultValues.spec.services} />
+      </Section>
 
       <div className="co-form-section__separator" />
 
       <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_16')} id="mappings" isRequired={false} description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_17')}>
-        <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer} defaultItem={{}} defaultValues={defaultValues.spec.mappings}/>
+        <ListView methods={methods} name={`spec.mappings`} addButtonText={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_18')} headerFragment={<></>} itemRenderer={bindingDataItemRenderer} defaultItem={{}} defaultValues={defaultValues.spec.mappings} />
       </Section>
 
       <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_22')} id="bindAsFiles" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_25')}>
@@ -223,79 +218,71 @@ const CreateServiceBindingComponent: React.FC<ServiceBindingFormProps> = props =
       </Section>
 
       <Section label={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_28')} id="namingStrategy" description={t('SINGLE:MSG_SERVICEBINDINGS_CREATEFORM_DIV2_29')}>
-        <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder='예: {{ .service.kind | upper}}_{{ .name | upper }}'/>
+        <TextInput inputClassName="pf-c-form-control" id="spec.namingStrategy" name="spec.namingStrategy" placeholder="예: {{ .service.kind | upper}}_{{ .name | upper }}" />
       </Section>
     </>
-  )
-}
+  );
+};
 
-export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = (props) => {
+export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = props => {
   const { t } = useTranslation();
   const formComponent = servicebindingFormFactory(props.match.params, props.obj);
   const ServiceBindingFormComponent = formComponent;
 
-  const [bindablesGroupVersion, setBindablesGroupVersion] = React.useState([])
+  const [bindablesGroupVersion, setBindablesGroupVersion] = React.useState([]);
 
   React.useEffect(() => {
     const getBindables = async () => {
-      const data = await coFetchJSON('api/hypercloud/bindableResources')
-      setBindablesGroupVersion(data)
-    }
-    getBindables()
-  }, [])
+      const data = await coFetchJSON('api/hypercloud/bindableResources');
+      setBindablesGroupVersion(data);
+    };
+    getBindables();
+  }, []);
 
   const onSubmitCallback = data => {
-    delete data.method
+    delete data.method;
 
-    let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`
-    let kind = ServiceBindingModel.kind
+    let apiVersion = `${ServiceBindingModel.apiGroup}/${ServiceBindingModel.apiVersion}`;
+    let kind = ServiceBindingModel.kind;
     let labels = SelectorInput.objectify(data.metadata.labels);
     let name = data.metadata.name;
     delete data.metadata.labels;
 
-    let bindAsFiles: boolean
+    let bindAsFiles: boolean;
 
-    bindAsFiles = (data.bindAsFiles==='false') ? false:true
+    bindAsFiles = data.bindAsFiles === 'false' ? false : true;
 
-    let detectBindingResources = data.detectBindingResources
+    let detectBindingResources = data.detectBindingResources;
     delete data.spec.detectBindingResources;
 
     let application = data.spec.application;
     delete data.spec.application;
     if (bindablesGroupVersion[application.kind].split('/').length == 1) {
-      application.group = application.group ?? ''
-      application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[0]
-    }
-    else {
-      application.group = application.group ?? bindablesGroupVersion[application.kind].split('/')[0]
-      application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[1]
+      application.group = application.group ?? '';
+      application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[0];
+    } else {
+      application.group = application.group ?? bindablesGroupVersion[application.kind].split('/')[0];
+      application.version = application.version ?? bindablesGroupVersion[application.kind].split('/')[1];
     }
 
     let services = data.spec.services;
     delete data.spec.services;
-    services.forEach((e) => {
+    services.forEach(e => {
       if (bindablesGroupVersion[e.kind].split('/').length == 1) {
-        e.group = e.group ?? ''
-        e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[0]
+        e.group = e.group ?? '';
+        e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[0];
+      } else {
+        e.group = e.group ?? bindablesGroupVersion[e.kind].split('/')[0];
+        e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[1];
       }
-      else {
-        e.group = e.group ?? bindablesGroupVersion[e.kind].split('/')[0]
-        e.version = e.version ?? bindablesGroupVersion[e.kind].split('/')[1]
-      }
-    })
+    });
 
-    data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: {name: name, labels: labels},
-      spec: {bindAsFiles: bindAsFiles,
-             detectBindingResources: detectBindingResources,
-             application: application,
-             services: services
-            }
-    }, data);
+    data = _.defaultsDeep({ apiVersion: apiVersion, kind: kind, metadata: { name: name, labels: labels }, spec: { bindAsFiles: bindAsFiles, detectBindingResources: detectBindingResources, application: application, services: services } }, data);
 
     return data;
   };
 
-  return <ServiceBindingFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('MSG_COMMON_CREATEFORM_DESCRIPTION_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true}/>;
+  return <ServiceBindingFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('MSG_COMMON_CREATEFORM_DESCRIPTION_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 type CreateServiceBindingProps = {
