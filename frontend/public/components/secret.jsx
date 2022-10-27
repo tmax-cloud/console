@@ -10,6 +10,7 @@ import { configureAddSecretToWorkloadModal } from './modals/add-secret-to-worklo
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 import { SecretModel } from '../models';
+import Memo, { memoColumnClass } from './hypercloud/utils/memo';
 
 export const WebHookSecretKey = 'WebHookSecretKey';
 
@@ -28,6 +29,8 @@ const actionButtons = [addSecretToWorkload];
 const menuActions = [Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.EditSecret, Kebab.factory.Delete];
 
 const kind = SecretModel.kind;
+
+const memoColumnClass = 'col-lg-1 co-text-center';
 
 const tableProps = {
   header: [
@@ -52,6 +55,11 @@ const tableProps = {
       sortField: 'metadata.creationTimestamp',
     },
     {
+      title: '메모',
+      transforms: null,
+      props: { className: memoColumnClass },
+    },
+    {
       title: '',
       transforms: null,
       props: { className: Kebab.columnClass },
@@ -74,6 +82,10 @@ const tableProps = {
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+    },
+    {
+      className: memoColumnClass,
+      children: <Memo model={SecretModel} resource={obj} />,
     },
     {
       className: Kebab.columnClass,
