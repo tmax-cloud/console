@@ -1,11 +1,5 @@
 import { FormikValues } from 'formik';
-import {
-  PipelineParam,
-  PipelineResource,
-  PipelineResourceTask,
-  PipelineTask,
-  PipelineWorkspace,
-} from '../../../utils/pipeline-augment';
+import { PipelineParam, PipelineResource, PipelineResourceTask, PipelineTask, PipelineWorkspace } from '../../../utils/pipeline-augment';
 import { PipelineVisualizationTaskItem } from '../../../utils/pipeline-utils';
 import { AddNodeDirection } from '../pipeline-topology/const';
 import { TaskErrorType, UpdateOperationType } from './const';
@@ -27,6 +21,7 @@ export type PipelineBuilderTaskGroup = PipelineBuilderTaskGrouping & {
 
 export type PipelineBuilderFormValues = PipelineBuilderTaskGrouping & {
   name: string;
+  metadata: { labels: [] };
   params: PipelineParam[];
   resources: PipelineResource[];
   workspaces: PipelineWorkspace[];
@@ -43,20 +38,14 @@ export type TaskErrorMap = {
   [pipelineInErrorName: string]: TaskErrorType[];
 };
 
-export type SelectTaskCallback = (
-  task: PipelineVisualizationTaskItem,
-  taskResource: PipelineResourceTask,
-) => void;
+export type SelectTaskCallback = (task: PipelineVisualizationTaskItem, taskResource: PipelineResourceTask) => void;
 
 export type UpdateOperation<D extends UpdateOperationBaseData = UpdateOperationBaseData> = {
   type: UpdateOperationType;
   data: D;
 };
 
-export type UpdateTasksCallback = (
-  taskGroup: PipelineBuilderTaskGroup,
-  op: UpdateOperation,
-) => void;
+export type UpdateTasksCallback = (taskGroup: PipelineBuilderTaskGroup, op: UpdateOperation) => void;
 
 type UpdateOperationBaseData = {};
 
@@ -108,8 +97,4 @@ export type CleanupResults = {
   errors?: TaskErrorMap;
 };
 
-export type UpdateOperationAction<D extends UpdateOperationBaseData> = (
-  tasks: PipelineTask[],
-  listTasks: PipelineBuilderListTask[],
-  data: D,
-) => CleanupResults;
+export type UpdateOperationAction<D extends UpdateOperationBaseData> = (tasks: PipelineTask[], listTasks: PipelineBuilderListTask[], data: D) => CleanupResults;
