@@ -84,7 +84,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
     handleReset();
   }, [handleReset]);
 
-  const labels = SelectorInput.arrayify(_.get(existingPipeline, 'metadata.labels'));
+  const labels = SelectorInput.arrayify(values.metadata.labels);
 
   return (
     <>

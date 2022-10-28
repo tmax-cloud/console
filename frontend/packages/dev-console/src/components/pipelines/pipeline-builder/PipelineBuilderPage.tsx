@@ -33,16 +33,6 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => {
     },
   } = props;
 
-  const initialPipelineValues: PipelineBuilderFormValues = {
-    name: 'new-pipeline',
-    params: [],
-    resources: [],
-    workspaces: [],
-    tasks: [],
-    listTasks: [],
-    ...(convertPipelineToBuilderForm(existingPipeline) || {}),
-  };
-
   const handleSubmit = (values: PipelineBuilderFormikValues, actions: FormikBag<any, PipelineBuilderFormValues>) => {
     let resourceCall;
     if (existingPipeline) {
@@ -64,9 +54,9 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => {
   //const kind = PipelineModel.kind;
   //const title = t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({kind: kind}, t) });
 
-  const getCustomFormEditor = ({ isCreate, initialPipelineValues }) => props => {
+  const getCustomFormEditor = ({ isCreate }) => props => {
     const { formData, onChange } = props;
-    const initialValues = initialPipelineValues || React.useMemo(() => convertPipelineToBuilderForm(formData), [formData]);
+    const initialValues = React.useMemo(() => convertPipelineToBuilderForm(formData), [formData]);
     return (
       <Formik
         initialValues={initialValues}
@@ -85,9 +75,9 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => {
   };
 
   if (!props.isCreate) {
-    return <EditDefault initialEditorType={EditorType.Form} create={false} model={PipelineModel} match={props.match} loaded={false} customFormEditor={getCustomFormEditor({ isCreate: false, initialPipelineValues: initialPipelineValues })} />;
+    return <EditDefault initialEditorType={EditorType.Form} create={false} model={PipelineModel} match={props.match} loaded={false} customFormEditor={getCustomFormEditor({ isCreate: false })} obj={existingPipeline} />;
   }
-  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineModel} match={props.match} loaded={false} customFormEditor={getCustomFormEditor({ isCreate: true, initialPipelineValues: undefined })} />;
+  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineModel} match={props.match} loaded={false} customFormEditor={getCustomFormEditor({ isCreate: true })} />;
 };
 
 export default PipelineBuilderPage;
