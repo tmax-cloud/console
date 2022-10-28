@@ -8,7 +8,6 @@ import { PipelineParameters, PipelineResources, PipelineWorkspaces } from '../de
 import { UpdateOperationType } from './const';
 import { useResourceValidation } from './hooks';
 import { removeTaskModal } from './modals';
-import PipelineBuilderHeader from './PipelineBuilderHeader';
 import PipelineBuilderVisualization from './PipelineBuilderVisualization';
 import Sidebar from './task-sidebar/Sidebar';
 import TaskSidebar from './task-sidebar/TaskSidebar';
@@ -37,7 +36,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
   //const { control } = methods;
   const { t } = useTranslation();
 
-  const { existingPipeline, status, isSubmitting, dirty, handleReset, handleSubmit, errors, namespace, setFieldValue, setStatus, values, isCreate } = props;
+  const { existingPipeline, status, isSubmitting, dirty, handleReset, handleSubmit, errors, namespace, setFieldValue, setStatus, values } = props;
   const statusRef = React.useRef(status);
   statusRef.current = status;
 
@@ -59,8 +58,8 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
     const { tasks, listTasks, errors: taskErrors } = changes;
     tasks.forEach(task => {
       task?.params?.forEach(param => {
-        if ( param.value === undefined) {
-          param.value = (param.type &&  param.type === 'array')  ? [''] : '';
+        if (param.value === undefined) {
+          param.value = param.type && param.type === 'array' ? [''] : '';
         }
       });
     });
@@ -90,9 +89,6 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
   return (
     <>
       <Stack className="odc-pipeline-builder-form">
-        <StackItem>
-          <PipelineBuilderHeader existingPipeline={existingPipeline} namespace={namespace} isCreate={isCreate} />
-        </StackItem>
         <StackItem isFilled className="odc-pipeline-builder-form__content">
           <Form className="odc-pipeline-builder-form__grid" onSubmit={handleSubmit}>
             <div className="odc-pipeline-builder-form__short-section">
@@ -102,28 +98,25 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
             </div>
 
             <div>
-              <Section label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_8')} id="labels" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_92')} >
-                <SelectorInput
-                  onChange={(val) => setFieldValue('metadata.labels', SelectorInput.objectify(val))}
-                  tags={labels}
-                />
+              <Section label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_8')} id="labels" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_92')}>
+                <SelectorInput onChange={val => setFieldValue('metadata.labels', SelectorInput.objectify(val))} tags={labels} />
               </Section>
             </div>
 
             <div>
-              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_2')} id="params" >
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_2')} id="params">
                 <PipelineParameters addLabel="Add Parameters" fieldName="params" />
               </Section>
             </div>
 
             <div>
-              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_10')} id="resources" >
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_10')} id="resources">
                 <PipelineResources addLabel="Add Resources" fieldName="resources" />
               </Section>
             </div>
 
             <div>
-              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_30')} id="workspaces" >
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_30')} id="workspaces">
                 <PipelineWorkspaces addLabel="Add Workspaces" fieldName="workspaces" />
               </Section>
             </div>
