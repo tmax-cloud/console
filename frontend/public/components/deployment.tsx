@@ -76,7 +76,7 @@ const tableProps = {
       sortField: 'spec.selector',
     },
     {
-      title: '메모',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_150',
       transforms: null,
       props: { className: memoColumnClass },
     },
