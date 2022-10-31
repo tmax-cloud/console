@@ -22,8 +22,8 @@ func New(fs *pflag.FlagSet) *LogInfo {
 		LogLevel: logLevel,
 		LogType:  logType,
 	}
-	fs.StringVar(&logInfo.LogLevel, "logLevel", "info", "trace | debug | info | warn | crit")
-	fs.StringVar(&logInfo.LogType, "logType", "pretty", "pretty | json")
+	fs.StringVar(&logInfo.LogLevel, "log-level", "info", "trace | debug | info | warn | crit")
+	fs.StringVar(&logInfo.LogType, "log-type", "pretty", "pretty | json")
 	return logInfo
 }
 

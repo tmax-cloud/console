@@ -19,10 +19,10 @@ import (
 func main() {
 	fs := flag.NewFlagSet("console", flag.ExitOnError)
 	listen := fs.String("listen", "https://0.0.0.0:9000", "listen URL")
-	baseAddress := fs.String("baseAddress", "https://0.0.0.0:9000", "Base Address")
-	certFile := fs.String("certFile", "", "TLS cert")
-	keyFile := fs.String("keyFile", "", "TLS key")
-	redirectPort := fs.Int("redirectPort", 0, "redirect port http to https")
+	baseAddress := fs.String("base-address", "https://0.0.0.0:9000", "Base Address")
+	certFile := fs.String("cert-file", "", "TLS cert")
+	keyFile := fs.String("key-file", "", "TLS key")
+	redirectPort := fs.Int("redirect-port", 0, "redirect port http to https")
 	server := console.New(fs)
 	zlog := logger.New(fs)
 	fs.SortFlags = false

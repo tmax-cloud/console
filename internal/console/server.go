@@ -55,18 +55,18 @@ type Server struct {
 
 func New(fs *flag.FlagSet) *Server {
 	s := &Server{}
-	fs.StringVar(&s.BasePath, "basePath", "/", "url base path")
-	fs.StringVar(&s.PublicDir, "publicDir", "./frontend/public/dist", "directory containing static web assets.")
-	fs.BoolVar(&s.McMode, "mcMode", true, "Activate Multi-Cluster Mode")
-	fs.BoolVar(&s.ChatbotEmbed, "chatbotEmbed", true, "Activate Chatbot")
-	fs.StringVar(&s.CustomProductName, "customProductName", customProductName, "Setting Custom Product Name")
-	fs.StringVar(&s.SvcType, "svcType", traefikServiceType, "Service type of api-gateway(traefik) default: LoadBalancer")
+	fs.StringVar(&s.BasePath, "base-path", "/", "url base path")
+	fs.StringVar(&s.PublicDir, "public-dir", "./frontend/public/dist", "directory containing static web assets.")
+	fs.BoolVar(&s.McMode, "mc-mode", true, "Activate Multi-Cluster Mode")
+	fs.BoolVar(&s.ChatbotEmbed, "chatbot-embed", true, "Activate Chatbot")
+	fs.StringVar(&s.CustomProductName, "custom-product-name", customProductName, "Setting Custom Product Name")
+	fs.StringVar(&s.SvcType, "svc-type", traefikServiceType, "Service type of api-gateway(traefik) default: LoadBalancer")
 	// TODO: ADD logic to check keycloak info
-	fs.StringVar(&s.KeycloakAuthURL, "keycloakAuthURL", "", "HyperAuth(keycloak) URL, format: https://<HYERAUTH_DOMAIN_NAME>/auth")
-	fs.StringVar(&s.KeycloakRealm, "keycloakRealm", "", "Hyperauth(keycloak) realm name")
-	fs.StringVar(&s.KeycloakClientId, "keycloakClientId", "", "Hyperauth(keycloak) client id")
-	fs.StringVar(&s.KubeAPIServerURL, "kubeAPIServerURL", kubeAPIServerURL, "kube API URL")
-	fs.StringVar(&s.KubeToken, "kubeToken", "", "Kubernetes SA Token")
+	fs.StringVar(&s.KeycloakAuthURL, "keycloak-auth-url", "", "HyperAuth(keycloak) URL, format: https://<HYERAUTH_DOMAIN_NAME>/auth")
+	fs.StringVar(&s.KeycloakRealm, "keycloak-realm", "", "Hyperauth(keycloak) realm name")
+	fs.StringVar(&s.KeycloakClientId, "keycloak-client-id", "", "Hyperauth(keycloak) client id")
+	fs.StringVar(&s.KubeAPIServerURL, "k8s-public-endpoint", kubeAPIServerURL, "kube API URL")
+	fs.StringVar(&s.KubeToken, "k8s-auth-bearer-token", "", "Kubernetes SA Token")
 	return s
 }
 

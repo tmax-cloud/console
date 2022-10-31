@@ -2,8 +2,8 @@
 
 set -exuo pipefail
 
-#myIP=$(hostname -I | awk '{print $1}')
-myIP=$(ipconfig getifaddr en0)
+myIP=$(hostname -I | awk '{print $1}')
+#myIP=$(ipconfig getifaddr en0)
 # myIP=localhost
 ## Default K8S Endpoint is public POC environment
 # k8sIP='220.90.208.100'
@@ -36,18 +36,18 @@ echo $id_token
 #
 ./bin/console \
   --listen=https://$myIP:9000 \
-  --baseAddress=https://$myIP:9000 \
-  --certFile=./tls/tls.crt \
-  --keyFile=./tls/tls.key \
-  --publicDir="./frontend/public/dist" \
-  --keycloakAuthURL=https://hyperauth.tmaxcloud.org/auth \
-  --keycloakClientId=hypercloud5 \
-  --keycloakRealm=tmax \
-  --mcMode=true \
-  --chatbotEmbed=true \
-  --customProductName="hypercloud" \
-  --svcType="LoadBalancer" \
-  --kubeAPIServerURL=https://$k8sIP:6443 \
-  --kubeToken="$id_token" \
-  --logType="pretty" \
-  --logLevel="trace"
+  --base-address=https://$myIP:9000 \
+  --cert-file=./tls/tls.crt \
+  --key-file=./tls/tls.key \
+  --public-dir="./frontend/public/dist" \
+  --keycloak-auth-url=https://hyperauth.tmaxcloud.org/auth \
+  --keycloak-client-id=hypercloud5 \
+  --keycloak-realm=tmax \
+  --mc-mode=true \
+  --chatbot-embed=true \
+  --custom-product-name="hypercloud" \
+  --svc-type="LoadBalancer" \
+  --k8s-public-endpoint=https://$k8sIP:6443 \
+  --k8s-auth-bearer-token="$id_token" \
+  --log-type="pretty" \
+  --log-level="trace"
