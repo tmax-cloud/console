@@ -3,7 +3,7 @@ import * as _ from 'lodash-es';
 import { OrderedMap } from 'immutable';
 import * as classNames from 'classnames';
 import * as fuzzy from 'fuzzysearch';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Dropdown, ResourceIcon } from '../../utils';
 import { K8sResourceKind } from '../../../module/k8s';
@@ -115,7 +115,9 @@ export const MultipleResourceListDropdown: React.SFC<BaseResourceListDropdown & 
         props.title ?? (
           <div key="title-resource">
             {`${props.resourceType} `}
-            <Badge isRead id="mrd-badge">{selected?.has('All') ? 'All' : selectedSize}</Badge>
+            <Badge isRead id="mrd-badge">
+              {selected?.has('All') ? 'All' : selectedSize}
+            </Badge>
           </div>
         )
       }
@@ -143,6 +145,7 @@ export interface ResourceDropdownCommon {
   type: 'single' | 'multiple';
   methods?: any;
   idFunc?: (item: HCK8sResourceKind) => string;
+  watchedFieldName?: string;
 }
 
 export interface BaseResourceListDropdown extends ResourceDropdownCommon {
@@ -163,7 +166,7 @@ export interface MultipleResourceDropdownProps extends ResourceDropdownCommon {
 }
 
 const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
-  const { name, required, methods, useHookForm, idFunc } = props;
+  const { name, required, methods, useHookForm, idFunc, watchedFieldName } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useHookForm ? useFormContext() : { register: null, unregister: null, setValue: null, watch: null };
 
   const prevResourceList = usePrevious(props.resourceList);
@@ -241,6 +244,14 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
       setValue?.(name, selection);
       props.onChange?.(selection);
     };
+
+    const watchedValue = watchedFieldName ? useWatch({ control: methods.control, name: watchedFieldName }) : undefined;
+
+    React.useEffect(() => {
+      if (watchedValue) {
+        setSelectedItem(watchedValue);
+      }
+    }, [watchedValue]);
 
     return <SingleResourceListDropdown {...props} selected={selectedItem} onChange={updateSelectedItem} />;
   }

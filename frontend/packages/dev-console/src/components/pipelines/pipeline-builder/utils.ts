@@ -33,7 +33,7 @@ export const convertResourceToTask = (resource: PipelineResourceTask, runAfter?:
     params: getTaskParameters(resource).map(param => ({
       name: param.name,
       value: param.default,
-      type: param.type
+      type: param.type,
     })),
   };
 };
@@ -60,7 +60,12 @@ const removeEmptyDefaultParams = (task: PipelineTask): PipelineTask => {
   if (task.params?.length > 0) {
     // Since we can submit, this param has a default; check for empty values and remove
     // 20210929 Policy changed
-    task.params.forEach(param => { if (param.value === undefined) { param.value = (param.type && param.type === 'array') ?  [''] : ''; }; delete param.type; });
+    task.params.forEach(param => {
+      if (param.value === undefined) {
+        param.value = param.type && param.type === 'array' ? [''] : '';
+      }
+      delete param.type;
+    });
     return {
       ...task,
       //params: task.params.filter(param => !!param.value),
@@ -99,12 +104,15 @@ export const convertPipelineToBuilderForm = (pipeline: Pipeline): PipelineBuilde
   if (!pipeline) return null;
 
   const {
-    metadata: { name },
+    metadata: { name, labels },
     spec: { params = [], resources = [], workspaces = [], tasks = [] },
   } = pipeline;
 
+  const metadata = { labels: labels };
+
   return {
     name,
+    metadata,
     params,
     resources,
     workspaces,

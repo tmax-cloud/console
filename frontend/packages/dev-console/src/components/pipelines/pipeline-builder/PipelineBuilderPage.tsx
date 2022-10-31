@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import { Formik, FormikBag } from 'formik';
 import { history } from '@console/internal/components/utils';
-import { k8sCreate, k8sUpdate } from '@console/internal/module/k8s';
+import { k8sCreate, K8sResourceKindReference, k8sUpdate } from '@console/internal/module/k8s';
 import { PipelineModel } from '@console/internal/models';
+import { CreateDefault } from '@console/internal/components/hypercloud/crd/create-pinned-resource';
+import { EditDefault } from '@console/internal/components/hypercloud/crd/edit-resource';
+import { EditorType } from '@console/shared/src/components/synced-editor/editor-toggle';
 import { Pipeline } from '../../../utils/pipeline-augment';
 import PipelineBuilderForm from './PipelineBuilderForm';
 import { PipelineBuilderFormValues, PipelineBuilderFormikValues } from './types';
-import {
-  convertBuilderFormToPipeline,
-  convertPipelineToBuilderForm,
-  getPipelineURL,
-} from './utils';
+import { convertBuilderFormToPipeline, convertPipelineToBuilderForm, getPipelineURL } from './utils';
 import { validationSchema } from './validation-utils';
 //import { useTranslation } from 'react-i18next';
 //import { TFunction } from 'i18next';
@@ -21,12 +19,12 @@ import { validationSchema } from './validation-utils';
 import './PipelineBuilderPage.scss';
 //import { pluralToKind } from 'public/components/hypercloud/form';
 
-type PipelineBuilderPageProps = RouteComponentProps<{ ns?: string }> & {
+type PipelineBuilderPageProps = RouteComponentProps<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }> & {
   existingPipeline?: Pipeline;
   isCreate?: boolean;
 };
 
-const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
+const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => {
   //const { t } = useTranslation();
   const {
     existingPipeline,
@@ -35,28 +33,10 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
     },
   } = props;
 
-  const initialValues: PipelineBuilderFormValues = {
-    name: 'new-pipeline',
-    params: [],
-    resources: [],
-    workspaces: [],
-    tasks: [],
-    listTasks: [],
-    ...(convertPipelineToBuilderForm(existingPipeline) || {}),
-  };
-
-  const handleSubmit = (
-    values: PipelineBuilderFormikValues,
-    actions: FormikBag<any, PipelineBuilderFormValues>,
-  ) => {
+  const handleSubmit = (values: PipelineBuilderFormikValues, actions: FormikBag<any, PipelineBuilderFormValues>) => {
     let resourceCall;
     if (existingPipeline) {
-      resourceCall = k8sUpdate(
-        PipelineModel,
-        convertBuilderFormToPipeline(values, ns, existingPipeline),
-        ns,
-        existingPipeline.metadata.name,
-      );
+      resourceCall = k8sUpdate(PipelineModel, convertBuilderFormToPipeline(values, ns, existingPipeline), ns, existingPipeline.metadata.name);
     } else {
       resourceCall = k8sCreate(PipelineModel, convertBuilderFormToPipeline(values, ns));
     }
@@ -66,7 +46,7 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
         actions.setSubmitting(false);
         history.push(`${getPipelineURL(ns)}/${values.name}`);
       })
-      .catch((e) => {
+      .catch(e => {
         actions.setStatus({ submitError: e.message });
       });
   };
@@ -74,27 +54,30 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
   //const kind = PipelineModel.kind;
   //const title = t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({kind: kind}, t) });
 
-  return (
-    <div className="odc-pipeline-builder-page">
-      <Helmet>
-        <title>Create Pipeline</title>
-      </Helmet>
+  const getCustomFormEditor = ({ isCreate }) => props => {
+    const { formData, onChange } = props;
+    const initialValues = React.useMemo(() => convertPipelineToBuilderForm(formData), [formData]);
+    return (
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
         onReset={history.goBack}
         validationSchema={validationSchema}
-        render={(formikProps) => (
-          <PipelineBuilderForm
-            {...formikProps}
-            namespace={ns}
-            existingPipeline={existingPipeline}
-            isCreate={props.isCreate}
-          />
-        )}
+        render={formikProps => {
+          const { values } = formikProps;
+          React.useEffect(() => {
+            onChange && onChange(convertBuilderFormToPipeline(values, ns));
+          }, [values]);
+          return <PipelineBuilderForm {...formikProps} namespace={ns} existingPipeline={existingPipeline} isCreate={isCreate} />;
+        }}
       />
-    </div>
-  );
+    );
+  };
+
+  if (!props.isCreate) {
+    return <EditDefault initialEditorType={EditorType.Form} create={false} model={PipelineModel} match={props.match} loaded={false} customFormEditor={getCustomFormEditor({ isCreate: false })} obj={existingPipeline} />;
+  }
+  return <CreateDefault initialEditorType={EditorType.Form} create={true} model={PipelineModel} match={props.match} loaded={false} customFormEditor={getCustomFormEditor({ isCreate: true })} />;
 };
 
 export default PipelineBuilderPage;

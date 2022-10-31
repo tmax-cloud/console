@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Alert } from '@patternfly/react-core';
 import { LoadingBox } from '@console/internal/components/utils';
-import { k8sGet, referenceForModel } from '@console/internal/module/k8s';
+import { k8sGet, K8sResourceKindReference, referenceForModel } from '@console/internal/module/k8s';
 import PipelineBuilderPage from './PipelineBuilderPage';
 import { Pipeline } from '../../../utils/pipeline-augment';
 import { PipelineModel } from '@console/internal/models';
 
 import './PipelineBuilderEditPage.scss';
 
-type PipelineBuilderEditPageProps = { isCreate?: boolean } & RouteComponentProps<{ ns: string; name: string }>;
+type PipelineBuilderEditPageProps = { isCreate?: boolean } & RouteComponentProps<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
 
 const PipelineBuilderEditPage: React.FC<PipelineBuilderEditPageProps> = props => {
   const [editPipeline, setEditPipeline] = React.useState<Pipeline>(null);

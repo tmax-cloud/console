@@ -13,7 +13,7 @@ import { Kebab, navFactory, ResourceKebab, SectionHeading, ResourceLink, Resourc
 import { ResourceEventStream } from './events';
 import { PersistentVolumeClaimModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
-
+import Memo, { memoColumnClass } from './hypercloud/utils/memo';
 import { PersistentVolumeClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { common, ExpandPVC } = Kebab.factory;
@@ -28,6 +28,7 @@ const tableColumnClasses = [
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // persistence volume
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // capacity
   classNames('pf-m-hidden', 'pf-m-visible-on-2xl'), // storage class
+  memoColumnClass,
   Kebab.columnClass,
 ];
 
@@ -70,8 +71,13 @@ const PVCTableHeader = t => {
       props: { className: tableColumnClasses[5] },
     },
     {
-      title: '',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_150'),
+      transforms: null,
       props: { className: tableColumnClasses[6] },
+    },
+    {
+      title: '',
+      props: { className: tableColumnClasses[7] },
     },
   ];
 };
@@ -95,6 +101,9 @@ const PVCTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[4]}>{_.get(obj, 'status.capacity.storage', '-')}</TableData>
       <TableData className={classNames(tableColumnClasses[5])}>{obj?.spec?.storageClassName ? <ResourceLink kind="StorageClass" name={obj.spec.storageClassName} title={obj.spec.storageClassName} /> : '-'}</TableData>
       <TableData className={tableColumnClasses[6]}>
+        <Memo model={PersistentVolumeClaimModel} resource={obj} />
+      </TableData>
+      <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>

@@ -108,6 +108,15 @@ export const defaultTemplateMap = new Map([
       },
     },
   ],
+  [
+    models.PipelineModel.kind,
+    {
+      metadata: {
+        name: 'new-pipeline',
+      },
+      spec: { params: [], resources: [], workspaces: [], tasks: [] },
+    },
+  ],
 ]);
 
 // 빈 값으로 정의되어야 하는 것들 정의
