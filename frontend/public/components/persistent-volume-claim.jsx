@@ -71,7 +71,7 @@ const PVCTableHeader = t => {
       props: { className: tableColumnClasses[5] },
     },
     {
-      title: '메모',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_150'),
       transforms: null,
       props: { className: tableColumnClasses[6] },
     },
