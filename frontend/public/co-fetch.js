@@ -10,6 +10,10 @@ const initDefaults = {
   credentials: 'same-origin',
 };
 
+const isCallToSubdomain = (url = '') => {
+  return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
+};
+
 // TODO: url can be url or path, but shouldLogout only handles paths
 export const shouldLogout = url => {
   const k8sRegex = new RegExp(`^${window.SERVER_FLAGS.basePath}api/kubernetes/`);
@@ -112,6 +116,11 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   if (url.indexOf('://') >= 0) {
     delete allOptions.headers.Authorization;
     delete allOptions.headers['X-CSRFToken'];
+  }
+
+  // multicluster.tmaxcloud.org 등의 하위도메인에서 API 요청할 경우 credentials 옵션을 include로 설정
+  if (isCallToSubdomain(url)) {
+    allOptions.credentials = 'include';
   }
 
   const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
