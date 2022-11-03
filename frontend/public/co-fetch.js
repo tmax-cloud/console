@@ -10,10 +10,6 @@ const initDefaults = {
   credentials: 'same-origin',
 };
 
-const isCallToSubdomain = (url = '') => {
-  return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
-};
-
 // TODO: url can be url or path, but shouldLogout only handles paths
 export const shouldLogout = url => {
   const k8sRegex = new RegExp(`^${window.SERVER_FLAGS.basePath}api/kubernetes/`);
@@ -104,6 +100,10 @@ const getCSRFToken = () =>
     .filter(c => c.startsWith(cookiePrefix))
     .map(c => c.slice(cookiePrefix.length))
     .pop();
+
+const isCallToSubdomain = (url = '') => {
+  return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
+};
 
 export const coFetch = (url, options = {}, timeout = 60000) => {
   const allOptions = _.defaultsDeep({}, initDefaults, options);
