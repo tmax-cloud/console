@@ -101,6 +101,10 @@ const getCSRFToken = () =>
     .map(c => c.slice(cookiePrefix.length))
     .pop();
 
+const isCallToSubdomain = (url = '') => {
+  return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
+};
+
 export const coFetch = (url, options = {}, timeout = 60000) => {
   const allOptions = _.defaultsDeep({}, initDefaults, options);
   if (allOptions.method !== 'GET') {
@@ -112,6 +116,11 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   if (url.indexOf('://') >= 0) {
     delete allOptions.headers.Authorization;
     delete allOptions.headers['X-CSRFToken'];
+  }
+
+  // multicluster.tmaxcloud.org 등의 하위도메인에서 API 요청할 경우 credentials 옵션을 include로 설정
+  if (isCallToSubdomain(url)) {
+    allOptions.credentials = 'include';
   }
 
   const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
