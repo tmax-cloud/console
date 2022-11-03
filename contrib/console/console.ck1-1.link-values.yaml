@@ -13,7 +13,7 @@ deploy:
     clientID: "hypercloud5"
 
   image:
-    tag: "5.2.9.0"
+    tag: "5.2.10.0"
 
   oauth2proxy:
     config:
