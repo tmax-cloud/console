@@ -10,8 +10,8 @@ export IP="<YOUR_IP>"
 # sample 파일 복사
 cp sample-console.yaml ${MYNAME}-console.yaml
 # 문자열 교체
-sed -i 's/{{NAME}}/${MYNAME}/g' ${MYNAME}-console.yaml
-sed -i 's/{{IP}}/${IP}/g' ${MYNAME}-console.yaml
+sed -i 's/{{NAME}}/'${MYNAME}'/g' ${MYNAME}-console.yaml
+sed -i 's/{{IP}}/'${IP}'/g' ${MYNAME}-console.yaml
 # kubectl로 쿠버네티스 환경에 ingressroute를 deploy
 kubectl apply -f ${MYNAME}-console.yaml
 ```
