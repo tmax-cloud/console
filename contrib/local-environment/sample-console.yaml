@@ -93,8 +93,7 @@ spec:
           namespace: monitoring
           port: web
           scheme: http
-  tls:
-    secretName: gateway-tls-acme
+  tls: {}
 
 ---
 apiVersion: v1
