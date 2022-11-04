@@ -658,7 +658,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'AddAction',
     properties: {
       id: 'dev-catalog',
-      url: '/catalog',
+      url: '/catalog?kind=%5B"ClusterServiceClass"%2C"ServiceClass"%5D',
       label: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_5',
       description: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_6',
       icon: <CatalogIcon />,
