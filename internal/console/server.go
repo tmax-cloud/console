@@ -30,7 +30,7 @@ const (
 	//keycloakRealm    = "tmax"
 	//keycloakClientId = "hypercloud5"
 
-	kubeAPIServerURL = "kubernetes.default.svc"
+	//kubeAPIServerURL = "https://kubernetes.default.svc"
 )
 
 type Server struct {
@@ -65,7 +65,7 @@ func New(fs *flag.FlagSet) *Server {
 	fs.StringVar(&s.KeycloakAuthURL, "keycloak-auth-url", "", "HyperAuth(keycloak) URL, format: https://<HYERAUTH_DOMAIN_NAME>/auth")
 	fs.StringVar(&s.KeycloakRealm, "keycloak-realm", "", "Hyperauth(keycloak) realm name")
 	fs.StringVar(&s.KeycloakClientId, "keycloak-client-id", "", "Hyperauth(keycloak) client id")
-	fs.StringVar(&s.KubeAPIServerURL, "k8s-public-endpoint", kubeAPIServerURL, "kube API URL")
+	fs.StringVar(&s.KubeAPIServerURL, "k8s-public-endpoint", "", "kube API URL")
 	fs.StringVar(&s.KubeToken, "k8s-auth-bearer-token", "", "Kubernetes SA Token")
 	return s
 }
