@@ -47,8 +47,10 @@ spec:
     HOTFIX_VER="0"
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
 
-    GUIDE_URL = "https://github.com/tmax-cloud/install-console/blob/5.0/README.md"
-    
+    // GUIDE_URL = "https://github.com/tmax-cloud/install-console/blob/5.0/README.md"
+    GUIDE_URL = "https://github.com/tmax-cloud/charts/blob/main/charts/console/README.md"
+    CHANGELOG_SERVER = "https://github.com/tmax-cloud/console/blob/master/CHANGELOG/CHANGELOG-SERVER.md"
+
     USER_TOKEN = "jinsoo-access-token"
     USER_NAME = "jinsoo-youn"
     USER_EMAIL = "jinsoo_youn@tmax.co.kr"
@@ -164,9 +166,9 @@ spec:
           to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
-          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 타 모듈과의 버전을 맞추기위해 기존 5.1에서 5.0으로 변경했습니다. (PATCH, HOTFIX 는 기존 번호 유지)" + 
-          "\n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
-                "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} ",
+          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 5.2.11.0 버전부터 console의 변수 값 설정이 변경 되었습니다." +
+          "\n\n 변경 사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
+                "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} 변경 사항: ${CHANGELOG_SERVER}",
           mimeType: 'text/plain'  
         )
       }
