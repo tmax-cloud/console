@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: console-ingressroute-{{NAME}}
+  name: {{NAME}}
   namespace: api-gateway-system
 spec:
   entryPoints:
@@ -11,6 +11,8 @@ spec:
     - kind: Rule
       match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 20
+      middlewares:
+        - name: api-gateway-system-oauth2-proxy-forwardauth@kubernetescrd
       services:
         - name: {{NAME}}-service
           namespace: api-gateway-system
@@ -19,10 +21,21 @@ spec:
           scheme: https
           serversTransport: insecure@file
     - kind: Rule
+      match: PathPrefix(`/oauth2/`) && Host(`{{NAME}}.tmaxcloud.org`)
+      middlewares:
+      - name: api-gateway-system-oauth2-proxy-headers@kubernetescrd
+      priority: 80
+      services:
+      - kind: Service
+        name: oauth2-proxy
+        namespace: api-gateway-system
+        port: 80
+        scheme: http
+    - kind: Rule
       match: PathPrefix(`/api/hypercloud`, `/api/multi-hypercloud`,`/api/webhook`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
+        - name: api-gateway-system-oauth2-proxy-forwardauth@kubernetescrd
         - name: hypercloud-stripprefix@file
       services:
         - kind: Service
@@ -35,7 +48,7 @@ spec:
       match: PathPrefix(`/api/kubernetes`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
+        - name: api-gateway-system-oauth2-proxy-forwardauth@kubernetescrd
         - name: kubernetes-stripprefix@file
       services:
         - kind: Service
@@ -48,7 +61,7 @@ spec:
       match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
+        - name: api-gateway-system-oauth2-proxy-forwardauth@kubernetescrd
         - name: monitoring-stripprefix-tenancy@file
       services:
         - kind: Service
@@ -60,7 +73,7 @@ spec:
       match: PathPrefix(`/api/prometheus/api`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
+        - name: api-gateway-system-oauth2-proxy-forwardauth@kubernetescrd
         - name: monitoring-stripprefix@file
       services:
         - kind: Service
@@ -72,7 +85,7 @@ spec:
       match: PathPrefix(`/api/alertmanager/api`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
+        - name: api-gateway-system-oauth2-proxy-forwardauth@kubernetescrd
         - name: monitoring-stripprefix@file
       services:
         - kind: Service
