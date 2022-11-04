@@ -1,8 +1,9 @@
-package main
+package logger
 
 import (
 	"fmt"
 	"github.com/rs/zerolog"
+	"github.com/spf13/pflag"
 	"os"
 )
 
@@ -16,14 +17,17 @@ type LogInfo struct {
 	LogType  string `json:"logType"`
 }
 
-func NewLogInfo() *LogInfo {
-	return &LogInfo{
+func New(fs *pflag.FlagSet) *LogInfo {
+	logInfo := &LogInfo{
 		LogLevel: logLevel,
 		LogType:  logType,
 	}
+	fs.StringVar(&logInfo.LogLevel, "log-level", "info", "trace | debug | info | warn | crit")
+	fs.StringVar(&logInfo.LogType, "log-type", "pretty", "pretty | json")
+	return logInfo
 }
 
-func (c *LogInfo) getLogger() (logger zerolog.Logger) {
+func (c *LogInfo) GetLogger() (logger zerolog.Logger) {
 	switch c.LogType {
 	case "json":
 		logger = zerolog.New(os.Stdout)
