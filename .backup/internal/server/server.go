@@ -17,6 +17,25 @@ type Server struct {
 	router chi.Router
 }
 
+func New() http.Handler {
+	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Logger)
+	// Basic CORS // for more ideas, see: https://developer.github.com/v3/#cross-origin-resource-sharing
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
+
+	return r
+}
+
 func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 	s := &Server{
 		App:        app,
@@ -43,10 +62,9 @@ func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 	r.Mount("/api/hypercloud", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "501 StatusNotFound", http.StatusNotImplemented)
 	}))
-
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/static"), http.Dir(s.App.PublicDir))
-	fileServer(r, singleJoiningSlash(s.App.BasePath, "/api/resource"), http.Dir("./api"))
-	fileServer(r, singleJoiningSlash(s.App.BasePath, "/usermanual"), http.Dir(singleJoiningSlash(s.App.PublicDir, "/usermanual")))
+	//fileServer(r, singleJoiningSlash(s.App.BasePath, "/api/resource"), http.Dir("./api"))
+	//fileServer(r, singleJoiningSlash(s.App.BasePath, "/usermanual"), http.Dir(singleJoiningSlash(s.App.PublicDir, "/usermanual")))
 
 	consoleProxyPath := singleJoiningSlash(s.App.BasePath, "/api/console")
 	r.Route(consoleProxyPath, func(r chi.Router) {

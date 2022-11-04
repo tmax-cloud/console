@@ -3,6 +3,7 @@ package server
 import (
 	"console/pkg/version"
 	"github.com/rs/zerolog"
+	flag "github.com/spf13/pflag"
 	"html/template"
 	"net/http"
 	"os"
@@ -41,6 +42,14 @@ type App struct {
 	AlertManagerBaseURL      string `json:"alertManagerBaseURL"`
 
 	logger zerolog.Logger
+}
+
+func NewApp() *App {
+	app := &App{}
+	fs := flag.NewFlagSet("app", flag.ExitOnError)
+	fs.StringVar(&app.BasePath, "dfdf", "dfdf", "Dfdfdf")
+
+	return app
 }
 
 func NewAppConfig() *App {
