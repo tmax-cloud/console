@@ -8,6 +8,7 @@
 - logInfo.logType -> log-type 으로 변경 
 - app.chatbotEmbed -> chatbot-embed 로 변경 
 - custom-product-name, svc-type 추가 
+- k8s-public-endpoint 추가 (5.2.11.0 버전에만 적용 필요, 추후에 default 값으로 설정됨으로 별도로 기입 불필요)
 
 기존 
 ```yaml
@@ -46,4 +47,5 @@ containers:
     - --svc-type={{ .svcType | default "LoadBalancer" }}
     - --log-level={{ .logLevel | default "debug" }}
     - --log-type={{ .logType | default "pretty" }}
+    - --k8s-public-endpoint=https://kubernetes.default.svc
 ```
