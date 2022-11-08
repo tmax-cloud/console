@@ -4,54 +4,35 @@ import * as _ from 'lodash-es';
 
 import { RESULTS_TYPE, RequestMap } from '../../reducers/dashboards';
 import { NotificationAlerts } from '../../reducers/ui';
-import {
-  Fetch,
-  StopWatchPrometheusAction,
-  stopWatchPrometheusQuery,
-  stopWatchURL,
-  StopWatchURLAction,
-  watchPrometheusQuery,
-  WatchPrometheusQueryAction,
-  watchURL,
-  WatchURLAction,
-  getQueryKey,
-} from '../../actions/dashboards';
+import { Fetch, StopWatchPrometheusAction, stopWatchPrometheusQuery, stopWatchURL, StopWatchURLAction, watchPrometheusQuery, WatchPrometheusQueryAction, watchURL, WatchURLAction, getQueryKey, clearPrometheusData, ClearPrometheusDataAction } from '../../actions/dashboards';
 import { RootState } from '../../redux';
 import { Firehose, FirehoseResource, FirehoseResult } from '../utils';
 import { K8sResourceKind } from '../../module/k8s';
 import { PrometheusResponse } from '../graphs';
 
-const mapDispatchToProps: DispatchToProps = (dispatch) => ({
+const mapDispatchToProps: DispatchToProps = dispatch => ({
   watchURL: (url, fetch) => dispatch(watchURL(url, fetch)),
-  stopWatchURL: (url) => dispatch(stopWatchURL(url)),
-  watchPrometheusQuery: (query, namespace, timespan) =>
-    dispatch(watchPrometheusQuery(query, namespace, timespan)),
-  stopWatchPrometheusQuery: (query, timespan) =>
-    dispatch(stopWatchPrometheusQuery(query, timespan)),
+  stopWatchURL: url => dispatch(stopWatchURL(url)),
+  watchPrometheusQuery: (query, namespace, timespan) => dispatch(watchPrometheusQuery(query, namespace, timespan)),
+  stopWatchPrometheusQuery: (query, timespan) => dispatch(stopWatchPrometheusQuery(query, timespan)),
+  clearPrometheusData: (query, timespan) => dispatch(clearPrometheusData(query, timespan)),
 });
 
 const mapStateToProps = (state: RootState) => ({
   [RESULTS_TYPE.URL]: state.dashboards.get(RESULTS_TYPE.URL),
-  [RESULTS_TYPE.PROMETHEUS]: state.dashboards.get(RESULTS_TYPE.PROMETHEUS) as RequestMap<
-    PrometheusResponse
-  >,
+  [RESULTS_TYPE.PROMETHEUS]: state.dashboards.get(RESULTS_TYPE.PROMETHEUS) as RequestMap<PrometheusResponse>,
   notificationAlerts: state.UI.getIn(['monitoring', 'notificationAlerts']),
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export const withDashboardResources = <P extends DashboardItemProps>(
-  WrappedComponent: React.ComponentType<P>,
-) =>
+export const withDashboardResources = <P extends DashboardItemProps>(WrappedComponent: React.ComponentType<P>) =>
   connect<StateProps, DispatchProps, Diff<P, DashboardItemProps>>(
     mapStateToProps,
     mapDispatchToProps,
   )(
-    class WithDashboardResources extends React.Component<
-      WithDashboardResourcesProps,
-      WithDashboardResourcesState
-    > {
+    class WithDashboardResources extends React.Component<WithDashboardResourcesProps, WithDashboardResourcesState> {
       private urls: Array<string> = [];
       private queries: Array<string> = [];
       private watchingAlerts: boolean = false;
@@ -63,42 +44,16 @@ export const withDashboardResources = <P extends DashboardItemProps>(
         };
       }
 
-      shouldComponentUpdate(
-        nextProps: WithDashboardResourcesProps,
-        nextState: WithDashboardResourcesState,
-      ) {
-        const urlResultChanged = this.urls.some(
-          (urlKey) =>
-            this.props[RESULTS_TYPE.URL].getIn([urlKey, 'data']) !==
-              nextProps[RESULTS_TYPE.URL].getIn([urlKey, 'data']) ||
-            this.props[RESULTS_TYPE.URL].getIn([urlKey, 'loadError']) !==
-              nextProps[RESULTS_TYPE.URL].getIn([urlKey, 'loadError']),
-        );
-        const queryResultChanged = this.queries.some(
-          (query) =>
-            this.props[RESULTS_TYPE.PROMETHEUS].getIn([query, 'data']) !==
-              nextProps[RESULTS_TYPE.PROMETHEUS].getIn([query, 'data']) ||
-            this.props[RESULTS_TYPE.PROMETHEUS].getIn([query, 'loadError']) !==
-              nextProps[RESULTS_TYPE.PROMETHEUS].getIn([query, 'loadError']),
-        );
-        const alertsResultChanged =
-          this.props?.notificationAlerts?.data !== nextProps?.notificationAlerts?.data ||
-          this.props?.notificationAlerts?.loadError !== nextProps?.notificationAlerts?.loadError;
+      shouldComponentUpdate(nextProps: WithDashboardResourcesProps, nextState: WithDashboardResourcesState) {
+        const urlResultChanged = this.urls.some(urlKey => this.props[RESULTS_TYPE.URL].getIn([urlKey, 'data']) !== nextProps[RESULTS_TYPE.URL].getIn([urlKey, 'data']) || this.props[RESULTS_TYPE.URL].getIn([urlKey, 'loadError']) !== nextProps[RESULTS_TYPE.URL].getIn([urlKey, 'loadError']));
+        const queryResultChanged = this.queries.some(query => this.props[RESULTS_TYPE.PROMETHEUS].getIn([query, 'data']) !== nextProps[RESULTS_TYPE.PROMETHEUS].getIn([query, 'data']) || this.props[RESULTS_TYPE.PROMETHEUS].getIn([query, 'loadError']) !== nextProps[RESULTS_TYPE.PROMETHEUS].getIn([query, 'loadError']));
+        const alertsResultChanged = this.props?.notificationAlerts?.data !== nextProps?.notificationAlerts?.data || this.props?.notificationAlerts?.loadError !== nextProps?.notificationAlerts?.loadError;
         const k8sResourcesChanged = this.state.k8sResources !== nextState.k8sResources;
 
         const nextExternalProps = this.getExternalProps(nextProps);
         const externalProps = this.getExternalProps(this.props);
 
-        return (
-          urlResultChanged ||
-          queryResultChanged ||
-          k8sResourcesChanged ||
-          (this.watchingAlerts && alertsResultChanged) ||
-          Object.keys(nextExternalProps).length !== Object.keys(externalProps).length ||
-          Object.keys(nextExternalProps).some(
-            (key) => nextExternalProps[key] !== externalProps[key],
-          )
-        );
+        return urlResultChanged || queryResultChanged || k8sResourcesChanged || (this.watchingAlerts && alertsResultChanged) || Object.keys(nextExternalProps).length !== Object.keys(externalProps).length || Object.keys(nextExternalProps).some(key => nextExternalProps[key] !== externalProps[key]);
       }
 
       watchURL: WatchURL = (url, fetch) => {
@@ -113,8 +68,9 @@ export const withDashboardResources = <P extends DashboardItemProps>(
 
       stopWatchPrometheusQuery: StopWatchPrometheus = (query, timespan) => {
         const queryKey = getQueryKey(query, timespan);
-        this.queries = this.queries.filter((q) => q !== queryKey);
+        this.queries = this.queries.filter(q => q !== queryKey);
         this.props.stopWatchPrometheusQuery(query, timespan);
+        this.props.clearPrometheusData(query, timespan);
       };
 
       watchAlerts: WatchAlerts = () => {
@@ -125,31 +81,20 @@ export const withDashboardResources = <P extends DashboardItemProps>(
         this.watchingAlerts = false;
       };
 
-      watchK8sResource: WatchK8sResource = (resource) => {
+      watchK8sResource: WatchK8sResource = resource => {
         this.setState((state: WithDashboardResourcesState) => ({
           k8sResources: [...state.k8sResources, { ...resource, optional: true }],
         }));
       };
 
-      stopWatchK8sResource: StopWatchK8sResource = (resource) => {
+      stopWatchK8sResource: StopWatchK8sResource = resource => {
         this.setState((state: WithDashboardResourcesState) => ({
-          k8sResources: state.k8sResources.filter((r) => r.prop !== resource.prop),
+          k8sResources: state.k8sResources.filter(r => r.prop !== resource.prop),
         }));
       };
 
-      getExternalProps = (props) => {
-        return _.omit(
-          props,
-          'watchURL',
-          'stopWatchURL',
-          'watchPrometheusQuery',
-          'stopWatchPrometheusQuery',
-          'watchAlerts',
-          'stopWatchAlerts',
-          RESULTS_TYPE.URL,
-          RESULTS_TYPE.PROMETHEUS,
-          'notificationAlerts',
-        );
+      getExternalProps = props => {
+        return _.omit(props, 'watchURL', 'stopWatchURL', 'watchPrometheusQuery', 'stopWatchPrometheusQuery', 'watchAlerts', 'stopWatchAlerts', RESULTS_TYPE.URL, RESULTS_TYPE.PROMETHEUS, 'notificationAlerts');
       };
 
       render() {
@@ -200,6 +145,7 @@ type WithDashboardResourcesProps = {
   watchPrometheusQuery: WatchPrometheusQueryAction;
   stopWatchURL: StopWatchURLAction;
   stopWatchPrometheusQuery: StopWatchPrometheusAction;
+  clearPrometheusData: ClearPrometheusDataAction;
   [RESULTS_TYPE.PROMETHEUS]: RequestMap<PrometheusResponse>;
   [RESULTS_TYPE.URL]: RequestMap<any>;
   notificationAlerts: any;
