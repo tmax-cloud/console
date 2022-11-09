@@ -21,7 +21,7 @@ description: >-
 
 ---
 
-# 🧐 메뉴 담당자
+<!-- # 🧐 메뉴 담당자
 
 <div class="menuHandlerTable-container">
 <div class="inner-vertical-container">
@@ -89,7 +89,7 @@ description: >-
 
 <br/>
 
----
+--- -->
 
 # 🖥️ 개발 가이드 리스트
 
