@@ -24,7 +24,7 @@ const tableProps: TableProps = {
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_137',
-      sortField: `obj.metadata.labels['strimzi.io/cluster']`,
+      sortField: `metadata.labels['strimzi.io/cluster']`,
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
@@ -45,7 +45,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children: <ResourceLink kind={KafkaClusterModel.kind} name={obj.metadata.labels['strimzi.io/cluster']} namespace={obj.metadata.namespace} />,
+      children: obj.metadata.labels && obj.metadata.labels['strimzi.io/cluster'] ? <ResourceLink kind={KafkaClusterModel.kind} name={obj.metadata.labels['strimzi.io/cluster']} namespace={obj.metadata.namespace} /> : <></>,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -59,9 +59,9 @@ const tableProps: TableProps = {
 
 export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps> = ({ obj: kr }) => {
   const { t } = useTranslation();
-  const [config, setConfig] = React.useState(new Map);
+  const [config, setConfig] = React.useState(new Map());
   const [loading, setLoading] = React.useState(false);
-  const kafkaName = kr.metadata?.labels['strimzi.io/cluster'];
+  const kafkaName = kr.metadata.labels && kr.metadata.labels['strimzi.io/cluster'] ? kr.metadata.labels['strimzi.io/cluster'] : '';
   const namespace = kr.metadata?.namespace;
 
   React.useEffect(() => {
@@ -73,19 +73,19 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
             'strimzi.io/cluster': kafkaName,
           },
         },
-      }).then((res) => {
+      }).then(res => {
         const kafka = res[0];
         setConfig(kafka.spec?.cruiseControl?.config);
         setLoading(true);
       });
-    }
+    };
     fetchKafkaConfig();
-  }, []);
+  }, [kafkaName, namespace]);
 
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_1')} obj={kr}>
-        <ResourceLink kind={KafkaClusterModel.kind} name={kr.metadata.labels['strimzi.io/cluster']} namespace={kr.metadata.namespace} />
+        {kafkaName !== '' ? <ResourceLink kind={KafkaClusterModel.kind} name={kafkaName} namespace={kr.metadata.namespace} /> : <></>}
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_2')} obj={kr}>
         {kr.spec?.concurrentIntraBrokerPartitionMovements}
@@ -97,13 +97,15 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
         {kr.spec?.concurrentPartitionMovementsPerBroker}
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_5')} obj={kr}>
-        {kr.spec?.goals?.map((goal) => { return <p key={`key-${goal}`}>{goal}</p> })}
+        {kr.spec?.goals?.map(goal => {
+          return <p key={`key-${goal}`}>{goal}</p>;
+        })}
       </DetailsItem>
-      {loading && config && config.get('hard.goals') &&
+      {loading && config && config.get('hard.goals') && (
         <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_6')} obj={kr}>
           {kr.spec?.skipHardGoalCheck ? t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_7') : t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_8')}
         </DetailsItem>
-      }
+      )}
     </dl>
   );
 };
