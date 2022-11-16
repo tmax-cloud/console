@@ -23,7 +23,8 @@ type Props = WithFlagsProps & StateProps & DispatchProps;
 
 const ClouldShellMastheadButton: React.FC<Props> = ({ flags, onClick, open }) => {
   const [terminalAvailable, setTerminalAvailable] = React.useState(false);
-  const flagEnabled = flags[FLAG_DEVWORKSPACE];
+  // const flagEnabled = flags[FLAG_DEVWORKSPACE];
+  const flagEnabled = true;
   React.useEffect(() => {
     let mounted = true;
     if (flagEnabled) {
@@ -59,16 +60,8 @@ const ClouldShellMastheadButton: React.FC<Props> = ({ flags, onClick, open }) =>
 
   return (
     <ToolbarItem>
-      <Tooltip
-        content={open ? 'Close command line terminal' : 'Open command line terminal'}
-        position={TooltipPosition.bottom}
-      >
-        <Button
-          variant="plain"
-          aria-label="Command line terminal"
-          onClick={toggleTerminal}
-          className={open ? 'pf-m-selected' : undefined}
-        >
+      <Tooltip content={open ? 'Close command line terminal' : 'Open command line terminal'} position={TooltipPosition.bottom}>
+        <Button variant="plain" aria-label="Command line terminal" onClick={toggleTerminal} className={open ? 'pf-m-selected' : undefined}>
           <TerminalIcon className="co-masthead-icon" />
         </Button>
       </Tooltip>
@@ -84,7 +77,4 @@ const cloudShellPropsToState = (dispatch: Dispatch): DispatchProps => ({
   onClick: () => dispatch(toggleCloudShellExpanded()),
 });
 
-export default connect<StateProps, DispatchProps>(
-  cloudShellStateToProps,
-  cloudShellPropsToState,
-)(connectToFlags(FLAG_DEVWORKSPACE)(ClouldShellMastheadButton));
+export default connect<StateProps, DispatchProps>(cloudShellStateToProps, cloudShellPropsToState)(connectToFlags(FLAG_DEVWORKSPACE)(ClouldShellMastheadButton));
