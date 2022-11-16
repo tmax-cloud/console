@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -exuo pipefail
+
 myIP=$(hostname -I | awk '{print $1}')
 #myIP=$(ipconfig getifaddr en0)
 # myIP=localhost
