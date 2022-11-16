@@ -1,0 +1,67 @@
+import * as React from 'react';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { css } from '@patternfly/react-styles';
+import { Button, Tooltip, Popover } from '@patternfly/react-core';
+import { TableText } from './TableText';
+
+
+export interface ColumnHelpWrapperProps {
+  /**
+   * The header cell that is wrapped
+   */
+  children: React.ReactNode;
+  /**
+   * The information that is presented in the tooltip/popover
+   */
+  info: React.ReactNode;
+  /**
+   * Optional classname to add to the tooltip/popover
+   */
+  className?: string;
+  /**
+   * The info variant
+   */
+  variant?: 'tooltip' | 'popover';
+  /**
+   * Additional props forwarded to the Popover component
+   */
+  popoverProps?: Omit<any, 'bodyContent'>;
+  /**
+   * Additional props forwarded to the tooltip component
+   */
+  tooltipProps?: Omit<any, 'content'>;
+  /**
+   * Aria label of the info button
+   */
+  ariaLabel?: string;
+}
+
+export const HeaderCellInfoWrapper: React.FunctionComponent<ColumnHelpWrapperProps> = ({
+  children,
+  info,
+  className,
+  variant = 'tooltip',
+  popoverProps,
+  tooltipProps,
+  ariaLabel
+}: ColumnHelpWrapperProps) => (
+  <div className={css("pf-c-table__column-help", className)}>
+    {typeof children === 'string' ? <TableText>{children}</TableText> : children}
+    <span className={css("pf-c-table__column-help-action")}>
+      {variant === 'tooltip' ? (
+        <Tooltip content={info} {...tooltipProps}>
+          <Button variant="plain" aria-label={ariaLabel || (typeof info === 'string' && info) || 'More info'}>
+            <HelpIcon noVerticalAlign />
+          </Button>
+        </Tooltip>
+      ) : (
+        <Popover bodyContent={info} {...popoverProps}>
+          <Button variant="plain" aria-label={ariaLabel || (typeof info === 'string' && info) || 'More info'}>
+            <HelpIcon noVerticalAlign />
+          </Button>
+        </Popover>
+      )}
+    </span>
+  </div>
+);
+HeaderCellInfoWrapper.displayName = 'HeaderCellInfoWrapper';
