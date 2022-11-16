@@ -975,7 +975,7 @@ const KeyValueEntryForm = withTranslation()(
           </div>
           <div className="form-group">
             <div>
-              <DroppableFileInput onChange={this.onValueChange} inputFileData={this.state.value} id={`${this.props.id}-value`} label={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_4')} inputFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_6')} />
+              <DroppableFileInput onChange={this.onValueChange} inputFileData={this.state.value} id={`${this.props.id}-value`} textareaFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEFORM_DIV2_1')} label={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_4')} inputFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_6')} />
               <p className="co-m-pane__explanation">{t('SINGLE:MSG_SECRETS_CREATEFORM_DIV2_1')}</p>
             </div>
           </div>
