@@ -137,12 +137,6 @@ spec:
             sed -i "s/\\[patch\\]//g" ./CHANGELOG/CHANGELOG-${VER}.md
             sed -i "/^    Note: \$/d" ./CHANGELOG/CHANGELOG-${VER}.md
           """
-          sh """
-            cp -r ./contrib/console/console.ck1-1.link-values.yaml.temp ./contrib/console/console.ck1-1.link-values.yaml
-            sed -i "s/@@VER@@/${VER}/g" ./contrib/console/console.ck1-1.link-values.yaml
-            cp -r ./contrib/console/console.tmaxcloud.org-values.yaml.temp ./contrib/console/console.tmaxcloud.org-values.yaml
-            sed -i "s/@@VER@@/${VER}/g" ./contrib/console/console.tmaxcloud.org-values.yaml
-          """
       }
     }
 
@@ -167,14 +161,36 @@ spec:
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
           body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 5.2.11.0 버전부터 console의 변수 값 설정이 변경 되었습니다." +
-          "\n\n 변경 사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
+          "\n\n 변경 사항 파일로 첨부합니다. \n\n 감사합니다.\n\n" +
                 "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} 변경 사항: ${CHANGELOG_SERVER}",
           mimeType: 'text/plain'  
         )
       }
     }
 
+  stage('Deploy'){
+    when {
+      anyOf {
+        environment name: 'BUILD_MODE', value: 'PATCH'
+        environment name: 'BUILD_MODE', value: 'HOTFIX'
+      }     
+    }
+    steps {
+      sh """
+        cp -r ./deploy/values-ck1-1.link.yaml.temp ./deploy/values-ck1-1.link.yaml
+        sed -i "s/@@VER@@/${VER}/g" ./deploy/values-ck1-1.link.yaml
+        cp -r ./deploy/values-tmaxcloud.org.yaml.tmp ./deploy/values-tmaxcloud.org.yaml
+        sed -i "s/@@VER@@/${VER}/g" ./deploy/values-tmaxcloud.org.yaml
+      """
+      withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
+          sh """
+            git commit -m 'Update deployment of console"
+            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
+          """
+      }
+    }
   }
+
 
   post {
     success {
