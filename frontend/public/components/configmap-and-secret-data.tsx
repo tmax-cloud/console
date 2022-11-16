@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Base64 } from 'js-base64';
+// import { Base64 } from 'js-base64';
 import { saveAs } from 'file-saver';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
@@ -29,17 +29,12 @@ export const ConfigMapBinaryData: React.FC<DownloadValueProps> = ({ data }) => {
   const dl = [];
   Object.keys(data || {})
     .sort()
-    .forEach((k) => {
+    .forEach(k => {
       const value = data[k];
       dl.push(<dt key={`${k}-k`}>{k}</dt>);
       dl.push(
         <dd key={`${k}-v`}>
-          <Button
-            className="pf-m-link--align-left"
-            type="button"
-            onClick={() => downloadBinary(k, value)}
-            variant="link"
-          >
+          <Button className="pf-m-link--align-left" type="button" onClick={() => downloadBinary(k, value)} variant="link">
             Save File
           </Button>
         </dd>,
@@ -53,7 +48,7 @@ export const ConfigMapData: React.FC<ConfigMapDataProps> = ({ data, label }) => 
   const dl = [];
   Object.keys(data || {})
     .sort()
-    .forEach((k) => {
+    .forEach(k => {
       const value = data[k];
       dl.push(<dt key={`${k}-k`}>{k}</dt>);
       dl.push(
@@ -71,9 +66,9 @@ export const SecretValue: React.FC<SecretValueProps> = ({ value, reveal, encoded
     return <span className="text-muted">No value</span>;
   }
 
-  const decodedValue = encoded ? Base64.decode(value) : value;
-  const visibleValue = reveal ? decodedValue : <MaskedData />;
-  return <CopyToClipboard value={decodedValue} visibleValue={visibleValue} />;
+  // const decodedValue = encoded ? Base64.decode(value) : value;
+  const visibleValue = reveal ? value : <MaskedData />;
+  return <CopyToClipboard value={value} visibleValue={visibleValue} />;
 };
 SecretValue.displayName = 'SecretValue';
 
@@ -84,7 +79,7 @@ export const SecretData: React.FC<SecretDataProps> = ({ data, title = 'Data' }) 
   const dl = [];
   Object.keys(data || {})
     .sort()
-    .forEach((k) => {
+    .forEach(k => {
       dl.push(<dt key={`${k}-k`}>{k}</dt>);
       dl.push(
         <dd key={`${k}-v`}>
@@ -97,12 +92,7 @@ export const SecretData: React.FC<SecretDataProps> = ({ data, title = 'Data' }) 
     <>
       <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DATA_1')}>
         {dl.length ? (
-          <Button
-            type="button"
-            onClick={() => setReveal(!reveal)}
-            variant="link"
-            className="pf-m-link--align-right"
-          >
+          <Button type="button" onClick={() => setReveal(!reveal)} variant="link" className="pf-m-link--align-right">
             {reveal ? (
               <>
                 <EyeSlashIcon className="co-icon-space-r" />
