@@ -51,8 +51,8 @@ const top25Queries = {
 const overviewQueries = {
   [OverviewQuery.MEMORY_TOTAL]: 'sum(node_memory_MemTotal_bytes{cluster=""})',
   [OverviewQuery.MEMORY_UTILIZATION]: 'sum(node_memory_MemTotal_bytes{cluster=""} - node_memory_MemAvailable_bytes{cluster=""})',
-  [OverviewQuery.NETWORK_IN_UTILIZATION]: 'sum(rate(container_network_receive_bytes_total{container="POD",pod!=""}[5m]))',
-  [OverviewQuery.NETWORK_OUT_UTILIZATION]: 'sum(rate(container_network_transmit_bytes_total{container="POD",pod!=""}[5m]))',
+  [OverviewQuery.NETWORK_IN_UTILIZATION]: 'sum(rate(container_network_receive_bytes_total{pod!=""}[5m]))',
+  [OverviewQuery.NETWORK_OUT_UTILIZATION]: 'sum(rate(container_network_transmit_bytes_total{pod!=""}[5m]))',
   [OverviewQuery.NETWORK_UTILIZATION]: 'sum(instance:node_network_transmit_bytes_excluding_lo:rate1m+instance:node_network_receive_bytes_excluding_lo:rate1m)',
   [OverviewQuery.CPU_UTILIZATION]: 'sum(instance:node_cpu:rate:sum{cluster=""})',
   [OverviewQuery.CPU_TOTAL]: 'sum(count(node_cpu_seconds_total{job="node-exporter",mode="idle"}) by(instance))',
