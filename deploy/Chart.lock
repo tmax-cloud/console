@@ -1,6 +1,6 @@
 dependencies:
 - name: console
   repository: https://tmax-cloud.github.io/charts/
-  version: 1.0.6
-digest: sha256:4faaca705f8b4c1ee98467840f24cdfd3688520b6b09dbb4d8dc7b3c4e8488ce
-generated: "2022-11-17T07:42:55.743595+09:00"
+  version: 1.1.0
+digest: sha256:3d311f565c0cef8a254f89a4f108760f385e133193b9aed0543097c8840306ff
+generated: "2022-11-17T10:35:22.834535+09:00"
