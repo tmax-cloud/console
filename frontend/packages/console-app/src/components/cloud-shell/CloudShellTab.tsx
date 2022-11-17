@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { InlineTechPreviewBadge } from '@console/shared';
-import CloudShellTerminal from './CloudShellTerminal';
+// import CloudShellTerminal from './CloudShellTerminal';
+import HyperCloudShellTerminal from './hypercloud/HyperCloudShellTerminal';
 import './CloudShellTab.scss';
 
 const CloudShellTab: React.FC = () => (
@@ -10,7 +11,7 @@ const CloudShellTab: React.FC = () => (
       <InlineTechPreviewBadge />
     </div>
     <div className="co-cloud-shell-tab__body">
-      <CloudShellTerminal />
+      <HyperCloudShellTerminal />
     </div>
   </>
 );

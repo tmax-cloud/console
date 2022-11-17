@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '@console/internal/redux';
-import { k8sCreate, k8sGet, UserKind } from '@console/internal/module/k8s';
-import { setCloudShellNamespace } from '../cloud-shell-utils';
-import CloudShellSetup from '../setup/CloudShellSetup';
+import { k8sGet, UserKind } from '@console/internal/module/k8s';
 
 import '../CloudShellTerminal.scss';
 import { PodModel } from '@console/internal/models';
 import { PodExecLoader } from './podExecLoader';
+import { coFetchJSON } from '@console/internal/co-fetch';
+import TerminalLoadingBox from '../TerminalLoadingBox';
 
 type StateProps = {
   user: UserKind;
@@ -19,40 +19,31 @@ type Props = {
 
 type CloudShellTerminalProps = StateProps & Props;
 
-const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user, onCancel }) => {
-  const [namespace, setNamespace] = React.useState('hypercloud-kubectl');
+const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) => {
+  const namespace = 'hypercloud-kubectl';
 
   const [kubectlPod, setKubectlPod] = React.useState(undefined);
+  const [kubectlPodReady, setKubectlPodReady] = React.useState(false);
 
+  // API call
   React.useEffect(() => {
-    k8sGet(PodModel, `${namespace}-${user['email'].replace('@', '.')}`, namespace)
-      .then(data => setKubectlPod(data))
-      .catch(e => {
-        console.log(e);
-        const workspace = {
-          metadata: { name: `${namespace}-${user['email'].replace('@', '.')}`, namespace: namespace },
-          spec: { containers: [{ name: 'test', image: 'nginx' }] },
-        };
-        k8sCreate(PodModel, workspace)
-          .then(data => setKubectlPod(data))
-          .catch(e => console.log(e));
-      });
+    coFetchJSON(`api/hypercloud/kubectl?userName=${user['email']}`, 'POST');
   }, []);
 
-  if (kubectlPod) {
-    return <PodExecLoader obj={kubectlPod} />;
-  }
+  React.useEffect(() => {
+    const podCheck = setInterval(() => {
+      k8sGet(PodModel, `${namespace}-${user['email'].replace('@', '.')}`, namespace).then(data => {
+        setKubectlPod(data);
+        if (data.status.phase === 'Running') {
+          setKubectlPodReady(true);
+          clearInterval(podCheck);
+        }
+      });
+    }, 1000);
+    return () => clearInterval(podCheck);
+  }, []);
 
-  // show the form to let the user create a new workspace
-  return (
-    <CloudShellSetup
-      onCancel={onCancel}
-      onSubmit={(ns: string) => {
-        setCloudShellNamespace(ns);
-        setNamespace(ns);
-      }}
-    />
-  );
+  return kubectlPodReady ? <PodExecLoader obj={kubectlPod} /> : <TerminalLoadingBox message="" />;
 };
 
 // For testing
