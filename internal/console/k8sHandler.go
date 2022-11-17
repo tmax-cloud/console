@@ -43,6 +43,7 @@ func NewK8sHandlerConfig(k8sEndpoint string, k8sToken string) *K8sHandler {
 
 	// Console In Cluster
 	if k8sEndpoint == "" || k8sEndpoint == defaultK8sEndpoint {
+		k8sEndpoint = defaultK8sEndpoint
 		k8sCertPEM, err := ioutil.ReadFile(k8sInClusterCA)
 		if err != nil {
 			log.Fatal().Err(err).Msg("Error inferring Kubernetes config from environment")
