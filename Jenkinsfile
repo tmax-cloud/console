@@ -168,28 +168,30 @@ spec:
       }
     }
 
-  stage('Deploy'){
-    when {
-      anyOf {
-        environment name: 'BUILD_MODE', value: 'PATCH'
-        environment name: 'BUILD_MODE', value: 'HOTFIX'
-      }     
-    }
-    steps {
-      sh """
-        cp -r ./deploy/values-ck1-1.link.yaml.temp ./deploy/values-ck1-1.link.yaml
-        sed -i "s/@@VER@@/${VER}/g" ./deploy/values-ck1-1.link.yaml
-        cp -r ./deploy/values-tmaxcloud.org.yaml.tmp ./deploy/values-tmaxcloud.org.yaml
-        sed -i "s/@@VER@@/${VER}/g" ./deploy/values-tmaxcloud.org.yaml
-      """
-      withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
-          sh """
-            git add -A
-            git commit -m 'Update deployment of console"
-            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
-          """
+    stage('Deploy'){
+      when {
+        anyOf {
+          environment name: 'BUILD_MODE', value: 'PATCH'
+          environment name: 'BUILD_MODE', value: 'HOTFIX'
+        }     
       }
-    }
+      steps {
+        sh """
+          cp -r ./deploy/values-ck1-1.link.yaml.temp ./deploy/values-ck1-1.link.yaml
+          sed -i "s/@@VER@@/${VER}/g" ./deploy/values-ck1-1.link.yaml
+          cp -r ./deploy/values-tmaxcloud.org.yaml.tmp ./deploy/values-tmaxcloud.org.yaml
+          sed -i "s/@@VER@@/${VER}/g" ./deploy/values-tmaxcloud.org.yaml
+        """
+        withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
+            sh """
+              git add -A
+              git commit -m 'Update deployment of console"
+              git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
+            """
+        }
+      }
+    }  
+  
   }
 
 
