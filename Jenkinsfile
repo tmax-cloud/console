@@ -183,11 +183,11 @@ spec:
           sed -i "s/@@VER@@/${VER}/g" ./deploy/values-tmaxcloud.org.yaml
         """
         withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
-            sh """
-              git add -A
-              git commit -m 'Update deployment of console"
-              git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
-            """
+          sh """
+            git add -A
+            git commit -m 'Update deployment of console"
+            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
+          """
         }
       }
     }  
