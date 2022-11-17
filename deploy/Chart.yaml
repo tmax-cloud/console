@@ -25,5 +25,5 @@ appVersion: "1.16.0"
 
 dependencies:
   - name: console
-    version: "1.1.0"
+    version: "1.1.1"
     repository: https://tmax-cloud.github.io/charts/
