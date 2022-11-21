@@ -68,17 +68,32 @@ const Terminal = React.forwardRef<ImperativeTerminalType, TerminalProps>(({ onDa
       terminal.current.clear();
       terminal.current.setOption('disableStdin', false);
     },
-    onDataReceived: (data) => {
+    onDataReceived: data => {
       terminal.current && terminal.current.write(data);
     },
-    onConnectionClosed: (msg) => {
+    onConnectionClosed: msg => {
       if (!terminal.current) return;
       terminal.current.write(`\x1b[31m${msg || 'disconnected'}\x1b[m\r\n`);
       terminal.current.setOption('disableStdin', true);
     },
   }));
 
-  return <div className="co-terminal" ref={terminalRef} />;
+  // init height
+  const [terminalHeight, setTerminalHeight] = React.useState(0);
+  React.useEffect(() => {
+    const element = document.getElementById('hypercloudshell-body') ?? document.getElementById('hypercloudshell-tab-body');
+    const { height } = element.getBoundingClientRect();
+    setTerminalHeight(height);
+
+    if (element.id === 'hypercloudshell-tab-body') {
+      window.addEventListener('resize', () => setTerminalHeight(element.getBoundingClientRect().height));
+      return () => {
+        window.removeEventListener('resize', () => setTerminalHeight(element.getBoundingClientRect().height));
+      };
+    }
+  }, []);
+
+  return <div className="co-terminal" id="hypercloud-terminal" ref={terminalRef} style={{ height: `${terminalHeight}px` }} />;
 });
 
 export default Terminal;

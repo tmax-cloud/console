@@ -57,20 +57,16 @@ const useSize = <T extends HTMLElement>(): [number, (element: T) => void] => {
 };
 
 // get the pageX value from a mouse or touch event
-const getPageY = (e: DraggableEvent): number =>
-  (e as MouseEvent).pageY ?? (e as TouchEvent).touches?.[0]?.pageY;
+const getPageY = (e: DraggableEvent): number => (e as MouseEvent).pageY ?? (e as TouchEvent).touches?.[0]?.pageY;
 
-const Drawer: React.FC<DrawerProps> = ({
-  children,
-  defaultHeight = 300,
-  height,
-  maxHeight = '100%',
-  open,
-  defaultOpen = true,
-  resizable = false,
-  header,
-  onChange,
-}) => {
+const getMastheadHeight = (): number => {
+  const masthead = document.getElementById('page-main-header');
+  if (!masthead) return 0;
+  const { height } = masthead.getBoundingClientRect();
+  return height;
+};
+
+const Drawer: React.FC<DrawerProps> = ({ children, defaultHeight = 300, height, maxHeight = '100%', open, defaultOpen = true, resizable = false, header, onChange }) => {
   const drawerRef = React.useRef<HTMLDivElement>();
   const [heightState, setHeightState] = React.useState(defaultHeight);
   const [openState, setOpenState] = React.useState(defaultOpen);
@@ -90,6 +86,16 @@ const Drawer: React.FC<DrawerProps> = ({
     setOpenState(newOpen);
     if (onChange) {
       onChange(newOpen, newHeight);
+    }
+
+    // resize terminal
+    const terminal = document.getElementById('hypercloud-terminal');
+    if (terminal) {
+      const maxHeight = `calc(100vh - ${getMastheadHeight() + minHeight}px)`;
+      terminal.style.maxHeight = maxHeight;
+
+      const terminalHeight = newHeight - minHeight;
+      terminal.style.height = `${terminalHeight}px`;
     }
   };
 
@@ -115,11 +121,7 @@ const Drawer: React.FC<DrawerProps> = ({
   };
 
   const draggable = resizable && (
-    <DraggableCoreIFrameFix
-      onDrag={handleDrag}
-      onStart={handleResizeStart}
-      onStop={handleResizeStop}
-    >
+    <DraggableCoreIFrameFix onDrag={handleDrag} onStart={handleResizeStart} onStop={handleResizeStop}>
       <div className="ocs-drawer__drag-handle" />
     </DraggableCoreIFrameFix>
   );
@@ -138,7 +140,9 @@ const Drawer: React.FC<DrawerProps> = ({
         <div ref={headerRef} className="ocs-drawer__header">
           {header}
         </div>
-        <div className="ocs-drawer__body">{children}</div>
+        <div className="ocs-drawer__body" id="hypercloudshell-body">
+          {children}
+        </div>
       </div>
     </CSSTransition>
   );
