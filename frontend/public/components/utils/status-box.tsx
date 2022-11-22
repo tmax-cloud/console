@@ -91,8 +91,8 @@ export const CrdNotFound: React.FC<CrdNotFoundProps> = ({ message }) => {
     <div>
       <Box className="text-center">
         <img className="cos-status-box__access-denied-icon" src={imgNoResource} />
-        <MsgBox title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_29')} detail={t('COMMON:MSG_COMMON_ERROR_MESSAGE_42')} className="co-pre-wrap" />
-        <Link to={'/k8s/cluster/customresourcedefinitions'}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_43')}</Link>
+        <MsgBox title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_42').split('\n')[0]} detail={t('COMMON:MSG_COMMON_ERROR_MESSAGE_42').split('\n')[1]} className="co-pre-wrap" />
+        <Link to={'/k8s/cluster/customresourcedefinitions/~new'}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_43')}</Link>
       </Box>
       {_.isString(message) && (
         <Alert isInline className="co-alert co-alert-space" variant="danger" title={t('COMMON:MSG_MAIN_POPOVER_1')}>

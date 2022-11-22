@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import { Link } from 'react-router-dom';
 
 import { ErrorBoundaryFallbackProps } from '@console/shared/src/components/error/error-boundary';
 import { CopyToClipboard, getQueryArgument, PageHeading, ExpandCollapse } from './utils';
@@ -47,7 +48,7 @@ const getErrMessage = () => {
   return '';
 };
 
-const ErrorComponent: React.SFC<ErrorComponentProps> = ({ title, message, errMessage, img }) => {
+const ErrorComponent: React.SFC<ErrorComponentProps> = ({ title, message, errMessage, img, link, linkText }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -57,6 +58,7 @@ const ErrorComponent: React.SFC<ErrorComponentProps> = ({ title, message, errMes
         <h1 className="co-m-pane__heading co-m-pane__heading--center co-m-pane__heading-error-h1">{title}</h1>
         {message && <div className="text-center">{message}</div>}
         {errMessage && <div className="text-center text-muted">{errMessage}</div>}
+        {link && <h2 className="text-center"><Link to={link} className="text-center">{linkText}</Link></h2>}
       </div>
     </>
   );
@@ -115,16 +117,14 @@ export const ErrorBoundaryFallback: React.SFC<ErrorBoundaryFallbackProps> = prop
 };
 
 export const IngressCheckPage: React.SFC<ErrorPageProps> = () => {
-  //const { t } = useTranslation();
-  const ingressLabelValue = getQueryArgument('ingresslabelvalue');
-  const message = ingressLabelValue ? '레이블이 ingress.tamxcloud.org/name=' + ingressLabelValue + ' 인그레스를 확인해 주세요' : '인그레스를 확인해 주세요';
-  
+  const { t } = useTranslation();
+
   return (
     <div>
       <Helmet>
-        <title>인그레스를 확인해 주세요</title>
+        <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]}</title>
       </Helmet>
-      <ErrorComponent title='인그레스를 확인해 주세요' message={message} />
+      <ErrorComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]} message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[1]} img={restrictedSignImg} link="/k8s/all-namespaces/ingresses" linkText={t('COMMON:MSG_COMMON_ERROR_MESSAGE_68')} />
     </div>
   );
 };
@@ -134,6 +134,8 @@ export type ErrorComponentProps = {
   message?: string;
   errMessage?: string;
   img?: any;
+  link?: string;
+  linkText?: string;
 };
 
 export type ErrorPageProps = {};

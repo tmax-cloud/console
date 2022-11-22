@@ -1,0 +1,25 @@
+console:
+  domain: "tmaxcloud.org"
+  subDomain: "console"
+
+  config:
+    hyperAuth:
+      address: hyperauth.tmaxcloud.org
+      realm: tmax
+      clientID: "hypercloud5"
+    mcMode: true
+    chatbotEmbed: true
+    customProductName: "hypercloud"
+    k8sPublicEndpoint: "https://kubernetes.default.svc"
+    # Ingress 주소 조회 시 api-gateway 서비스 타입을 확인
+    # NodePort 일 경우 대응되는 포트번호를 조회
+    # LoadBalancer, NodePort 중 택 1
+    svcType: "LoadBalancer"
+
+    logLevel: "debug"
+    logType: "pretty"
+
+  image:
+    repository: "docker.io/tmaxcloudck/hypercloud-console"
+    pullPolicy: IfNotPresent
+    tag: "@@VER@@"
