@@ -123,7 +123,8 @@ export const withSecretForm = (SubForm, modal?: boolean) =>
           inProgress: false,
           type: defaultSecretType,
           stringData: _.mapValues(_.get(props.obj, 'data'), value => {
-            return value ? Base64.decode(value) : '';
+            return value;
+            // return value ? Base64.decode(value) : '';
           }),
           disableForm: false,
         };
