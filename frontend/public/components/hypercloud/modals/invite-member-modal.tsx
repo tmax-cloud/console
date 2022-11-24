@@ -20,10 +20,6 @@ const radioItems = (t?: TFunction) => [
     title: t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_RADIOBUTTON_1'),
     value: 'user',
   },
-  {
-    title: t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_RADIOBUTTON_2'),
-    value: 'group',
-  },
 ];
 
 const roleItems = (t?: TFunction) => [
