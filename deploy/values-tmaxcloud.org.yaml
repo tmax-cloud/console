@@ -15,10 +15,11 @@ console:
     # NodePort 일 경우 대응되는 포트번호를 조회
     # LoadBalancer, NodePort 중 택 1
     svcType: "LoadBalancer"
+
     logLevel: "debug"
     logType: "pretty"
 
   image:
     repository: "docker.io/tmaxcloudck/hypercloud-console"
     pullPolicy: IfNotPresent
-    tag: "5.2.13.0"
+    tag: "5.2.14.0"
