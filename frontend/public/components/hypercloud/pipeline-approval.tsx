@@ -99,7 +99,7 @@ export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListPr
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_19')} obj={ds} path="spec.users">
         {ds.spec.users.map(user => (
-          <div>{user}</div>
+          <div>{typeof user === 'string' ? user : user.name}</div>
         ))}
       </DetailsItem>
       {ds.status.result === 'Rejected' && (
