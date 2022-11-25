@@ -3,14 +3,14 @@ import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { sortable, compoundExpand } from '@patternfly/react-table';
-import { SectionHeading, Timestamp, detailsPage, navFactory, Kebab, KebabOption, KebabAction, Page, ResourceLink } from '@console/internal/components/utils';
-import { TableProps } from './utils/default-list-component';
+import { SectionHeading, Timestamp, detailsPage, navFactory, Kebab, KebabOption, KebabAction, ResourceLink } from '@console/internal/components/utils';
 import { DetailsPage, ListPage, DetailsPageProps, Table } from '../factory';
 import { deleteModal, helmrepositoryUpdateModal } from '../modals';
 import { TFunction } from 'i18next';
 import { ExpandableInnerTable } from './utils/expandable-inner-table';
 import { HelmRepositoryModel, HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
 import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
+import { ChartListPage } from './helmchart';
 
 const kind = HelmRepositoryModel.kind;
 
@@ -198,43 +198,6 @@ const HelmRepositoriesList: React.FC = props => {
 HelmRepositoriesList.displayName = 'HelmRepositoriesList';
 
 const { details } = navFactory;
-const chartsPage: (c?: React.ComponentType<any>) => Page = component => ({
-  href: 'charts',
-  name: 'COMMON:MSG_MAIN_TABLEHEADER_142',
-  component,
-});
-const chartTableProps = (repoName: string): TableProps => {
-  return {
-    header: [
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
-        sortField: 'name',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_141',
-        sortField: 'version',
-      },
-    ],
-    row: (obj: any) => {
-      return [
-        {
-          children: <ResourceLink manualPath={`/helmcharts/${repoName}/${obj.name}`} kind={HelmChartModel.kind} name={obj.name} />,
-        },
-        {
-          children: obj.version,
-        },
-      ];
-    },
-  };
-};
-
-type ChartListPageProps = {
-  name: string;
-};
-export const ChartListPage: React.FC<ChartListPageProps> = props => {
-  const { name } = props;
-  return <ListPage tableProps={chartTableProps(name)} kind={HelmChartModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel, helmRepo: name }} isK8sResource={false} />;
-};
 
 export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
   const { t } = useTranslation();
@@ -268,7 +231,14 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
     <DetailsPage
       {...props}
       kind={kind}
-      pages={[details(detailsPage(HelmRepositoryDetails)), chartsPage(() => ChartListPage({ name }))]}
+      pages={[
+        details(detailsPage(HelmRepositoryDetails)),
+        {
+          href: 'charts',
+          name: 'COMMON:MSG_MAIN_TABLEHEADER_142',          
+          component: ChartListPage,
+        },
+      ]}
       customData={{ helmRepo: props.match?.params?.repo, nonK8sResource: true, kindObj: HelmRepositoryModel }}
       name={props.match?.params?.name}
       isK8sResource={false}
