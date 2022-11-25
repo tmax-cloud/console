@@ -178,10 +178,9 @@ const chartTableProps = (repoName: string): TableProps => {
   };
 };
 export const ChartListPage: React.FC<ChartListPageProps> = props => {
-  const { repoName } = props;
-  return <ListPage tableProps={chartTableProps(repoName)} kind={HelmChartModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel, helmRepo: name }} isK8sResource={false} />;
+  const { name } = props.match.params;
+  return <ListPage tableProps={chartTableProps(name)} kind={HelmChartModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel, helmRepo: name }} isK8sResource={false} />;
 };
 type ChartListPageProps = {
   match?: any;
-  repoName?: string;
 };
