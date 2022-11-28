@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>img_no selected resource</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="76.3011714%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#F4F4F4" offset="0%"></stop>
+            <stop stop-color="#EAEAEA" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#DDDDDD" offset="0%"></stop>
+            <stop stop-color="#C1C1C1" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#D65147" offset="0%"></stop>
+            <stop stop-color="#C9190B" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-2:HyperCloud-Single-Cluster" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02_04_07_Error-" transform="translate(-1055.000000, -261.000000)">
+            <g id="img_no-selected-resource" transform="translate(1055.000000, 261.000000)">
+                <rect id="Rectangle" fill="#FFFFFF" opacity="0" x="0" y="0" width="100" height="100"></rect>
+                <g id="Group-9" transform="translate(0.000000, 5.000000)">
+                    <g id="Group-7">
+                        <path d="M22,0 L83,0 L83,0 L83,76 C83,84.2842712 76.2842712,91 68,91 L17,91 L17,91 L17,5 C17,2.23857625 19.2385763,5.07265313e-16 22,0 Z" id="Rectangle" fill="url(#linearGradient-1)"></path>
+                        <path d="M57,75 C57,82.681859 62.4136287,89.0992973 69.6338666,90.6452952 C68.6114338,90.8812277 67.5651657,91 66.5149263,91 L16,91 C7.163444,91 1.082166e-15,83.836556 0,75 Z" id="Combined-Shape" fill="url(#linearGradient-2)"></path>
+                    </g>
+                    <g id="Group-3" transform="translate(26.000000, 9.000000)" fill="#BBBBBB">
+                        <rect id="Rectangle" x="7" y="0" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-9" x="12" y="0" width="3" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-9" x="13" y="3" width="2" height="4" rx="1"></rect>
+                        <rect id="Rectangle-Copy-17" x="13" y="8" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-18" x="13" y="12" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" x="3" y="0" width="3" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" x="0" y="0" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-10" x="0" y="4" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-16" x="0" y="8" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-11" x="0" y="12" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-11" x="3" y="13" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-12" x="8" y="13" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-13" x="13" y="13" width="2" height="2" rx="1"></rect>
+                    </g>
+                    <g id="Group-3-Copy" transform="translate(26.000000, 30.000000)" fill="#BBBBBB">
+                        <rect id="Rectangle" x="7" y="0" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-9" x="12" y="0" width="3" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-9" x="13" y="3" width="2" height="4" rx="1"></rect>
+                        <rect id="Rectangle-Copy-17" x="13" y="8" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-18" x="13" y="12" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" x="3" y="0" width="3" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" x="0" y="0" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-10" x="0" y="4" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-16" x="0" y="8" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-11" x="0" y="12" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-11" x="3" y="13" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-12" x="8" y="13" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-13" x="13" y="13" width="2" height="2" rx="1"></rect>
+                    </g>
+                    <g id="Group-3-Copy-2" transform="translate(26.000000, 51.000000)" fill="#BBBBBB">
+                        <rect id="Rectangle" x="7" y="0" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-9" x="12" y="0" width="3" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-9" x="13" y="3" width="2" height="4" rx="1"></rect>
+                        <rect id="Rectangle-Copy-17" x="13" y="8" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-18" x="13" y="12" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" x="3" y="0" width="3" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" x="0" y="0" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-10" x="0" y="4" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-16" x="0" y="8" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-11" x="0" y="12" width="2" height="3" rx="1"></rect>
+                        <rect id="Rectangle-Copy-11" x="3" y="13" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-12" x="8" y="13" width="4" height="2" rx="1"></rect>
+                        <rect id="Rectangle-Copy-13" x="13" y="13" width="2" height="2" rx="1"></rect>
+                    </g>
+                    <g id="Group-4" transform="translate(57.000000, 23.000000)">
+                        <path d="M25.0029656,6.35421659 L39.7302789,33.068878 C40.7968081,35.0035124 40.0930698,37.4364363 38.1584354,38.5029656 C37.5670082,38.8290087 36.9026579,39 36.2273133,39 L6.77268668,39 C4.56354768,39 2.77268668,37.209139 2.77268668,35 C2.77268668,34.3246554 2.94367793,33.6603051 3.26972112,33.068878 L17.9970344,6.35421659 C19.0635637,4.41958213 21.4964876,3.71584382 23.431122,4.78237307 C24.0930572,5.14728607 24.6380526,5.69228138 25.0029656,6.35421659 Z" id="Triangle" fill="url(#linearGradient-3)"></path>
+                        <path d="M23.9478733,14.05 L23.4520399,25.95 L19.5479601,25.95 L19.0521267,14.05 L23.9478733,14.05 Z" id="Rectangle" stroke="#C9190B" stroke-width="0.1" fill="#FFFFFF"></path>
+                        <rect id="Rectangle-Copy-3" stroke="#C9190B" stroke-width="0.1" fill="#FFFFFF" x="19.05" y="29.05" width="4.9" height="4.9" rx="2.45"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
