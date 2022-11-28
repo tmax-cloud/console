@@ -114,13 +114,12 @@ export const ResourceQuotaClaimsPage: React.FC<ResourceQuotaClaimsPageProps> = p
       name: t('COMMON:MSG_LNB_MENU_80'),
     },
     {
-      // href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
-      href: 'resourcequotaclaims',
+      href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
       path: 'resourcequotaclaims',
       name: t('COMMON:MSG_LNB_MENU_102'),
     },
   ];
-  return <ListPage kind={'ResourceQuotaClaim'} canCreate={true} ListComponent={ResourceQuotaClaimsList} {...props} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
+  return <ListPage kind={'ResourceQuotaClaim'} canCreate={true} ListComponent={ResourceQuotaClaimsList} {...props} multiNavPages={pages} rowFilters={filters.bind(null, t)()} />;
 };
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ obj: resourcequotaclaims }) => {

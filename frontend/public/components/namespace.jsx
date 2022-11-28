@@ -193,7 +193,7 @@ export const NamespacesPage = props => {
         name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
       },
       {
-        href: 'namespaceclaims',
+        href: 'namespaceclaims?rowFilter-namespace-claim-status=Awaiting',
         name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
       },
     ];
