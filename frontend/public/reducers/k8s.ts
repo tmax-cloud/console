@@ -37,11 +37,7 @@ const updateList = (list: ImmutableMap<string, any>, nextJS: K8sResourceKind) =>
 
   // TODO: (kans) only store the data for things we display ...
   //  and then only do this comparison for the same stuff!
-  if (
-    current
-      .deleteIn(['metadata', 'resourceVersion'])
-      .equals(next.deleteIn(['metadata', 'resourceVersion']))
-  ) {
+  if (current.deleteIn(['metadata', 'resourceVersion']).equals(next.deleteIn(['metadata', 'resourceVersion']))) {
     // If the only thing that differs is resource version, don't fire an update.
     return list;
   }
@@ -51,17 +47,21 @@ const updateList = (list: ImmutableMap<string, any>, nextJS: K8sResourceKind) =>
 
 const loadList = (oldList, resources, id?) => {
   const existingKeys = new Set(oldList.keys());
-  return oldList.withMutations((list) => {
-    (resources || []).forEach((r) => {
-      const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name : getQN(r);
+  return oldList.withMutations(list => {
+    (resources || []).forEach(r => {
+      const repoName = r.repo?.name ? r.repo.name : '';
+      const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name + repoName : getQN(r);
+
       existingKeys.delete(qualifiedName);
       const next = fromJS(r);
       const current = list.get(qualifiedName);
+
       if (!current || isNonK8SResource(id) ? true : moreRecent(next, current)) {
         list.set(qualifiedName, next);
       }
     });
-    existingKeys.forEach((k) => {
+
+    existingKeys.forEach(k => {
       const r = list.get(k);
       const metadata = isNonK8SResource(id) ? {} : r.get('metadata').toJSON();
       if (!metadata.deletionTimestamp) {
@@ -93,24 +93,20 @@ export default (state: K8sState, action: K8sAction): K8sState => {
     case ActionType.ReceivedResources:
       return (
         action.payload.resources.models
-          .filter((model) => !state.getIn(['RESOURCES', 'models']).has(referenceForModel(model)))
-          .filter((model) => {
+          .filter(model => !state.getIn(['RESOURCES', 'models']).has(referenceForModel(model)))
+          .filter(model => {
             const existingModel = state.getIn(['RESOURCES', 'models', model.kind]);
             return !existingModel || referenceForModel(existingModel) !== referenceForModel(model);
           })
-          .map((model) => {
-            model.namespaced
-              ? namespacedResources.add(referenceForModel(model))
-              : namespacedResources.delete(referenceForModel(model));
+          .map(model => {
+            model.namespaced ? namespacedResources.add(referenceForModel(model)) : namespacedResources.delete(referenceForModel(model));
             return model;
           })
           .reduce((prevState, newModel) => {
             // FIXME: Need to use `kind` as model reference for legacy components accessing k8s primitives
-            const [modelRef, model] = allModels().findEntry(
-              (staticModel) => referenceForModel(staticModel) === referenceForModel(newModel),
-            ) || [referenceForModel(newModel), newModel];
+            const [modelRef, model] = allModels().findEntry(staticModel => referenceForModel(staticModel) === referenceForModel(newModel)) || [referenceForModel(newModel), newModel];
             // Verbs and short names are not part of the static model definitions, so use the values found during discovery.
-            return prevState.updateIn(['RESOURCES', 'models'], (models) =>
+            return prevState.updateIn(['RESOURCES', 'models'], models =>
               models.set(modelRef, {
                 ...model,
                 verbs: newModel.verbs,
@@ -197,14 +193,14 @@ export default (state: K8sState, action: K8sAction): K8sState => {
     case ActionType.UpdateListFromWS:
       newList = state.getIn([action.payload.id, 'data']);
       // HelmRelease WS update
-      if(action.payload.id === 'HelmRelease') {
+      if (action.payload.id === 'HelmRelease') {
         const listObject: any = action.payload.k8sObjects[0];
         newList = newList.clear();
         listObject.release.forEach(r => {
           const qualifiedName = (r.namespace ? `(${r.namespace})-` : '') + r.name;
           const next = fromJS(r);
           newList = newList.set(qualifiedName, next);
-        });        
+        });
         break;
       }
       // k8sObjects is an array of k8s WS Events
@@ -229,14 +225,7 @@ export default (state: K8sState, action: K8sAction): K8sState => {
       if (!state.getIn([action.payload.id, 'data'])) {
         return state;
       }
-      newList = state
-        .getIn([action.payload.id, 'data'])
-        .merge(
-          action.payload.k8sObjects.reduce(
-            (map, obj) => map.set(getQN(obj), fromJS(obj)),
-            ImmutableMap(),
-          ),
-        );
+      newList = state.getIn([action.payload.id, 'data']).merge(action.payload.k8sObjects.reduce((map, obj) => map.set(getQN(obj), fromJS(obj)), ImmutableMap()));
       break;
     case ActionType.Errored:
       if (!state.getIn([action.payload.id, 'data'])) {
