@@ -49,7 +49,9 @@ const loadList = (oldList, resources, id?) => {
   const existingKeys = new Set(oldList.keys());
   return oldList.withMutations(list => {
     (resources || []).forEach(r => {
-      const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name + r.created + r.repo.name : getQN(r);
+      const repoNmae = r.repo?.name ? r.repo.name : '';
+      const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name + repoNmae : getQN(r);
+
       existingKeys.delete(qualifiedName);
       const next = fromJS(r);
       const current = list.get(qualifiedName);
