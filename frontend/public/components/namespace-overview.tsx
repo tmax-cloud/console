@@ -8,8 +8,10 @@ import StatusCard from './namespace-overview-cards/status-card';
 import { UtilizationCard } from './namespace-overview-cards/utilization-card';
 import ActivityCard from './namespace-overview-cards/activity-card';
 import ResourceQuotaCard from './namespace-overview-cards/resource-quota-card';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const NamespaceOverview = props => {
+  const isSingle = isSingleClusterPerspective();
   const statusCard = {
     Card: StatusCard,
     props: {
@@ -63,7 +65,7 @@ const NamespaceOverview = props => {
   };
   const mainCards = [statusCard, utilizationCard, resourceQuotaCard];
   const leftCards = [detailCard, inventoryCard];
-  const rightCards = [claimCard, activityCard];
+  const rightCards = isSingle ? [activityCard] : [claimCard, activityCard];
   return (
     <Dashboard>
       <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />
