@@ -21,7 +21,8 @@ import { EventStreamList } from './utils/event-stream';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
 import DateTimePicker from 'react-datetime-picker';
-import 'react-datetime-picker/dist/DateTimePicker.css'
+import 'react-datetime-picker/dist/DateTimePicker.css';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const maxMessages = 500;
 const flushInterval = 500;
@@ -75,7 +76,7 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
         const { involvedObject: obj, source, message, reason, series, getMethod } = event;
         const tooltipMsg = `${reason} (${obj.kind})`;
         const isWarning = typeFilter('warning', event);
-        const ksttoUTC = (kst) => {
+        const ksttoUTC = kst => {
           let timestamp = Date.parse(kst);
           timestamp -= 9 * 60 * 60 * 1000;
           return new Date(timestamp).toISOString();
@@ -154,12 +155,12 @@ class _EventsList extends React.Component {
     this.setState({ selected: new Set(['All']) });
   };
 
-  onStartChange = (value) => {
+  onStartChange = value => {
     this.setState({
       start: value,
     });
   };
-  onEndChange = (value) => {
+  onEndChange = value => {
     this.setState({
       end: value,
     });
@@ -180,17 +181,19 @@ class _EventsList extends React.Component {
             <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" />
             <Dropdown className="btn-group co-search-group__resource" items={eventTypes} onChange={v => this.setState({ type: v })} selectedKey={type} title={selectedType} />
             <TextFilter autoFocus={autoFocus} label={t('SINGLE:MSG_EVENTS_MAIN_PLACEHOLDER_1')} onChange={val => this.setState({ textFilter: val || '' })} />
-            <div className='co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter'>
-              <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethod: v })} selectedKey={getMethod} title={selectedGetMethod} />
-              <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
-              <div className="co-datepicker-wrapper">
-                <DateTimePicker onChange={this.onStartChange} value={start} disabled={getMethod==='streaming'} disableClock	maxDate={end} locale='en-US' />
+            {!isSingleClusterPerspective() && (
+              <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
+                <Dropdown className="btn-group co-search-group__resource" items={getMethods} onChange={v => this.setState({ getMethod: v })} selectedKey={getMethod} title={selectedGetMethod} />
+                <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
+                <div className="co-datepicker-wrapper">
+                  <DateTimePicker onChange={this.onStartChange} value={start} disabled={getMethod === 'streaming'} disableClock maxDate={end} locale="en-US" />
+                </div>
+                <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
+                <div className="co-datepicker-wrapper">
+                  <DateTimePicker onChange={this.onEndChange} value={end} disabled={getMethod === 'streaming'} disableClock minDate={start} maxDate={new Date()} locale="en-US" />
+                </div>
               </div>
-              <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
-              <div className="co-datepicker-wrapper">
-                <DateTimePicker onChange={this.onEndChange} value={end} disabled={getMethod==='streaming'} disableClock minDate={start} maxDate={new Date()} locale='en-US' />
-              </div>
-            </div>
+            )}
           </div>
           <div className="form-group">
             <ChipGroup withToolbar defaultIsOpen={false}>
@@ -212,7 +215,7 @@ class _EventsList extends React.Component {
             </ChipGroup>
           </div>
         </PageHeading>
-        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} start={start} end={end} getMethod={getMethod}/>
+        <_EventStream {...this.props} key={[...selected].join(',')} type={type} kind={selected.has('All') || selected.size === 0 ? 'all' : [...selected].join(',')} mock={this.props.mock} textFilter={textFilter} start={start} end={end} getMethod={getMethod} />
       </>
     );
   }
@@ -452,7 +455,7 @@ class _EventStream extends React.Component {
       url = url + `&namespace=${namespace}`;
     }
     if (kind && kind !== 'all') {
-      const kinds = kind.split(',')
+      const kinds = kind.split(',');
       let kindsquery = '';
       kinds.forEach(k => {
         kindsquery = kindsquery + '&kind=' + k.split('~')[2];
@@ -550,7 +553,9 @@ class _EventStream extends React.Component {
           {getMethod === 'interval' ? (
             <>
               <div className="co-sysevent-stream__status">
-                <div className="co-sysevent-stream__timeline__btn-text"><span></span></div>
+                <div className="co-sysevent-stream__timeline__btn-text">
+                  <span></span>
+                </div>
                 <div className="co-sysevent-stream__totals text-secondary">{t('SINGLE:MSG_EVENTS_MAIN_COUNT_1', { something: count })}</div>
               </div>
               <EventStreamList events={filterdApiEvents} EventComponent={Inner} />
