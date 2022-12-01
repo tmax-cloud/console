@@ -9,6 +9,7 @@ import { ServiceModel } from '../models';
 import { useTranslation } from 'react-i18next';
 import { TracePage } from './trace';
 import Memo from './hypercloud/utils/memo';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 export const menuActions = [Kebab.factory.ModifyPodSelector, ...Kebab.getExtensionsActionsForKind(ServiceModel), ...Kebab.factory.common];
 
@@ -263,7 +264,7 @@ const ServicesDetailsPage = props => (
       details(Details),
       editResource(),
       pods(),
-      {
+      !isSingleClusterPerspective() && {
         href: 'trace',
         name: 'COMMON:MSG_DETAILS_TABTRACE_1',
         component: TraceTab,
