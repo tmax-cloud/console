@@ -10,6 +10,8 @@ const REQUEST_TOKEN_INFO_URL = '/oauth2/tokeninfo';
 export const REQUEST_ACCOUNT_USERS_URL = '/oauth2/user/list';
 export const REQUEST_ACCOUNT_GROUPS_URL = '/oauth2/group/list';
 
+const SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE = 'show-alert-in-singlecluster-nodepage'
+
 const id = 'id';
 const email = 'email';
 const groups = 'groups';
@@ -162,6 +164,7 @@ export const detectUser = () => {
       sessionStorage.setItem(groups, JSON.stringify(info?.group));
       sessionStorage.setItem(accountUrl, info?.iss);
       sessionStorage.setItem(expireTime, info?.exp);
+      sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'true');
       store.dispatch(setUser({ id: sessionStorage.getItem(id), email: sessionStorage.getItem(email), groups: sessionStorage.getItem(groups) }));
       resolve();
     } catch (error) {
