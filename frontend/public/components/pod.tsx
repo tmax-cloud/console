@@ -22,6 +22,10 @@ import { VolumesTable } from './volumes-table';
 import { PodModel } from '../models';
 import { Conditions } from './conditions';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
+
+const SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE = 'show-alert-in-singlecluster-podpage';
 
 // Only request metrics if the device's screen width is larger than the
 // breakpoint where metrics are visible.
@@ -285,6 +289,7 @@ export const PodResourceSummary: React.FC<PodResourceSummaryProps> = ({ pod }) =
 
 const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
   const { t } = useTranslation();
+  const [isAlert, setIsAlert] = React.useState(sessionStorage.getItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE) === 'true');
   const limits = {
     cpu: null,
     memory: null,
@@ -308,6 +313,24 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
 
   return (
     <>
+      {isAlert && isSingleClusterPerspective() && (
+        <div style={{ position: 'absolute', width: '100%', zIndex: 5 }}>
+          <Alert
+            variant="info"
+            title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_5')}
+            action={
+              <AlertActionCloseButton
+                onClose={() => {
+                  sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'false');
+                  setIsAlert(false);
+                }}
+              />
+            }
+          >
+            {t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_7')}
+          </Alert>
+        </div>
+      )}
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(pod, t) })} />
