@@ -178,7 +178,7 @@ class _EventsList extends React.Component {
       <>
         <PageHeading detail={true} title={this.props.title}>
           <div className="co-search-group">
-            <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" />
+            <ResourceListDropdown onChange={this.toggleSelected} selected={Array.from(selected)} showAll clearSelection={this.clearSelection} className="co-search-group__resource" type='multiple' />
             <Dropdown className="btn-group co-search-group__resource" items={eventTypes} onChange={v => this.setState({ type: v })} selectedKey={type} title={selectedType} />
             <TextFilter autoFocus={autoFocus} label={t('SINGLE:MSG_EVENTS_MAIN_PLACEHOLDER_1')} onChange={val => this.setState({ textFilter: val || '' })} />
             {!isSingleClusterPerspective() && (
