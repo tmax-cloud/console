@@ -141,7 +141,7 @@ const SelectNamespacePage = () => {
           <Helmet>
             <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]}</title>
           </Helmet>
-          <AddComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_49')} message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_50')} img={restrictedSignImg} link="/k8s/cluster/namespaces/~new" linkText={t('COMMON:MSG_COMMON_ERROR_MESSAGE_68')} />
+          <AddComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_49')} message={t('SINGLE:MSG_ADD_CREATFORM_2')} img={restrictedSignImg} link="/k8s/cluster/namespaces/~new" linkText={t('COMMON:MSG_COMMON_ERROR_MESSAGE_68')} />
         </div>
       </div>
     </>

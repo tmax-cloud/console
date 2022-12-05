@@ -84,7 +84,7 @@ const SelectNamespacePage = () => {
     <>
       <div className="odc-empty-state__title">
         <PageHeading title={t('COMMON:MSG_LNB_MENU_191')} />
-        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('COMMON:MSG_LNB_MENU_DESCRIPTION_1')}</div>
+        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_48')}</div>
         <div>
           <Helmet>
             <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]}</title>
