@@ -97,14 +97,20 @@ const sortTasksByRunAfterAndFrom = (
     let flag = -1;
     if (conditions.hasRunAfterDependency(output[i])) {
       for (let j = 0; j < output.length; j++) {
-        if (i < j && output[j].taskRef.name === output[i].runAfter[output[i].runAfter.length - 1]) {
-          flag = j;
+        if (output[j].taskRef) {          
+          const taskName = output[j].taskRef.name ? output[j].taskRef.name : output[j].name;
+          if (i < j && taskName === output[i].runAfter[output[i].runAfter.length - 1]) {
+            flag = j;
+          }
         }
       }
     } else if (conditions.hasFromDependency(output[i])) {
       for (let j = i + 1; j < output.length; j++) {
-        if (output[j].taskRef.name === output[i].resources.inputs[0].from[0]) {
-          flag = j;
+        if (output[j].taskRef) {          
+          const taskName = output[j].taskRef.name ? output[j].taskRef.name : output[j].name;
+          if (taskName === output[i].resources.inputs[0].from[0]) {
+            flag = j;
+          }
         }
       }
     }
@@ -184,11 +190,14 @@ export const getPipelineTasks = (
       let flag = out.length - 1;
       for (let i = 0; i < out.length; i++) {
         for (const t of out[i]) {
-          if (
-            t.taskRef.name === task.resources.inputs[0].from[0] ||
-            t.name === task.resources.inputs[0].from[0]
-          ) {
-            flag = i;
+          if (t.taskRef) {
+            const taskName = t.taskRef.name ? t.taskRef.name : t.name;
+            if (
+              taskName === task.resources.inputs[0].from[0] ||
+              t.name === task.resources.inputs[0].from[0]
+            ) {
+              flag = i;
+            }
           }
         }
       }
@@ -216,8 +225,11 @@ export const getPipelineTasks = (
       let flag = out.length - 1;
       for (let i = 0; i < out.length; i++) {
         for (const t of out[i]) {
-          if (t.taskRef.name === task.runAfter[0] || t.name === task.runAfter[0]) {
-            flag = i;
+          if (t.taskRef) {
+            const taskName = t.taskRef.name ? t.taskRef.name : t.name;
+            if (taskName === task.runAfter[0] || t.name === task.runAfter[0]) {
+              flag = i;
+            }
           }
         }
       }

@@ -56,20 +56,20 @@ const podRow = (metric, current, key) => {
 };
 
 const getResourceUtilization = currentMetric => {
-  const currentUtilization = _.get(currentMetric, 'resource.currentAverageUtilization');
+  const currentUtilization = _.get(currentMetric, 'resource.current.averageUtilization');
 
   // Use _.isFinite so that 0 evaluates to true, but null / undefined / NaN don't
   if (!_.isFinite(currentUtilization)) {
     return null;
   }
 
-  const currentAverageValue = _.get(currentMetric, 'resource.currentAverageValue');
+  const currentAverageValue = _.get(currentMetric, 'resource.current.averageValue');
   // Only show currentAverageValue in parens if set and non-zero to avoid things like "0% (0)"
   return currentAverageValue && currentAverageValue !== '0' ? `${currentUtilization}% (${currentAverageValue})` : `${currentUtilization}%`;
 };
 
 const resourceRow = (metric, current, key) => {
-  const targetUtilization = metric.resource.targetAverageUtilization;
+  const targetUtilization = metric.resource.target.averageUtilization;
   const resourceLabel = `resource ${metric.resource.name}`;
   const type = targetUtilization ? (
     <>
@@ -78,9 +78,8 @@ const resourceRow = (metric, current, key) => {
   ) : (
     resourceLabel
   );
-  const currentValue = targetUtilization ? getResourceUtilization(current) : _.get(current, 'resource.currentAverageValue');
+  const currentValue = targetUtilization ? getResourceUtilization(current) : _.get(current, 'resource.current.averageValue');
   const targetValue = targetUtilization ? `${targetUtilization}%` : metric.resource.targetAverageValue;
-
   return <MetricsRow key={key} type={type} current={currentValue} target={targetValue} />;
 };
 

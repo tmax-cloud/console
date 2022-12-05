@@ -84,24 +84,26 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
     return taskComponent;
   }
 
-  let resources;
-  if (task.taskRef.kind === ClusterTaskModel.kind) {
-    resources = [
-      {
-        kind: referenceForModel(ClusterTaskModel),
-        name: task.taskRef.name,
-        prop: 'task',
-      },
-    ];
-  } else {
-    resources = [
-      {
-        kind: referenceForModel(TaskModel),
-        name: task.taskRef.name,
-        namespace,
-        prop: 'task',
-      },
-    ];
+  let resources = [];
+  if (task.taskRef) {
+    if (task.taskRef.kind === ClusterTaskModel.kind) {
+      resources = [
+        {
+          kind: referenceForModel(ClusterTaskModel),
+          name: task.taskRef.name ? task.taskRef.name : task.name,
+          prop: 'task',
+        },
+      ];
+    } else {
+      resources = [
+        {
+          kind: referenceForModel(TaskModel),
+          name: task.taskRef.name ? task.taskRef.name : task.name,
+          namespace,
+          prop: 'task',
+        },
+      ];
+    }
   }
   return <Firehose resources={resources}>{taskComponent}</Firehose>;
 };

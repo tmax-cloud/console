@@ -123,9 +123,12 @@ export const withSecretForm = (SubForm, modal?: boolean) =>
           inProgress: false,
           type: defaultSecretType,
           stringData: _.mapValues(_.get(props.obj, 'data'), value => {
-            return value ? Base64.decode(value) : '';
+            return '';
           }),
           disableForm: false,
+          originData: _.mapValues(_.get(props.obj, 'data'), value => {
+            return value ? Base64.decode(value) : '';
+          }),
         };
         this.onDataChanged = this.onDataChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
@@ -162,6 +165,9 @@ export const withSecretForm = (SubForm, modal?: boolean) =>
         e.preventDefault();
         const { metadata } = this.state.secret;
         this.setState({ inProgress: true });
+        for (const [key, value] of Object.entries(this.state.stringData)) {
+          value === '' && (this.state.stringData[key] = this.state.originData[key]);
+        }
         const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData }, { type: this.state.type });
         (this.props.isCreate ? k8sCreate(SecretModel, newSecret) : k8sUpdate(SecretModel, newSecret, metadata.namespace, newSecret.metadata.name)).then(
           secret => {
@@ -975,7 +981,7 @@ const KeyValueEntryForm = withTranslation()(
           </div>
           <div className="form-group">
             <div>
-              <DroppableFileInput onChange={this.onValueChange} inputFileData={this.state.value} id={`${this.props.id}-value`} textareaFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEFORM_DIV2_1')} label={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_4')} inputFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_6')} />
+              <DroppableFileInput onChange={this.onValueChange} inputFileData={this.state.value} id={`${this.props.id}-value`} label={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_4')} inputFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEKEYVALUESECRET_DIV2_6')} />
             </div>
           </div>
         </div>
@@ -1088,6 +1094,9 @@ type BaseEditSecretState_ = {
   inProgress: boolean;
   type: SecretType;
   stringData: {
+    [key: string]: string;
+  };
+  originData: {
     [key: string]: string;
   };
   error?: any;

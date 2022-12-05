@@ -103,12 +103,11 @@ export const NamespaceClaimsPage: React.FC = props => {
       name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
     },
     {
-      href: 'namespaceclaims',
-      // path: 'namespaceclaims',
+      href: 'namespaceclaims?rowFilter-namespace-claim-status=Awaiting',
       name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
     },
   ];
-  return <ListPage kind={kind} canCreate={true} tableProps={tableProps} {...props} mock={false} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
+  return <ListPage kind={kind} canCreate={true} tableProps={tableProps} {...props} mock={false} multiNavPages={pages} rowFilters={filters.bind(null, t)()} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: namespaceclaims }) => {

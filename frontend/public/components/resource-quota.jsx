@@ -334,7 +334,7 @@ export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(props => {
           name: t('COMMON:MSG_LNB_MENU_80'),
         },
         {
-          href: 'resourcequotaclaims',
+          href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
           name: t('COMMON:MSG_LNB_MENU_102'),
         },
       ];

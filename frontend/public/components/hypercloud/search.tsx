@@ -48,7 +48,7 @@ const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props =>
   const [labelFilter, setLabelFilter] = React.useState([]);
   const [labelFilterInput, setLabelFilterInput] = React.useState('');
   const [typeaheadNameFilter, setTypeaheadNameFilter] = React.useState('');
-  const [startDate, setStartDate] = React.useState(new Date(0));
+  const [startDate, setStartDate] = React.useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
   const [endDate, setEndDate] = React.useState(new Date());
   const { namespace, noProjectsAvailable } = props;
 

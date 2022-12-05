@@ -185,7 +185,7 @@ spec:
         withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
           sh """
             git add -A
-            git commit -m 'Update deployment of console"
+            git commit -m 'Update deployment of console'
             git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
           """
         }

@@ -42,13 +42,13 @@ const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.
 const CREATE_NEW_RESOURCE = '#CREATE_RESOURCE_ACTION#';
 
 export const deleteModal = (kind, ns) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   let { label, weight, accessReview } = Kebab.factory.Delete(kind, ns);
   let callback = undefined;
   let tooltip;
- 
+
   if (ns.metadata.name === 'default') {
-    tooltip = `${t('COMMON:MSG_MAIN_TOOTIP_1', {0:kind.label})}`;
+    tooltip = `${t('COMMON:MSG_MAIN_TOOTIP_1', { 0: kind.label })}`;
   } else if (ns.status.phase === 'Terminating') {
     tooltip = `${kind.label} is already terminating`;
   } else {
@@ -188,15 +188,15 @@ export const NamespacesPage = props => {
   const pages = isSingleClusterPerspective()
     ? null
     : [
-      {
-        href: 'namespaces',
-        name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
-      },
-      {
-        href: 'namespaceclaims',
-        name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
-      },
-    ];
+        {
+          href: 'namespaces',
+          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
+        },
+        {
+          href: 'namespaceclaims?rowFilter-namespace-claim-status=Awaiting',
+          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
+        },
+      ];
 
   return (
     <ListPage
@@ -204,8 +204,8 @@ export const NamespacesPage = props => {
       tableProps={namespacesTableProps}
       canCreate={true}
       multiNavPages={pages}
-    // createProps={createProps}
-    // createHandler={() => createNamespaceModal({ blocking: true })}
+      // createProps={createProps}
+      // createHandler={() => createNamespaceModal({ blocking: true })}
     />
   );
 };
@@ -251,19 +251,19 @@ const projectTableHeader = ({ showMetrics, showActions }) => {
     },
     ...(showMetrics
       ? [
-        {
-          title: 'Memory',
-          sortFunc: 'namespaceMemory',
-          transforms: [sortable],
-          props: { className: projectColumnClasses[4] },
-        },
-        {
-          title: 'CPU',
-          sortFunc: 'namespaceCPU',
-          transforms: [sortable],
-          props: { className: projectColumnClasses[5] },
-        },
-      ]
+          {
+            title: 'Memory',
+            sortFunc: 'namespaceMemory',
+            transforms: [sortable],
+            props: { className: projectColumnClasses[4] },
+          },
+          {
+            title: 'CPU',
+            sortFunc: 'namespaceCPU',
+            transforms: [sortable],
+            props: { className: projectColumnClasses[5] },
+          },
+        ]
       : []),
     {
       title: 'Created',
@@ -576,17 +576,17 @@ class NamespaceBarDropdowns_ extends React.Component {
       .forEach(name => (items[name] = name));
 
     const sortFuntion = (items, index) => {
-      let sortedItems = []
+      let sortedItems = [];
       items.forEach(([key, value], index) => {
         if (key === ALL_NAMESPACES_KEY) {
-          sortedItems.unshift([key, value])
+          sortedItems.unshift([key, value]);
         } else {
-          sortedItems.push([key, value])
+          sortedItems.push([key, value]);
         }
-      })
+      });
 
       return sortedItems;
-    }
+    };
 
     let title = activeNamespace;
     if (activeNamespace === ALL_NAMESPACES_KEY) {
@@ -599,11 +599,11 @@ class NamespaceBarDropdowns_ extends React.Component {
     }
     const defaultActionItem = canCreateProject
       ? [
-        {
-          actionTitle: `Create ${model.label}`,
-          actionKey: CREATE_NEW_RESOURCE,
-        },
-      ]
+          {
+            actionTitle: `Create ${model.label}`,
+            actionKey: CREATE_NEW_RESOURCE,
+          },
+        ]
       : [];
 
     const onChange = newNamespace => {
@@ -690,7 +690,7 @@ export const NamespacesDetailsPage = props => (
       },
       navFactory.editResource(),
       navFactory.roles(RolesPage),
-      navFactory.metering(),
+      !isSingleClusterPerspective() && navFactory.metering(),
     ]}
   />
 );
