@@ -10,6 +10,8 @@ import NamespacedPage from './NamespacedPage';
 import ProjectsExistWrapper from './ProjectsExistWrapper';
 // import CreateProjectListPage from './projects/CreateProjectListPage';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import * as restrictedSignImg from '../../../../public/imgs/img_no selected resource.svg';
 
 export interface AddPageProps {
   match: RMatch<{
@@ -108,13 +110,39 @@ const RenderEmptyState = ({ namespace }) => {
   );
 };
 
+const AddComponent: React.SFC<AddComponentProps> = ({ title, message, errMessage, img, link, linkText }) => {
+  return (
+    <>
+      <div className="co-m-pane__body" data-test-id="error-page">
+        {img && <img className="co-m-pane__heading-img" src={img} />}
+        <h1 className="co-m-pane__heading co-m-pane__heading--center co-m-pane__heading-error-h1">{title}</h1>
+        {message && <div className="text-center">{message}</div>}
+        {errMessage && <div className="text-center text-muted">{errMessage}</div>}
+        {link && (
+          <h2 className="text-center">
+            <Link to={link} className="text-center">
+              {linkText}
+            </Link>
+          </h2>
+        )}
+      </div>
+    </>
+  );
+};
+
 const SelectNamespacePage = () => {
   const { t } = useTranslation();
   return (
     <>
       <div className="odc-empty-state__title">
-        <PageHeading title={t('SINGLE:MSG_ADD_CREATFORM_1')} />
-        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('SINGLE:MSG_ADD_CREATFORM_2')}</div>
+        <PageHeading title={t('COMMON:MSG_LNB_MENU_217')} />
+        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_2')}</div>
+        <div>
+          <Helmet>
+            <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]}</title>
+          </Helmet>
+          <AddComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_49')} message={t('SINGLE:MSG_ADD_CREATFORM_2')} img={restrictedSignImg} link="/k8s/cluster/namespaces/~new" linkText={t('COMMON:MSG_COMMON_ERROR_MESSAGE_68')} />
+        </div>
       </div>
     </>
   );
@@ -138,3 +166,11 @@ export const AddPage: React.FC<AddPageProps> = ({ match }) => {
 };
 
 export default AddPage;
+export type AddComponentProps = {
+  title: string;
+  message?: string;
+  errMessage?: string;
+  img?: any;
+  link?: string;
+  linkText?: string;
+};

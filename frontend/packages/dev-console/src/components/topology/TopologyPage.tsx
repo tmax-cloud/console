@@ -17,6 +17,28 @@ import { LAST_TOPOLOGY_VIEW_LOCAL_STORAGE_KEY } from './components/const';
 import './TopologyPage.scss';
 import { TOPOLOGY_SEARCH_FILTER_KEY } from './filters';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import * as restrictedSignImg from '../../../../../public/imgs/img_no resource.svg';
+
+const TopologyComponent: React.SFC<TopologyComponentProps> = ({ title, message, errMessage, img, link, linkText }) => {
+  return (
+    <>
+      <div className="co-m-pane__body" data-test-id="error-page">
+        {img && <img className="co-m-pane__heading-img" src={img} />}
+        <h1 className="co-m-pane__heading co-m-pane__heading--center co-m-pane__heading-error-h1">{title}</h1>
+        {message && <div className="text-center">{message}</div>}
+        {errMessage && <div className="text-center text-muted">{errMessage}</div>}
+        {link && (
+          <h2 className="text-center">
+            <Link to={link} className="text-center">
+              {linkText}
+            </Link>
+          </h2>
+        )}
+      </div>
+    </>
+  );
+};
 
 export interface TopologyPageProps {
   match: RMatch<{
@@ -62,7 +84,13 @@ const SelectNamespacePage = () => {
     <>
       <div className="odc-empty-state__title">
         <PageHeading title={t('COMMON:MSG_LNB_MENU_191')} />
-        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('COMMON:MSG_LNB_MENU_DESCRIPTION_1')}</div>
+        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_48')}</div>
+        <div>
+          <Helmet>
+            <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]}</title>
+          </Helmet>
+          <TopologyComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_49')} message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_50')} img={restrictedSignImg} />
+        </div>
       </div>
     </>
   );
@@ -118,13 +146,20 @@ export const TopologyPage: React.FC<TopologyPageProps> = ({ match }) => {
         }
       >
         <Firehose resources={[{ kind: 'Namespace', prop: 'projects', isList: true }]}>
-          <ProjectsExistWrapper title="Topology">
-            {namespace ? showListView ? <AsyncComponent mock={false} match={match} title="" EmptyMsg={EmptyMsg} emptyBodyClass="odc-namespaced-page__content" loader={() => import('@console/internal/components/overview' /* webpackChunkName: "topology-overview" */).then(m => m.Overview)} /> : <ConnectedTopologyDataController match={match} render={renderTopology} /> : <SelectNamespacePage />}
-          </ProjectsExistWrapper>
+          <ProjectsExistWrapper title="Topology">{namespace ? showListView ? <AsyncComponent mock={false} match={match} title="" EmptyMsg={EmptyMsg} emptyBodyClass="odc-namespaced-page__content" loader={() => import('@console/internal/components/overview' /* webpackChunkName: "topology-overview" */).then(m => m.Overview)} /> : <ConnectedTopologyDataController match={match} render={renderTopology} /> : <SelectNamespacePage />}</ProjectsExistWrapper>
         </Firehose>
       </NamespacedPage>
     </>
   );
+};
+
+export type TopologyComponentProps = {
+  title: string;
+  message?: string;
+  errMessage?: string;
+  img?: any;
+  link?: string;
+  linkText?: string;
 };
 
 export default TopologyPage;
