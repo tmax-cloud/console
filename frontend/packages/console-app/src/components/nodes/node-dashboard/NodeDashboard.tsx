@@ -11,6 +11,11 @@ import DetailsCard from './DetailsCard';
 import StatusCard from './StatusCard';
 import ActivityCard from './ActivityCard';
 import UtilizationCard from './UtilizationCard';
+import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
+import { useTranslation } from 'react-i18next';
+
+const SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE = 'show-alert-in-singlecluster-nodepage';
 
 const leftCards = [{ Card: DetailsCard }, { Card: InventoryCard }];
 const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
@@ -74,24 +79,17 @@ export const reducer = (state: NodeDashboardState, action: NodeDashboardAction) 
 };
 
 const NodeDashboard: React.FC<NodeDashboardProps> = ({ obj }) => {
+  const { t } = useTranslation();
+  const [isAlert, setIsAlert] = React.useState(sessionStorage.getItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE) === 'true');
   const [state, dispatch] = React.useReducer(reducer, initialState(obj));
 
   if (obj !== state.obj) {
     dispatch({ type: ActionType.OBJ, payload: obj });
   }
 
-  const setCPULimit = React.useCallback(
-    (payload: LimitRequested) => dispatch({ type: ActionType.CPU_LIMIT, payload }),
-    [],
-  );
-  const setMemoryLimit = React.useCallback(
-    (payload: LimitRequested) => dispatch({ type: ActionType.MEMORY_LIMIT, payload }),
-    [],
-  );
-  const setHealthCheck = React.useCallback(
-    (payload: HealthCheck) => dispatch({ type: ActionType.HEALTH_CHECK, payload }),
-    [],
-  );
+  const setCPULimit = React.useCallback((payload: LimitRequested) => dispatch({ type: ActionType.CPU_LIMIT, payload }), []);
+  const setMemoryLimit = React.useCallback((payload: LimitRequested) => dispatch({ type: ActionType.MEMORY_LIMIT, payload }), []);
+  const setHealthCheck = React.useCallback((payload: HealthCheck) => dispatch({ type: ActionType.HEALTH_CHECK, payload }), []);
 
   const context = {
     obj,
@@ -105,6 +103,24 @@ const NodeDashboard: React.FC<NodeDashboardProps> = ({ obj }) => {
 
   return (
     <NodeDashboardContext.Provider value={context}>
+      {isAlert && isSingleClusterPerspective() && (
+        <div style={{ position: 'absolute', width: '100%', zIndex: 5 }}>
+          <Alert
+            variant="info"
+            title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_5')}
+            action={
+              <AlertActionCloseButton
+                onClose={() => {
+                  sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'false');
+                  setIsAlert(false);
+                }}
+              />
+            }
+          >
+            {t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_6')}
+          </Alert>
+        </div>
+      )}
       <Dashboard>
         <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />
       </Dashboard>
@@ -125,8 +141,4 @@ type NodeDashboardState = {
   healthCheck: HealthCheck;
 };
 
-type NodeDashboardAction =
-  | { type: ActionType.CPU_LIMIT; payload: LimitRequested }
-  | { type: ActionType.MEMORY_LIMIT; payload: LimitRequested }
-  | { type: ActionType.HEALTH_CHECK; payload: HealthCheck }
-  | { type: ActionType.OBJ; payload: NodeKind };
+type NodeDashboardAction = { type: ActionType.CPU_LIMIT; payload: LimitRequested } | { type: ActionType.MEMORY_LIMIT; payload: LimitRequested } | { type: ActionType.HEALTH_CHECK; payload: HealthCheck } | { type: ActionType.OBJ; payload: NodeKind };

@@ -89,8 +89,8 @@ export const multilineQueries = {
 const namespaceQueries = (namespace: String) => {
   return {
     [OverviewQuery.MEMORY_UTILIZATION]: `sum by(namespace) (container_memory_working_set_bytes{namespace="${namespace}",container="",pod!="",mode!="idle"})`,
-    [OverviewQuery.NETWORK_IN_UTILIZATION]: `sum(rate(container_network_receive_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
-    [OverviewQuery.NETWORK_OUT_UTILIZATION]: `sum(rate(container_network_transmit_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
+    [OverviewQuery.NETWORK_IN_UTILIZATION]: `sum(rate(container_network_receive_bytes_total{pod!="",namespace="${namespace}"}[5m]))`,
+    [OverviewQuery.NETWORK_OUT_UTILIZATION]: `sum(rate(container_network_transmit_bytes_total{pod!="",namespace="${namespace}"}[5m]))`,
     [OverviewQuery.NETWORK_UTILIZATION]: '',
     [OverviewQuery.CPU_UTILIZATION]: `sum(rate(container_cpu_usage_seconds_total{name=~".+",namespace=~"${namespace}"}[5m])) by (namespace)`,
     [OverviewQuery.STORAGE_UTILIZATION]: `sum(pod:container_fs_usage_bytes:sum{namespace='${namespace}'}) by (namespace)`,

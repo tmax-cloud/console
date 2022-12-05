@@ -84,7 +84,7 @@ export const PipelineDetailsList: React.FC<PipelineDetailsListProps> = ({ ds: pi
     .filter((pipelineTask: PipelineTask) => !!pipelineTask.taskRef)
     .map(task => ({
       model: getResourceModelFromTaskKind(task.taskRef.kind),
-      name: task.taskRef.name,
+      name: task.taskRef.name ? task.taskRef.name : task.name,
       displayName: task.name,
     }));
 

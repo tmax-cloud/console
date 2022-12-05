@@ -158,16 +158,16 @@ const RulesRows = props => {
         rules.push({
           host: rule.host || '*',
           path: '*',
-          serviceName: _.get(props.spec, 'backend.serviceName'),
-          servicePort: _.get(props.spec, 'backend.servicePort'),
+          serviceName: _.get(props.spec, 'backend.service.name'),
+          servicePort: _.get(props.spec, 'backend.service.port.number'),
         });
       } else {
         _.forEach(paths, path => {
           rules.push({
             host: rule.host || '*',
             path: path.path || '*',
-            serviceName: path.backend.serviceName,
-            servicePort: path.backend.servicePort,
+            serviceName: path.backend.service.name,
+            servicePort: path.backend.service.port.number,
           });
         });
       }

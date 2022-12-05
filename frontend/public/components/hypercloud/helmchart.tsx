@@ -152,3 +152,35 @@ export const HelmChartDetailsList: React.FC<HelmChartDetailsListProps> = ({ entr
 type HelmChartDetailsListProps = {
   entry: any;
 };
+
+const chartTableProps = (repoName: string): TableProps => {
+  return {
+    header: [
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+        sortField: 'name',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_141',
+        sortField: 'version',
+      },
+    ],
+    row: (obj: any) => {
+      return [
+        {
+          children: <ResourceLink manualPath={`/helmcharts/${repoName}/${obj.name}`} kind={HelmChartModel.kind} name={obj.name} />,
+        },
+        {
+          children: obj.version,
+        },
+      ];
+    },
+  };
+};
+export const ChartListPage: React.FC<ChartListPageProps> = props => {
+  const { name } = props.match.params;
+  return <ListPage tableProps={chartTableProps(name)} kind={HelmChartModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel, helmRepo: name }} isK8sResource={false} />;
+};
+type ChartListPageProps = {
+  match?: any;
+};
