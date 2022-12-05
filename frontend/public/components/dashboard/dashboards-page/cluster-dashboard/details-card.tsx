@@ -21,7 +21,7 @@ const ModuleStatus = ({ status }) => {
   switch (status) {
     case 'Normal':
       return <GreenCheckCircleIcon />;
-    case 'Abnoraml':
+    case 'Abnormal':
       return <RedExclamationCircleIcon />;
     default:
       return <div></div>;
