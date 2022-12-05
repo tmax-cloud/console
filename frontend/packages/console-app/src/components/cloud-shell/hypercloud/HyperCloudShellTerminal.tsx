@@ -34,7 +34,6 @@ const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) =>
         let date = new Date();
         date.setSeconds(date.getSeconds() + Number(response.timeout));
         setTime(date);
-        console.log(date.getSeconds() + Number(response.timeout), date, new Date());
       })
       .catch(err => {
         console.log(err);
@@ -53,7 +52,6 @@ const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) =>
     }, 1000);
     return () => clearInterval(podCheck);
   }, []);
-  'MSG_MAIN_POPUP_DESCRIPTION_30';
   return kubectlPodReady ? (
     <div>
       <div className="co-cloud-shell-drawer__heading">
