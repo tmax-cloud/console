@@ -189,8 +189,8 @@ export const useNodes = (
       },
     });
 
-  const invalidTaskList = taskGroup.tasks.filter((task) => !getTask(task.taskRef));
-  const validTaskList = taskGroup.tasks.filter((task) => !!getTask(task.taskRef));
+  const invalidTaskList = taskGroup.tasks.filter((task) => task.taskRef && !getTask(task.taskRef));
+  const validTaskList = taskGroup.tasks.filter((task) => task.taskRef && !!getTask(task.taskRef));
 
   const invalidTaskListNodes: PipelineTaskListNodeModel[] = invalidTaskList.map((task) =>
     newInvalidListNode(task.name, task.runAfter),
@@ -200,7 +200,7 @@ export const useNodes = (
       ? tasksToBuilderNodes(
           validTaskList,
           onNewListNode,
-          (task) => onTaskSelection(task, getTask(task.taskRef)),
+          (task) => task.taskRef && onTaskSelection(task, getTask(task.taskRef)),
           getErrorMessage(nodeTaskErrors, tasksInError),
           taskGroup.highlightedIds,
         )
