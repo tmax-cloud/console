@@ -63,7 +63,7 @@ export const convertToForm = (data: any) => {
   _.forEach(_data.spec?.workspaces, workspace => {
     let _name = workspace.name;
 
-    let type = 'emptyDir' in workspace ? 'EmptyDirectory' : 'VolumeClaimTemplate';
+    let type = 'emptyDir' in workspace ? 'EmptyDirectory' : 'volumeClaimTemplate' in workspace ? 'VolumeClaimTemplate' : '';
     if (type === 'VolumeClaimTemplate') {
       workspace.volumeClaimTemplate.spec.accessModes = workspace.volumeClaimTemplate.spec.accessModes[0];
     }
