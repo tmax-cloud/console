@@ -317,7 +317,7 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
         <div style={{ position: 'absolute', width: '100%', zIndex: 5 }}>
           <Alert
             variant="info"
-            title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_5')}
+            title={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_2')}
             action={
               <AlertActionCloseButton
                 onClose={() => {
@@ -327,7 +327,7 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
               />
             }
           >
-            {t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_7')}
+            {t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_1')}
           </Alert>
         </div>
       )}
