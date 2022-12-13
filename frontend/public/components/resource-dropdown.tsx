@@ -6,10 +6,12 @@ import * as classNames from 'classnames';
 import * as fuzzy from 'fuzzysearch';
 
 import { Dropdown, ResourceIcon } from './utils';
-import { apiVersionForReference, K8sKind, K8sResourceKindReference, modelFor, referenceForModel } from '../module/k8s';
+import { apiVersionForReference, K8sKind, K8sResourceKindReference, K8sVerb, kindToAbbr, modelFor, pluralizeKind, referenceForModel } from '../module/k8s';
 import { Badge, Checkbox } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
-
+import { getSingleClusterFullBasePath } from '@console/internal/hypercloud/perspectives';
+import { coFetchJSON } from '@console/internal/co-fetch';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 // Blacklist known duplicate resources.
 const blacklistGroups = ImmutableSet([
   // Prefer rbac.authorization.k8s.io/v1, which has the same resources.
@@ -20,6 +22,8 @@ const blacklistResources = ImmutableSet([
   // Prefer core/v1
   'events.k8s.io/v1beta1.Event',
 ]);
+
+const ADMIN_RESOURCES = new Set(['roles', 'rolebindings', 'clusterroles', 'clusterrolebindings', 'thirdpartyresources', 'nodes', 'secrets']);
 
 const DropdownItem: React.SFC<DropdownItemProps> = ({ model, showGroup, checked }) => (
   <>
@@ -60,8 +64,71 @@ const DropdownResourceItem: React.SFC<DropdownResourceItemProps> = ({ name, chec
 const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
   const { selected, onChange, allModels, showAll, className, preferredVersions, type } = props;
   const { t } = useTranslation();
+  const [models, setModels] = React.useState(allModels);
+  const [versions, setVersions] = React.useState(preferredVersions);
+  async function inSingle() {
+    await coFetchJSON(`${getSingleClusterFullBasePath()}/api/kubernetes/apis`).then(res => {
+      const preferredVersions = res.groups.map(group => group.preferredVersion);
+      const all: Promise<APIResourceList>[] = _.flatten(res.groups.map(group => group.versions.map(version => `/apis/${version.groupVersion}`)))
+        .concat(['/api/v1'])
+        .map(p => coFetchJSON(`${getSingleClusterFullBasePath()}/api/kubernetes${p}`).catch(err => err));
+      return Promise.all(all).then(data => {
+        const resourceSet = new Set<string>();
+        const namespacedSet = new Set<string>();
+        data.forEach(
+          d =>
+            d.resources &&
+            d.resources.forEach(({ namespaced, name }) => {
+              resourceSet.add(name);
+              namespaced && namespacedSet.add(name);
+            }),
+        );
+        const allResources = [...resourceSet].sort();
 
-  const resources = allModels
+        const safeResources = [];
+        const adminResources = [];
+
+        const defineModels = (list: APIResourceList): K8sKind[] => {
+          const groupVersionParts = list.groupVersion.split('/');
+          const apiGroup = groupVersionParts.length > 1 ? groupVersionParts[0] : null;
+          const apiVersion = groupVersionParts.length > 1 ? groupVersionParts[1] : list.groupVersion;
+          return list.resources
+            .filter(({ name }) => !name.includes('/'))
+            .map(({ name, singularName, namespaced, kind, verbs, shortNames }) => {
+              return {
+                kind,
+                namespaced,
+                verbs,
+                shortNames,
+                label: kind,
+                plural: name,
+                apiVersion,
+                abbr: kindToAbbr(kind),
+                ...(apiGroup ? { apiGroup } : {}),
+                labelPlural: pluralizeKind(kind),
+                path: name,
+                id: singularName,
+                crd: true,
+              };
+            });
+        };
+        allResources.forEach(r => (ADMIN_RESOURCES.has(r.split('/')[0]) ? adminResources.push(r) : safeResources.push(r)));
+        const modelss = _.flatten(data.filter(d => d.resources).map(defineModels));
+        let obj = {};
+        modelss.forEach(element => {
+          obj[element.apiGroup + '~' + element.apiVersion + '~' + element.kind] = element;
+        });
+        setModels(ImmutableMap(obj));
+        setVersions(preferredVersions);
+      });
+    });
+  }
+  React.useEffect(() => {
+    isSingleClusterPerspective() && inSingle();
+  }, []);
+
+  // isSingleClusterPerspective() && inSingle();
+  const resources = models
     .filter(({ apiGroup, apiVersion, kind, verbs }) => {
       // Remove blacklisted items.
       if (blacklistGroups.has(apiGroup) || blacklistResources.has(`${apiGroup}/${apiVersion}.${kind}`)) {
@@ -72,16 +139,14 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
       if (!_.isEmpty(verbs) && !_.includes(verbs, 'list')) {
         return false;
       }
-
       // Only show preferred version for resources in the same API group.
-      const preferred = (m: K8sKind) => preferredVersions.some(v => v.groupVersion === apiVersionForReference(referenceForModel(m)));
+      const preferred = (m: K8sKind) => versions.some(v => v.groupVersion === apiVersionForReference(referenceForModel(m)));
       const sameGroupKind = (m: K8sKind) => m.kind === kind && m.apiGroup === apiGroup && m.apiVersion !== apiVersion;
 
-      return !allModels.find(m => sameGroupKind(m) && preferred(m));
+      return !models.find(m => sameGroupKind(m) && preferred(m));
     })
     .toOrderedMap()
     .sortBy(({ kind, apiGroup }) => `${kind} ${apiGroup}`);
-
   // Track duplicate names so we know when to show the group.
   const kinds = resources.groupBy(m => m.kind);
   const isDup = kind => kinds.get(kind).size > 1;
@@ -89,6 +154,7 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
   const isKindSelected = (kind: string) => {
     return _.includes(selected, kind);
   };
+
   // Create dropdown items for each resource.
   const items = resources.map(model => <DropdownItem key={referenceForModel(model)} model={model} showGroup={isDup(model.kind)} checked={isKindSelected(referenceForModel(model))} />) as OrderedMap<string, JSX.Element>;
   // Add an "All" item to the top if `showAll`.
@@ -263,4 +329,26 @@ type DropdownResourceItemProps = {
   name: string;
   checked?: boolean;
   kind: string;
+};
+export type APIResourceList = {
+  kind: 'APIResourceList';
+  apiVersion: 'v1';
+  groupVersion: string;
+  resources?: {
+    name: string;
+    singularName?: string;
+    namespaced?: boolean;
+    kind: string;
+    verbs: K8sVerb[];
+    shortNames?: string[];
+  }[];
+};
+export type DiscoveryResources = {
+  adminResources: string[];
+  allResources: string[];
+  configResources: K8sKind[];
+  modelss: K8sKind[];
+  namespacedSet: Set<string>;
+  preferredVersions: { groupVersion: string; version: string }[];
+  safeResources: string[];
 };
