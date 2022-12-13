@@ -9,7 +9,6 @@ import { Dropdown, ResourceIcon } from './utils';
 import { apiVersionForReference, K8sKind, K8sResourceKindReference, K8sVerb, kindToAbbr, modelFor, pluralizeKind, referenceForModel } from '../module/k8s';
 import { Badge, Checkbox } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
-// import { getSingleClusterFullBasePath } from '@console/internal/hypercloud/perspectives';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 // Blacklist known duplicate resources.
