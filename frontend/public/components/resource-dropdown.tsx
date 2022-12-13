@@ -9,7 +9,7 @@ import { Dropdown, ResourceIcon } from './utils';
 import { apiVersionForReference, K8sKind, K8sResourceKindReference, K8sVerb, kindToAbbr, modelFor, pluralizeKind, referenceForModel } from '../module/k8s';
 import { Badge, Checkbox } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
-import { getSingleClusterFullBasePath } from '@console/internal/hypercloud/perspectives';
+// import { getSingleClusterFullBasePath } from '@console/internal/hypercloud/perspectives';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 // Blacklist known duplicate resources.
@@ -67,11 +67,11 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
   const [models, setModels] = React.useState(allModels);
   const [versions, setVersions] = React.useState(preferredVersions);
   async function inSingle() {
-    await coFetchJSON(`${getSingleClusterFullBasePath()}/api/kubernetes/apis`).then(res => {
+    await coFetchJSON(`/api/kubernetes/apis`).then(res => {
       const preferredVersions = res.groups.map(group => group.preferredVersion);
       const all: Promise<APIResourceList>[] = _.flatten(res.groups.map(group => group.versions.map(version => `/apis/${version.groupVersion}`)))
         .concat(['/api/v1'])
-        .map(p => coFetchJSON(`${getSingleClusterFullBasePath()}/api/kubernetes${p}`).catch(err => err));
+        .map(p => coFetchJSON(`/api/kubernetes${p}`).catch(err => err));
       return Promise.all(all).then(data => {
         const resourceSet = new Set<string>();
         const namespacedSet = new Set<string>();
