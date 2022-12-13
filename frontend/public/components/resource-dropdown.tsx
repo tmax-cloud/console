@@ -64,7 +64,7 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
   const { selected, onChange, allModels, showAll, className, preferredVersions, type } = props;
   const { t } = useTranslation();
   const [models, setModels] = React.useState(allModels);
-  const [versions, setVersions] = React.useState(preferredVersions);
+  const [preferredVersionsState, setPreferredVersionsState] = React.useState(preferredVersions);
   async function inSingle() {
     await coFetchJSON(`/api/kubernetes/apis`).then(res => {
       const preferredVersions = res.groups.map(group => group.preferredVersion);
@@ -112,13 +112,13 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
             });
         };
         allResources.forEach(r => (ADMIN_RESOURCES.has(r.split('/')[0]) ? adminResources.push(r) : safeResources.push(r)));
-        const modelss = _.flatten(data.filter(d => d.resources).map(defineModels));
+        const singleModels = _.flatten(data.filter(d => d.resources).map(defineModels));
         let obj = {};
-        modelss.forEach(element => {
+        singleModels.forEach(element => {
           obj[element.apiGroup + '~' + element.apiVersion + '~' + element.kind] = element;
         });
         setModels(ImmutableMap(obj));
-        setVersions(preferredVersions);
+        setPreferredVersionsState(preferredVersions);
       });
     });
   }
@@ -138,7 +138,7 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
         return false;
       }
       // Only show preferred version for resources in the same API group.
-      const preferred = (m: K8sKind) => versions.some(v => v.groupVersion === apiVersionForReference(referenceForModel(m)));
+      const preferred = (m: K8sKind) => preferredVersionsState.some(v => v.groupVersion === apiVersionForReference(referenceForModel(m)));
       const sameGroupKind = (m: K8sKind) => m.kind === kind && m.apiGroup === apiGroup && m.apiVersion !== apiVersion;
 
       return !models.find(m => sameGroupKind(m) && preferred(m));
