@@ -127,7 +127,6 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
     isSingleClusterPerspective() && inSingle();
   }, []);
 
-  // isSingleClusterPerspective() && inSingle();
   const resources = models
     .filter(({ apiGroup, apiVersion, kind, verbs }) => {
       // Remove blacklisted items.
