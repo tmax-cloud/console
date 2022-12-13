@@ -161,7 +161,7 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
         All: (
           <>
             <span className="co-resource-item">
-              <Checkbox id="all-resources" isChecked={isKindSelected('All')} />
+              <Checkbox id="all-resources" checked={isKindSelected('All')} />
               <span className="co-resource-icon--fixed-width">
                 <ResourceIcon kind="All" />
               </span>
@@ -234,7 +234,7 @@ export const RegistryListDropdown_: React.SFC<RegistryListDropdownProps> = props
         All: (
           <>
             <span className="co-resource-item">
-              <Checkbox id="all-resources" isChecked={isResourceSelected('All')} />
+              <Checkbox id="all-resources" checked={isResourceSelected('All')} />
               <span className="co-resource-icon--fixed-width">
                 <ResourceIcon kind="All" />
               </span>
