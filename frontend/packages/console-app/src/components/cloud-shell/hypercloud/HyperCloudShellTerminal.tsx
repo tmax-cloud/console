@@ -29,6 +29,7 @@ const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) =>
 
   // API call
   React.useEffect(() => {
+    coFetchJSON(`api/hypercloud/kubectl?userName=${user['email']}`, 'POST');
     coFetchJSON(`api/hypercloud/kubectl?userName=${user['email']}`, 'GET')
       .then(response => {
         let date = new Date();
