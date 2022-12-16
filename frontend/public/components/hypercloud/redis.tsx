@@ -27,6 +27,7 @@ const tableProps: TableProps = {
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_145',
       sortField: 'obj.spec.redisConfig.additionalRedisConfig',
+      tooltip: "hi i'm tooltip",
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',

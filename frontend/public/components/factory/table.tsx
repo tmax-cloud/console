@@ -185,7 +185,7 @@ const sorts = {
   },
   HelmReleaseStatusReducer: Helmreleases => HelmReleaseStatusReducer(Helmreleases),
   helmResourcesNumber: Helmreleases => (Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0),
-  ServiceBindingStatusReducer:  Servicebinding => ServiceBindingStatusReducer(Servicebinding),
+  ServiceBindingStatusReducer: Servicebinding => ServiceBindingStatusReducer(Servicebinding),
 };
 
 const afterFuzzySort = (a, b, value) => {
@@ -471,7 +471,6 @@ export const Table = connect<TablePropsFromState, TablePropsFromDispatch, TableP
       const columns = this.props.Header(componentProps);
       const sp = new URLSearchParams(window.location.search);
       const columnIndex = _.findIndex(columns, { title: sp.get('sortBy') });
-
       if (columnIndex > -1) {
         const sortOrder = sp.get('orderBy') || SortByDirection.asc;
         const column = columns[columnIndex];

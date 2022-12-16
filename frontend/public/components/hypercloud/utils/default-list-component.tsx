@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Table, TableRow, TableData, RowFunctionArgs } from '../../factory';
 import { sortable } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
+import { sortableHelp } from './sort/sortTip';
 
 const generateTableClassName = (index: number): string => {
   switch (index) {
@@ -20,11 +21,11 @@ const generateTableClassName = (index: number): string => {
   }
 };
 
-const makeTableHeader = (header: Header[], t: TFunction) => {
+const makeTableHeader = (header: Header[], t: TFunction, label: string) => {
   const _header: Header[] = header.map((value, index) => ({
     ...value,
     title: t(value.title),
-    transforms: _.isUndefined(value.transforms) ? [sortable] : value.transforms,
+    transforms: _.isUndefined(value.tooltip) ? (_.isUndefined(value.transforms) ? [sortable] : value.transforms) : [sortableHelp],
     props: value.props || { className: generateTableClassName(index) },
   }));
   return () => {
@@ -55,8 +56,9 @@ const makeTableRow = (row: Rows) => {
 export const DefaultListComponent: React.FC<DefaultListComponentProps> = props => {
   const { header, row, customSorts } = props.tableProps;
   const { t } = useTranslation();
-  const headerFunc = makeTableHeader(header, t);
+  const headerFunc = makeTableHeader(header, t, props.label);
   const rowFunc = makeTableRow(row);
+  console.log('????', props.label);
   return <Table {...props} aria-label="Resource List" Header={headerFunc} Row={rowFunc} virtualize customSorts={customSorts} />;
 };
 
@@ -66,6 +68,7 @@ type Header = {
   sortFunc?: string;
   transforms?: any;
   props?: { className: string };
+  tooltip?: string;
 };
 
 type Row = {
@@ -83,4 +86,5 @@ export type TableProps = {
 
 type DefaultListComponentProps = {
   tableProps: TableProps;
+  label: string;
 };
