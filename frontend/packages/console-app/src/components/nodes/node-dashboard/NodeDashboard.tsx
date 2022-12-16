@@ -11,11 +11,10 @@ import DetailsCard from './DetailsCard';
 import StatusCard from './StatusCard';
 import ActivityCard from './ActivityCard';
 import UtilizationCard from './UtilizationCard';
-import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { ToastPopupAlert } from '@console/internal/components/utils/hypercloud/toast-popup-alert';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 import { useTranslation } from 'react-i18next';
-
-const SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE = 'show-alert-in-singlecluster-nodepage';
+import { SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE } from '@console/internal/hypercloud/auth';
 
 const leftCards = [{ Card: DetailsCard }, { Card: InventoryCard }];
 const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
@@ -104,22 +103,13 @@ const NodeDashboard: React.FC<NodeDashboardProps> = ({ obj }) => {
   return (
     <NodeDashboardContext.Provider value={context}>
       {isAlert && isSingleClusterPerspective() && (
-        <div style={{ position: 'absolute', width: '100%', zIndex: 5 }}>
-          <Alert
-            variant="info"
-            title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_5')}
-            action={
-              <AlertActionCloseButton
-                onClose={() => {
-                  sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'false');
-                  setIsAlert(false);
-                }}
-              />
-            }
-          >
-            {t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_6')}
-          </Alert>
-        </div>
+        <ToastPopupAlert
+          title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_5')}
+          message={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_6')}
+          onceOption={true}
+          key={SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE}
+          setIsAlert={setIsAlert}
+        />
       )}
       <Dashboard>
         <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />
