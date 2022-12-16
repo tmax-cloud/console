@@ -10,8 +10,8 @@ const REQUEST_TOKEN_INFO_URL = '/oauth2/tokeninfo';
 export const REQUEST_ACCOUNT_USERS_URL = '/oauth2/user/list';
 export const REQUEST_ACCOUNT_GROUPS_URL = '/oauth2/group/list';
 
-const SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE = 'show-alert-in-singlecluster-nodepage'
-const SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE = 'show-alert-in-singlecluster-podpage'
+export const SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE = 'show-alert-in-singlecluster-nodepage'
+export const SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE = 'show-alert-in-singlecluster-podpage'
 
 const id = 'id';
 const email = 'email';
