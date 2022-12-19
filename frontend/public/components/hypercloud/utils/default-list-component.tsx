@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Table, TableRow, TableData, RowFunctionArgs } from '../../factory';
 import { sortable } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
+import { sortableHelp } from './sort/sortTip';
 
 const generateTableClassName = (index: number): string => {
   switch (index) {
@@ -24,7 +25,7 @@ const makeTableHeader = (header: Header[], t: TFunction) => {
   const _header: Header[] = header.map((value, index) => ({
     ...value,
     title: t(value.title),
-    transforms: _.isUndefined(value.transforms) ? [sortable] : value.transforms,
+    transforms: _.isUndefined(value.tooltip) ? (_.isUndefined(value.transforms) ? [sortable] : value.transforms) : [sortableHelp({ tooltip: t(value.tooltip) })],
     props: value.props || { className: generateTableClassName(index) },
   }));
   return () => {
@@ -66,6 +67,7 @@ type Header = {
   sortFunc?: string;
   transforms?: any;
   props?: { className: string };
+  tooltip?: string;
 };
 
 type Row = {
@@ -83,4 +85,5 @@ export type TableProps = {
 
 type DefaultListComponentProps = {
   tableProps: TableProps;
+  label: string;
 };
