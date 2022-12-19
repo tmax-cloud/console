@@ -54,5 +54,4 @@ export interface IExtra {
   columnIndex?: number;
   column?: any;
   property?: string;
-  tooltip?: string;
 }
