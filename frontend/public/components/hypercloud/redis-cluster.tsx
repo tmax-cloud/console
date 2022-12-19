@@ -9,7 +9,6 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 import { CustomMenusMap } from '../../../public/hypercloud/menu/menu-types';
-import { sortable } from '@patternfly/react-table';
 
 const kind = RedisClusterModel.kind;
 
@@ -29,7 +28,7 @@ const tableProps: TableProps = {
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_146',
       sortField: 'spec.clusterSize',
-      tooltip: 'tooltip test',
+      tooltip: 'MSG_MAIN_TABLEHEADER_149',
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_147',
@@ -77,7 +76,6 @@ const tableProps: TableProps = {
 };
 
 export const RedisClusterPage: React.FC = props => {
-  console.log(sortable, '@@@@');
   return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
 };
 

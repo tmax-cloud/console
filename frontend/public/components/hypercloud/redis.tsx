@@ -31,7 +31,6 @@ const tableProps: TableProps = {
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
-      tooltip: "hi i'm tooltip",
     },
     {
       title: '',
