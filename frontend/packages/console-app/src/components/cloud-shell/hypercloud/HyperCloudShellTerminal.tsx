@@ -57,7 +57,7 @@ const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) =>
     <div>
       <div className="co-cloud-shell-drawer__heading">
         {t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_30', {
-          0: time.getFullYear() + '.' + time.getMonth() + '.' + time.getDay() + ' ' + time.getHours() + ':' + time.getMinutes(),
+          0: time.getFullYear() + '.' + (Number(time.getMonth()) + 1) + '.' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes(),
         })}
       </div>
       <PodExecLoader obj={kubectlPod} />
