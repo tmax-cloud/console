@@ -22,10 +22,9 @@ import { VolumesTable } from './volumes-table';
 import { PodModel } from '../models';
 import { Conditions } from './conditions';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
-import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { ToastPopupAlert } from '@console/internal/components/utils/hypercloud/toast-popup-alert';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
-
-const SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE = 'show-alert-in-singlecluster-podpage';
+import { SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE } from '@console/internal/hypercloud/auth';
 
 // Only request metrics if the device's screen width is larger than the
 // breakpoint where metrics are visible.
@@ -314,22 +313,13 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
   return (
     <>
       {isAlert && isSingleClusterPerspective() && (
-        <div style={{ position: 'absolute', width: '100%', zIndex: 5 }}>
-          <Alert
-            variant="info"
-            title={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_2')}
-            action={
-              <AlertActionCloseButton
-                onClose={() => {
-                  sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'false');
-                  setIsAlert(false);
-                }}
-              />
-            }
-          >
-            {t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_1')}
-          </Alert>
-        </div>
+        <ToastPopupAlert
+          title={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_2')}
+          message={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_1')}
+          onceOption={true}
+          sessionStoragekey={SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE}
+          setIsAlert={setIsAlert}
+        />
       )}
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">

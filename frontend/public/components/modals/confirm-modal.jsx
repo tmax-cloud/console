@@ -9,6 +9,11 @@ class ConfirmModal extends PromiseComponent {
     super(props);
     this._submit = this._submit.bind(this);
     this._cancel = this.props.cancel.bind(this);
+    this.handlePromise(
+      this.props.executeFn(null, {
+        supressNotifications: true,
+      }),
+    ).then(this.props.close);
   }
 
   _submit(event) {
@@ -20,20 +25,12 @@ class ConfirmModal extends PromiseComponent {
       }),
     ).then(this.props.close);
   }
-
   render() {
     return (
       <form onSubmit={this._submit} name="form" className="modal-content">
         <ModalTitle>{this.props.title}</ModalTitle>
         <ModalBody>{this.props.message}</ModalBody>
-        <ModalSubmitFooter
-          errorMessage={this.state.errorMessage}
-          inProgress={this.state.inProgress}
-          submitText={this.props.btnText || 'Confirm'}
-          cancel={this._cancel}
-          cancelText={this.props.cancelText || 'Cancel'}
-          submitDanger={this.props.submitDanger}
-        />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={this.props.btnText || 'Confirm'} cancel={this._cancel} cancelText={this.props.cancelText || 'Cancel'} submitDanger={this.props.submitDanger} />
       </form>
     );
   }
