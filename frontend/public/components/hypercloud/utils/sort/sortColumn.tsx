@@ -7,7 +7,6 @@ import styles from '@patternfly/react-styles/css/components/Table/table';
 import { SortByDirection } from '@patternfly/react-table';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { Tooltip } from '@patternfly/react-core';
-import { useTranslation } from 'react-i18next';
 import './help.css';
 export interface SortColumnProps extends React.HTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
@@ -15,12 +14,11 @@ export interface SortColumnProps extends React.HTMLAttributes<HTMLButtonElement>
   isSortedBy?: boolean;
   onSort?: Function;
   sortDirection?: string;
-  tooltip?: string;
+  tooltipHelp?: React.ReactNode;
 }
 
-export const SortColumn: React.FunctionComponent<SortColumnProps> = ({ children = null, className = '', isSortedBy = false, onSort = null, sortDirection = '', ...props }: SortColumnProps) => {
+export const SortColumn: React.FunctionComponent<SortColumnProps> = ({ children = null, className = '', tooltipHelp, isSortedBy = false, onSort = null, sortDirection = '', ...props }: SortColumnProps) => {
   let SortedByIcon;
-  const { t } = useTranslation();
   if (isSortedBy) {
     SortedByIcon = sortDirection === SortByDirection.asc ? LongArrowAltUpIcon : LongArrowAltDownIcon;
   } else {
@@ -32,7 +30,7 @@ export const SortColumn: React.FunctionComponent<SortColumnProps> = ({ children 
       <span className={css(styles.tableSortIndicator)}>
         <SortedByIcon />
       </span>
-      <Tooltip content={t('hihi')}>
+      <Tooltip content={tooltipHelp['tooltip']}>
         <HelpIcon className="help-icon" />
       </Tooltip>
     </button>

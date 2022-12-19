@@ -20,12 +20,12 @@ const generateTableClassName = (index: number): string => {
       return classNames('pf-m-hidden', 'pf-m-visible-on-xl');
   }
 };
-
+// tooltip, columnIndex, column, property
 const makeTableHeader = (header: Header[], t: TFunction, label: string) => {
   const _header: Header[] = header.map((value, index) => ({
     ...value,
     title: t(value.title),
-    transforms: _.isUndefined(value.tooltip) ? (_.isUndefined(value.transforms) ? [sortable] : value.transforms) : [sortableHelp],
+    transforms: _.isUndefined(value.tooltip) ? (_.isUndefined(value.transforms) ? [sortable] : value.transforms) : [sortableHelp({ tooltip: t(value.tooltip) })],
     props: value.props || { className: generateTableClassName(index) },
   }));
   return () => {
@@ -58,7 +58,6 @@ export const DefaultListComponent: React.FC<DefaultListComponentProps> = props =
   const { t } = useTranslation();
   const headerFunc = makeTableHeader(header, t, props.label);
   const rowFunc = makeTableRow(row);
-  console.log('????', props.label);
   return <Table {...props} aria-label="Resource List" Header={headerFunc} Row={rowFunc} virtualize customSorts={customSorts} />;
 };
 
