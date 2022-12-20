@@ -1,25 +1,18 @@
-import {
-  chart_color_green_400 as successColor,
-  chart_color_blue_300 as runningColor,
-  global_danger_color_100 as failureColor,
-  chart_color_blue_100 as pendingColor,
-  chart_color_black_400 as skippedColor,
-  chart_color_black_500 as cancelledColor,
-} from '@patternfly/react-tokens';
+import { chart_color_green_400 as successColor, chart_color_blue_300 as runningColor, global_danger_color_100 as failureColor, chart_color_blue_100 as pendingColor, chart_color_black_400 as skippedColor, chart_color_black_500 as cancelledColor } from '@patternfly/react-tokens';
 import { K8sKind, K8sResourceKind, referenceForModel } from '@console/internal/module/k8s';
 import {
-  //ClusterTaskModel,
+  // ClusterTaskModel,
   ClusterTriggerBindingModel,
-  //PipelineRunModel,
-  //TaskModel,
+  // PipelineRunModel,
+  // TaskModel,
   TriggerBindingModel,
 } from '../models';
 import {
   ClusterTaskModel,
-  //ClusterTriggerBindingModel,
+  // ClusterTriggerBindingModel,
   PipelineRunModel,
   TaskModel,
-  //TriggerBindingModel,
+  // TriggerBindingModel,
 } from '@console/internal/models';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
 
@@ -143,7 +136,7 @@ export interface PipelineSpecTaskSpec {
     securityContext?: {
       privileged: boolean;
       [key: string]: any;
-    }
+    };
     imagePullPolicy?: string;
     workingDir?: string;
   }[];
@@ -184,7 +177,7 @@ export interface PipelineRun extends K8sResourceKind {
     startTime?: string;
     completionTime?: string;
     taskRuns?: TaskRuns;
-    runs?: TaskRuns; 
+    runs?: TaskRuns;
     phase?: string;
     nodes?: any;
   };
@@ -255,7 +248,10 @@ export interface PipelineWorkspace extends Param {
 }
 
 export interface PipelineRunWorkspace extends Param {
-  [key: string]: string;
+  // [key: string]: string;
+  secret?: {
+    secretName: string;
+  };
 }
 
 interface FirehoseResource {
@@ -295,23 +291,11 @@ export const getLatestRun = (runs: Runs, field: string): PipelineRun => {
   let latestRun = runs.data[0];
   if (field === 'creationTimestamp') {
     for (let i = 1; i < runs.data.length; i++) {
-      latestRun =
-        runs.data[i] &&
-        runs.data[i].metadata &&
-        runs.data[i].metadata[field] &&
-        new Date(runs.data[i].metadata[field]) > new Date(latestRun.metadata[field])
-          ? runs.data[i]
-          : latestRun;
+      latestRun = runs.data[i] && runs.data[i].metadata && runs.data[i].metadata[field] && new Date(runs.data[i].metadata[field]) > new Date(latestRun.metadata[field]) ? runs.data[i] : latestRun;
     }
   } else if (field === 'startTime' || field === 'completionTime') {
     for (let i = 1; i < runs.data.length; i++) {
-      latestRun =
-        runs.data[i] &&
-        runs.data[i].status &&
-        runs.data[i].status[field] &&
-        new Date(runs.data[i].status[field]) > new Date(latestRun.status[field])
-          ? runs.data[i]
-          : latestRun;
+      latestRun = runs.data[i] && runs.data[i].status && runs.data[i].status[field] && new Date(runs.data[i].status[field]) > new Date(latestRun.status[field]) ? runs.data[i] : latestRun;
     }
   } else {
     latestRun = runs.data[runs.data.length - 1];
@@ -326,11 +310,7 @@ export const getLatestRun = (runs: Runs, field: string): PipelineRun => {
   return latestRun;
 };
 
-export const augmentRunsToData = (
-  data: PropPipelineData[],
-  propsReferenceForRuns: string[],
-  runs: { [key: string]: Runs },
-): PropPipelineData[] => {
+export const augmentRunsToData = (data: PropPipelineData[], propsReferenceForRuns: string[], runs: { [key: string]: Runs }): PropPipelineData[] => {
   if (propsReferenceForRuns) {
     const newData: PropPipelineData[] = [];
     propsReferenceForRuns.forEach((reference, i) => {
@@ -390,17 +370,11 @@ export const getRunStatusColor = (status: string): StatusMessage => {
   }
 };
 
-export const truncateName = (name: string, length: number): string =>
-  name.length < length ? name : `${name.slice(0, length - 1)}...`;
+export const truncateName = (name: string, length: number): string => (name.length < length ? name : `${name.slice(0, length - 1)}...`);
 
 export const getTaskStatus = (pipelinerun: PipelineRun, pipeline: Pipeline): TaskStatus => {
-  const totalTasks =
-    pipeline && pipeline.spec && pipeline.spec.tasks ? pipeline.spec.tasks.length : 0;
-  const plrTasks =
-    pipelinerun && pipelinerun.status && pipelinerun.status.taskRuns
-      ? pipelinerun.status.runs ? Object.keys(pipelinerun.status.runs).concat(Object.keys(pipelinerun.status.taskRuns))
-        : Object.keys(pipelinerun.status.taskRuns)
-      : [];
+  const totalTasks = pipeline && pipeline.spec && pipeline.spec.tasks ? pipeline.spec.tasks.length : 0;
+  const plrTasks = pipelinerun && pipelinerun.status && pipelinerun.status.taskRuns ? (pipelinerun.status.runs ? Object.keys(pipelinerun.status.runs).concat(Object.keys(pipelinerun.status.taskRuns)) : Object.keys(pipelinerun.status.taskRuns)) : [];
   const plrTaskLength = plrTasks.length;
   const taskStatus: TaskStatus = {
     PipelineNotStarted: 0,
@@ -411,7 +385,7 @@ export const getTaskStatus = (pipelinerun: PipelineRun, pipeline: Pipeline): Tas
     Cancelled: 0,
   };
   if (plrTasks) {
-    plrTasks.forEach((taskRun) => {
+    plrTasks.forEach(taskRun => {
       const status = pipelineRunFilterReducer(pipelinerun.status.taskRuns[taskRun] ?? pipelinerun.status.runs[taskRun]);
       if (status === 'Succeeded' || status === 'Completed' || status === 'Complete') {
         taskStatus[runStatus.Succeeded]++;
@@ -425,17 +399,8 @@ export const getTaskStatus = (pipelinerun: PipelineRun, pipeline: Pipeline): Tas
         taskStatus[runStatus.Pending]++;
       }
     });
-    taskStatus[runStatus.Failed] > 0 || taskStatus[runStatus.Cancelled] > 0
-      ? (taskStatus[runStatus.Cancelled] +=
-          totalTasks >= plrTaskLength ? totalTasks - plrTaskLength : totalTasks)
-      : (taskStatus[runStatus.Pending] +=
-          totalTasks >= plrTaskLength ? totalTasks - plrTaskLength : totalTasks);
-  } else if (
-    pipelinerun &&
-    pipelinerun.status &&
-    pipelinerun.status.conditions &&
-    pipelinerun.status.conditions[0].status === 'False'
-  ) {
+    taskStatus[runStatus.Failed] > 0 || taskStatus[runStatus.Cancelled] > 0 ? (taskStatus[runStatus.Cancelled] += totalTasks >= plrTaskLength ? totalTasks - plrTaskLength : totalTasks) : (taskStatus[runStatus.Pending] += totalTasks >= plrTaskLength ? totalTasks - plrTaskLength : totalTasks);
+  } else if (pipelinerun && pipelinerun.status && pipelinerun.status.conditions && pipelinerun.status.conditions[0].status === 'False') {
     taskStatus[runStatus.Cancelled] = totalTasks;
   } else {
     taskStatus[runStatus.PipelineNotStarted]++;
@@ -443,11 +408,9 @@ export const getTaskStatus = (pipelinerun: PipelineRun, pipeline: Pipeline): Tas
   return taskStatus;
 };
 
-export const getResourceModelFromTaskKind = (kind: string): K8sKind =>
-  kind === ClusterTaskModel.kind ? ClusterTaskModel : TaskModel;
+export const getResourceModelFromTaskKind = (kind: string): K8sKind => (kind === ClusterTaskModel.kind ? ClusterTaskModel : TaskModel);
 
-export const getResourceModelFromBindingKind = (kind: string): K8sKind =>
-  kind === ClusterTriggerBindingModel.kind ? ClusterTriggerBindingModel : TriggerBindingModel;
+export const getResourceModelFromBindingKind = (kind: string): K8sKind => (kind === ClusterTriggerBindingModel.kind ? ClusterTriggerBindingModel : TriggerBindingModel);
 
 export const getResourceModelFromTask = (task: PipelineTask): K8sKind => {
   const {
@@ -457,5 +420,4 @@ export const getResourceModelFromTask = (task: PipelineTask): K8sKind => {
   return getResourceModelFromTaskKind(kind);
 };
 
-export const pipelineRefExists = (pipelineRun: PipelineRun): boolean =>
-  !!pipelineRun.spec.pipelineRef?.name;
+export const pipelineRefExists = (pipelineRun: PipelineRun): boolean => !!pipelineRun.spec.pipelineRef?.name;
