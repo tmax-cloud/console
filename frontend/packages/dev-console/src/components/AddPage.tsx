@@ -120,7 +120,7 @@ const AddComponent: React.SFC<AddComponentProps> = ({ title, message, errMessage
         {errMessage && <div className="text-center text-muted">{errMessage}</div>}
         {link && (
           <h2 className="text-center">
-            <Link to={link} className="text-center">
+            <Link to={link} className="co-text-center-link">
               {linkText}
             </Link>
           </h2>
