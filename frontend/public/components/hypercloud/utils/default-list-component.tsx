@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Table, TableRow, TableData, RowFunctionArgs } from '../../factory';
 import { sortable } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
-import { sortableHelp } from './sort/sortTip';
+import { sortableHelp } from './sortTip';
 
 const generateTableClassName = (index: number): string => {
   switch (index) {

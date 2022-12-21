@@ -7,7 +7,7 @@ import styles from '@patternfly/react-styles/css/components/Table/table';
 import { SortByDirection } from '@patternfly/react-table';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { Tooltip } from '@patternfly/react-core';
-import './help.css';
+import './help.scss';
 export interface SortColumnProps extends React.HTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   className?: string;
