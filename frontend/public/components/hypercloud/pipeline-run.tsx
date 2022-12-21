@@ -1,4 +1,3 @@
-import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
@@ -6,7 +5,7 @@ import { sortable } from '@patternfly/react-table';
 import { referenceForModel } from '@console/internal/module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, viewYamlComponent } from '../utils';
-import { PipelineRunModel, PipelineModel, PipelineResourceModel } from '../../models';
+import { PipelineRunModel, PipelineModel, PipelineResourceModel, SecretModel } from '../../models';
 import { pipelineRunDuration } from '../../../packages/dev-console/src/utils/pipeline-utils';
 import { PipelineRun, pipelineRefExists, PipelineRunReferenceResource } from '../../../packages/dev-console/src/utils/pipeline-augment';
 import { pipelineRunFilterReducer } from '../../../packages/dev-console/src/utils/pipeline-filter-reducer';
@@ -138,7 +137,11 @@ const PipelineRunInPipelinePageTableRow: RowFunction<PipelineRun> = ({ obj: pipe
 export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ pipelineRun }) => {
   const unfilteredResources = pipelineRun.spec.resources as PipelineRunReferenceResource[];
   const renderResources = unfilteredResources?.filter(({ resourceRef }) => !!resourceRef).map(resource => resource.resourceRef.name) || [];
-
+  const secretObj = pipelineRun.spec?.workspaces?.map(function(data) {
+    if (data.secret) {
+      return data;
+    }
+  });
   const { t } = useTranslation();
   return (
     <div className="col-sm-6 odc-pipeline-run-details__customDetails">
@@ -153,6 +156,14 @@ export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ 
       {/* <TriggeredBySection pipelineRun={pipelineRun} /> */}
       <br />
       <ResourceLinkList model={PipelineResourceModel} links={renderResources} namespace={pipelineRun.metadata.namespace} />
+      {secretObj && secretObj[0] && (
+        <dl>
+          <dt>{ResourceLabel(SecretModel, t)}</dt>
+          <dd>
+            <ResourceLink kind={referenceForModel(SecretModel)} name={secretObj[0].secret.secretName} namespace={pipelineRun.metadata.namespace} />
+          </dd>
+        </dl>
+      )}
     </div>
   );
 };
