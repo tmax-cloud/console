@@ -11,8 +11,8 @@ export const ToastPopupAlert: React.FC<ToastPopupAlertProps> = ({ title, message
           onClose={() => {
             if (onceOption) {
               sessionStorage.setItem(sessionStoragekey, 'false');
-              setIsAlert(false);
             }
+            setIsAlert(false);
           }}
         />
       }

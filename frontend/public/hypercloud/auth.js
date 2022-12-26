@@ -12,6 +12,7 @@ export const REQUEST_ACCOUNT_GROUPS_URL = '/oauth2/group/list';
 
 export const SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE = 'show-alert-in-singlecluster-nodepage'
 export const SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE = 'show-alert-in-singlecluster-podpage'
+export const SHOW_ALERT_IN_SAMPLEPAGE = 'show-alert-in-samplepage'
 
 const id = 'id';
 const email = 'email';
@@ -167,6 +168,7 @@ export const detectUser = () => {
       sessionStorage.setItem(expireTime, info?.exp);
       sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'true');
       sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'true');
+      sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
       store.dispatch(setUser({ id: sessionStorage.getItem(id), email: sessionStorage.getItem(email), groups: sessionStorage.getItem(groups) }));
       resolve();
     } catch (error) {
