@@ -165,7 +165,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
                 )
               );
             })) : (
-              <p>Pod가 삭제되어 로그를 조회할 수 없습니다.</p>
+              <p>{t('SINGLE:MSG_PIPELINERUNS_PIPELINERUNDETAILS_TABLOG_1')}</p>
             )}
         </div>
       </div>
