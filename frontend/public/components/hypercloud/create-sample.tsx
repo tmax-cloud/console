@@ -20,6 +20,8 @@ import { Button } from '@patternfly/react-core';
 import { TextInput } from './utils/text-input';
 import { DropdownSetComponent } from './utils/dropdown-set';
 import { DropdownCheckAddComponent } from './utils/dropdown-check-add';
+import { ToastPopupAlert } from '@console/internal/components/utils/hypercloud/toast-popup-alert';
+import { SHOW_ALERT_IN_SAMPLEPAGE } from '@console/internal/hypercloud/auth';
 
 const defaultValues = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
@@ -159,7 +161,6 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     { label: 'Coconut', value: 'Coconut', category: 'Fruit', isFirstItem: false },
   ];
 
-
   const listHeaderFragment = (
     <div className="row pairs-list__heading">
       <div className="col-xs-4 text-secondary text-uppercase">NAME</div>
@@ -192,8 +193,13 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     </div>
   );
 
+  const [isAlert, setIsAlert] = React.useState('true');
+  const [isAlertOnce, setIsAlertOnce] = React.useState(sessionStorage.getItem(SHOW_ALERT_IN_SAMPLEPAGE) === 'true');
+
   return (
     <div>
+      <div>{isAlert && <ToastPopupAlert title="Toast Popup Alert Sample" message="Toast Popup Alert Sample" onceOption={false} setIsAlert={setIsAlert} />}</div>
+      <div>{isAlertOnce && <ToastPopupAlert title="세션당 한번 나오는 Toast Popup Alert Sample" message="세션당 한번 보여줌" onceOption={true} sessionStoragekey={SHOW_ALERT_IN_SAMPLEPAGE} setIsAlert={setIsAlertOnce} />}</div>
       <Section label="Labels" id="label" description="이것은 Label입니다.">
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} valid={true} />
       </Section>
