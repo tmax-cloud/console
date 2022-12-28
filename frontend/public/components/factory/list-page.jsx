@@ -12,7 +12,7 @@ import { useDocumentListener, KEYBOARD_SHORTCUTS } from '@console/shared';
 import { filterList } from '../../actions/k8s';
 import { storagePrefix } from '../row-filter';
 import { ErrorPage404, ErrorBoundaryFallback } from '../error';
-import { kindForReference, referenceForModel } from '../../module/k8s';
+import { k8sList, kindForReference, referenceForModel } from '../../module/k8s';
 import { CrdNotFound, Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, LoadingBox, PageHeading, RequireCreatePermission } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
@@ -21,6 +21,8 @@ import './list-page.scss';
 import { NavBar } from '../utils/horizontal-nav';
 import { DefaultListComponent } from '../hypercloud/utils/default-list-component';
 import { getQueryArgument } from '../utils';
+import { CustomResourceDefinitionModel } from '../../models';
+import { isResourceSchemaBasedMenu } from '../hypercloud/form';
 
 /** @type {React.SFC<{disabled?: boolean, label?: string, onChange: (value: string) => void;, defaultValue?: string, value?: string, placeholder?: string, autoFocus?: boolean, onFocus?:any, name?:string, id?: string, onKeyDown?: any, parentClassName?: string }}>} */
 export const TextFilter = props => {
@@ -417,9 +419,9 @@ ListPage.displayName = 'ListPage';
 /** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, displayTitleRow?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent?: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[], startDate?: Date, endDate?: Date} >} */
 export const MultiListPage = props => {
   const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, displayTitleRow = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows, tableProps, items, startDate, endDate } = props;
-
+  const [createPropsState, setCreatePropsState] = React.useState(createProps);
   const { t } = useTranslation();
-
+  let href = '';
   const isNSSelected = !props.resources?.[0]?.namespaced || namespace;
   let unclickableMsg = !isNSSelected && !isClusterScope ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
   unclickableMsg = window.location.pathname.startsWith('/k8s/cluster/customresourcedefinitions') ? undefined : unclickableMsg;
@@ -429,6 +431,16 @@ export const MultiListPage = props => {
     namespace: r.namespaced ? namespace : r.namespace,
     prop: r.prop || r.kind,
   }));
+  const isCustomResourceType = !isResourceSchemaBasedMenu(resources[0].kindObj.kind);
+  React.useEffect(() => {
+    isCustomResourceType &&
+      k8sList(CustomResourceDefinitionModel).then(res => {
+        _.find(res, function(data) {
+          return data.spec.names.kind === resources[0].kindObj.kind;
+        }) ||
+          ((href = namespace ? `/k8s/ns/${namespace}/import` : `/k8s/all-namespaces/import`) && setCreatePropsState({ to: href }));
+      });
+  }, []);
 
   const listPageWrapper = (
     <ListPageWrapper_
@@ -459,7 +471,7 @@ export const MultiListPage = props => {
       canCreate={canCreate}
       createAccessReview={createAccessReview}
       createButtonText={createButtonText || 'Create'}
-      createProps={createProps}
+      createProps={createPropsState}
       filterLabel={filterLabel || 'by name'}
       helpText={helpText}
       resources={mock ? [] : resources}
