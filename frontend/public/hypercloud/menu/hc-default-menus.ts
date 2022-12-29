@@ -20,7 +20,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.storage,
-    innerMenus: [Models.PersistentVolumeModel.kind, Models.PersistentVolumeClaimModel.kind,Models.StorageClassModel.kind ],
+    innerMenus: [Models.PersistentVolumeModel.kind, Models.PersistentVolumeClaimModel.kind, Models.StorageClassModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -30,12 +30,12 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
-    innerMenus: [ Models.ServiceAccountModel.kind,Models.RoleModel.kind, Models.RoleBindingModel.kind],
+    innerMenus: [Models.ServiceAccountModel.kind, Models.RoleModel.kind, Models.RoleBindingModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.management,
-    innerMenus: [ Models.ResourceQuotaModel.kind, Models.LimitRangeModel.kind, Models.CustomResourceDefinitionModel.kind,Models.PodSecurityPolicyModel.kind],
+    innerMenus: [Models.ResourceQuotaModel.kind, Models.LimitRangeModel.kind, Models.CustomResourceDefinitionModel.kind, Models.PodSecurityPolicyModel.kind],
   },
 ];
 
@@ -66,13 +66,13 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels['ci/cd'],
-    innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind,  Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind, Models.ApplicationModel.kind],
+    innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind, Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind, Models.ApplicationModel.kind],
   },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.aidevops,
-    innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
-  },
+  // {
+  //   menuType: MenuType.CONTAINER,
+  //   label: MenuContainerLabels.aidevops,
+  //   innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
+  // },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.kafka,
@@ -85,7 +85,7 @@ const DeveloperNavMenus = [
   },
   {
     menuType: MenuType.REGISTERED_MENU,
-    kind: Models.ServiceBindingModel.kind
+    kind: Models.ServiceBindingModel.kind,
   },
 ];
 
@@ -130,7 +130,7 @@ const SingleNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.workload,
-    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.StatefulSetModel.kind, Models.SecretModel.kind, Models.ConfigMapModel.kind, Models.CronJobModel.kind, Models.JobModel.kind, Models.DaemonSetModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind ],
+    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.StatefulSetModel.kind, Models.SecretModel.kind, Models.ConfigMapModel.kind, Models.CronJobModel.kind, Models.JobModel.kind, Models.DaemonSetModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
