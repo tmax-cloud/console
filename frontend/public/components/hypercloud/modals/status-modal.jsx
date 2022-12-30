@@ -20,7 +20,8 @@ const BaseStatusModal = withTranslation()(
       super(props);
       this._submit = this._submit.bind(this);
       this._cancel = props.cancel.bind(this);
-      let status = 'Approved';
+      const { t } = this.props;
+      let status = t('COMMON:MSG_COMMON_BUTTON_COMMIT_9');
       const reason = '';
       this.state = Object.assign(this.state, {
         status,
@@ -29,8 +30,8 @@ const BaseStatusModal = withTranslation()(
         submitDisabled: this.getButtonStateFromProps(),
       });
       this.options = [
-        { value: 'Approved', disabled: false },
-        { value: 'Rejected', disabled: false },
+        { value: t('COMMON:MSG_COMMON_BUTTON_COMMIT_9'), disabled: false },
+        { value: t('COMMON:MSG_COMMON_BUTTON_COMMIT_10'), disabled: false },
       ];
     }
 
@@ -58,12 +59,12 @@ const BaseStatusModal = withTranslation()(
     _submit(e) {
       e.preventDefault();
 
-      const { kind, path, resource } = this.props;
+      const { kind, path, resource, t } = this.props;
       switch (kind.kind) {
         case RoleBindingClaimModel.kind:
         case ResourceQuotaClaimModel.kind:
         case NamespaceClaimModel.kind: {
-          const stat = this.state.status === 'Approved' ? 'Approved' : 'Rejected';
+          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_10');
           const promise = k8sUpdateApproval(
             kind,
             resource,
@@ -78,7 +79,7 @@ const BaseStatusModal = withTranslation()(
           break;
         }
         case TFApplyClaimModel.kind: {
-          const stat = this.state.status === 'Approved' ? 'Approve' : 'Reject';
+          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? 'Approve' : 'Reject';
           const promise = k8sUpdateApproval(
             kind,
             resource,
@@ -93,7 +94,7 @@ const BaseStatusModal = withTranslation()(
           break;
         }
         case ClusterTemplateClaimModel.kind: {
-          const stat = this.state.status === 'Approved' ? 'Approved' : 'Rejected';
+          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_10');
           const promise = k8sUpdateApproval(
             kind,
             resource,
@@ -109,7 +110,7 @@ const BaseStatusModal = withTranslation()(
         }
         case ClusterClaimModel.kind: {
           const clusterClaim = resource.metadata.name;
-          const admit = this.state.status === 'Approved' ? true : false;
+          const admit = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? true : false;
           const reason = this.state.reason;
           const ns = resource.metadata.namespace;
 
@@ -119,7 +120,7 @@ const BaseStatusModal = withTranslation()(
         }
         default: {
           // resourceURL
-          const approval = this.state.status === 'Approved' ? 'approve' : 'reject';
+          const approval = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? 'approve' : 'reject';
 
           const promise = k8sUpdateApproval(kind, resource, approval, {
             reason: this.state.reason,
@@ -173,7 +174,7 @@ const BaseStatusModal = withTranslation()(
                   ))}
                 </Select>
               </div>
-              {this.state.status === 'Rejected' && (
+              {this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_10') && (
                 <>
                   <div className="col-sm-12">
                     <textarea className="col-sm-12 pf-c-form-control query-browser__query-input" style={{ height: '100px' }} onChange={this.onChangeReason} value={this.state.reason} />
