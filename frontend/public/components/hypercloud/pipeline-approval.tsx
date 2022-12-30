@@ -148,7 +148,7 @@ const filters = t => [
     reducer: pipelineApprovalStatusReducer,
     items: [
       { id: 'Approved', title: 'Approved' },
-      { id: 'Waiting', title: 'Waiting' },
+      { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Rejected', title: 'Rejected' },
     ],
   },
