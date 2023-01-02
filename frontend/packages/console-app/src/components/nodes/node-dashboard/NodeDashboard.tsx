@@ -15,6 +15,8 @@ import { ToastPopupAlert } from '@console/internal/components/utils/hypercloud/t
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 import { useTranslation } from 'react-i18next';
 import { SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE } from '@console/internal/hypercloud/auth';
+import { getActiveCluster } from '@console/internal/actions/ui';
+import { coFetchJSON } from '@console/internal/co-fetch';
 
 const leftCards = [{ Card: DetailsCard }, { Card: InventoryCard }];
 const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
@@ -100,9 +102,29 @@ const NodeDashboard: React.FC<NodeDashboardProps> = ({ obj }) => {
     setHealthCheck,
   };
 
+  const [isAWS, setIsAWS] = React.useState(false);
+  React.useEffect(() => {
+    const getIsAWS = async () => {
+      const activeCluster = getActiveCluster();
+      const clusterManagerNameSpace = activeCluster.split('/')[0];
+      const clusterManagerName = activeCluster.split('/')[1];
+      const url = `${origin}/api/kubernetes/apis/cluster.tmax.io/v1alpha1/namespaces/${clusterManagerNameSpace}/clustermanagers/${clusterManagerName}`;
+
+      return coFetchJSON(url).then(result => {
+        return result.spec.provider === 'AWS';
+      });
+    };
+    if (isSingleClusterPerspective()) {
+      getIsAWS().then(res => {
+        setIsAWS(res);
+      });
+    }
+  }, []);
+
+
   return (
     <NodeDashboardContext.Provider value={context}>
-      {isAlert && isSingleClusterPerspective() && (
+      {isAlert && isSingleClusterPerspective() && isAWS && (
         <ToastPopupAlert
           title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_5')}
           message={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_6')}
