@@ -1,3 +1,4 @@
+import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
 import * as _ from 'lodash-es';
 import { Dispatch } from 'react-redux';
 import { ActionType as Action, action } from 'typesafe-actions';
@@ -8,7 +9,7 @@ import { makeReduxID } from '../components/utils/k8s-watcher';
 import { APIServiceModel } from '../models';
 import { coFetchJSON } from '../co-fetch';
 import { referenceForModel, K8sResourceKind, K8sKind } from '../module/k8s';
-import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult, getKind } from './utils/nonk8s-utils'
+import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult, getKind } from './utils/nonk8s-utils';
 import { history } from '@console/internal/components/utils/router';
 
 export enum ActionType {
@@ -83,12 +84,13 @@ export const watchK8sObject = (id: string, name: string, namespace: string, quer
       }
       coFetchJSON(url).then(
         o => dispatch(modifyObject(id, nonK8sObjectResult(getKind(id), o))),
-        e => dispatch(errored(id, e)),)
+        e => dispatch(errored(id, e)),
+      );
     } else {
       k8sGet(k8sType, name, namespace).then(
         o => dispatch(modifyObject(id, o)),
         e => dispatch(errored(id, e)),
-      )
+      );
     }
   };
   POLLs[id] = setInterval(poller, 30 * 1000);
@@ -156,18 +158,22 @@ export const watchK8sList = (
       history.push('/ingress-check?ingresslabelvalue=helm-apiserver');
     }
 
-    const response = nonK8SResource ? await coFetchJSON(url) : await k8sList(
-      k8skind,
-      {
-        limit: paginationLimit,
-        ...query,
-        ...(continueToken ? { continue: continueToken } : {}),
-      },
-      true,
-      // {},
-      // listName
-    );
-
+    const response = nonK8SResource
+      ? await coFetchJSON(url).catch(() => null)
+      : await k8sList(
+          k8skind,
+          {
+            limit: paginationLimit,
+            ...query,
+            ...(continueToken ? { continue: continueToken } : {}),
+          },
+          true,
+          // {},
+          // listName
+        );
+    if (url.includes(helmAPI) && response === null) {
+      history.push('/api-error');
+    }
     if (!REF_COUNTS[id]) {
       return;
     }
