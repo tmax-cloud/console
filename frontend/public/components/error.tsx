@@ -58,7 +58,13 @@ const ErrorComponent: React.SFC<ErrorComponentProps> = ({ title, message, errMes
         <h1 className="co-m-pane__heading co-m-pane__heading--center co-m-pane__heading-error-h1">{title}</h1>
         {message && <div className="text-center">{message}</div>}
         {errMessage && <div className="text-center text-muted">{errMessage}</div>}
-        {link && <h2 className="text-center"><Link to={link} className="text-center">{linkText}</Link></h2>}
+        {link && (
+          <h2 className="text-center">
+            <Link to={link} className="text-center">
+              {linkText}
+            </Link>
+          </h2>
+        )}
       </div>
     </>
   );
@@ -125,6 +131,18 @@ export const IngressCheckPage: React.SFC<ErrorPageProps> = () => {
         <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]}</title>
       </Helmet>
       <ErrorComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[0]} message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_66').split('\n')[1]} img={restrictedSignImg} link="/k8s/all-namespaces/ingresses" linkText={t('COMMON:MSG_COMMON_ERROR_MESSAGE_68')} />
+    </div>
+  );
+};
+export const ApiServiceError: React.SFC<ErrorPageProps> = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <Helmet>
+        <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_69').split('\n')[0]}</title>
+      </Helmet>
+      <ErrorComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_69').split('\n')[0]} message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_69').split('\n')[1]} img={restrictedSignImg} link="/k8s/all-namespaces/import" linkText={t('MSG_COMMON_ERROR_MESSAGE_70')} />
     </div>
   );
 };
