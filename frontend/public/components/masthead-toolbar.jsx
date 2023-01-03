@@ -18,12 +18,53 @@ import { clusterVersionReference, getReportBugLink } from '../module/k8s/cluster
 import * as redhatLogoImg from '../imgs/logos/redhat.svg';
 import { ExpTimer } from './hypercloud/exp-timer';
 import { createAccountUrl, logout as _logout, tokenRefresh } from '../hypercloud/auth';
-import { withTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
 import { setLanguage } from './hypercloud/utils/langs/i18n';
 import { hideChatbot } from './hypercloud/chatbot/chatbot';
+import { Dropdown, DropdownToggle, DropdownGroup, DropdownItem } from '@patternfly/react-core';
 
+import React from 'react';
+import { Dropdown, DropdownToggle, DropdownGroup, DropdownItem } from '@patternfly/react-core';
+
+export const DropdownGroups = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const { t } = useTranslation();
+
+  const onToggle = isOpen => {
+    setIsOpen(isOpen);
+  };
+
+  const onFocus = () => {
+    const element = document.getElementById('toggle-groups');
+    element.focus();
+  };
+
+  const onSelect = () => {
+    setIsOpen(false);
+    onFocus();
+  };
+
+  const dropdownItems = [
+    <DropdownGroup key="group 1">
+      <DropdownItem key="group 1 link">
+        <a href={HyperCloudManualLink} target="_blank" className="pf-c-app-launcher__menu-item">
+          {t('COMMON:MSG_GNB_MORE_1')}
+        </a>
+      </DropdownItem>
+      <DropdownItem key="group 1 action" component="button">
+        <CloudShellMastheadButton />
+      </DropdownItem>
+    </DropdownGroup>,
+  ];
+  const helpToggle = (
+    <span className="pf-c-dropdown__toggle">
+      <QuestionCircleIcon color="white" />
+    </span>
+  );
+  return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher" onSelect={onSelect} onToggle={onToggle} isOpen={isOpen} items={dropdownItems} toggleIcon={helpToggle} color="white" isGrouped />;
+};
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
     <ToolbarItem className={className}>
@@ -366,7 +407,6 @@ class MastheadToolbarContents_ extends React.Component {
         <AngleDownIcon className="pf-c-dropdown__toggle-icon" color="#757575" />
       </span>
     );
-
     return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher co-user-menu" onSelect={this._onUserDropdownSelect} onToggle={this._onUserDropdownToggle} isOpen={isUserDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={userToggle} isGrouped />;
   }
   _renderLanguageMenu(mobile) {
@@ -493,14 +533,7 @@ class MastheadToolbarContents_ extends React.Component {
                 </Link>
               </Tooltip>
             </ToolbarItem>
-            <CloudShellMastheadButton />
-            <ToolbarItem className="co-masthead-icon__button">
-              <Tooltip content="Manual" position={TooltipPosition.bottom}>
-                <a href={HyperCloudManualLink} target="_blank">
-                  <QuestionCircleIcon className="co-masthead-icon" color="white" />
-                </a>
-              </Tooltip>
-            </ToolbarItem>
+            <DropdownGroups />
           </ToolbarGroup>
 
           <ToolbarGroup>
