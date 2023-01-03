@@ -39,7 +39,7 @@ export class ExpTimer extends React.Component {
   tick() {
     if (expTime > 0) {
       expTime -= 1;
-      if (Math.floor(expTime) === 60) {
+      if (Math.floor(expTime) <= 60) {
         NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
       }
       this.expFormat();
