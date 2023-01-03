@@ -105,13 +105,12 @@ DefaultPage.displayName = 'DefaultPage';
 export const DefaultDetailsPage = props => {
   const menuActions = [...Kebab.getExtensionsActionsForKind(kindObj(props.kind)), ...common];
   const [pageState, setPageState] = React.useState([navFactory.details(DetailsForKind(props.kind)), navFactory.editResource()]);
-  const isCustomResourceType = !isResourceSchemaBasedMenu(props.kind);
-
+  const isCustomResourceType = !isResourceSchemaBasedMenu(props.kindObj.kind);
   React.useEffect(() => {
     isCustomResourceType &&
       k8sList(CustomResourceDefinitionModel).then(res => {
         _.find(res, function(data) {
-          return data.spec.names.kind === props.kind;
+          return data.spec.names.kind === props.kindObj.kind;
         }) || setPageState([navFactory.details(DetailsForKind(props.kind))]);
       });
   }, []);
