@@ -6,10 +6,12 @@ import { Conditions } from './conditions';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
-import { referenceFor, kindForReference, modelFor } from '../module/k8s';
+import { referenceFor, kindForReference, modelFor, k8sList } from '../module/k8s';
 import { Kebab, kindObj, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from './utils';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
+import { isResourceSchemaBasedMenu } from './hypercloud/form';
+import { CustomResourceDefinitionModel } from '../models';
 
 const { common } = Kebab.factory;
 
@@ -94,16 +96,25 @@ export const DefaultList = props => {
 DefaultList.displayName = 'DefaultList';
 
 export const DefaultPage = props => {
-  const exceptionKindList = ['ClusterRole'];  
+  const exceptionKindList = ['ClusterRole'];
   const canCreate = exceptionKindList.includes(props.kind) ? false : props.canCreate || _.get(modelFor(props.kind), 'crd') !== 'false';
   return <ListPage {...props} ListComponent={DefaultList} canCreate={canCreate} />;
 };
 DefaultPage.displayName = 'DefaultPage';
 
 export const DefaultDetailsPage = props => {
-  const pages = [navFactory.details(DetailsForKind(props.kind)), navFactory.editResource()];
   const menuActions = [...Kebab.getExtensionsActionsForKind(kindObj(props.kind)), ...common];
+  const [pageState, setPageState] = React.useState([navFactory.details(DetailsForKind(props.kind)), navFactory.editResource()]);
+  const isCustomResourceType = !isResourceSchemaBasedMenu(props.kindObj.kind);
+  React.useEffect(() => {
+    isCustomResourceType &&
+      k8sList(CustomResourceDefinitionModel).then(res => {
+        _.find(res, function(data) {
+          return data.spec.names.kind === props.kindObj.kind;
+        }) || setPageState([navFactory.details(DetailsForKind(props.kind))]);
+      });
+  }, []);
 
-  return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
+  return <DetailsPage {...props} menuActions={menuActions} pages={pageState} />;
 };
 DefaultDetailsPage.displayName = 'DefaultDetailsPage';
