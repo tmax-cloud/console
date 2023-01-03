@@ -393,7 +393,7 @@ class MastheadToolbarContents_ extends React.Component {
       //   ],
       // });
 
-      return <ApplicationLauncher aria-label="Utility menu" className="co-app-launcher" onSelect={this._onKebabDropdownSelect} onToggle={this._onKebabDropdownToggle} isOpen={isKebabDropdownOpen} items={this._renderApplicationItems(actions)} toggleIcon={<EllipsisVIcon color="white" />} isGrouped />;
+      return <ApplicationLauncher aria-label="Utility menu" className="co-app-launcher" onSelect={this._onKebabDropdownSelect} onToggle={this._onKebabDropdownToggle} isOpen={isKebabDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={<EllipsisVIcon color="white" />} isGrouped />;
     }
 
     if (_.isEmpty(actions)) {
