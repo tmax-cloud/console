@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RootState } from '@console/internal/redux';
-import { TerminalIcon } from '@patternfly/react-icons';
 import { isCloudShellExpanded } from '../../redux/reducers/cloud-shell-reducer';
 import { Button, ToolbarItem, Tooltip, TooltipPosition } from '@patternfly/react-core';
 import { connectToFlags, WithFlagsProps } from '@console/internal/reducers/features';
@@ -14,7 +13,6 @@ import { checkTerminalAvailable } from './cloud-shell-utils';
 type DispatchProps = {
   onClick: () => void;
 };
-
 type StateProps = {
   open?: boolean;
 };
@@ -62,7 +60,7 @@ const ClouldShellMastheadButton: React.FC<Props> = ({ flags, onClick, open }) =>
     <ToolbarItem>
       <Tooltip content={open ? 'Close command line terminal' : 'Open command line terminal'} position={TooltipPosition.bottom}>
         <Button variant="plain" aria-label="Command line terminal" onClick={toggleTerminal} className={open ? 'pf-m-selected' : undefined}>
-          <TerminalIcon className="co-masthead-icon" />
+          <div className="pf-c-app-launcher__menu-item">kubectl Command Line</div>
         </Button>
       </Tooltip>
     </ToolbarItem>
