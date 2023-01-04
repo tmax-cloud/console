@@ -183,7 +183,7 @@ export const EditYAML_ = connect(stateToProps)(
       const url = getResourceSchemaUrl(model, isCustomResourceType);
       url &&
         coFetchJSON(url).then(template => {
-          this.setState({ definition: isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : JSON.parse(template) });
+          this.setState({ definition: isCustomResourceType ? (template?.spec?.validation?.openAPIV3Schema ? template?.spec?.validation?.openAPIV3Schema : template?.spec?.versions[0]?.schema?.openAPIV3Schema) : JSON.parse(template) });
         });
     }
 
