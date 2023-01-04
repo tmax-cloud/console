@@ -5,32 +5,23 @@ import { coFetchJSON } from '../../co-fetch';
 import { K8sKind, K8sVerb } from '../../module/k8s';
 import { API_DISCOVERY_RESOURCES_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 
-const ADMIN_RESOURCES = new Set([
-  'roles',
-  'rolebindings',
-  'clusterroles',
-  'clusterrolebindings',
-  'thirdpartyresources',
-  'nodes',
-  'secrets',
-]);
+const ADMIN_RESOURCES = new Set(['roles', 'rolebindings', 'clusterroles', 'clusterrolebindings', 'thirdpartyresources', 'nodes', 'secrets']);
 
 const abbrBlacklist = ['ASS'];
-export const kindToAbbr = (kind) => {
+const abbrOneLetter = ['DEP'];
+
+export const kindToAbbr = kind => {
   const abbrKind = (kind.replace(/[^A-Z]/g, '') || kind.toUpperCase()).slice(0, 3);
-  return abbrBlacklist.includes(abbrKind) ? abbrKind.slice(0, -1) : abbrKind;
+  return abbrBlacklist.includes(abbrKind) ? abbrKind.slice(0, -1) : abbrOneLetter.includes(abbrKind) ? abbrKind.slice(0, -2) : abbrKind;
 };
 
-export const cacheResources = (resources) =>
+export const cacheResources = resources =>
   new Promise<void>((resolve, reject) => {
     try {
       // Add the console version. We invalidate the cache when console version changes.
       const { consoleVersion } = window.SERVER_FLAGS;
       const versionedResources = _.assign({}, resources, { consoleVersion });
-      localStorage.setItem(
-        API_DISCOVERY_RESOURCES_LOCAL_STORAGE_KEY,
-        JSON.stringify(versionedResources),
-      );
+      localStorage.setItem(API_DISCOVERY_RESOURCES_LOCAL_STORAGE_KEY, JSON.stringify(versionedResources));
       resolve();
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -56,9 +47,7 @@ export const getCachedResources = () =>
         const { consoleVersion: cachedVersion } = resources;
         if (cachedVersion !== currentVersion) {
           // eslint-disable-next-line no-console
-          console.log(
-            `Invalidating API discovery cache from earlier console version (current: ${currentVersion}, cached: ${cachedVersion})`,
-          );
+          console.log(`Invalidating API discovery cache from earlier console version (current: ${currentVersion}, cached: ${cachedVersion})`);
           resolve(null);
           return;
         }
@@ -97,19 +86,17 @@ export const pluralizeKind = (kind: string): string => {
 };
 
 export const getResources = () =>
-  coFetchJSON('api/kubernetes/apis').then((res) => {
-    const preferredVersions = res.groups.map((group) => group.preferredVersion);
-    const all: Promise<APIResourceList>[] = _.flatten(
-      res.groups.map((group) => group.versions.map((version) => `/apis/${version.groupVersion}`)),
-    )
+  coFetchJSON('api/kubernetes/apis').then(res => {
+    const preferredVersions = res.groups.map(group => group.preferredVersion);
+    const all: Promise<APIResourceList>[] = _.flatten(res.groups.map(group => group.versions.map(version => `/apis/${version.groupVersion}`)))
       .concat(['/api/v1'])
-      .map((p) => coFetchJSON(`api/kubernetes${p}`).catch((err) => err));
+      .map(p => coFetchJSON(`api/kubernetes${p}`).catch(err => err));
 
-    return Promise.all(all).then((data) => {
+    return Promise.all(all).then(data => {
       const resourceSet = new Set<string>();
       const namespacedSet = new Set<string>();
       data.forEach(
-        (d) =>
+        d =>
           d.resources &&
           d.resources.forEach(({ namespaced, name }) => {
             resourceSet.add(name);
@@ -146,14 +133,9 @@ export const getResources = () =>
           });
       };
 
-      const models = _.flatten(data.filter((d) => d.resources).map(defineModels));
-      allResources.forEach((r) =>
-        ADMIN_RESOURCES.has(r.split('/')[0]) ? adminResources.push(r) : safeResources.push(r),
-      );
-      const configResources = _.filter(
-        models,
-        (m) => m.apiGroup === 'config.openshift.io' && m.kind !== 'ClusterOperator',
-      );
+      const models = _.flatten(data.filter(d => d.resources).map(defineModels));
+      allResources.forEach(r => (ADMIN_RESOURCES.has(r.split('/')[0]) ? adminResources.push(r) : safeResources.push(r)));
+      const configResources = _.filter(models, m => m.apiGroup === 'config.openshift.io' && m.kind !== 'ClusterOperator');
 
       return {
         allResources,
