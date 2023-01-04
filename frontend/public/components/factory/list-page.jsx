@@ -431,12 +431,12 @@ export const MultiListPage = props => {
     namespace: r.namespaced ? namespace : r.namespace,
     prop: r.prop || r.kind,
   }));
-  const isCustomResourceType = !isResourceSchemaBasedMenu(resources[0].kindObj.kind);
+  const isCustomResourceType = !isResourceSchemaBasedMenu(resources[0]?.kindObj?.kind);
   React.useEffect(() => {
     isCustomResourceType &&
       k8sList(CustomResourceDefinitionModel).then(res => {
         _.find(res, function(data) {
-          return data.spec.names.kind === resources[0].kindObj.kind;
+          return data.spec.names.kind === resources[0]?.kindObj?.kind;
         }) ||
           ((href = namespace ? `/k8s/ns/${namespace}/import` : `/k8s/all-namespaces/import`) && setCreatePropsState({ to: href }));
       });
