@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
 import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { Status } from '@console/shared';
 import { SidecarModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { TableProps } from './utils/default-list-component';
