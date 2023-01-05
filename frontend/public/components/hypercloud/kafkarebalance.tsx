@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, StatusWithIcon } from '../utils';
 import { KafkaClusterModel, KafkaRebalanceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,10 @@ const tableProps: TableProps = {
       sortField: `metadata.labels['strimzi.io/cluster']`,
     },
     {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
+      sortField: 'status.conditions[0].type',
+    },
+    {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
     },
@@ -46,6 +50,9 @@ const tableProps: TableProps = {
     },
     {
       children: obj.metadata.labels && obj.metadata.labels['strimzi.io/cluster'] ? <ResourceLink kind={KafkaClusterModel.kind} name={obj.metadata.labels['strimzi.io/cluster']} namespace={obj.metadata.namespace} /> : <></>,
+    },
+    {
+      children: <StatusWithIcon obj={obj} />,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
