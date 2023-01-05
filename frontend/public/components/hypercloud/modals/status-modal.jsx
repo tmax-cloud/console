@@ -64,7 +64,7 @@ const BaseStatusModal = withTranslation()(
         case RoleBindingClaimModel.kind:
         case ResourceQuotaClaimModel.kind:
         case NamespaceClaimModel.kind: {
-          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_10');
+          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? 'Approved' : 'Rejected';
           const promise = k8sUpdateApproval(
             kind,
             resource,
@@ -94,7 +94,7 @@ const BaseStatusModal = withTranslation()(
           break;
         }
         case ClusterTemplateClaimModel.kind: {
-          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_10');
+          const stat = this.state.status === t('COMMON:MSG_COMMON_BUTTON_COMMIT_9') ? 'Approved' : 'Rejected';
           const promise = k8sUpdateApproval(
             kind,
             resource,
