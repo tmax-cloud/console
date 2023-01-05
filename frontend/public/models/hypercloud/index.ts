@@ -1491,7 +1491,6 @@ export const TFApplyClaimModel: K8sKind = {
   },
 };
 
-
 export const AWXModel: K8sKind = {
   kind: 'AWX',
   label: 'AWX Instance',
@@ -1588,8 +1587,8 @@ export const NodeConfigModel: K8sKind = {
 };
 
 export const BareMetalHostModel: K8sKind = {
-  label: 'Bare Metal Host',
-  labelPlural: 'Bare Metal Hosts',
+  label: 'BareMetal Host',
+  labelPlural: 'BareMetal Hosts',
   apiVersion: 'v1alpha1',
   apiGroup: 'metal3.io',
   plural: 'baremetalhosts',
@@ -1753,7 +1752,7 @@ export const RedisModel: K8sKind = {
     label: 'COMMON:MSG_LNB_MENU_242',
     labelPlural: 'COMMON:MSG_LNB_MENU_243',
   },
-}
+};
 
 export const RedisClusterModel: K8sKind = {
   label: 'Redis Cluster',

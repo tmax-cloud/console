@@ -25,6 +25,7 @@ import { GrafanaPage } from './hypercloud/grafana';
 //PF4 Imports
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import WelcomePage from './hypercloud/login/welcome';
+import SasPage from './hypercloud/sas/sas';
 
 const RedirectComponent = props => {
   const to = `/k8s${props.location.pathname}`;
@@ -76,7 +77,6 @@ const DefaultPage_: React.FC<DefaultPageProps> = ({ activePerspective, flags }) 
     return <LoadingBox />;
   }
   // support redirecting to perspective landing page
-  console.log(getPerspectives());
   return (
     <Redirect
       to={getPerspectives()
@@ -179,7 +179,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/add/ns/:ns" exact loader={() => import('../../packages/dev-console/src/components/AddPage' /* webpackChunkName: "import-yaml" */).then(m => NamespaceFromURL(m.AddPage))} />
           <Route path="/add" exact component={NamespaceRedirect} />
           <Route path="/welcome" exact component={WelcomePage} />
-
+          <Route path="/sas" exact component={SasPage} />
           <LazyRoute path="/kiali/all-namespaces" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />
           <LazyRoute path="/kiali/ns/:ns" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />
           <Route path="/kiali" exact component={NamespaceRedirect} />

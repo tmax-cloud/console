@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CogsIcon } from '@patternfly/react-icons';
 import { Perspective } from '@console/plugin-sdk';
-import { FLAGS } from '@console/shared/src/constants';
+import { FLAGS, LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 import { getActivePerspective, getActiveCluster } from '@console/internal/actions/ui';
 import { TFunction } from 'i18next';
 import * as MultiClusterIcon from '@console/internal/imgs/hypercloud/lnb/multi_cluster.svg';
@@ -14,7 +14,6 @@ import * as SelectedMasterClusterIcon from '@console/internal/imgs/hypercloud/ln
 import * as SelectedSingleClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/single_cluster_filled.svg';
 import * as SelectedDeveloperIcon from '@console/internal/imgs/hypercloud/lnb/filled/developer_filled.svg';
 import * as SelectedBaremetalIcon from '@console/internal/imgs/hypercloud/lnb/filled/baremetal_filled.svg';
-import { LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 
 export enum PerspectiveType {
   MASTER = 'MASTER',
@@ -22,6 +21,7 @@ export enum PerspectiveType {
   SINGLE = 'SINGLE',
   DEVELOPER = 'DEVELOPER',
   BAREMETAL = 'BAREMETAL',
+  SAS = 'SAS',
   CUSTOM = 'CUSTOM',
 }
 
@@ -31,15 +31,16 @@ export const PerspectiveLabelKeys = {
   [PerspectiveType.SINGLE]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_1',
   [PerspectiveType.DEVELOPER]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_4',
   [PerspectiveType.BAREMETAL]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_5',
+  [PerspectiveType.SAS]: 'SAS',
   [PerspectiveType.CUSTOM]: 'CUSTOM',
 };
 
 export const isSingleClusterPerspective = () => {
-  return window.SERVER_FLAGS.mcMode && getActivePerspective() == PerspectiveType.SINGLE;
+  return window.SERVER_FLAGS.mcMode && getActivePerspective() === PerspectiveType.SINGLE;
 };
 
 export const isMasterClusterPerspective = () => {
-  return getActivePerspective() == PerspectiveType.MASTER;
+  return getActivePerspective() === PerspectiveType.MASTER;
 };
 export const getSingleClusterFullBasePath = () => {
   return `${sessionStorage.getItem(LAST_CLUSTER_HOST_LOCAL_STORAGE_KEY)}api/${getActiveCluster()}`;
@@ -65,8 +66,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
             default: true,
-            getLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
-            getK8sLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
+            getLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
             getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
           },
         },
@@ -102,8 +103,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
-            getLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
-            getK8sLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
+            getLandingPageURL: () => (isFirstTime ? '/developer/add' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/developer/add' : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -115,8 +116,21 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             icon: <img src={BaremetalIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedBaremetalIcon} className="font-icon" />,
             default: true,
-            getLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
-            getK8sLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
+            getLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
+            getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
+          },
+        },
+        {
+          type: 'Perspective',
+          properties: {
+            id: PerspectiveType.SAS,
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
+            icon: <img src={BaremetalIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+            selectedIcon: <img src={SelectedBaremetalIcon} className="font-icon" />,
+            default: true,
+            getLandingPageURL: () => (isFirstTime ? '/sas' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/sas' : '/welcome'),
             getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
           },
         },
@@ -142,9 +156,23 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
-            getLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
-            getK8sLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
+            getLandingPageURL: () => (isFirstTime ? '/developer/add' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/developer/add' : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+          },
+        },
+        ,
+        {
+          type: 'Perspective',
+          properties: {
+            id: PerspectiveType.SAS,
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
+            icon: <img src={BaremetalIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+            selectedIcon: <img src={SelectedBaremetalIcon} className="font-icon" />,
+            default: true,
+            getLandingPageURL: () => (isFirstTime ? '/sas' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/sas' : '/welcome'),
+            getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
           },
         },
       ];
@@ -157,8 +185,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         name: 'Custom', // 임시. 스트링 나오면 재적용 필요
         icon: <CogsIcon className="font-icon co-console-dropdowntoggle-icon" />,
         selectedIcon: <CogsIcon className="font-icon " />,
-        getLandingPageURL: flags => (isFirstTime ? '/custom/add' : '/welcome'),
-        getK8sLandingPageURL: flags => (isFirstTime ? '/custom/add' : '/welcome'),
+        getLandingPageURL: () => (isFirstTime ? '/custom/add' : '/welcome'),
+        getK8sLandingPageURL: () => (isFirstTime ? '/custom/add' : '/welcome'),
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
       },
     });
