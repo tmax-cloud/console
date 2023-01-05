@@ -38,7 +38,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
     },
     {
-      children: <Status status={obj.metadata.namespace} />,
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
