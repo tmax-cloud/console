@@ -433,6 +433,9 @@ export const MultiListPage = props => {
   }));
   const isCustomResourceType = !isResourceSchemaBasedMenu(resources[0]?.kindObj?.kind);
   React.useEffect(() => {
+    setCreatePropsState(createProps);
+  }, [createProps]);
+  React.useEffect(() => {
     isCustomResourceType &&
       k8sList(CustomResourceDefinitionModel).then(res => {
         _.find(res, function(data) {
