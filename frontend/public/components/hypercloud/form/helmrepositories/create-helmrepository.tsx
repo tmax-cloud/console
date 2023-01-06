@@ -7,18 +7,16 @@ import { WithCommonForm } from '../create-form';
 import { RadioGroup } from '../../utils/radio';
 import { TextInput } from '../../utils/text-input';
 import { HelmRepositoryModel } from '@console/internal/models/hypercloud/helm-model';
-import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils'
+import { helmAPI } from '@console/internal/actions/utils/nonk8s-utils';
 
 const typeItems = [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
     title: 'Public',
-    desc: 'Public',
     value: 'Public',
   },
   {
     title: 'Private',
-    desc: 'Private',
     value: 'Private',
   },
 ];
