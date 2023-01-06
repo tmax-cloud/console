@@ -10,7 +10,7 @@ import { referenceFor, kindForReference, modelFor, k8sList } from '../module/k8s
 import { Kebab, kindObj, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from './utils';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
-import { isResourceSchemaBasedMenu } from './hypercloud/form';
+import { isResourceSchemaBasedMenu, isResourceSchemaBasedOrCreateMenu } from './hypercloud/form';
 import { CustomResourceDefinitionModel } from '../models';
 
 const { common } = Kebab.factory;
@@ -105,7 +105,8 @@ DefaultPage.displayName = 'DefaultPage';
 export const DefaultDetailsPage = props => {
   const menuActions = [...Kebab.getExtensionsActionsForKind(kindObj(props.kind)), ...common];
   const [pageState, setPageState] = React.useState([navFactory.details(DetailsForKind(props.kind)), navFactory.editResource()]);
-  const isCustomResourceType = !isResourceSchemaBasedMenu(props.kindObj.kind);
+  const isCustomResourceType = !isResourceSchemaBasedOrCreateMenu(props.kindObj.kind);
+
   React.useEffect(() => {
     isCustomResourceType &&
       k8sList(CustomResourceDefinitionModel).then(res => {

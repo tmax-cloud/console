@@ -22,7 +22,7 @@ import { NavBar } from '../utils/horizontal-nav';
 import { DefaultListComponent } from '../hypercloud/utils/default-list-component';
 import { getQueryArgument } from '../utils';
 import { CustomResourceDefinitionModel } from '../../models';
-import { isResourceSchemaBasedMenu } from '../hypercloud/form';
+import { isResourceSchemaBasedMenu, isResourceSchemaBasedOrCreateMenu } from '../hypercloud/form';
 
 /** @type {React.SFC<{disabled?: boolean, label?: string, onChange: (value: string) => void;, defaultValue?: string, value?: string, placeholder?: string, autoFocus?: boolean, onFocus?:any, name?:string, id?: string, onKeyDown?: any, parentClassName?: string }}>} */
 export const TextFilter = props => {
@@ -431,7 +431,8 @@ export const MultiListPage = props => {
     namespace: r.namespaced ? namespace : r.namespace,
     prop: r.prop || r.kind,
   }));
-  const isCustomResourceType = !isResourceSchemaBasedMenu(resources[0]?.kindObj?.kind);
+  const kind = props?.resources[0]?.kindObj?.kind || props?.resources[0]?.kind;
+  const isCustomResourceType = !isResourceSchemaBasedOrCreateMenu(kind);
   React.useEffect(() => {
     setCreatePropsState(createProps);
   }, [createProps]);
@@ -439,7 +440,7 @@ export const MultiListPage = props => {
     isCustomResourceType &&
       k8sList(CustomResourceDefinitionModel).then(res => {
         _.find(res, function(data) {
-          return data.spec.names.kind === resources[0]?.kindObj?.kind;
+          return data.spec.names.kind === kind;
         }) ||
           ((href = namespace ? `/k8s/ns/${namespace}/import` : `/k8s/all-namespaces/import`) && setCreatePropsState({ to: href }));
       });

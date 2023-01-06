@@ -1,7 +1,7 @@
 import * as models from '../../../models';
 import { CustomResourceDefinitionModel } from '../../../models';
 import { allModels, getK8sAPIPath, K8sKind } from '../../../module/k8s';
-
+import * as helmModel from '../../../../public/models/hypercloud/helm-model';
 enum SCHEMA_DIRECTORY {
   MANAGEMENT = 'management',
   NETWORK = 'network',
@@ -41,11 +41,18 @@ export const resourceSchemaBasedMenuMap = new Map([
 
 const isCreateManualSet = new Set([models.RoleModel.kind, models.ClusterRoleModel.kind, models.ServiceInstanceModel.kind, models.TemplateInstanceModel.kind, models.TaskModel.kind, models.ClusterTaskModel.kind, models.TaskRunModel.kind, models.PipelineRunModel.kind, models.PipelineResourceModel.kind, models.RoleBindingModel.kind, models.ClusterRoleBindingModel.kind, models.RoleBindingClaimModel.kind, models.PipelineModel.kind, models.SecretModel.kind, models.ServiceBindingModel.kind]);
 
+const resourceCreateMenu = new Set([helmModel.HelmChartModel.kind, helmModel.HelmReleaseModel.kind, helmModel.HelmRepositoryModel.kind]);
+
 export const pluralToKind = (plural: string) => allModels().find(model => model.plural === plural)?.kind;
 
 export const isCreateManual = (kind: string) => isCreateManualSet.has(kind);
 
 export const isResourceSchemaBasedMenu = (kind: string) => resourceSchemaBasedMenuMap.has(kind);
+
+export const isResourceSchemaBasedOrCreateMenu = (kind: string) => {
+  const ret = resourceSchemaBasedMenuMap.has(kind) || resourceCreateMenu.has(kind);
+  return ret;
+};
 
 export const getResourceSchemaUrl = (model: K8sKind, isCustomResourceType: boolean) => {
   let url = null;
