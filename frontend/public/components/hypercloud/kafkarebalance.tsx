@@ -7,11 +7,15 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
 import { k8sList } from '@console/internal/module/k8s';
-
+import { Status } from '@console/shared';
+import { CodeContainer } from '../utils/hypercloud/code-container';
 const kind = KafkaRebalanceModel.kind;
 
 const menuActions: KebabAction[] = [...Kebab.factory.common];
-
+const KafkaRebalanceReducer = (kr: any): string => {
+  return kr.status ? kr.status.conditions[0].type : 'No Status';
+};
+const KafkaRebalanceStatus = ({ kr }) => <Status status={KafkaRebalanceReducer(kr)} />;
 const tableProps: TableProps = {
   header: [
     {
@@ -91,6 +95,9 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
 
   return (
     <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')} obj={kr}>
+        <KafkaRebalanceStatus kr={kr} />
+      </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_1')} obj={kr}>
         {kafkaName !== '' ? <ResourceLink kind={KafkaClusterModel.kind} name={kafkaName} namespace={kr.metadata.namespace} /> : <></>}
       </DetailsItem>
@@ -131,6 +138,10 @@ const KafkaRebalanceDetails: React.FC<KafkaRebalanceDetailsProps> = ({ obj: kr }
             <KafkaRebalanceDetailsList obj={kr} />
           </div>
         </div>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_10')} />
+        <CodeContainer label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_10')} value={kr.status.optimizationResult} />
       </div>
     </>
   );
