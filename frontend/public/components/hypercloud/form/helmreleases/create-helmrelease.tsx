@@ -151,7 +151,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
       versions.length > 0 && version.label !== ''
         ? versions.filter(e => {
             if (e.label === version.label) return true;
-          })[0].value
+          })[0]?.value
         : '';
     const setChartVersion = async () => {
       await coFetchJSON(`${host}/helm/v1/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
