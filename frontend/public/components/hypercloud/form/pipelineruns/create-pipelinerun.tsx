@@ -68,7 +68,7 @@ const ResourceListComponent = props => {
 };
 
 const WorkspaceListComponent = props => {
-  return props.workspaceList.map((cur, idx) => <Workspace namespace={props.namespace} methods={props.methods} id={`spec.workspaces[${idx}]`} {...cur} />);
+  return props.workspaceList.map((cur, idx) => <Workspace {...cur} key={`workspace-${cur.name}`} namespace={props.namespace} methods={props.methods} id={`spec.workspaces[${idx}]`} name={cur.name} />);
 };
 
 const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
@@ -176,7 +176,7 @@ const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
   const { formData, onChange } = props;
   const _formData = React.useMemo(() => convertToForm(formData), [formData]);
   const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
-  const watchFieldNames = ['metadata.labels', 'spec.params', 'spec.resources'];
+  const watchFieldNames = ['metadata.labels', 'spec.params', 'spec.resources', 'spec.workspaces'];
   return <Form fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 

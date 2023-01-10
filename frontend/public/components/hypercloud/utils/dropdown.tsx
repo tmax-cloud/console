@@ -86,7 +86,7 @@ const Dropdown_: React.SFC<DropdownProps> = props => {
 
     setValue(name, selected);
     setKeyboardHoverKey(selected);
-    callback(selected);
+    callback && callback(selected);
 
     hide(e);
   };

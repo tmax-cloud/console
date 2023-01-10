@@ -20,14 +20,20 @@ export const onSubmitCallback = data => {
   });
 
   _.forEach(data.spec.workspaces, workspace => {
-    _.forEach(workspace.name, (type, name) => {
-      workspace.name = name;
-      if (type === 'EmptyDirectory') {
+    if (workspace && workspace.type) {
+      if (workspace.type == 'EmptyDirectory') {
         workspace.emptyDir = {};
-      } else if (type === 'VolumeClaimTemplate') {
-        workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
+      } else if (workspace.type == 'VolumeClaimTemplate') {
+        workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes[0]];
+      } else if (workspace.type == 'Secret') {
+        workspace.secret.secretName = workspace?.secret?.secretName;
+      } else if (workspace.type == 'ConfigMap') {
+        workspace.configmap.name = workspace?.configmap?.name;
+      } else if (workspace.type == 'PVC') {
+        workspace.persistentVolumeClaim.claimName = workspace?.persistentVolumeClaim?.claimName;
       }
-    });
+      delete workspace.type;
+    }
   });
 
   delete data.metadata.labels;
@@ -60,20 +66,33 @@ export const convertToForm = (data: any) => {
     resources[obj.name] = { resourceRef: { name: obj.resourceRef?.name } };
   });
 
+  const workspaces = [];
   _.forEach(_data.spec?.workspaces, workspace => {
-    let _name = workspace.name;
+    if (workspace) {
+      let newWorkspace = { name: workspace.name };
+      const type = 'secret' in workspace ? 'Secret' : 'configmap' in workspace ? 'ConfigMap' : 'emptyDir' in workspace ? 'EmptyDirectory' : 'persistentVolumeClaim' in workspace ? 'PVC' : 'volumeClaimTemplate' in workspace ? 'VolumeClaimTemplate' : '';
+      newWorkspace = _.merge(newWorkspace, { type: type });
+      if (type === 'EmptyDirectory') {
+        newWorkspace = _.merge(newWorkspace, { emptyDir: {} });
+      } else if (type === 'VolumeClaimTemplate') {
+        const accessMode = workspace?.volumeClaimTemplate?.spec?.accessModes[0];
+        const storage = workspace?.volumeClaimTemplate?.spec?.resources?.requests?.storage;
+        const storageClassName = workspace?.volumeClaimTemplate?.spec?.storageClassName;
+        newWorkspace = _.merge(newWorkspace, { volumeClaimTemplate: { spec: { accessModes: [accessMode], resources: { requests: { storage: storage } }, storageClassName: storageClassName } } });
+      } else if (type === 'Secret') {
+        newWorkspace = _.merge(newWorkspace, { secret: { secretName: workspace?.secret?.secretName } });
+      } else if (type === 'ConfigMap') {
+        newWorkspace = _.merge(newWorkspace, { configmap: { name: workspace?.configmap?.name } });
+      } else if (type === 'PVC') {
+        newWorkspace = _.merge(newWorkspace, { persistentVolumeClaim: { claimName: workspace?.persistentVolumeClaim?.claimName } });
+      }
 
-    let type = 'emptyDir' in workspace ? 'EmptyDirectory' : 'volumeClaimTemplate' in workspace ? 'VolumeClaimTemplate' : '';
-    if (type === 'VolumeClaimTemplate') {
-      workspace.volumeClaimTemplate.spec.accessModes = workspace.volumeClaimTemplate.spec.accessModes[0];
+      workspaces.push(newWorkspace);
     }
-
-    workspace.name = {};
-    workspace.name[_name] = type;
   });
 
-  const omittedData = _.omit(_data, ['metadata.labels', 'spec.resources', 'spec.params']);
+  const omittedData = _.omit(_data, ['metadata.labels', 'spec.resources', 'spec.params', 'spec.workspaces']);
 
-  const convertedData = _.merge(omittedData, { metadata: { labels }, spec: { resources, params } });
+  const convertedData = _.merge(omittedData, { metadata: { labels }, spec: { resources, params, workspaces } });
   return convertedData;
 };
