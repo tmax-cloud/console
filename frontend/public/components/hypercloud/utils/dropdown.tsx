@@ -27,7 +27,23 @@ type DropdownRowProps = {
 };
 
 const Dropdown_: React.SFC<DropdownProps> = props => {
-  const { name, ariaLabel, className, buttonClassName, menuClassName, dropDownClassName, titlePrefix, describedBy, disabled, required, methods, defaultValue, callback } = props;
+  const {
+    name,
+    ariaLabel,
+    className,
+    buttonClassName,
+    menuClassName,
+    dropDownClassName,
+    titlePrefix,
+    describedBy,
+    disabled,
+    required,
+    methods,
+    defaultValue,
+    callback = e => {
+      e;
+    },
+  } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
   const selectedKey = watch(name, defaultValue);
