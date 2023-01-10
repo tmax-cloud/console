@@ -43,89 +43,85 @@ export const Workspace = props => {
   const { t } = useTranslation();
   const workspace = useWatch<string>({
     control: props.methods.control,
-    name: `${props.id}.name.${props.name}`,
+    name: `${props.id}.type`,
   });
-
-  const workspaceDetail = {
-    VolumeClaimTemplate: (
-      <>
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_14')} id="accessMode">
-          <RadioGroup name={`${props.id}.volumeClaimTemplate.spec.accessModes`} items={accessItems} methods={props.methods} />
-        </Section>
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_12')} id="storage">
-          <TextInput className="pf-c-form-control" id={`${props.id}.volumeClaimTemplate.spec.resources.requests.storage`} methods={props.methods} />
-        </Section>
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_13')} id="storageClass">
-          <TextInput className="pf-c-form-control" id={`${props.id}.volumeClaimTemplate.spec.storageClassName`} methods={props.methods} />
-        </Section>
-      </>
-    ),
-    PVC: (
-      <>
-        <Section label={t('COMMON:MSG_LNB_MENU_141')} id="pvc">
-          <ResourceDropdown
-            name={`${props.id}.persistentVolumeClaim.claimName`}
-            resources={[
-              {
-                kind: 'PersistentVolumeClaim',
-                namespace: props.namespace,
-                prop: 'persistentvolumeclaim',
-              },
-            ]}
-            type="single"
-            methods={props.methods}
-            useHookForm
-          />
-        </Section>
-      </>
-    ),
-    ConfigMap: (
-      <>
-        <Section label={t('COMMON:MSG_LNB_MENU_120')} id="configmap">
-          <ResourceDropdown
-            name={`${props.id}.configmap.name`}
-            resources={[
-              {
-                kind: 'ConfigMap',
-                namespace: props.namespace,
-                prop: 'configmap',
-              },
-            ]}
-            type="single"
-            methods={props.methods}
-            useHookForm
-          />
-        </Section>
-      </>
-    ),
-    Secret: (
-      <>
-        <Section label={t('COMMON:MSG_LNB_MENU_119')} id="secret">
-          <ResourceDropdown
-            name={`${props.id}.secret.secretName`}
-            resources={[
-              {
-                kind: 'Secret',
-                namespace: props.namespace,
-                prop: 'secret',
-              },
-            ]}
-            type="single"
-            methods={props.methods}
-            useHookForm
-          />
-        </Section>
-      </>
-    ),
-    EmptyDirectory: null,
-  }[workspace];
 
   return (
     <ul>
+      <TextInput className="pf-c-form-control" id={`${props.id}.name`} methods={props.methods} defaultValue={props.name} hidden />
       <Section label={props.name} id={props.name}>
-        <Dropdown name={`${props.id}.name.${props.name}`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={props.type} />
+        <Dropdown name={`${props.id}.type`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={props.type} />
       </Section>
-      {workspaceDetail}
+      {workspace == 'VolumeClaimTemplate' && (
+        <>
+          <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_14')} id="accessMode">
+            <RadioGroup name={`${props.id}.volumeClaimTemplate.spec.accessModes[0]`} items={accessItems} methods={props.methods} />
+          </Section>
+          <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_12')} id="storage">
+            <TextInput className="pf-c-form-control" id={`${props.id}.volumeClaimTemplate.spec.resources.requests.storage`} methods={props.methods} />
+          </Section>
+          <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_13')} id="storageClass">
+            <TextInput className="pf-c-form-control" id={`${props.id}.volumeClaimTemplate.spec.storageClassName`} methods={props.methods} />
+          </Section>
+        </>
+      )}
+      {workspace == 'PVC' && (
+        <>
+          <Section label={t('COMMON:MSG_LNB_MENU_141')} id="pvc">
+            <ResourceDropdown
+              name={`${props.id}.persistentVolumeClaim.claimName`}
+              resources={[
+                {
+                  kind: 'PersistentVolumeClaim',
+                  namespace: props.namespace,
+                  prop: 'persistentvolumeclaim',
+                },
+              ]}
+              type="single"
+              methods={props.methods}
+              useHookForm
+            />
+          </Section>
+        </>
+      )}
+      {workspace == 'ConfigMap' && (
+        <>
+          <Section label={t('COMMON:MSG_LNB_MENU_120')} id="configmap">
+            <ResourceDropdown
+              name={`${props.id}.configmap.name`}
+              resources={[
+                {
+                  kind: 'ConfigMap',
+                  namespace: props.namespace,
+                  prop: 'configmap',
+                },
+              ]}
+              type="single"
+              methods={props.methods}
+              useHookForm
+            />
+          </Section>
+        </>
+      )}
+      {workspace == 'Secret' && (
+        <>
+          <Section label={t('COMMON:MSG_LNB_MENU_119')} id="secret">
+            <ResourceDropdown
+              name={`${props.id}.secret.secretName`}
+              resources={[
+                {
+                  kind: 'Secret',
+                  namespace: props.namespace,
+                  prop: 'secret',
+                },
+              ]}
+              type="single"
+              methods={props.methods}
+              useHookForm
+            />
+          </Section>
+        </>
+      )}
     </ul>
   );
 };
