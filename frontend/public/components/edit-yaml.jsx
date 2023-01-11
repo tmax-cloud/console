@@ -182,8 +182,14 @@ export const EditYAML_ = connect(stateToProps)(
       const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
       const url = getResourceSchemaUrl(model, isCustomResourceType);
       url &&
-        coFetchJSON(url).then(template => {
-          const currentDefinition = isCustomResourceType ? (template?.spec?.validation?.openAPIV3Schema ? template?.spec?.validation?.openAPIV3Schema : template?.spec?.versions[0]?.schema?.openAPIV3Schema) : JSON.parse(template);
+        coFetchJSON(url).then(template => {          
+          const currentDefinition = isCustomResourceType
+            ? template?.spec?.validation?.openAPIV3Schema
+              ? template?.spec?.validation?.openAPIV3Schema
+              : template?.spec?.versions.filter(version => {
+                  if (version.name === model.apiVersion) return true;
+                })[0]?.schema?.openAPIV3Schema
+            : JSON.parse(template);
           const currentProperties = _.get(currentDefinition, 'properties') || _.get(currentDefinition, 'items.properties');
           this.setState({ definition: currentProperties ? currentDefinition : null });
         });
