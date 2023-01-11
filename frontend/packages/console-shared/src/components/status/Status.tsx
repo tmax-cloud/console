@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { ClipboardListIcon, HourglassStartIcon, HourglassHalfIcon, SyncAltIcon, BanIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
-//import { ClipboardListIcon, HourglassStartIcon, HourglassHalfIcon, SyncAltIcon, BanIcon, ExclamationTriangleIcon, UnknownIcon } from '@patternfly/react-icons';
+import { ClipboardListIcon, HourglassStartIcon, HourglassHalfIcon, SyncAltIcon, BanIcon } from '@patternfly/react-icons';
 import { DASH } from '../../constants';
 import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import { YellowExclamationTriangleIcon } from './icons';
 import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, SuccessStatus } from './statuses';
-//import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
 import * as AwaitingIcon from '@console/internal/imgs/hypercloud/awaiting.svg';
@@ -37,11 +35,10 @@ import * as WorkerIcon from '@console/internal/imgs/hypercloud/worker.svg';
 import * as MasterIcon from '@console/internal/imgs/hypercloud/master.svg';
 import * as LostIcon from '@console/internal/imgs/hypercloud/lost.svg';
 import * as BoundIcon from '@console/internal/imgs/hypercloud/bound.svg';
-import * as Cash_loop_back_offIcon from '@console/internal/imgs/hypercloud/cash_loop_back_off.svg';
+import * as CrashLoopBackOffIcon from '@console/internal/imgs/hypercloud/cash_loop_back_off.svg';
 import * as RunningIcon from '@console/internal/imgs/hypercloud/running.svg';
 import * as UnknownIcon from '@console/internal/imgs/hypercloud/unknown.svg';
 import * as ThrobberIcon from '@console/internal/imgs/hypercloud/throbber.svg';
-//import * as ErrorIcon from '@console/internal/imgs/hypercloud/error.failure.failed.svg';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
@@ -54,7 +51,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
       return <StatusIconAndText {...statusProps} icon={<HourglassHalfIcon />} />;
 
     case 'Awaiting':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-awaiting-icon" src={AwaitingIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-awaiting-icon" src={AwaitingIcon} alt="" />} />;
 
     case 'Planning':
       return <StatusIconAndText {...statusProps} icon={<ClipboardListIcon />} />;
@@ -62,24 +59,19 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'ContainerCreating':
     case 'Creating':
     case 'UpgradePending':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-creating-icon" src={CreatingIcon} />} />;
-    //return <ProgressStatus {...statusProps} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-creating-icon" src={CreatingIcon} alt="" />} />;
 
     case 'In Progress':
     case 'InstallReady':
     case 'Replacing':
-    case 'Running':
     case 'Signing':
     case 'Updating':
     case 'Deploying':
       return <StatusIconAndText {...statusProps} icon={<SyncAltIcon />} />;
 
-    case 'Cancelled':
     case 'Deleting':
     case 'Expired':
     case 'Not Ready':
-    case 'NotReady':
-    case 'Terminating':
     case 'Rejected':
       return <StatusIconAndText {...statusProps} icon={<BanIcon />} />;
 
@@ -89,10 +81,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Role Binding Deleted':
     case 'Deleted':
     case 'Delete':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deleted-icon" src={DeletedIcon} />} />;
-
-    case 'Warning':
-      return <StatusIconAndText {...statusProps} icon={<ExclamationTriangleIcon />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deleted-icon" src={DeletedIcon} alt="" />} />;
 
     case 'RequiresApproval':
       return <StatusIconAndText {...statusProps} icon={<YellowExclamationTriangleIcon />} />;
@@ -106,21 +95,16 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Fail':
     case 'ImagePullBackOff':
     case 'InstallCheckFailed':
-    case 'Lost':
     case 'UpgradeFailed':
     case 'Failure':
-      //return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-error-icon" src={ErrorIcon} />} />;
       return <ErrorStatus {...statusProps}>{children}</ErrorStatus>;
-
     case 'Accepted':
     case 'Succeeded':
     case 'Active':
-    case 'Bound':
     case 'Complete':
     case 'Completed':
     case 'Created':
     case 'Enabled':
-    case 'Succeeded':
     case 'Up to date':
     case 'Provisioned as node':
     case 'Approved':
@@ -132,84 +116,84 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
 
     case 'Unknown':
     case 'unknown':
-      //return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-unknown-icon" src={UnknownIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-unknown-icon" src={UnknownIcon} alt="" />} />;
 
     case 'ChartFetched':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-chartfetched-icon" src={ChartFetchedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-chartfetched-icon" src={ChartFetchedIcon} alt="" />} />;
     case 'ChartFetchFailed':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-chartfetchfailed-icon" src={ChartFetchFailedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-chartfetchfailed-icon" src={ChartFetchFailedIcon} alt="" />} />;
     case 'Installing':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-installing-icon" src={InstallingIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-installing-icon" src={InstallingIcon} alt="" />} />;
     case 'Upgrading':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-upgrading-icon" src={UpgradingIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-upgrading-icon" src={UpgradingIcon} alt="" />} />;
     case 'Deployed':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deployed-icon" src={DeployedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deployed-icon" src={DeployedIcon} alt="" />} />;
     case 'DeployedFailed':
     case 'DeployFailed':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deployedfailed-icon" src={DeployedFailedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deployedfailed-icon" src={DeployedFailedIcon} alt="" />} />;
     case 'Testing':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-testing-icon" src={TestingIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-testing-icon" src={TestingIcon} alt="" />} />;
     case 'TestFailed':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-testfailed-icon" src={TestFailedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-testfailed-icon" src={TestFailedIcon} alt="" />} />;
     case 'Tested':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-tested-icon" src={TestedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-tested-icon" src={TestedIcon} alt="" />} />;
     case 'RollingBack':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-rollingback-icon" src={RollingBackIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-rollingback-icon" src={RollingBackIcon} alt="" />} />;
     case 'RolledBack':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-rolledback-icon" src={RolledBackIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-rolledback-icon" src={RolledBackIcon} alt="" />} />;
     case 'RollBackFailed':
     case 'RollbackFailed':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-rollbackfailed-icon" src={RollBackFailedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-rollbackfailed-icon" src={RollBackFailedIcon} alt="" />} />;
     case 'Applied':
     case 'applied':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-applied-icon" src={AppliedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-applied-icon" src={AppliedIcon} alt="" />} />;
     case 'Destroyed':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-destroyed-icon" src={DestroyedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-destroyed-icon" src={DestroyedIcon} alt="" />} />;
     case 'Ready':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-ready-icon" src={ReadyIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-ready-icon" src={ReadyIcon} alt="" />} />;
     case 'UnReady':
     case 'Unready':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-unready-icon" src={UnreadyIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-unready-icon" src={UnreadyIcon} alt="" />} />;
     case 'Notready':
     case 'NotReady':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-notready-icon" src={NotreadyIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-notready-icon" src={NotreadyIcon} alt="" />} />;
     case 'Planned':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-planned-icon" src={PlannedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-planned-icon" src={PlannedIcon} alt="" />} />;
     case 'Normal':
     case 'normal':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-normal-icon" src={NormalIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-normal-icon" src={NormalIcon} alt="" />} />;
     case 'Warning':
     case 'warning':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-warning-icon" src={WarningIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-warning-icon" src={WarningIcon} alt="" />} />;
     case 'Scanning':
     case 'scanning':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-scanning-icon" src={ScanningIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-scanning-icon" src={ScanningIcon} alt="" />} />;
     case 'Cancelled':
     case 'cancelled':
     case 'Terminating':
     case 'terminating':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cancelled-icon" src={CancelledIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cancelled-icon" src={CancelledIcon} alt="" />} />;
     case 'Worker':
     case 'worker':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-worker-icon" src={WorkerIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-worker-icon" src={WorkerIcon} alt="" />} />;
     case 'Master':
     case 'master':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-master-icon" src={MasterIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-master-icon" src={MasterIcon} alt="" />} />;
     case 'Lost':
     case 'lost':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-lost-icon" src={LostIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-lost-icon" src={LostIcon} alt="" />} />;
     case 'Bound':
     case 'bound':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-bound-icon" src={BoundIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-bound-icon" src={BoundIcon} alt="" />} />;
     case 'Cash_loop_back_off':
     case 'cash_loop_back_off':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cash_loop_back_off-icon" src={Cash_loop_back_offIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cash_loop_back_off-icon" src={CrashLoopBackOffIcon} alt="" />} />;
     case 'Running':
+    case 'RUNNING':
     case 'running':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-running-icon" src={RunningIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-running-icon" src={RunningIcon} alt="" />} />;
     case NO_STATUS:
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-throbber-icon" src={ThrobberIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-throbber-icon" src={ThrobberIcon} alt="" />} />;
     default:
       return <>{status || DASH}</>;
   }
