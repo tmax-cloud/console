@@ -5,6 +5,7 @@ import { SectionHeading, Timestamp, detailsPage, navFactory, ResourceLink } from
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { HelmChartModel, HelmRepositoryModel } from '@console/internal/models/hypercloud/helm-model';
+import { Link } from 'react-router-dom';
 
 const kind = HelmChartModel.kind;
 
@@ -127,7 +128,10 @@ export const HelmChartDetailsList: React.FC<HelmChartDetailsListProps> = ({ entr
       )}
       <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1')}</dt>
       <dd>
-        <div>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_2') + ' : ' + entry.repo.name}</div>
+        <div>
+          <span>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_2') + ' : '}</span>
+          <Link to={`/helmrepositories/${entry.repo.name}`}>{entry.repo.name}</Link>
+        </div>
         <div>{'URL : ' + entry.repo.url}</div>
       </dd>
       <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_6')}</dt>

@@ -45,22 +45,17 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
   switch (status) {
     case 'New':
       return <StatusIconAndText {...statusProps} icon={<HourglassStartIcon />} />;
-
     case 'Pending':
     case 'Waiting':
       return <StatusIconAndText {...statusProps} icon={<HourglassHalfIcon />} />;
-
     case 'Awaiting':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-awaiting-icon" src={AwaitingIcon} alt="" />} />;
-
     case 'Planning':
       return <StatusIconAndText {...statusProps} icon={<ClipboardListIcon />} />;
-
     case 'ContainerCreating':
     case 'Creating':
     case 'UpgradePending':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-creating-icon" src={CreatingIcon} alt="" />} />;
-
     case 'In Progress':
     case 'InstallReady':
     case 'Replacing':
@@ -68,7 +63,6 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Updating':
     case 'Deploying':
       return <StatusIconAndText {...statusProps} icon={<SyncAltIcon />} />;
-
     case 'Deleting':
     case 'Expired':
     case 'Not Ready':
@@ -82,10 +76,8 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Deleted':
     case 'Delete':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-deleted-icon" src={DeletedIcon} alt="" />} />;
-
     case 'RequiresApproval':
       return <StatusIconAndText {...statusProps} icon={<YellowExclamationTriangleIcon />} />;
-
     case 'ContainerCannotRun':
     case 'CrashLoopBackOff':
     case 'Critical':
@@ -99,7 +91,6 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Failure':
       return <ErrorStatus {...statusProps}>{children}</ErrorStatus>;
     case 'Accepted':
-    case 'Succeeded':
     case 'Active':
     case 'Complete':
     case 'Completed':
@@ -150,6 +141,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Destroyed':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-destroyed-icon" src={DestroyedIcon} alt="" />} />;
     case 'Ready':
+    case 'Succeeded':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-ready-icon" src={ReadyIcon} alt="" />} />;
     case 'UnReady':
     case 'Unready':
@@ -185,8 +177,8 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Bound':
     case 'bound':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-bound-icon" src={BoundIcon} alt="" />} />;
-    case 'Cash_loop_back_off':
-    case 'cash_loop_back_off':
+    case 'Crash_loop_back_off':
+    case 'crash_loop_back_off':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cash_loop_back_off-icon" src={CrashLoopBackOffIcon} alt="" />} />;
     case 'Running':
     case 'RUNNING':
