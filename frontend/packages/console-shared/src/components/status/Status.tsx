@@ -35,7 +35,7 @@ import * as WorkerIcon from '@console/internal/imgs/hypercloud/worker.svg';
 import * as MasterIcon from '@console/internal/imgs/hypercloud/master.svg';
 import * as LostIcon from '@console/internal/imgs/hypercloud/lost.svg';
 import * as BoundIcon from '@console/internal/imgs/hypercloud/bound.svg';
-import * as CashloopbackoffIcon from '@console/internal/imgs/hypercloud/cash_loop_back_off.svg';
+import * as CrashLoopBackOffIcon from '@console/internal/imgs/hypercloud/cash_loop_back_off.svg';
 import * as RunningIcon from '@console/internal/imgs/hypercloud/running.svg';
 import * as UnknownIcon from '@console/internal/imgs/hypercloud/unknown.svg';
 import * as ThrobberIcon from '@console/internal/imgs/hypercloud/throbber.svg';
@@ -59,7 +59,6 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'In Progress':
     case 'InstallReady':
     case 'Replacing':
-    case 'Running':
     case 'Signing':
     case 'Updating':
     case 'Deploying':
@@ -91,7 +90,6 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'UpgradeFailed':
     case 'Failure':
       return <ErrorStatus {...statusProps}>{children}</ErrorStatus>;
-
     case 'Accepted':
     case 'Active':
     case 'Complete':
@@ -179,9 +177,11 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Bound':
     case 'bound':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-bound-icon" src={BoundIcon} alt="" />} />;
-    case 'Cash_loop_back_off':
-    case 'cash_loop_back_off':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cash_loop_back_off-icon" src={CashloopbackoffIcon} alt="" />} />;
+    case 'Crash_loop_back_off':
+    case 'crash_loop_back_off':
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-cash_loop_back_off-icon" src={CrashLoopBackOffIcon} alt="" />} />;
+    case 'Running':
+    case 'RUNNING':
     case 'running':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-running-icon" src={RunningIcon} alt="" />} />;
     case NO_STATUS:
