@@ -13,6 +13,12 @@ import { MembersPage, RowMemberData } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { TableProps } from './utils/default-list-component';
 
+const CLUSTER_TYPE_LABEL = 'clustermanager.cluster.tmax.io/cluster-type';
+const ClusterType = {
+  CREATED: 'created',
+  REGISTERED: 'registered',
+};
+
 const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
   const { t } = useTranslation();
   return {
@@ -39,18 +45,11 @@ const kind = ClusterManagerModel.kind;
 const getMenuActions = type => {
   let menuActions: any[];
   if (type === ClusterType.CREATED) {
-    menuActions = [ModifyClusterNodes, ...Kebab.getExtensionsActionsForKind(ClusterManagerModel), ...Kebab.factory.common];
+    menuActions = [ModifyClusterNodes, Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Delete];
   } else {
-    menuActions = [...Kebab.getExtensionsActionsForKind(ClusterManagerModel), ...Kebab.factory.common];
+    menuActions = [Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Delete];
   }
   return menuActions;
-};
-
-const CLUSTER_TYPE_LABEL = 'clustermanager.cluster.tmax.io/cluster-type';
-
-const ClusterType = {
-  CREATED: 'created',
-  REGISTERED: 'registered',
 };
 
 const TypeColumnItem = (props: TypeColumnItemProps) => {
@@ -120,10 +119,7 @@ const tableProps: TableProps = {
         children: <TypeColumnItem type={type} />,
       },
       {
-        children: cluster.status?.phase==='Sync Needed' ?
-          <ExternalLink href={cluster.status.applicationLink} text={cluster.status?.phase} />
-          :
-          cluster.status?.phase,
+        children: cluster.status?.phase === 'Sync Needed' ? <ExternalLink href={cluster.status.applicationLink} text={cluster.status?.phase} /> : cluster.status?.phase,
       },
       {
         children: cluster.spec.version,
@@ -147,11 +143,12 @@ const tableProps: TableProps = {
 
 const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) => {
   const { t } = useTranslation();
+  const type = cl.metadata.labels[CLUSTER_TYPE_LABEL] || '';
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={cl} path="spec.provider" />
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_2')} obj={cl} path="spec.provider">
-        {cl.spec.provider ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_TYPE_1') : t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_TYPE_2')}
+        <TypeColumnItem type={type} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={cl} path="status.ready">
         <Status status={cl.status?.ready ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_1') : t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_2')} />
@@ -188,12 +185,13 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         const data = await coFetchJSON(url);
         setMembers(data);
       } catch (error) {
+        /* eslint-disable no-console */
         console.error('Error fetching members', error);
-        setMembers(undefined);
+        setMembers(null);
       }
     };
     fetchMembers();
-  }, []);
+  }, [cluster.metadata.name, cluster.metadata.namespace]);
 
   React.useEffect(() => {
     const fetchGroups = async () => {
@@ -202,12 +200,13 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         const data = await coFetchJSON(url);
         setGroups(data);
       } catch (error) {
+        /* eslint-disable no-console */
         console.error('Error fetching groups', error);
-        setGroups(undefined);
+        setGroups(null);
       }
     };
     fetchGroups();
-  }, []);
+  }, [cluster.metadata.name, cluster.metadata.namespace]);
 
   const getChildren = (data: RowMemberData[]) => {
     if (!data) {
@@ -215,9 +214,8 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
     }
     if (data.length === 0) {
       return <span className="text-muted">{t('COMMON:MSG_DETAILS_TABDETAILS_41')}</span>;
-    } else {
-      return data.map(d => KeyValuePrint({ id: d.Id, memberId: d.MemberId, role: d.Role, t }));
     }
+    return data.map(d => KeyValuePrint({ id: d.Id, memberId: d.MemberId, role: d.Role, t }));
   };
 
   return (
@@ -227,8 +225,12 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={cluster} showOwnerRole />
-            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={getChildren(members)} />
-            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={getChildren(groups)} />
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster}>
+              {getChildren(members)}
+            </DetailsItem>
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster}>
+              {getChildren(groups)}
+            </DetailsItem>
           </div>
           <div className="col-lg-6">
             <ClusterDetailsList cl={cluster} />
