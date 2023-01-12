@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
-
 import { referenceForModel } from '@console/internal/module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, viewYamlComponent } from '../utils';
@@ -14,16 +13,13 @@ import { getPipelineRunKebabActions } from '../../../packages/dev-console/src/ut
 import { PipelineRunLogsWithActiveTask } from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs';
 import PipelineRunVisualization from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunVisualization';
 import ResourceLinkList from '../../../packages/dev-console/src/components/pipelines/resource-overview/ResourceLinkList';
-//import TriggeredBySection from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/TriggeredBySection';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-
 import { PipelineRunReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const PipelineRunStatus: React.FC<PipelineRunStatusProps> = ({ result }) => <Status status={PipelineRunReducer(result)} />;
-
 const kind = PipelineRunModel.kind;
 
 const tableColumnClasses = [
@@ -58,8 +54,6 @@ const PipelineRunTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_78'),
-      //sortFunc: 'LinkedPipelineRunTaskStatus',
-      //transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
@@ -137,11 +131,7 @@ const PipelineRunInPipelinePageTableRow: RowFunction<PipelineRun> = ({ obj: pipe
 export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ pipelineRun }) => {
   const unfilteredResources = pipelineRun.spec.resources as PipelineRunReferenceResource[];
   const renderResources = unfilteredResources?.filter(({ resourceRef }) => !!resourceRef).map(resource => resource.resourceRef.name) || [];
-  const secretObj = pipelineRun.spec?.workspaces?.map(function(data) {
-    if (data.secret) {
-      return data;
-    }
-  });
+  const renderSecrets = pipelineRun.spec.workspaces.filter(data => !!data.secret).map(secret => secret.secret.secretName) || [];
   const { t } = useTranslation();
   return (
     <div className="col-sm-6 odc-pipeline-run-details__customDetails">
@@ -153,17 +143,9 @@ export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ 
           </dd>
         </dl>
       )}
-      {/* <TriggeredBySection pipelineRun={pipelineRun} /> */}
       <br />
       <ResourceLinkList model={PipelineResourceModel} links={renderResources} namespace={pipelineRun.metadata.namespace} />
-      {secretObj && secretObj[0] && (
-        <dl>
-          <dt>{ResourceLabel(SecretModel, t)}</dt>
-          <dd>
-            <ResourceLink kind={referenceForModel(SecretModel)} name={secretObj[0].secret.secretName} namespace={pipelineRun.metadata.namespace} />
-          </dd>
-        </dl>
-      )}
+      <ResourceLinkList model={SecretModel} links={renderSecrets} namespace={pipelineRun.metadata.namespace} />
     </div>
   );
 };
