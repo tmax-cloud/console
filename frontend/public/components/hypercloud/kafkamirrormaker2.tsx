@@ -7,10 +7,11 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
 import { Status } from '@console/shared';
-const kind = KafkaMirrorMaker2Model.kind;
 
+const kind = KafkaMirrorMaker2Model.kind;
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
+// list
 const tableProps: TableProps = {
   header: [
     {
@@ -104,6 +105,12 @@ export const MirrorTable = ({ heading, mirrors, km2 }) => {
     </>
   );
 };
+export const KafkaMirrorMaker2sPage: React.FC = props => {
+  return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
+};
+
+// detail
+const { details, editResource } = navFactory;
 const KafkaMirrorMaker2Details: React.FC<KafkaMirrorMaker2DetailsProps> = ({ obj: km2 }) => {
   const { t } = useTranslation();
   return (
@@ -122,17 +129,9 @@ const KafkaMirrorMaker2Details: React.FC<KafkaMirrorMaker2DetailsProps> = ({ obj
     </>
   );
 };
-
-const { details, editResource } = navFactory;
-
-export const KafkaMirrorMaker2sPage: React.FC = props => {
-  return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
-};
-
 export const KafkaMirrorMaker2sDetailsPage: React.FC<DetailsPageProps> = props => {
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(KafkaMirrorMaker2Details)), editResource()]} />;
 };
-
 type KafkaMirrorMaker2DetailsProps = {
   obj: K8sResourceKind;
 };
