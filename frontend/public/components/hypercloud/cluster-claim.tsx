@@ -201,17 +201,14 @@ const filters = [
     type: 'registry-status',
     reducer: ClusterClaimStatusReducer,
     items: [
-      { id: 'Created', title: 'Created' },
-      { id: 'Waiting', title: 'Waiting' },
-      { id: 'Admitted', title: 'Admitted' },
-      { id: 'Success', title: 'Success' },
+      { id: 'Approved', title: 'Approved' },
+      { id: 'ClusterClaim Deleted', title: 'ClusterClaim Deleted' },
+      { id: 'ClusterDeleted', title: 'ClusterDeleted' },
+      { id: 'Cluster Deleted', title: 'Cluster Deleted' },
       { id: 'Rejected', title: 'Rejected' },
-      { id: 'Error', title: 'Error' },
-      { id: 'Deleted', title: 'Deleted' },
     ],
   },
 ];
-
 export const ClusterClaimsPage: React.FC = props => {
   const pages = [
     {
