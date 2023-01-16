@@ -113,11 +113,11 @@ export const CatalogTileDetails = withTranslation()(
                       </ul>
                     </>
                   )}
-                  {longDescription && (
+                  {documentationUrl && (
                     <>
                       <hr />
                       <p>
-                        <ExternalLink href={longDescription} text={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_SIDEPANEL_5')} />
+                        <ExternalLink href={documentationUrl} text={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_SIDEPANEL_5')} />
                       </p>
                     </>
                   )}
