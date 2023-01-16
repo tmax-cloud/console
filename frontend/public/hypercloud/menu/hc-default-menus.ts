@@ -68,11 +68,11 @@ const DeveloperNavMenus = [
     label: MenuContainerLabels['ci/cd'],
     innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind, Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind, Models.ApplicationModel.kind],
   },
-  // {
-  //   menuType: MenuType.CONTAINER,
-  //   label: MenuContainerLabels.aidevops,
-  //   innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
-  // },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.aidevops,
+    innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
+  },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.kafka,

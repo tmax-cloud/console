@@ -159,7 +159,7 @@ export const EditYAML_ = connect(stateToProps)(
           try {
             yaml = safeDump(obj, {
               sortKeys: function(a, b) {
-                let order = ['spec', 'metadata', 'kind', 'apiVersion'];
+                const order = ['spec', 'metadata', 'kind', 'apiVersion'];
                 const orderA = order.indexOf(a);
                 const orderB = order.indexOf(b);
                 if (orderA < 0 && orderB < 0) {
@@ -183,7 +183,20 @@ export const EditYAML_ = connect(stateToProps)(
       const url = getResourceSchemaUrl(model, isCustomResourceType);
       url &&
         coFetchJSON(url).then(template => {
-          const currentDefinition = isCustomResourceType ? (template?.spec?.validation?.openAPIV3Schema ? template?.spec?.validation?.openAPIV3Schema : template?.spec?.versions[0]?.schema?.openAPIV3Schema) : JSON.parse(template);
+          let currentDefinition;
+          if (isCustomResourceType) {
+            if (template?.spec?.validation?.openAPIV3Schema) {
+              currentDefinition = template?.spec?.validation?.openAPIV3Schema;
+            } else {
+              currentDefinition = template?.spec?.versions.filter(version => {
+                if (version.name === model.apiVersion) {
+                  return true;
+                }
+              })[0]?.schema?.openAPIV3Schema;
+            }
+          } else {
+            currentDefinition = JSON.parse(template);
+          }
           const currentProperties = _.get(currentDefinition, 'properties') || _.get(currentDefinition, 'items.properties');
           this.setState({ definition: currentProperties ? currentDefinition : null });
         });
