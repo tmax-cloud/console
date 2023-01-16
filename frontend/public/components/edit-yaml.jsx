@@ -159,7 +159,7 @@ export const EditYAML_ = connect(stateToProps)(
           try {
             yaml = safeDump(obj, {
               sortKeys: function(a, b) {
-                let order = ['spec', 'metadata', 'kind', 'apiVersion'];
+                const order = ['spec', 'metadata', 'kind', 'apiVersion'];
                 const orderA = order.indexOf(a);
                 const orderB = order.indexOf(b);
                 if (orderA < 0 && orderB < 0) {
@@ -189,7 +189,9 @@ export const EditYAML_ = connect(stateToProps)(
               currentDefinition = template?.spec?.validation?.openAPIV3Schema;
             } else {
               currentDefinition = template?.spec?.versions.filter(version => {
-                if (version.name === model.apiVersion) return true;
+                if (version.name === model.apiVersion) {
+                  return true;
+                }
               })[0]?.schema?.openAPIV3Schema;
             }
           } else {

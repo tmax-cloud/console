@@ -5,58 +5,14 @@ import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, 
 import { KafkaMirrorMaker2Model } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
-import { TableProps } from './utils/default-list-component';
 import { Status } from '@console/shared';
+import { SingleExpandableTable } from './utils/expandable-table';
+import { compoundExpand } from '@patternfly/react-table';
 const kind = KafkaMirrorMaker2Model.kind;
-
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
-const tableProps: TableProps = {
-  header: [
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
-      sortField: 'metadata.name',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
-      sortField: 'metadata.namespace',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_151',
-      sortField: 'spec.replicas',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
-      sortField: 'metadata.creationTimestamp',
-    },
-    {
-      title: '',
-      transforms: null,
-      props: { className: Kebab.columnClass },
-    },
-  ],
-  row: (obj: K8sResourceKind) => [
-    {
-      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
-    },
-    {
-      className: 'co-break-word',
-      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
-    },
-    {
-      children: obj.spec.replicas,
-    },
-    {
-      children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
-    },
-    {
-      className: Kebab.columnClass,
-      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
-    },
-  ],
-};
 export const MirrorRow = ({ mirror, km2 }) => {
-  const connectors = km2.status.connectors;
+  const connectors = km2.status?.connectors || [];
   const connector = connectors.find(obj => {
     return obj.name.indexOf(mirror.sourceCluster) !== -1 && obj.name.indexOf(mirror.targetCluster) !== -1;
   });
@@ -81,11 +37,10 @@ export const MirrorRow = ({ mirror, km2 }) => {
     </div>
   );
 };
-export const MirrorTable = ({ heading, mirrors, km2 }) => {
+export const MirrorTable = ({ data, km2 }) => {
   const { t } = useTranslation();
   return (
     <>
-      <SectionHeading text={heading} />
       <div className="co-m-table-grid co-m-table-grid--bordered">
         <div className="row co-m-table-grid__head">
           <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_5')}</div>
@@ -96,7 +51,7 @@ export const MirrorTable = ({ heading, mirrors, km2 }) => {
           <div className="col-lg-1 hidden-md hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_10')}</div>
         </div>
         <div className="co-m-table-grid__body">
-          {mirrors.map((m: any, i: number) => (
+          {data.map((m: any, i: number) => (
             <MirrorRow key={i} mirror={m} km2={km2} />
           ))}
         </div>
@@ -104,6 +59,77 @@ export const MirrorTable = ({ heading, mirrors, km2 }) => {
     </>
   );
 };
+
+const KafkaMirrorMaker2Table = (t, props) => {
+  const kafkaMirrorMaker2List = props.data;
+  // KafkaMirrorMaker2Table테이블의 outer table header columns 정의
+  const KafkaMirrorMaker2Columns = [
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      sortField: 'metadata.name',
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      sortField: 'metadata.namespace',
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_151'),
+      sortField: 'spec.obj.spec.mirrors',
+      cellTransforms: [compoundExpand],
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      sortField: 'metadata.creationTimestamp',
+    },
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
+  ];
+
+  // outer table의 row renderer 정의
+  const rowRenderer = (index, obj: K8sResourceKind) => {
+    return [
+      {
+        title: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+      },
+      {
+        className: 'co-break-word',
+        title: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+      },
+      {
+        title: obj.spec.mirrors.length,
+        props: {
+          isOpen: false,
+        },
+      },
+      {
+        title: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+      },
+      {
+        className: Kebab.columnClass,
+        title: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+      },
+    ];
+  };
+
+  // outer table의 innerRenderer 정의
+  const innerRenderer = km2 => {
+    // inner renderer는 ExpandableInnerTable 컴포넌트를 반환한다.
+    return <MirrorTable key="MirrorTable" data={km2.spec.mirrors} km2={km2} />;
+  };
+
+  return <SingleExpandableTable header={KafkaMirrorMaker2Columns} itemList={kafkaMirrorMaker2List} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={2} />;
+};
+
+export const KafkaMirrorMaker2sPage: React.FC = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} canCreate={true} kind={kind} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} />;
+};
+
+// detail
+const { details, editResource } = navFactory;
 const KafkaMirrorMaker2Details: React.FC<KafkaMirrorMaker2DetailsProps> = ({ obj: km2 }) => {
   const { t } = useTranslation();
   return (
@@ -117,22 +143,15 @@ const KafkaMirrorMaker2Details: React.FC<KafkaMirrorMaker2DetailsProps> = ({ obj
         </div>
       </div>
       <div className="co-m-pane__body">
-        <MirrorTable key="MirrorTable" heading={t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_4')} mirrors={km2.spec.mirrors} km2={km2} />
+        <SectionHeading text={t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_4')} />
+        <MirrorTable key="MirrorTable" data={km2.spec.mirrors} km2={km2} />
       </div>
     </>
   );
 };
-
-const { details, editResource } = navFactory;
-
-export const KafkaMirrorMaker2sPage: React.FC = props => {
-  return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
-};
-
 export const KafkaMirrorMaker2sDetailsPage: React.FC<DetailsPageProps> = props => {
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(KafkaMirrorMaker2Details)), editResource()]} />;
 };
-
 type KafkaMirrorMaker2DetailsProps = {
   obj: K8sResourceKind;
 };
