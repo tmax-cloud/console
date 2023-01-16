@@ -201,13 +201,11 @@ const filters = [
     type: 'registry-status',
     reducer: ClusterClaimStatusReducer,
     items: [
-      { id: 'Created', title: 'Created' },
-      { id: 'Waiting', title: 'Waiting' },
-      { id: 'Admitted', title: 'Admitted' },
-      { id: 'Success', title: 'Success' },
+      { id: 'Approved', title: 'Approved' },
+      { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Rejected', title: 'Rejected' },
       { id: 'Error', title: 'Error' },
-      { id: 'Deleted', title: 'Deleted' },
+      { id: 'Cluster Deleted', title: 'Cluster Deleted' },
     ],
   },
 ];
