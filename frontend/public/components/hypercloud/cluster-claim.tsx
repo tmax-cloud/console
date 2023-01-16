@@ -202,13 +202,14 @@ const filters = [
     reducer: ClusterClaimStatusReducer,
     items: [
       { id: 'Approved', title: 'Approved' },
-      { id: 'ClusterClaim Deleted', title: 'ClusterClaim Deleted' },
-      { id: 'ClusterDeleted', title: 'ClusterDeleted' },
-      { id: 'Cluster Deleted', title: 'Cluster Deleted' },
+      { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Rejected', title: 'Rejected' },
+      { id: 'Error', title: 'Error' },
+      { id: 'Cluster Deleted', title: 'Cluster Deleted' },
     ],
   },
 ];
+
 export const ClusterClaimsPage: React.FC = props => {
   const pages = [
     {
