@@ -60,10 +60,10 @@ const tableProps: TableProps = {
       children: obj.spec.clusterSize,
     },
     {
-      children: <ResourceLink kind={'ConfigMap'} name={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} />,
+      children: obj.spec.redisLeader.redisConfig?.additionalRedisConfig ? <ResourceLink kind={'ConfigMap'} name={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisLeader.redisConfig?.additionalRedisConfig} /> : '-',
     },
     {
-      children: <ResourceLink kind={'ConfigMap'} name={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} />,
+      children: obj.spec.redisFollower.redisConfig?.additionalRedisConfig ? <ResourceLink kind={'ConfigMap'} name={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} namespace={obj.metadata.namespace} title={obj.spec.redisFollower.redisConfig?.additionalRedisConfig} /> : '-',
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
