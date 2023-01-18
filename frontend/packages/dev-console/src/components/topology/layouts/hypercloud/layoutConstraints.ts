@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { ColaGroup, ColaLink, ColaNode, LayoutOptions } from '@console/topology';
-import { TYPE_CONNECTS_TO, TYPE_REPLICASET_GROUP, TYPE_WORKLOAD, TYPE_POD } from '../../components/const';
+import { TYPE_CONNECTS_TO, TYPE_REPLICASET_GROUP, TYPE_WORKLOAD, TYPE_POD, TYPE_PVC } from '../../components/const';
 
 // TODO : constraint 리팩토링 하기
 const getNodeTimeStamp = (node: ColaNode): Date => {
@@ -15,7 +15,7 @@ export const layoutConstraints = (nodes: ColaNode[], groups: ColaGroup[], edges:
   const constraints: any[] = [];
 
   [...groups, ...nodes]
-    .filter(g => g.element.getType() === TYPE_POD || g.element.getType() === TYPE_WORKLOAD || (g.element.getType() === TYPE_REPLICASET_GROUP && g.element.isCollapsed() === true))
+    .filter(g => g.element.getType() === TYPE_POD || g.element.getType() === TYPE_PVC || g.element.getType() === TYPE_WORKLOAD || (g.element.getType() === TYPE_REPLICASET_GROUP && g.element.isCollapsed() === true))
     .forEach(g => {
       const eventSourceLinks = edges.filter(e => e.element.getType() === TYPE_CONNECTS_TO && (e.target.element === g.element || e.target.element.getParent() === g.element)).sort((l1: ColaLink, l2: ColaLink) => nodeSorter(l1.source, l2.source));
       if (eventSourceLinks.length) {

@@ -10,12 +10,13 @@ import GraphComponent from './GraphComponent';
 import { workloadContextMenu, groupContextMenu, graphContextMenu } from './nodeContextMenu';
 import { NodeComponentProps, graphDropTargetSpec, nodeDragSourceSpec, nodeDropTargetSpec, applicationGroupDropTargetSpec, edgeDragSourceSpec, removeConnectorCallback, MOVE_CONNECTOR_DROP_TYPE, withContextMenu } from './componentUtils';
 import './ContextMenu.scss';
-import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_APPLICATION_GROUP, TYPE_AGGREGATE_EDGE, TYPE_SERVICE_BINDING, TYPE_TRAFFIC_CONNECTOR, TYPE_DAEMONSET_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE, TYPE_POD } from './const';
+import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_APPLICATION_GROUP, TYPE_AGGREGATE_EDGE, TYPE_SERVICE_BINDING, TYPE_TRAFFIC_CONNECTOR, TYPE_DAEMONSET_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE, TYPE_POD, TYPE_PVC } from './const';
 import { createConnection } from './createConnection';
 import { withEditReviewAccess } from './withEditReviewAccess';
 import { AggregateEdge, ConnectsTo, ServiceBinding, TrafficConnector } from './edges';
 import { AbstractSBRComponentFactory } from './AbstractSBRComponentFactory';
 import { PodNode } from './hypercloud/nodes/PodNode';
+import { PVCNode } from './hypercloud/nodes/PVCNode';
 
 class ComponentFactory extends AbstractSBRComponentFactory {
   getFactory = (): TopologyComponentFactory => {
@@ -33,6 +34,9 @@ class ComponentFactory extends AbstractSBRComponentFactory {
           return withDndDrop(applicationGroupDropTargetSpec)(withSelection(false, true)(withContextMenu(groupContextMenu)(Application)));
         case TYPE_POD:
           return withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(PodNode)))));
+
+        case TYPE_PVC:
+          return withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(PVCNode)))));
         case TYPE_SERVICE:
         case TYPE_WORKLOAD:
           return withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(WorkloadNode)))));
