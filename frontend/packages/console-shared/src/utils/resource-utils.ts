@@ -9,7 +9,7 @@ import { resourceStatus, podStatusIcon } from './ResourceStatus';
 import { isKnativeServing, isIdled } from './pod-utils';
 import { ClusterServiceVersionModel, ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 
-export const getResourceList = (namespace: string, resList?: any) => {
+export const getResourceList = (namespace: string) => {
   const resources: FirehoseResource[] = [
     {
       isList: true,
@@ -91,13 +91,6 @@ export const getResourceList = (namespace: string, resList?: any) => {
   ];
 
   const utils = [];
-  // if (resList) {
-  //   resList.forEach((resource) => {
-  //     resources = [...resources, ...resource.properties.resources(namespace)];
-  //     utils = [...utils, resource.properties.utils];
-  //   });
-  // }
-
   return { resources, utils };
 };
 
@@ -794,17 +787,24 @@ export const createIngressItems = (ingresses: K8sResourceKind[]): OverviewItem[]
   return items;
 };
 
-export const createPersistentVolumeClaimItems = (services: K8sResourceKind[]): OverviewItem[] => {
-  const items = _.map(services, s => {
-    const obj: K8sResourceKind = {
-      ...s,
+export const createPersistentVolumeClaimItems = (pvcs: any): OverviewItem[] => {
+  // pvc 상태아이콘 표시를 위한 부분을 추가하면서
+  // pvc용으로 podStatusIcon처럼 만들기에는 코드낭비로 보여 PodKind로 받아 pod와 동일하게 처리.
+  // resourceStatusIcon과 같은 범용적으로 쓸수 있는 컴포넌트를 만드는게 좋지 않을까..
+  const items = _.map(pvcs, p => {
+    const obj: PodKind = {
+      ...p,
       apiVersion: apiVersionForModel(PersistentVolumeClaimModel),
       kind: PersistentVolumeClaimModel.kind,
     };
+    const phase = _.get(obj, 'status.phase');
+    const statusComponent = podStatusIcon(obj);
+    const status: StatusData = { phase, icon: statusComponent };
     return {
       obj,
       services: null,
       buildConfigs: null,
+      status,
     };
   });
   return items;
