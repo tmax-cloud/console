@@ -25,11 +25,10 @@ const ObservedPVCNode: React.FC<PVCNodeProps> = ({ element, urlAnchorRef, canDro
   const { width, height } = element.getDimensions();
   const pvcData = element.getData().data;
   const size = Math.min(width, height);
-  const { donutStatus, builderImage, kind } = pvcData;
+  const { status, image, kind } = pvcData;
   const { radius, decoratorRadius } = calculateRadius(size);
   const cx = width / 2;
   const cy = height / 2;
-  const status = donutStatus?.dc?.status;
   return (
     <g>
       <Tooltip content="" trigger="manual" isVisible={dropTarget && canDrop} tippyProps={{ duration: 0, delay: 0 }}>
@@ -37,7 +36,7 @@ const ObservedPVCNode: React.FC<PVCNodeProps> = ({ element, urlAnchorRef, canDro
           className="odc-pod-node"
           outerRadius={radius}
           innerRadius={radius - 15}
-          icon={builderImage}
+          icon={image}
           kind={kind}
           element={element}
           dropTarget={dropTarget}

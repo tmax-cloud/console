@@ -34,7 +34,6 @@ class ComponentFactory extends AbstractSBRComponentFactory {
           return withDndDrop(applicationGroupDropTargetSpec)(withSelection(false, true)(withContextMenu(groupContextMenu)(Application)));
         case TYPE_POD:
           return withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(PodNode)))));
-
         case TYPE_PVC:
           return withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(PVCNode)))));
         case TYPE_SERVICE:

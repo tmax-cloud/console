@@ -28,6 +28,30 @@ export const createTopologyPodNodeData = (item: TopologyOverviewItem, type: stri
   };
 };
 
+export const createTopologyPVCNodeData = (item: TopologyOverviewItem, type: string, defaultIcon: string, operatorBackedService: boolean = false): TopologyDataObject => {
+  const { obj: pvc } = item;
+  const uid = _.get(pvc, 'metadata.uid');
+  const labels = _.get(pvc, 'metadata.labels', {});
+
+  return {
+    id: uid,
+    name: _.get(pvc, 'metadata.name') || labels['app.kubernetes.io/instance'],
+    type,
+    resources: { ...item, isOperatorBackedService: operatorBackedService },
+    pods: item.pods,
+    operatorBackedService,
+    data: {
+      url: '',
+      kind: PersistentVolumeClaimModel.kind,
+      editURL: '',
+      vcsURI: '',
+      image: defaultIcon,
+      obj: pvc,
+      status: item.status,
+    },
+  };
+};
+
 export const getChildrenResources = (obj: K8sResourceKind, resources: TopologyDataResources) => {
   const parentUid = _.get(obj, 'metadata.uid');
 
