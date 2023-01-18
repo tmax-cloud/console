@@ -131,7 +131,7 @@ const PipelineRunInPipelinePageTableRow: RowFunction<PipelineRun> = ({ obj: pipe
 export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ pipelineRun }) => {
   const unfilteredResources = pipelineRun.spec.resources as PipelineRunReferenceResource[];
   const renderResources = unfilteredResources?.filter(({ resourceRef }) => !!resourceRef).map(resource => resource.resourceRef.name) || [];
-  const renderSecrets = pipelineRun.spec.workspaces.filter(data => !!data.secret).map(secret => secret.secret.secretName) || [];
+  const renderSecrets = pipelineRun.spec.workspaces?.filter(data => !!data.secret).map(secret => secret.secret.secretName) || [];
   const { t } = useTranslation();
   return (
     <div className="col-sm-6 odc-pipeline-run-details__customDetails">
