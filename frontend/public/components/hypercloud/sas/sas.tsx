@@ -1,34 +1,41 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
+import { WSFactory } from '@console/internal/module/ws-factory';
 
 const SasPage = () => {
-  const output = React.useRef<any>(null);
-  const exampleSocket = new WebSocket('wss://console.tmaxcloud.org/api/sas');
-  exampleSocket.onopen = function(event) {
-    console.log(event, '연결완료');
-  };
-  exampleSocket.onmessage = function(event) {
-    output.current.innerHtml = event.data;
-    console.log('Message from server ', event.data);
-  };
+  const watchURL = 'wss://console.tmaxcloud.org/api/sas';
+  const ws: WSFactory = new WSFactory('sas', {
+    host: '',
+    reconnect: true,
+    path: watchURL,
+    jsonParse: true,
+  });
+  ws.onopen(() => {
+    // eslint-disable-next-line no-console
+    console.log('연결완료');
+  });
+  ws.onmessage(msg => {
+    // eslint-disable-next-line no-console
+    console.log('Message from server ', msg.data);
+  });
 
   const getResource = type => {
     switch (type) {
       case 'worker':
-        exampleSocket.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetWorker', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
+        ws.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetWorker', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
         break;
       case 'binary':
-        exampleSocket.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetBinary', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
+        ws.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetBinary', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
         break;
       case 'application':
-        exampleSocket.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetApplication', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
+        ws.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetApplication', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
         break;
       case 'controller':
-        exampleSocket.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetController', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
+        ws.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetController', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
         break;
       case 'service':
-        exampleSocket.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetService', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
+        ws.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetService', messageType: 'REQUEST', contentType: 'TEXT' }, body: {} }`);
         break;
       default:
         break;
@@ -76,9 +83,6 @@ const SasPage = () => {
           </Button>
         </FlexItem>
       </Flex>
-      <div className="box">
-        <p ref={output}> </p>
-      </div>
     </>
   );
 };
