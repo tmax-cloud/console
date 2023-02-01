@@ -9,6 +9,7 @@ import { TYPE_TRAFFIC_CONNECTOR, TYPE_WORKLOAD, TYPE_CONNECTS_TO } from '../comp
 import { allowedResources } from '../topology-utils';
 import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem, mergeGroup } from './transform-utils';
 import { getChildrenResources, getComponentType, createTopologyPodNodeData, createTopologyPVCNodeData, getTopologyGroupItems } from './hypercloud/transform-utils';
+import { HelmReleaseResourcesMap } from '../../helm/helm-types';
 // import { getOperatorTopologyDataModel } from '../operators/operators-data-transformer';
 // import { getHelmTopologyDataModel } from '../helm/helm-data-transformer';
 
@@ -131,7 +132,7 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
 /**
  * Tranforms the k8s resources objects into topology data
  */
-export const transformTopologyData = (resources: TopologyDataResources, transformBy: string[], utils?: Function[], trafficData?: TrafficData): TopologyDataModel => {
+export const transformTopologyData = (resources: TopologyDataResources, transformBy: string[], utils?: Function[], trafficData?: TrafficData, helmResourcesMap?: HelmReleaseResourcesMap): TopologyDataModel => {
   const topologyGraphAndNodeData: TopologyDataModel = {
     graph: { nodes: [], edges: [], groups: [] },
     topology: {},

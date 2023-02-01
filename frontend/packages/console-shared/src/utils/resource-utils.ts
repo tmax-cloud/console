@@ -9,7 +9,7 @@ import { resourceStatus, podStatusIcon } from './ResourceStatus';
 import { isKnativeServing, isIdled } from './pod-utils';
 import { ClusterServiceVersionModel, ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 
-export const getResourceList = (namespace: string) => {
+export const getResourceList = (namespace: string, resList?: any) => {
   const resources: FirehoseResource[] = [
     {
       isList: true,
