@@ -146,10 +146,9 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       )}
       {!_.isEmpty(workspaceList) && (
         <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_9')} id="workspace">
-          <WorkspaceListComponent workspaceList={workspaceList} namespace={namespace} methods={methods} />
+          <WorkspaceListComponent workspaceList={workspaceList} namespace={namespace} methods={methods} formData={formData} />
         </Section>
       )}
-
       <div className="co-form-section__separator" />
 
       <Section label={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_17')} id="serviceaccount">
@@ -174,10 +173,22 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
 const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
   const { formData, onChange } = props;
-  const _formData = React.useMemo(() => convertToForm(formData), [formData]);
-  const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
+  const [formDataState, setFormDataState] = React.useState(convertToForm(formData));
+  const [formDatas, setFormDatas] = React.useState(() => formData_ => {
+    return onSubmitCallback(formData_);
+  });
+
+  React.useEffect(() => {
+    setFormDatas(() => formData => onSubmitCallback(formData));
+  }, [onSubmitCallback]);
+
+  React.useEffect(() => {
+    setFormDataState(convertToForm(formData));
+  }, [formData]);
+
   const watchFieldNames = ['metadata.labels', 'spec.params', 'spec.resources', 'spec.workspaces'];
-  return <Form fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
+
+  return <Form fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={formDataState} setFormData={formDatas} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 
 export const CreatePipelineRun: React.FC<CreatePipelineRunProps> = props => {

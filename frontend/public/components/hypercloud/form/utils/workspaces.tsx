@@ -45,7 +45,19 @@ export const Workspace = props => {
     control: props.methods.control,
     name: `${props.id}.type`,
   });
+  const [pvcDefaultValue, setPvcDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
+  const [cmDefaultValue, setCmDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
+  const [secretDefaultValue, setsecretDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
 
+  React.useEffect(() => {
+    props.persistentVolumeClaim?.claimName && setPvcDefaultValue(props.persistentVolumeClaim?.claimName);
+  }, [props.persistentVolumeClaim?.claimName]);
+  React.useEffect(() => {
+    props.configmap?.name && setCmDefaultValue(props.configmap?.name);
+  }, [props.configmap?.name]);
+  React.useEffect(() => {
+    props.secret?.secretName && setsecretDefaultValue(props.secret?.secretName);
+  }, [props.secret?.secretName]);
   return (
     <ul>
       <TextInput className="pf-c-form-control" id={`${props.id}.name`} methods={props.methods} defaultValue={props.name} hidden />
@@ -79,6 +91,7 @@ export const Workspace = props => {
               ]}
               type="single"
               methods={props.methods}
+              defaultValue={pvcDefaultValue}
               useHookForm
             />
           </Section>
@@ -98,6 +111,7 @@ export const Workspace = props => {
               ]}
               type="single"
               methods={props.methods}
+              defaultValue={cmDefaultValue}
               useHookForm
             />
           </Section>
@@ -117,6 +131,7 @@ export const Workspace = props => {
               ]}
               type="single"
               methods={props.methods}
+              defaultValue={secretDefaultValue}
               useHookForm
             />
           </Section>
