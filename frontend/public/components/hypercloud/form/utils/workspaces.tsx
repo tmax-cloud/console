@@ -46,8 +46,8 @@ export const Workspace = props => {
     name: `${props.id}.type`,
   });
   const [pvcDefaultValue, setPvcDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
-  const [cmDefaultValue, setCmDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
-  const [secretDefaultValue, setsecretDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
+  const [cmDefaultValue, setCmDefaultValue] = React.useState(props.configmap?.name);
+  const [secretDefaultValue, setsecretDefaultValue] = React.useState(props.secret?.secretName);
 
   React.useEffect(() => {
     props.persistentVolumeClaim?.claimName && setPvcDefaultValue(props.persistentVolumeClaim?.claimName);
