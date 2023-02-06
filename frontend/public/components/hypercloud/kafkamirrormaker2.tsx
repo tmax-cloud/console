@@ -7,7 +7,7 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { Status } from '@console/shared';
 import { SingleExpandableTable } from './utils/expandable-table';
-import { compoundExpand } from '@patternfly/react-table';
+import { compoundExpand, sortable } from '@patternfly/react-table';
 const kind = KafkaMirrorMaker2Model.kind;
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
@@ -66,19 +66,24 @@ const KafkaMirrorMaker2Table = (t, props) => {
   const KafkaMirrorMaker2Columns = [
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      transforms: [sortable],
       sortField: 'metadata.name',
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      transforms: [sortable],
       sortField: 'metadata.namespace',
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_151'),
+      transforms: [sortable],
       sortField: 'spec.obj.spec.mirrors',
+      tooltip: 'MSG_MAIN_TABLEHEADER_152',
       cellTransforms: [compoundExpand],
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      transforms: [sortable],
       sortField: 'metadata.creationTimestamp',
     },
     {
