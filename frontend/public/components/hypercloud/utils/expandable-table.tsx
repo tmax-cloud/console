@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import { Table as PfTable, TableHeader as PfTableHeader, TableBody as PfTableBody, ICell, sortable } from '@patternfly/react-table';
+import { Table as PfTable, TableHeader as PfTableHeader, TableBody as PfTableBody, ICell, sortable, SortByDirection } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
 import { sortableHelp } from './sortTip';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,8 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
   const [tableRows, setTableRows] = React.useState([]);
   const { t } = useTranslation();
   const headerFunc = makeTableHeader(header, t);
+  const [sortBy, setSortBy] = React.useState<PFSortState>({});
+
   React.useEffect(() => {
     const preData = [];
     itemList
@@ -83,8 +85,12 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
     setTableRows(rows);
   };
 
+  const onSort = (_event, index, direction) => {
+    setSortBy({ index, direction });
+  };
+
   return (
-    <PfTable aria-label="Compound expandable table" onExpand={onExpand} rows={tableRows} cells={headerFunc()}>
+    <PfTable aria-label="Compound expandable table" onExpand={onExpand} rows={tableRows} cells={headerFunc()} onSort={onSort} sortBy={sortBy}>
       <PfTableHeader />
       <PfTableBody />
     </PfTable>
@@ -107,4 +113,8 @@ type SingleExpandableTableProps = {
   header: Header[]; // header column들의 배열. 펼침 기능을 사용할 column object에는 cellTransforms: [compoundExpand] 속성 넣어줘야 함.
   compoundParent: number; // table 펼칠 수 있는 column의 index
   customSorts?: { [key: string]: any };
+};
+type PFSortState = {
+  index?: number;
+  direction?: SortByDirection;
 };
