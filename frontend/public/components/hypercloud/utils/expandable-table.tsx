@@ -66,11 +66,7 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
       });
   }, [compoundParent, header.length, innerRenderer, itemList, rowRenderer]);
 
-  // function delay() {
-  //   return new Promise(resolve => setTimeout(resolve, 300));
-  // }
-
-  const onExpand = (rowIndex, colIndex, isOpen) => {
+  const onExpand = (_event, rowIndex, colIndex, isOpen, _rowData, _extraData) => {
     const rows = _.cloneDeep(tableRows);
     if (!isOpen) {
       rows[rowIndex].cells.forEach((cell: ICell) => {
