@@ -10,22 +10,10 @@ import { k8sList } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import { CodeContainer } from '../utils/hypercloud/code-container';
 import { coFetchJSON } from '@console/internal/co-fetch';
+import { KafkaRebalanceReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 const kind = KafkaRebalanceModel.kind;
-
 //status
 const menuActions: KebabAction[] = [...Kebab.factory.common];
-const KafkaRebalanceReducer = (kr: any): string => {
-  let status = 'No Status';
-  if (kr.status) {
-    status = kr.status.conditions[0].type;
-    if (status === 'Ready') {
-      status = 'Succeeded';
-    } else if (status === 'NotReady') {
-      status = 'Error';
-    }
-  }
-  return status;
-};
 const KafkaRebalanceStatus = ({ kr }) => <Status status={KafkaRebalanceReducer(kr)} />;
 
 // rebalancing button
@@ -193,7 +181,7 @@ export const KafkaRebalancesPage: React.FC = props => {
 };
 
 export const KafkaRebalancesDetailsPage: React.FC<DetailsPageProps> = props => {
-  return <DetailsPage {...props} kind={kind} buttonActions={actionButtons} menuActions={menuActions} pages={[details(detailsPage(KafkaRebalanceDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} getResourceStatus={KafkaRebalanceReducer} buttonActions={actionButtons} menuActions={menuActions} pages={[details(detailsPage(KafkaRebalanceDetails)), editResource()]} />;
 };
 
 type KafkaRebalanceDetailsListProps = {
