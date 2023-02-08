@@ -1,6 +1,7 @@
-import * as _ from 'lodash-es';
+import * as _ from 'lodash';
 import { NodeCondition } from '@console/shared/src/types';
 import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
+
 export const NO_STATUS = 'No Status';
 
 export const ServiceBrokerStatusReducer = instance => {
@@ -16,9 +17,8 @@ export const ServiceBrokerStatusReducer = instance => {
       }
     });
     return phase;
-  } else {
-    return NO_STATUS;
   }
+  return NO_STATUS;
 };
 
 export const ClusterServiceBrokerReducer = instance => {
@@ -34,17 +34,27 @@ export const ClusterServiceBrokerReducer = instance => {
       }
     });
     return phase;
-  } else {
-    return NO_STATUS;
   }
+  return NO_STATUS;
 };
-
+export const KafkaRebalanceReducer = (kr: any): string => {
+  let status = 'No Status';
+  if (kr.status) {
+    status = kr.status.conditions[0].type;
+    if (status === 'Ready') {
+      status = 'Succeeded';
+    } else if (status === 'NotReady') {
+      status = 'Error';
+    }
+  }
+  return status;
+};
 export const ServiceInstanceStatusReducer = (serviceInstance: any): string => {
-  return !!serviceInstance.status ? serviceInstance.status.lastConditionState : NO_STATUS;
+  return serviceInstance.status ? serviceInstance.status.lastConditionState : NO_STATUS;
 };
 
 export const ClusterTemplateClaimReducer = (clusterTemplateClaim: any): string => {
-  return !!clusterTemplateClaim.status ? clusterTemplateClaim.status.status : NO_STATUS;
+  return clusterTemplateClaim.status ? clusterTemplateClaim.status.status : NO_STATUS;
 };
 
 export const TemplateInstanceStatusReducer = instance => {
@@ -56,13 +66,12 @@ export const TemplateInstanceStatusReducer = instance => {
       }
     });
     return phase;
-  } else {
-    return NO_STATUS;
   }
+  return NO_STATUS;
 };
-
+/* eslint consistent-return: off */
 export const NotebookStatusReducer = notebook => {
-  return !!notebook.status ? notebook.status.conditions?.[0]?.type : NO_STATUS || '';
+  return notebook.status ? notebook.status.conditions?.[0]?.type : NO_STATUS;
 };
 
 export const TrainingJobStatusReducer = tj => {
@@ -74,27 +83,25 @@ export const TrainingJobStatusReducer = tj => {
   for (let i = len - 1; i >= 0; i--) {
     if (tj.status.conditions[i].status) {
       return tj.status.conditions[i].type;
-    } else {
-      return NO_STATUS;
     }
+    return NO_STATUS;
   }
 };
 
 export const ExperimentStatusReducer = experiment => {
   if (experiment.status) {
     const conditions = experiment.status?.conditions;
-    return !!conditions ? conditions[conditions.length - 1]?.type : '-';
-  } else {
-    return NO_STATUS;
+    return conditions ? conditions[conditions.length - 1]?.type : '-';
   }
+  return NO_STATUS;
 };
 
 export const ClusterClaimStatusReducer = (clusterClaim: any): string => {
-  return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
+  return clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
 };
 
 export const TerraformClaimStatusReducer = (clusterClaim: any): string => {
-  return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
+  return clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
 };
 export const AwxStatusReducer = (awx: any): string => {
   if (!awx.status) {
@@ -108,23 +115,23 @@ export const AwxStatusReducer = (awx: any): string => {
 };
 
 export const NamespaceClaimReducer = (namespaceClaim: any): string => {
-  return !!namespaceClaim.status ? namespaceClaim.status.status : NO_STATUS;
+  return namespaceClaim.status ? namespaceClaim.status.status : NO_STATUS;
 };
 
 export const PersistentVolumeReducer = (persistentVolume: any): string => {
   let phase = '';
   phase = persistentVolume.metadata.deletionTimestamp ? 'Terminating' : persistentVolume.status.phase;
-  return !!persistentVolume.status ? phase : NO_STATUS;
+  return persistentVolume.status ? phase : NO_STATUS;
 };
 
 export const PersistentVolumeClaimReducer = (persistentVolumeClaim: any): string => {
   let phase = '';
   phase = persistentVolumeClaim.metadata.deletionTimestamp ? 'Terminating' : persistentVolumeClaim.status.phase;
-  return !!persistentVolumeClaim.status ? phase : NO_STATUS;
+  return persistentVolumeClaim.status ? phase : NO_STATUS;
 };
 
 export const RoleBindingClaimReducer = (roleBindingClaim: any): string => {
-  return !!roleBindingClaim.status ? roleBindingClaim.status.status : NO_STATUS;
+  return roleBindingClaim.status ? roleBindingClaim.status.status : NO_STATUS;
 };
 
 export const PipelineRunReducer = (pipelineRun: any): string => {
@@ -136,15 +143,16 @@ export const PipelineRunReducer = (pipelineRun: any): string => {
   if (conditions.length === 0) return null;
 
   const condition = conditions.find(c => c.type === 'Succeeded');
-  let status = !condition || !condition.status ? null : condition.status === 'True' ? 'Completed' : condition.status === 'False' ? 'Failed' : 'Running';
+  const status = !condition || !condition.status ? null : condition.status === 'True' ? 'Completed' : condition.status === 'False' ? 'Failed' : 'Running';
 
-  return !!pipelineRun.status.conditions ? status : NO_STATUS;
+  return pipelineRun.status.conditions ? status : NO_STATUS;
 };
 
 export const PipelineApprovalReducer = (pipelineApproval: any): string => {
-  return !!pipelineApproval.status ? pipelineApproval.status.result : NO_STATUS;
+  return pipelineApproval.status ? pipelineApproval.status.result : NO_STATUS;
 };
-
+/* eslint consistent-return: off */
+/* eslint no-unused-expressions: off */
 export const IntegrationConfigReducer = (integrationConfig: any): string => {
   let phase = '';
   if (integrationConfig.status) {
@@ -156,11 +164,13 @@ export const IntegrationConfigReducer = (integrationConfig: any): string => {
           phase = 'UnReady';
         }
       }
+      return phase;
     });
+    return NO_STATUS;
   }
-  return !!integrationConfig.status ? phase : NO_STATUS;
+  return NO_STATUS;
 };
-
+/* eslint no-unused-expressions: off */
 export const InferenceServiceReducer = (inferenceService: any): string => {
   let phase = '';
   if (inferenceService.status) {
@@ -174,9 +184,11 @@ export const InferenceServiceReducer = (inferenceService: any): string => {
           phase = 'Not Ready';
         }
       }
+      return phase;
     });
+    return NO_STATUS;
   }
-  return !!inferenceService.status ? phase : NO_STATUS;
+  return NO_STATUS;
 };
 
 export const TrainedModelReducer = (trainedModel: any): string => {
@@ -192,7 +204,7 @@ export const TrainedModelReducer = (trainedModel: any): string => {
       }
     });
   }
-  return !!trainedModel.status ? phase : NO_STATUS;
+  return trainedModel.status ? phase : NO_STATUS;
 };
 
 export const NodeStatusReducer = (node: any): string => {
@@ -204,16 +216,14 @@ export const NodeStatusReducer = (node: any): string => {
 
 export const ClusterRegistrationStatusReducer = (cr: any): string => {
   const status = _.get(cr, 'status');
-  if (!!status) {
+  if (status) {
     const phase = status.phase || '';
     if (phase === 'Failed' || phase === 'Success' || phase === 'Deleted') {
       return phase;
-    } else {
-      return 'Validation/Validated';
     }
-  } else {
-    return NO_STATUS;
+    return 'Validation/Validated';
   }
+  return NO_STATUS;
 };
 
 export const ClusterMenuPolicyStatusReducer = (cmp: any): string => {
@@ -221,13 +231,12 @@ export const ClusterMenuPolicyStatusReducer = (cmp: any): string => {
   const primaryValue = _.get(labels, CMP_PRIMARY_KEY);
   if (primaryValue === 'true') {
     return 'Activated';
-  } else {
-    return 'Deactivated';
   }
+  return 'Deactivated';
 };
 
 export const BareMetalHostStatusReducer = (bmh: any): string => {
-  return bmh.status?.provisioning?.state;
+  return bmh.status?.provisioning?.state || NO_STATUS;
 };
 
 export const HelmReleaseStatusReducer = (hr: any): string => {
@@ -237,22 +246,17 @@ export const HelmReleaseStatusReducer = (hr: any): string => {
 export const ServiceBindingStatusReducer = (sb: any): string => {
   if (sb.status) {
     for (const c of sb.status.conditions) {
-      if (c.type=="Ready") {
-        if (c.status=="True") {
-          return "Succeeded"
+      if (c.type === 'Ready') {
+        if (c.status === 'True') {
+          return 'Succeeded';
         }
-        else if (c.status=="False") {
-          return "Failed"
+        if (c.status === 'False') {
+          return 'Failed';
         }
-        else {
-          return "Unknown"
-        }
+        return 'Unknown';
       }
     }
+  } else {
+    return 'Unknown';
   }
-  else {
-    return "Unknown"
-  }
-
-
-}
+};
