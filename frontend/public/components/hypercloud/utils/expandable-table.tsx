@@ -22,7 +22,9 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
   const { t } = useTranslation();
   const headerFunc = makeTableHeader(header, t);
   const [sortBy, setSortBy] = React.useState<PFSortState>({});
+  const [outerTableRows, setOuterTableRows] = React.useState([]);
 
+  // itemList : KafkaMirrorMaker2 원본 리소스 리스트
   React.useEffect(() => {
     const preData = [];
     itemList
@@ -67,7 +69,7 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
         setTableRows(_.cloneDeep(preData));
       });
   }, [compoundParent, header.length, innerRenderer, itemList, rowRenderer]);
-
+  //
   const onExpand = (_event, rowIndex, colIndex, isOpen, _rowData, _extraData) => {
     const rows = _.cloneDeep(tableRows);
     if (!isOpen) {
@@ -85,8 +87,25 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
     setTableRows(rows);
   };
 
-  const onSort = (_event, index, direction) => {
-    setSortBy({ index, direction });
+  const sortRows = ({ index, sortField, direction }, outerTableRows) => {
+    const sortedRows = outerTableRows.sort((a, b) => {
+      const compA = typeof a.cells[index].title === 'object' ? a.cells[index].title.props[sortField] : a.cells[index].title,
+        compB = typeof b.cells[index].title === 'object' ? b.cells[index].title.props[sortField] : b.cells[index].title;
+      return compA < compB ? -1 : compA > compB ? 1 : 0;
+    });
+    setOuterTableRows(direction === SortByDirection.asc ? sortedRows : sortedRows.reverse());
+  };
+
+  const onSort = (_event, index, direction, extraData) => {
+    const sortField = extraData.column.data;
+    //tableRows의 홀수 행만 outerTable의 값 : index는 0,2....
+    _.cloneDeep(tableRows).map((row, idx) => {
+      if (idx % 2 === 0) {
+        outerTableRows.push(row);
+      }
+    });
+    sortRows({ index, sortField, direction }, outerTableRows);
+    setSortBy({ index, sortField, direction });
   };
 
   return (
@@ -116,5 +135,6 @@ type SingleExpandableTableProps = {
 };
 type PFSortState = {
   index?: number;
+  sortField?: any;
   direction?: SortByDirection;
 };
