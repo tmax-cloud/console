@@ -42,7 +42,8 @@
     "no-irregular-whitespace": ["error"],
     "no-prototype-builtins": 0, // Disable with exlint v6 update.
     "no-underscore-dangle": 0,
-    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "React", "args": "after-used" }],
+    "no-unused-vars": 0,
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "React", "args": "none" }],
     "@typescript-eslint/no-use-before-define": 2,
     "no-var": 2,
     "object-shorthand": ["error", "properties"],
