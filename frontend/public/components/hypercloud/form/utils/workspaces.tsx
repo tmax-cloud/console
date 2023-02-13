@@ -62,7 +62,7 @@ export const Workspace = props => {
     <ul>
       <TextInput className="pf-c-form-control" id={`${props.id}.name`} methods={props.methods} defaultValue={props.name} hidden />
       <Section label={props.name} id={props.name}>
-        <Dropdown name={`${props.id}.type`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={props.type} />
+        <Dropdown name={`${props.id}.type`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={workspace} />
       </Section>
       {workspace == 'VolumeClaimTemplate' && (
         <>
