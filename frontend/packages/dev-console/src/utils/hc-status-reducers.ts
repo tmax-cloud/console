@@ -164,11 +164,9 @@ export const IntegrationConfigReducer = (integrationConfig: any): string => {
           phase = 'UnReady';
         }
       }
-      return phase;
     });
-    return NO_STATUS;
   }
-  return NO_STATUS;
+  return integrationConfig.status ? phase : NO_STATUS;
 };
 /* eslint no-unused-expressions: off */
 export const InferenceServiceReducer = (inferenceService: any): string => {
