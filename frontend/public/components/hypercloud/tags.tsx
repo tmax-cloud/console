@@ -25,13 +25,20 @@ export const Tags: React.SFC<TagsProps> = ({ tags, namespace, repository, regist
 const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry }) => {
   const { t } = useTranslation();
   const TagsListHeaderColumns = [
-    t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-    t('COMMON:MSG_MAIN_TABLEHEADER_74'),
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_74'),
+    },
     {
       title: 'Scan Result',
       cellTransforms: [compoundExpand],
     },
-    t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+    },
+
     {
       title: '',
       props: { className: tableColumnClasses[0] },
@@ -72,7 +79,7 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
       return [
         {
           title: (
-            <a href={obj.link} target="_blank">
+            <a href={obj.link} target="_blank" rel="noopener noreferrer">
               {obj.name}
             </a>
           ),
@@ -106,7 +113,7 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
     ];
 
     const model = Object.assign({}, RepositoryModel);
-    model.apiGroup = 'registry.' + model.apiGroup;
+    model.apiGroup = `registry.${model.apiGroup}`;
     if (isExtRegistry) {
       model.plural = 'ext-repositories';
     }
@@ -117,13 +124,15 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
         const resObj = _.get(res, parentItem.version);
 
         for (const proerty in resObj) {
-          for (let i = 0; i < resObj[proerty].length; ++i) {
-            innerItemsData.push({
-              severity: resObj[proerty][i].Severity,
-              name: resObj[proerty][i].Name,
-              version: resObj[proerty][i].NamespaceName,
-              link: resObj[proerty][i].Link,
-            });
+          if (proerty) {
+            for (let i = 0; i < resObj[proerty].length; ++i) {
+              innerItemsData.push({
+                severity: resObj[proerty][i].Severity,
+                name: resObj[proerty][i].Name,
+                version: resObj[proerty][i].NamespaceName,
+                link: resObj[proerty][i].Link,
+              });
+            }
           }
         }
         return <ExpandableInnerTable aria-label="Scan Result" header={ScanResultTableHeader} Row={ScanResultTableRow} data={innerItemsData} />;
@@ -133,7 +142,7 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
       });
   };
 
-  return <SingleExpandableTable header={TagsListHeaderColumns} itemList={tags} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={2}></SingleExpandableTable>;
+  return <SingleExpandableTable header={TagsListHeaderColumns} itemList={tags} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={2} />;
 };
 
 export type TagsProps = {

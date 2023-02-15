@@ -1394,7 +1394,7 @@ export const InferenceServiceModel: K8sKind = {
   label: 'Inference Service',
   labelPlural: 'Inference Services',
   apiVersion: 'v1beta1',
-  apiGroup: 'serving.kubeflow.org',
+  apiGroup: 'serving.kserve.io',
   plural: 'inferenceservices',
   abbr: 'ISVC',
   namespaced: true,
@@ -1416,7 +1416,7 @@ export const TrainedModelModel: K8sKind = {
   label: 'Trained Model',
   labelPlural: 'Trained Models',
   apiVersion: 'v1alpha1',
-  apiGroup: 'serving.kubeflow.org',
+  apiGroup: 'serving.kserve.io',
   plural: 'trainedmodels',
   abbr: 'TM',
   namespaced: true,
@@ -1490,7 +1490,6 @@ export const TFApplyClaimModel: K8sKind = {
     labelPlural: 'COMMON:MSG_LNB_MENU_200',
   },
 };
-
 
 export const AWXModel: K8sKind = {
   kind: 'AWX',
@@ -1753,7 +1752,7 @@ export const RedisModel: K8sKind = {
     label: 'COMMON:MSG_LNB_MENU_242',
     labelPlural: 'COMMON:MSG_LNB_MENU_243',
   },
-}
+};
 
 export const RedisClusterModel: K8sKind = {
   label: 'Redis Cluster',

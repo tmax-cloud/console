@@ -66,7 +66,7 @@ const TaskRunTableRow: RowFunction<K8sResourceKind> = ({ obj: taskRun, index, ke
 
 const TaskRunDetails: React.FC<TaskRunDetailsProps> = ({ obj: taskRun }) => {
   const { t } = useTranslation();
-  const renderSecrets = taskRun.spec.workspaces.filter(data => !!data.secret).map(secret => secret.secret.secretName) || [];
+  const renderSecrets = taskRun.spec?.workspaces?.filter(data => !!data.secret).map(secret => secret.secret.secretName) || [];
 
   return (
     <>

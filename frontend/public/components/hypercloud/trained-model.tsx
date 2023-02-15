@@ -83,9 +83,11 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={tm.metadata.namespace} title={tm.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}><TrainedModelStatus result={tm} /></TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <TrainedModelStatus result={tm} />
+      </TableData>
       <TableData className={tableColumnClasses[3]}>{tm.spec.model.framework}</TableData>
-      <TableData className={tableColumnClasses[4]}>{tm.status.url}</TableData>
+      <TableData className={tableColumnClasses[4]}>{tm.status?.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{tm.spec.model.storageUri}</TableData>
       <TableData className={tableColumnClasses[6]}>
         <Timestamp timestamp={tm.metadata.creationTimestamp} />
@@ -121,9 +123,7 @@ export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = (
       </DetailsItem>
     </dl>
   );
-}
-
-
+};
 
 const TrainedModelDetails: React.FC<TrainedModelDetailsProps> = ({ obj: tm }) => {
   const { t } = useTranslation();
@@ -153,32 +153,12 @@ export const TrainedModels: React.FC = props => {
 export const TrainedModelsPage: React.FC<TrainedModelsPageProps> = props => {
   const { t } = useTranslation();
 
-  return (
-    <ListPage
-      title={t('COMMON:MSG_LNB_MENU_196')}
-      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_196') })}
-      canCreate={true}
-      ListComponent={TrainedModels}
-      kind={kind} {...props}
-    />
-  );
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_196')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_196') })} canCreate={true} ListComponent={TrainedModels} kind={kind} {...props} />;
 };
-
-
-
 
 export const TrainedModelsDetailsPage: React.FC<TrainedModelsDetailsPageProps> = props => {
-  return (
-    <DetailsPage
-      {...props}
-      kind={kind}
-      menuActions={menuActions}
-      getResourceStatus={TrainedModelReducer}
-      pages={[details(detailsPage(TrainedModelDetails)), editResource()]}
-    />
-  );
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} getResourceStatus={TrainedModelReducer} pages={[details(detailsPage(TrainedModelDetails)), editResource()]} />;
 };
-
 
 type TrainedModelDetailsListProps = {
   ds: K8sResourceKind;

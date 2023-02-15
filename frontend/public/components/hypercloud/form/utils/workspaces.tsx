@@ -45,12 +45,24 @@ export const Workspace = props => {
     control: props.methods.control,
     name: `${props.id}.type`,
   });
+  const [pvcDefaultValue, setPvcDefaultValue] = React.useState(props.persistentVolumeClaim?.claimName);
+  const [cmDefaultValue, setCmDefaultValue] = React.useState(props.configmap?.name);
+  const [secretDefaultValue, setsecretDefaultValue] = React.useState(props.secret?.secretName);
 
+  React.useEffect(() => {
+    props.persistentVolumeClaim?.claimName && setPvcDefaultValue(props.persistentVolumeClaim?.claimName);
+  }, [props.persistentVolumeClaim?.claimName]);
+  React.useEffect(() => {
+    props.configmap?.name && setCmDefaultValue(props.configmap?.name);
+  }, [props.configmap?.name]);
+  React.useEffect(() => {
+    props.secret?.secretName && setsecretDefaultValue(props.secret?.secretName);
+  }, [props.secret?.secretName]);
   return (
     <ul>
       <TextInput className="pf-c-form-control" id={`${props.id}.name`} methods={props.methods} defaultValue={props.name} hidden />
       <Section label={props.name} id={props.name}>
-        <Dropdown name={`${props.id}.type`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={props.type} />
+        <Dropdown name={`${props.id}.type`} title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')} items={workspaceType} defaultValue={workspace} />
       </Section>
       {workspace == 'VolumeClaimTemplate' && (
         <>
@@ -79,6 +91,7 @@ export const Workspace = props => {
               ]}
               type="single"
               methods={props.methods}
+              defaultValue={pvcDefaultValue}
               useHookForm
             />
           </Section>
@@ -98,6 +111,7 @@ export const Workspace = props => {
               ]}
               type="single"
               methods={props.methods}
+              defaultValue={cmDefaultValue}
               useHookForm
             />
           </Section>
@@ -117,6 +131,7 @@ export const Workspace = props => {
               ]}
               type="single"
               methods={props.methods}
+              defaultValue={secretDefaultValue}
               useHookForm
             />
           </Section>

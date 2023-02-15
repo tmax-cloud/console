@@ -1,7 +1,5 @@
 import * as React from 'react';
-import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
-import { useState } from 'react';
 import { Button } from '@patternfly/react-core';
 import { sortable } from '@patternfly/react-table';
 import { Status } from '@console/shared';
@@ -10,7 +8,7 @@ import { K8sResourceKind, modelFor, k8sGet } from '../../module/k8s';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
-import { Kebab, ResourceKebab, navFactory, viewYamlComponent, SectionHeading, ResourceSummary, ResourceLink, Timestamp, resourcePath } from '../utils';
+import { Kebab, ResourceKebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp, resourcePath } from '../utils';
 import { ResourceSidebar } from '../sidebars/resource-sidebar';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ResourceIcon } from '../utils/resource-icon';
@@ -26,11 +24,10 @@ export const serviceInstanceMenuActions = [...Kebab.getExtensionsActionsForKind(
 const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
   const { t } = useTranslation();
   const { obj: serviceInstance, match } = props;
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [sidebarDetails, setSidebarDetails] = useState({});
-  const [sidebarKind, setSidebarKind] = useState('');
-  const [sidebarTitle, setSidebarTitle] = useState('');
-  // const [planDetails, setPlanDetails] = useState({});
+  const [showSidebar, setShowSidebar] = React.useState(false);
+  const [sidebarDetails, setSidebarDetails] = React.useState({});
+  const [sidebarKind, setSidebarKind] = React.useState('');
+  const [sidebarTitle, setSidebarTitle] = React.useState('');
   const getDetails = async (kind, name) => {
     const model = modelFor(kind);
     const details = await k8sGet(model, name, kind.indexOf('Cluster') < 0 ? match.params.ns : null);
@@ -38,7 +35,6 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
     setShowSidebar(true);
     setSidebarKind(kind);
     setSidebarTitle(details.spec?.externalName || details.metadata.name);
-    console.log(sidebarDetails);
   };
 
   const SidebarLink = ({ name, displayName, kind }) => {
@@ -58,7 +54,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
   const servicePlanRefName = serviceInstance.spec?.servicePlanExternalName || serviceInstance.spec?.servicePlanRef?.name;
 
   if (window.location.href.indexOf('?serviceplanSidebar=open') > 0) {
-    getDetails(!!clusterServicePlanRefName ? ClusterServicePlanModel.kind : ServicePlanModel.kind, !!clusterServicePlanRefName ? serviceInstance.spec?.clusterServicePlanRef?.name : serviceInstance.spec?.servicePlanRef?.name);
+    getDetails(clusterServicePlanRefName ? ClusterServicePlanModel.kind : ServicePlanModel.kind, clusterServicePlanRefName ? serviceInstance.spec?.clusterServicePlanRef?.name : serviceInstance.spec?.servicePlanRef?.name);
     window.history.replaceState(null, null, window.location.pathname);
   }
 
@@ -69,7 +65,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
           <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceInstance, t) })} />
           <div className="row">
             <div className="col-md-6">
-              <ResourceSummary resource={serviceInstance}></ResourceSummary>
+              <ResourceSummary resource={serviceInstance} />
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
@@ -77,11 +73,11 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
                 <dd>
                   <Status status={serviceInstance.status?.lastConditionState} />
                 </dd>
-                <dt>{!!clusterServiceClassRefName ? t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_2') : t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_19')}</dt>
-                <dd>{!!clusterServiceClassRefName ? <ResourceLink kind={ClusterServiceClassModel.kind} displayName={clusterServiceClassRefName} name={serviceInstance.spec?.clusterServiceClassRef?.name} title={clusterServiceClassRefName} /> : <ResourceLink kind={ServiceClassModel.kind} displayName={serviceClassRefName} name={serviceInstance.spec?.serviceClassRef?.name} title={serviceClassRefName} namespace={serviceInstance.metadata.namespace} />}</dd>
-                <dt>{!!clusterServicePlanRefName ? t('COMMON:MSG_DETAILS_TABSERVICEPLANS_DETAILS_SIDEPANEL_13') : t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1')}</dt>
+                <dt>{clusterServiceClassRefName ? t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_2') : t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_19')}</dt>
+                <dd>{clusterServiceClassRefName ? <ResourceLink kind={ClusterServiceClassModel.kind} displayName={clusterServiceClassRefName} name={serviceInstance.spec?.clusterServiceClassRef?.name} title={clusterServiceClassRefName} /> : <ResourceLink kind={ServiceClassModel.kind} displayName={serviceClassRefName} name={serviceInstance.spec?.serviceClassRef?.name} title={serviceClassRefName} namespace={serviceInstance.metadata.namespace} />}</dd>
+                <dt>{clusterServicePlanRefName ? t('COMMON:MSG_DETAILS_TABSERVICEPLANS_DETAILS_SIDEPANEL_13') : t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1')}</dt>
                 <dd>
-                  <SidebarLink displayName={!!clusterServicePlanRefName ? clusterServicePlanRefName : servicePlanRefName} name={!!clusterServicePlanRefName ? serviceInstance.spec?.clusterServicePlanRef?.name : serviceInstance.spec?.servicePlanRef?.name} kind={!!clusterServicePlanRefName ? ClusterServicePlanModel.kind : ServicePlanModel.kind}></SidebarLink>
+                  <SidebarLink displayName={clusterServicePlanRefName ? clusterServicePlanRefName : servicePlanRefName} name={clusterServicePlanRefName ? serviceInstance.spec?.clusterServicePlanRef?.name : serviceInstance.spec?.servicePlanRef?.name} kind={clusterServicePlanRefName ? ClusterServicePlanModel.kind : ServicePlanModel.kind} />
                 </dd>
               </dl>
             </div>
@@ -120,7 +116,7 @@ type ServiceInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={ServiceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml(viewYamlComponent)]} />;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={ServiceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [
@@ -139,7 +135,7 @@ const ServicePlanSidePanelOpenedLink = ({ serviceinstance, displayName, iconKind
   return (
     <>
       <ResourceIcon kind={iconKind} />
-      <Link to={resourcePath(ServiceInstanceModel.kind, serviceinstance.metadata.name, serviceinstance.metadata.namespace) + '?serviceplanSidebar=open'}>{displayName}</Link>
+      <Link to={`${resourcePath(ServiceInstanceModel.kind, serviceinstance.metadata.name, serviceinstance.metadata.namespace)}?serviceplanSidebar=open`}>{displayName}</Link>
     </>
   );
 };
@@ -162,9 +158,9 @@ const ServiceInstanceTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[2]}>
         <Status status={obj.status?.lastConditionState} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>{!!clusterServiceClassRefName ? <ResourceLink kind={ClusterServiceClassModel.kind} title={clusterServiceClassRefName} name={obj.spec.clusterServiceClassRef?.name} displayName={clusterServiceClassRefName} /> : <ResourceLink kind={ServiceClassModel.kind} title={serviceClassRefName} name={obj.spec.serviceClassRef?.name} displayName={serviceClassRefName} namespace={obj.metadata.namespace} />}</TableData>
+      <TableData className={tableColumnClasses[3]}>{clusterServiceClassRefName ? <ResourceLink kind={ClusterServiceClassModel.kind} title={clusterServiceClassRefName} name={obj.spec.clusterServiceClassRef?.name} displayName={clusterServiceClassRefName} /> : <ResourceLink kind={ServiceClassModel.kind} title={serviceClassRefName} name={obj.spec.serviceClassRef?.name} displayName={serviceClassRefName} namespace={obj.metadata.namespace} />}</TableData>
       <TableData className={tableColumnClasses[4]}>
-        {!!clusterServicePlanRefName ? (
+        {clusterServicePlanRefName ? (
           <dd>
             <ServicePlanSidePanelOpenedLink serviceinstance={obj} iconKind={ClusterServicePlanModel.kind} displayName={clusterServiceClassRefName} />
           </dd>
