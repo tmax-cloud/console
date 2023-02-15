@@ -1,5 +1,7 @@
 import * as _ from 'lodash-es';
+import classNames from 'classnames';
 import * as React from 'react';
+import i18next from 'i18next';
 import { useState, useRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { match as RMatch } from 'react-router';
@@ -19,6 +21,7 @@ import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
 import { Workspace } from '../utils/workspaces';
 import { convertToForm, onSubmitCallback } from './sync-form-data';
+import { FieldLevelHelp } from 'public/components/utils';
 
 let defaultArrayLength = 0;
 
@@ -60,6 +63,62 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     workspaceList: [],
     paramValueListData: [],
   });
+
+const Node_taskparam = ({ className, children, description, valid, validationErrorDesc }) => {
+    const { t } = useTranslation();
+    return (
+      <div className={className}>
+        <p className={classNames('help-block', { 'help-block-short-margin-top': !valid })}>{description}</p>
+        <div>{children}</div>
+        <div className="row" />
+        {!valid && <p className="error-string">{i18next.exists(validationErrorDesc) ? t(validationErrorDesc) : validationErrorDesc}</p>}
+      </div>
+    );
+  };
+  
+  const CombineNodes_taskParam = (id, description, children, valid, validationErrorDesc) => {
+    // children node 개수에 따라 가로 분할 class 적용
+    let isArray = Array.isArray(children);
+    let className = isArray ? `col-md-${Math.floor(12 / children.length)}` : 'col-md-12';
+    return isArray ? children.map((cur, idx) => <Node_taskparam className={className} key={`${id}-${idx}`} children={cur} description={description} valid={valid} validationErrorDesc={validationErrorDesc} />) : <Node_taskparam className={className} children={children} description={description} valid={valid} validationErrorDesc={validationErrorDesc} />;
+  };
+  
+  const TaskParam: React.FC<TaskParamProps> = ({ id, label, description, children, isRequired = false, valid = true, validationErrorDesc = '', help = false, helpText, helpTitle }) => {
+    let result = CombineNodes_taskParam(id, description, children, valid, validationErrorDesc);
+    return (
+      <div className="form-group">
+        {label && (
+          <label className={'control-label ' + (isRequired ? 'co-required' : '')} htmlFor={id}>
+            {label}
+          </label>
+        )}
+        {help && (
+          <div style={{ display: 'inline-block', marginLeft: 5 }}>
+            <FieldLevelHelp>
+              <h2>{helpTitle}</h2>
+              <p>{helpText}</p>
+            </FieldLevelHelp>
+          </div>
+        )}
+        <div className="row" key={id}>
+          {result}
+        </div>
+      </div>
+    );
+  };
+  
+  type TaskParamProps = {
+    id: string;
+    children: Array<React.ReactNode> | React.ReactNode;
+    label?: string;
+    description?: string;
+    isRequired?: boolean;
+    valid?: boolean;
+    validationErrorDesc?: string;
+    help?: boolean;
+    helpTitle?: string;
+    helpText?: string;
+  };
 
   const [pipelineList, setPipelineList] = useState([]);
   const [serviceAccountList, setServiceAccountList] = useState([]);
@@ -190,21 +249,21 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
       lists.paramList.map((item, index) => {
         if (item.type === 'array') {
           return (
-            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
+            <TaskParam label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
               <>
                 <input ref={methods.register} type="hidden" id={`params.${index}.name`} name={`params.${index}.name`} value={item.name} />
                 <ListView name={`params.${index}.value`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={lists.paramValueListData[index]?.value} />
               </>
-            </Section>
+            </TaskParam>
           );
         } else {
           return (
-            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
+            <TaskParam label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
               <>
                 <input ref={methods.register} type="hidden" id={`params[${index}].name`} name={`params[${index}].name`} value={item.name} />
                 <input ref={methods.register} className="pf-c-form-control" id={`params[${index}].value`} name={`params[${index}].value`} defaultValue={item.value} required={false} />
               </>
-            </Section>
+            </TaskParam>
           );
         }
       })
