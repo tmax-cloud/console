@@ -89,6 +89,14 @@ const getNavItems = (perspective, cmp, flags) => {
         return basicMenusFactory(PerspectiveType.BAREMETAL, flags[FLAGS.CAN_LIST_NS]);
       }
     }
+    case PerspectiveType.SAS: {
+      const sasMenus = _.filter(tabs, { name: PerspectiveType.SAS });
+      if (sasMenus?.length > 0) {
+        return dynamicMenusFactory(perspective, sasMenus[0], flags[FLAGS.CAN_LIST_NS]);
+      } else {
+        return basicMenusFactory(PerspectiveType.SAS, flags[FLAGS.CAN_LIST_NS]);
+      }
+    }
     case PerspectiveType.CUSTOM: {
       const customMenus = _.filter(tabs, { name: PerspectiveType.CUSTOM });
       if (customMenus?.length > 0) {
