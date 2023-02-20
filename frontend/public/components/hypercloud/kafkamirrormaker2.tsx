@@ -32,9 +32,15 @@ export const MirrorRow = ({ mirror, km2 }) => {
       <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">{mirror.sourceCluster || '-'}</div>
       <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs ">{targetClusterBootstrapServerObj?.bootstrapServers}</div>
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{mirror.targetCluster || '-'}</div>
+<<<<<<< HEAD
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs ">{connector?.name}</div>
       <div className="col-lg-1 hidden-md hidden-sm hid den-xs ">
         <Status status={connector?.connector?.state} />
+=======
+      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs ">{connector?.name || '-'}</div>
+      <div className="col-lg-1 hidden-md hidden-sm hid den-xs ">
+        <Status status={connector?.connector?.state || '-'} />
+>>>>>>> 463990062f39cf4be80a66984fdcbe08c3dd6e5d
       </div>
     </div>
   );
