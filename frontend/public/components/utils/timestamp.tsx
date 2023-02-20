@@ -159,6 +159,7 @@ export type TimestampProps = {
   simple?: boolean;
   omitSuffix?: boolean;
   className?: string;
+  creationTimestamp?: string;
 };
 
 Timestamp.displayName = 'Timestamp';
