@@ -22,14 +22,13 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
   const { t } = useTranslation();
   const headerFunc = makeTableHeader(header, t);
   const [sortBy, setSortBy] = React.useState<PFSortState>({});
-  const [outerTableRows, setOuterTableRows] = React.useState([]);
-
   // itemList : KafkaMirrorMaker2 원본 리소스 리스트
   React.useEffect(() => {
     const preData = [];
     itemList
       .reduce((result, item, index: number) => {
         return result.then(async () => {
+          item['index'] = index;
           const innerTable = await innerRenderer(item);
           if (innerTable) {
             preData.push({
@@ -87,24 +86,30 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
     setTableRows(rows);
   };
 
-  const sortRows = ({ index, sortField, direction }, outerTableRows) => {
-    const sortedRows = outerTableRows.sort((a, b) => {
-      const compA = typeof a.cells[index].title === 'object' ? a.cells[index].title.props[sortField] : a.cells[index].title,
-        compB = typeof b.cells[index].title === 'object' ? b.cells[index].title.props[sortField] : b.cells[index].title;
+  const sortRows = async ({ index, sortField, direction }, outerTableRow) => {
+    const sortedRows = outerTableRow.sort((a, b) => {
+      const compA = typeof a.cells[index].title === 'object' ? a.cells[index].title.props[sortField] : a.cells[index].title;
+      const compB = typeof b.cells[index].title === 'object' ? b.cells[index].title.props[sortField] : b.cells[index].title;
       return compA < compB ? -1 : compA > compB ? 1 : 0;
     });
-    setOuterTableRows(direction === SortByDirection.asc ? sortedRows : sortedRows.reverse());
+    const newOuterTableRow = direction === SortByDirection.asc ? sortedRows : sortedRows.reverse();
+    let newTableRows = [];
+    await newOuterTableRow.map(async (item, num) => {
+      const inner = await tableRows.find(i => i?.parent === item.cells[0].index * 2);
+      if (inner) {
+        inner.parent = num * 2;
+        item.cells[0].index = num;
+        newTableRows = [...newTableRows, item, inner];
+      }
+    });
+    setTableRows(newTableRows);
   };
 
   const onSort = (_event, index, direction, extraData) => {
     const sortField = extraData.column.data;
     //tableRows의 홀수 행만 outerTable의 값 : index는 0,2....
-    _.cloneDeep(tableRows).map((row, idx) => {
-      if (idx % 2 === 0) {
-        outerTableRows.push(row);
-      }
-    });
-    sortRows({ index, sortField, direction }, outerTableRows);
+    const filteredTable = tableRows.filter((item, index) => index % 2 === 0).map(item => ({ ...item }));
+    sortRows({ index, sortField, direction }, filteredTable);
     setSortBy({ index, sortField, direction });
   };
 
