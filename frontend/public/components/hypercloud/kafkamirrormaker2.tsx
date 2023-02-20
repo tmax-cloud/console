@@ -7,7 +7,9 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { Status } from '@console/shared';
 import { SingleExpandableTable } from './utils/expandable-table';
-import { compoundExpand, sortable } from '@patternfly/react-table';
+import { compoundExpand } from '@patternfly/react-table';
+import { Tooltip } from '@patternfly/react-core';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 const kind = KafkaMirrorMaker2Model.kind;
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
@@ -26,9 +28,9 @@ export const MirrorRow = ({ mirror, km2 }) => {
   });
   return (
     <div className="row">
-      <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5 ">{sourceClusterBootstrapServerObj.bootstrapServers}</div>
+      <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5 ">{sourceClusterBootstrapServerObj?.bootstrapServers}</div>
       <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">{mirror.sourceCluster || '-'}</div>
-      <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs ">{targetClusterBootstrapServerObj.bootstrapServers}</div>
+      <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs ">{targetClusterBootstrapServerObj?.bootstrapServers}</div>
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{mirror.targetCluster || '-'}</div>
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs ">{connector?.name || '-'}</div>
       <div className="col-lg-1 hidden-md hidden-sm hid den-xs ">
@@ -47,7 +49,13 @@ export const MirrorTable = ({ data, km2 }) => {
           <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_6')}</div>
           <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_7')}</div>
           <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_8')}</div>
-          <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_9')}</div>
+          <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
+            {t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_9')}
+            {'  '}
+            <Tooltip content={[<span key={`mirror-table-tooltip-${km2.index}`}>커넥터 정보가 유효하지 않을 시 해당 값은 불러오기가 불가능한 상태입니다</span>]}>
+              <HelpIcon className="co-field-level-help__icon" />
+            </Tooltip>
+          </div>
           <div className="col-lg-1 hidden-md hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_10')}</div>
         </div>
         <div className="co-m-table-grid__body">
@@ -66,24 +74,24 @@ const KafkaMirrorMaker2Table = (t, props) => {
   const KafkaMirrorMaker2Columns = [
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-      transforms: [sortable],
+      sortField: 'metadata.name',
       data: 'name',
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
-      transforms: [sortable],
+      sortField: 'metadata.name',
       data: 'namespace',
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_151'),
-      transforms: [sortable],
+      sortField: 'spec.obj.spec.mirrors',
       tooltip: 'MSG_MAIN_TABLEHEADER_152',
       cellTransforms: [compoundExpand],
       data: 'mirrors.length',
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      transforms: [sortable],
+      sortField: 'metadata.creationTimestamp',
       data: 'creationTimestamp',
     },
     {
@@ -98,10 +106,11 @@ const KafkaMirrorMaker2Table = (t, props) => {
     return [
       {
         title: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+        index: index,
       },
       {
         className: 'co-break-word',
-        title: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+        title: <ResourceLink kind="Namespace" name={obj.metadata.namespace} namespace={obj.metadata.namespace} title={obj.metadata.namespace} />,
       },
       {
         title: obj.spec.mirrors.length,
@@ -110,7 +119,7 @@ const KafkaMirrorMaker2Table = (t, props) => {
         },
       },
       {
-        title: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+        title: <Timestamp timestamp={obj.metadata.creationTimestamp} creationTimestamp={obj.metadata.creationTimestamp} />,
       },
       {
         className: Kebab.columnClass,
