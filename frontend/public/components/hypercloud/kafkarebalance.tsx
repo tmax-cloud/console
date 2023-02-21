@@ -142,7 +142,7 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
           return <p key={`key-${goal}`}>{goal}</p>;
         })}
       </DetailsItem>
-      {loading && config && config.get('hard.goals') && (
+      {loading && config && Object.keys(config).includes('hard.goals') && (
         <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_6')} obj={kr}>
           {kr.spec?.skipHardGoalCheck ? t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_7') : t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_8')}
         </DetailsItem>
