@@ -2,64 +2,136 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { WSFactory } from '@console/internal/module/ws-factory';
-
-import * as classNames from 'classnames';
+import { compoundExpand } from '@patternfly/react-table';
 import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
-import { TableProps } from '../utils/default-list-component';
 import { K8sResourceKind } from '../../../module/k8s';
 import { DetailsPage, DetailsPageProps, ListPage } from '../../factory';
+import { SingleExpandableTable } from '../utils/expandable-table';
 
 const menuActions: KebabAction[] = [...Kebab.factory.common, Kebab.factory.Connect];
-const kind = 'App';
+const kind = 'SasApp';
 
-const tableProps: TableProps = {
-  header: [
+export const MirrorRow = ({ mirror, km2 }) => {
+  const connectors = km2.status?.connectors || [];
+  const connector = connectors.find(obj => {
+    return obj.name.indexOf(mirror.sourceCluster) !== -1 && obj.name.indexOf(mirror.targetCluster) !== -1;
+  });
+
+  const clusters = km2.spec.clusters;
+  const sourceClusterBootstrapServerObj = clusters.find(obj => {
+    return obj.alias.indexOf(mirror.sourceCluster) !== -1;
+  });
+  const targetClusterBootstrapServerObj = clusters.find(obj => {
+    return obj.alias.indexOf(mirror.targetCluster) !== -1;
+  });
+  return (
+    <div className="row">
+      <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5 ">{sourceClusterBootstrapServerObj?.bootstrapServers}</div>
+      <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">{mirror.sourceCluster || '-'}</div>
+      <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs ">{targetClusterBootstrapServerObj?.bootstrapServers}</div>
+      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{mirror.targetCluster || '-'}</div>
+      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs ">{connector?.name || '-'}</div>
+      <div className="col-lg-1 hidden-md hidden-sm hid den-xs ">
+        <Status status={connector?.connector?.state || '-'} />
+      </div>
+    </div>
+  );
+};
+
+export const MirrorTable = ({ data, km2 }) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="co-m-table-grid co-m-table-grid--bordered">
+        <div className="row co-m-table-grid__head">
+          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_5')}</div>
+          <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_6')}</div>
+          <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_7')}</div>
+          <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_8')}</div>
+          <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_9')}</div>
+          <div className="col-lg-1 hidden-md hidden-sm hidden-xs">{t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_10')}</div>
+        </div>
+        <div className="co-m-table-grid__body">
+          {data.map((m: any, i: number) => (
+            <MirrorRow key={i} mirror={m} km2={km2} />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+const KafkaMirrorMaker2Table = (t, props) => {
+  const kafkaMirrorMaker2List = props.data;
+  // KafkaMirrorMaker2Table테이블의 outer table header columns 정의
+  const KafkaMirrorMaker2Columns = [
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
       sortField: 'metadata.name',
+      data: 'name',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
-      sortField: 'metadata.namespace',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      sortField: 'metadata.name',
+      data: 'namespace',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
-      sortFunc: 'AwxStatusReducer',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_151'),
+      sortField: 'spec.obj.spec.mirrors',
+      tooltip: 'MSG_MAIN_TABLEHEADER_152',
+      cellTransforms: [compoundExpand],
+      data: 'mirrors.length',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
+      data: 'creationTimestamp',
     },
     {
       title: '',
       transforms: null,
       props: { className: Kebab.columnClass },
     },
-  ],
-  row: (obj: K8sResourceKind) => [
-    {
-      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
-    },
-    {
-      className: 'co-break-word',
-      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
-    },
-    {
-      className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
-      children: <Status status={AwxStatusReducer(obj)} />,
-    },
-    {
-      children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
-    },
-    {
-      className: Kebab.columnClass,
-      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'URL', url: obj.spec?.hostname ? `https://${obj.spec?.hostname}` : null }} />,
-    },
-  ],
+  ];
+
+  // outer table의 row renderer 정의
+  const rowRenderer = (index, obj: K8sResourceKind) => {
+    return [
+      {
+        title: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+        index: index,
+      },
+      {
+        className: 'co-break-word',
+        title: <ResourceLink kind="Namespace" name={obj.metadata.namespace} namespace={obj.metadata.namespace} title={obj.metadata.namespace} />,
+      },
+      {
+        title: obj.spec.mirrors.length,
+        props: {
+          isOpen: false,
+        },
+      },
+      {
+        title: <Timestamp timestamp={obj.metadata.creationTimestamp} creationTimestamp={obj.metadata.creationTimestamp} />,
+      },
+      {
+        className: Kebab.columnClass,
+        title: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+      },
+    ];
+  };
+
+  // outer table의 innerRenderer 정의
+  const innerRenderer = km2 => {
+    // inner renderer는 ExpandableInnerTable 컴포넌트를 반환한다.
+    return <MirrorTable key="MirrorTable" data={km2.spec.mirrors} km2={km2} />;
+  };
+
+  return <SingleExpandableTable header={KafkaMirrorMaker2Columns} itemList={kafkaMirrorMaker2List} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={2} />;
 };
 
 const filters = (t: TFunction) => [
@@ -131,11 +203,6 @@ const SasAppDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
 };
 
 const { details, editResource } = navFactory;
-
-export const SasAppsPage: React.FC = props => {
-  const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />;
-};
 
 export const SasAppsDetailsPage: React.FC<DetailsPageProps> = props => {
   const [url, setUrl] = React.useState(null);
@@ -235,7 +302,7 @@ const SasAppPage = props => {
           </Button>
         </FlexItem>
       </Flex>
-      <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} tableProps={tableProps} />;
+      <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} customData={{ nonK8sResource: true, sas: 'app' }} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} />;
     </>
   );
 };

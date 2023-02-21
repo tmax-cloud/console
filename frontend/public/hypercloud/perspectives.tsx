@@ -121,18 +121,6 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
           },
         },
-        {
-          type: 'Perspective',
-          properties: {
-            id: PerspectiveType.SAS,
-            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
-            icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-            selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
-            getLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
-            getK8sLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
-            getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
-          },
-        },
       ]
     : [
         {
@@ -160,21 +148,22 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
-        {
-          type: 'Perspective',
-          properties: {
-            id: PerspectiveType.SAS,
-            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
-            icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-            selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
-            getLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
-            getK8sLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
-            getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
-          },
-        },
       ];
-
-  if (window.SERVER_FLAGS.showCustomPerspective === undefined || window.SERVER_FLAGS.showCustomPerspective === true) {
+  if (window.SERVER_FLAGS.showCustomPerspective === undefined || window.SERVER_FLAGS.showCustomPerspective === 'SAS') {
+    perspectives.push({
+      type: 'Perspective',
+      properties: {
+        id: PerspectiveType.SAS,
+        name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
+        icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+        selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
+        getLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
+        getK8sLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
+        getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
+      },
+    });
+  }
+  if (window.SERVER_FLAGS.showCustomPerspective === undefined || window.SERVER_FLAGS.showCustomPerspective === 'CUSTOM') {
     perspectives.push({
       type: 'Perspective',
       properties: {

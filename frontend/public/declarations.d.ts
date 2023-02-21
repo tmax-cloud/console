@@ -39,7 +39,7 @@ declare interface Window {
     GOARCH: string;
     GOOS: string;
     mcMode: boolean;
-    showCustomPerspective: boolean;
+    showCustomPerspective: string;
     KeycloakAuthURL: string;
     KeycloakRealm: string;
     gitlabURL: string;

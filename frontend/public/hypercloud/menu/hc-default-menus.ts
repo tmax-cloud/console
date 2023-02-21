@@ -175,7 +175,7 @@ const BaremetalNavMenus = [
 const SasNavMenus = [
   {
     menuType: MenuType.REGISTERED_MENU,
-    kind: 'App',
+    kind: 'SasApp',
   },
   {
     menuType: MenuType.REGISTERED_MENU,
@@ -183,7 +183,7 @@ const SasNavMenus = [
   },
   {
     menuType: MenuType.REGISTERED_MENU,
-    kind: 'Controller',
+    kind: 'SasController',
   },
   {
     menuType: MenuType.REGISTERED_MENU,

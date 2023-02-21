@@ -39,11 +39,17 @@ const initializeCmpFlag = () => {
     coFetchJSON(getCmpListFetchUrl())
       .then(res => {
         const policy = res?.items?.[0];
-        window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
+        if (policy?.menuTabs?.[0]?.name === 'SAS' && policy?.showCustomPerspective) {
+          window.SERVER_FLAGS.showCustomPerspective = 'SAS';
+        } else if (policy?.menuTabs?.[0]?.name === 'CUSTOM' && policy?.showCustomPerspective) {
+          window.SERVER_FLAGS.showCustomPerspective = 'CUSTOM';
+        } else {
+          window.SERVER_FLAGS.showCustomPerspective = null;
+        }
         resolve();
       })
       .catch(() => {
-        window.SERVER_FLAGS.showCustomPerspective = false;
+        window.SERVER_FLAGS.showCustomPerspective = null;
         // eslint-disable-next-line no-console
         console.log(`No cmp resource.`);
         // MEMO : 링크나 메뉴생성에 에러가 나도 일단 app 화면은 떠야 되니 resolve처리함.

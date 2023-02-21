@@ -274,7 +274,7 @@ export const CustomMenusMap: CustomMenus = {
     isMultiOnly: false,
   },
   App: {
-    kind: 'App',
+    kind: 'SasApp',
     visible: true,
     type: MenuLinkType.HrefLink,
     defaultLabel: 'App',
@@ -292,7 +292,7 @@ export const CustomMenusMap: CustomMenus = {
     isMultiOnly: false,
   },
   Controller: {
-    kind: 'Controller',
+    kind: 'SasController',
     visible: true,
     type: MenuLinkType.HrefLink,
     defaultLabel: 'Controller',

@@ -235,7 +235,7 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
         details(detailsPage(HelmRepositoryDetails)),
         {
           href: 'charts',
-          name: 'COMMON:MSG_MAIN_TABLEHEADER_142',          
+          name: 'COMMON:MSG_MAIN_TABLEHEADER_142',
           component: ChartListPage,
         },
       ]}
