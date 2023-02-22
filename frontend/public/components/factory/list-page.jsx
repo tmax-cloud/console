@@ -320,7 +320,6 @@ export const ListPage = withFallback(props => {
   const sas = customData?.sas ? customData.sas : null;
 
   let href = namespaced ? `/k8s/ns/${usedNamespace || 'default'}/${plural}/~new` : `/k8s/cluster/${plural}/~new`;
-
   if (ko.crd) {
     try {
       const ref = referenceForModel(ko);

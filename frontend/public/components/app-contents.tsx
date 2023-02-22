@@ -25,10 +25,7 @@ import { GrafanaPage } from './hypercloud/grafana';
 //PF4 Imports
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import WelcomePage from './hypercloud/login/welcome';
-import SasAppPage from './hypercloud/sas/sas-app';
-import SasServicePage from './hypercloud/sas/sas-service';
-import SasControllerPage from './hypercloud/sas/sas-controller';
-import SasNodePage from './hypercloud/sas/sas-node';
+
 const RedirectComponent = props => {
   const to = `/k8s${props.location.pathname}`;
   return <Redirect to={to} />;
@@ -182,10 +179,11 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/add/ns/:ns" exact loader={() => import('../../packages/dev-console/src/components/AddPage' /* webpackChunkName: "import-yaml" */).then(m => NamespaceFromURL(m.AddPage))} />
           <Route path="/add" exact component={NamespaceRedirect} />
           <Route path="/welcome" exact component={WelcomePage} />
-          <Route path="/sas-app" exact component={SasAppPage} />
-          <Route path="/sas-service" exact component={SasServicePage} />
-          <Route path="/sas-controller" exact component={SasControllerPage} />
-          <Route path="/sas-node" exact component={SasNodePage} />
+
+          <LazyRoute path="/sas-app" exact loader={() => import('./hypercloud/sas/sas-app' /* webpackChunkName: "helmchart" */).then(m => m.SasAppPage)} />
+          <LazyRoute path="/sas-service" exact loader={() => import('./hypercloud/sas/sas-service' /* webpackChunkName: "helmchart" */).then(m => m.SasServicePage)} />
+          <LazyRoute path="/sas-controller" exact loader={() => import('./hypercloud/sas/sas-controller' /* webpackChunkName: "helmchart" */).then(m => m.SasControllerPage)} />
+          <LazyRoute path="/sas-node" exact loader={() => import('./hypercloud/sas/sas-node' /* webpackChunkName: "helmchart" */).then(m => m.SasNodePage)} />
           <LazyRoute path="/kiali/all-namespaces" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />
           <LazyRoute path="/kiali/ns/:ns" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />
           <Route path="/kiali" exact component={NamespaceRedirect} />

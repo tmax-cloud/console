@@ -11,6 +11,7 @@ import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, ResourceKebab
 import { K8sResourceKind } from '../../../module/k8s';
 import { DetailsPage, DetailsPageProps, ListPage } from '../../factory';
 import { SingleExpandableTable } from '../utils/expandable-table';
+import { SasAppModel } from './sas-model';
 
 const menuActions: KebabAction[] = [...Kebab.factory.common, Kebab.factory.Connect];
 const kind = 'SasApp';
@@ -221,7 +222,7 @@ type AWXDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const SasAppPage = props => {
+export const SasAppPage = props => {
   const watchURL = 'wss://console.tmaxcloud.org/api/sas';
   const ws: WSFactory = new WSFactory('sas', {
     host: '',
@@ -302,7 +303,7 @@ const SasAppPage = props => {
           </Button>
         </FlexItem>
       </Flex>
-      <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} customData={{ nonK8sResource: true, sas: 'app' }} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} />;
+      <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} customData={{ nonK8sResource: true, sas: 'app', kindObj: SasAppModel }} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} isK8sResource={false} />;
     </>
   );
 };

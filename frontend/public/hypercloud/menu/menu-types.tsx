@@ -273,7 +273,7 @@ export const CustomMenusMap: CustomMenus = {
     url: '',
     isMultiOnly: false,
   },
-  App: {
+  SasApp: {
     kind: 'SasApp',
     visible: true,
     type: MenuLinkType.HrefLink,
@@ -291,7 +291,7 @@ export const CustomMenusMap: CustomMenus = {
     activePath: '/sas-service/',
     isMultiOnly: false,
   },
-  Controller: {
+  SasController: {
     kind: 'SasController',
     visible: true,
     type: MenuLinkType.HrefLink,

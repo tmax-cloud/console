@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { WSFactory } from '@console/internal/module/ws-factory';
 
-const SasNodePage = () => {
+export const SasNodePage = () => {
   const watchURL = 'wss://console.tmaxcloud.org/api/sas';
   const ws: WSFactory = new WSFactory('sas', {
     host: '',
