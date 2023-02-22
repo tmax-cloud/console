@@ -103,6 +103,8 @@ export const getMenusInPerspective = (perspective: PerspectiveType): MenuData[] 
       return HyperCloudDefaultMenus.BaremetalNavMenus;
     case PerspectiveType.CUSTOM:
       return HyperCloudDefaultMenus.CustomNavMenus;
+    case PerspectiveType.SAS:
+      return HyperCloudDefaultMenus.SasNavMenus;
     default:
       // Empty
       return [];
