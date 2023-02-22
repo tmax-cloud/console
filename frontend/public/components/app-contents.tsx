@@ -180,10 +180,10 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <Route path="/add" exact component={NamespaceRedirect} />
           <Route path="/welcome" exact component={WelcomePage} />
 
-          <LazyRoute path="/sas-app" exact loader={() => import('./hypercloud/sas/sas-app' /* webpackChunkName: "helmchart" */).then(m => m.SasAppPage)} />
-          <LazyRoute path="/sas-service" exact loader={() => import('./hypercloud/sas/sas-service' /* webpackChunkName: "helmchart" */).then(m => m.SasServicePage)} />
-          <LazyRoute path="/sas-controller" exact loader={() => import('./hypercloud/sas/sas-controller' /* webpackChunkName: "helmchart" */).then(m => m.SasControllerPage)} />
-          <LazyRoute path="/sas-node" exact loader={() => import('./hypercloud/sas/sas-node' /* webpackChunkName: "helmchart" */).then(m => m.SasNodePage)} />
+          <LazyRoute path="/sas-app" exact loader={() => import('./hypercloud/sas/sas-app' /* webpackChunkName: "sas-app" */).then(m => m.SasAppPage)} />
+          <LazyRoute path="/sas-service" exact loader={() => import('./hypercloud/sas/sas-service' /* webpackChunkName: "sas-service" */).then(m => m.SasServicePage)} />
+          <LazyRoute path="/sas-controller" exact loader={() => import('./hypercloud/sas/sas-controller' /* webpackChunkName: "sas-controller" */).then(m => m.SasControllerPage)} />
+          <LazyRoute path="/sas-node" exact loader={() => import('./hypercloud/sas/sas-node' /* webpackChunkName: "sas-node" */).then(m => m.SasNodePage)} />
           <LazyRoute path="/kiali/all-namespaces" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />
           <LazyRoute path="/kiali/ns/:ns" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />
           <Route path="/kiali" exact component={NamespaceRedirect} />
