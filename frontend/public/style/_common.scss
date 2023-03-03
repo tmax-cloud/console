@@ -510,6 +510,7 @@ $co-external-link-padding-right: 15px;
     .co-m-table-grid__body .row,
     .co-m-table-grid__head {
       border-bottom: solid 1px #eee;
+      display: flex;
     }
   }
   [class*='col-'],

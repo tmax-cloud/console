@@ -23,7 +23,7 @@ export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] =>
   const subs: { [key: string]: KebabSubMenu } = {};
   const menuOptions: KebabMenuOption[] = [];
 
-  options.forEach(o => {
+  options?.forEach(o => {
     if (!o.hidden) {
       if (o.path) {
         const parts = o.path.split('/');
@@ -403,6 +403,10 @@ export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
       'hidden',
     );
     return <Kebab options={options} key={resource.version} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
+  }
+  if (kind === 'SasApp') {
+    console.log('역시 넌 여기야', actions, kind, kindObj, resource, isDisabled, extraResources, customData);
+    return <Kebab key={resource.version} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
   }
 
   if (!kindObj) {

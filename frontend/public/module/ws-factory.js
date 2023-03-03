@@ -39,7 +39,7 @@ function createURL(host, path) {
 
   if (path.split('/')[1] === 'helm') {
     const mapUrl = CustomMenusMap.Helm.url;
-    if (location.protocol === 'https:') {      
+    if (location.protocol === 'https:') {
       url = `wss://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
     } else {
       url = `ws://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
@@ -187,6 +187,7 @@ WSFactory.prototype._triggerEvent = function(type, event) {
 
 WSFactory.prototype.onmessage = function(fn) {
   this._registerHandler('message', fn);
+  console.log('WSFactory.prototype.onmessage', fn);
   return this;
 };
 
@@ -291,5 +292,6 @@ WSFactory.prototype.destroy = function(timedout) {
 };
 
 WSFactory.prototype.send = function(data) {
+  console.log('WSFactory.prototype.send', data);
   this.ws && this.ws.send(data);
 };
