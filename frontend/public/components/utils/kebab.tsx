@@ -404,10 +404,6 @@ export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
     );
     return <Kebab options={options} key={resource.version} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
   }
-  if (kind === 'SasApp') {
-    console.log('역시 넌 여기야', actions, kind, kindObj, resource, isDisabled, extraResources, customData);
-    return <Kebab key={resource.version} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
-  }
 
   if (!kindObj) {
     return null;
