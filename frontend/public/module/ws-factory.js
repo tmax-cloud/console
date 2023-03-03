@@ -187,7 +187,6 @@ WSFactory.prototype._triggerEvent = function(type, event) {
 
 WSFactory.prototype.onmessage = function(fn) {
   this._registerHandler('message', fn);
-  console.log('WSFactory.prototype.onmessage', fn);
   return this;
 };
 
@@ -257,7 +256,6 @@ WSFactory.prototype.bufferSize = function() {
 };
 
 WSFactory.prototype.destroy = function(timedout) {
-  console.log(`destroying websocket: ${this.id}`);
   if (this._state === 'destroyed') {
     return;
   }
@@ -292,6 +290,5 @@ WSFactory.prototype.destroy = function(timedout) {
 };
 
 WSFactory.prototype.send = function(data) {
-  console.log('WSFactory.prototype.send', data);
   this.ws && this.ws.send(data);
 };
