@@ -23,7 +23,7 @@ export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] =>
   const subs: { [key: string]: KebabSubMenu } = {};
   const menuOptions: KebabMenuOption[] = [];
 
-  options.forEach(o => {
+  options?.forEach(o => {
     if (!o.hidden) {
       if (o.path) {
         const parts = o.path.split('/');
