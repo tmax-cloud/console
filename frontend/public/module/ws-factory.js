@@ -39,7 +39,7 @@ function createURL(host, path) {
 
   if (path.split('/')[1] === 'helm') {
     const mapUrl = CustomMenusMap.Helm.url;
-    if (location.protocol === 'https:') {      
+    if (location.protocol === 'https:') {
       url = `wss://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
     } else {
       url = `ws://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
@@ -256,7 +256,6 @@ WSFactory.prototype.bufferSize = function() {
 };
 
 WSFactory.prototype.destroy = function(timedout) {
-  console.log(`destroying websocket: ${this.id}`);
   if (this._state === 'destroyed') {
     return;
   }

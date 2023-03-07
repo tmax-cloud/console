@@ -6,7 +6,7 @@ import { setPinnedResources } from '../../actions/ui';
 import { getActivePerspective, getPinnedResources } from '../../reducers/ui';
 import { getCmpListFetchUrl } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { coFetchJSON } from '@console/internal/co-fetch';
-import { dynamicMenusFactory, basicMenusFactory } from './menus';
+import { basicMenusFactory, dynamicMenusFactory } from './menus';
 import './_perspective-nav.scss';
 import { FlagsObject, getFlagsObject } from '@console/internal/reducers/features';
 import { PerspectiveType } from '../../hypercloud/perspectives';
@@ -46,14 +46,13 @@ const PerspectiveNav: React.FC<StateProps & DispatchProps> = ({ perspective, fla
 
 const getNavItems = (perspective, cmp, flags) => {
   const tabs = cmp.menuTabs;
-
   switch (perspective) {
     case PerspectiveType.MULTI: {
       const multiMenus = _.filter(tabs, { name: PerspectiveType.MULTI });
       if (multiMenus?.length > 0) {
         return dynamicMenusFactory(perspective, multiMenus[0], flags[FLAGS.CAN_LIST_NS]);
       } else {
-        return basicMenusFactory(PerspectiveType.MULTI, flags[FLAGS.CAN_LIST_NS]);
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.MULTI, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.MASTER: {
@@ -62,7 +61,7 @@ const getNavItems = (perspective, cmp, flags) => {
         // MEMO : CR안에 Master메뉴에 대한 정의가 여러 개여도 0번째만 가져와서 반영 되도록.
         return dynamicMenusFactory(perspective, masterMenus[0], flags[FLAGS.CAN_LIST_NS]);
       } else {
-        return basicMenusFactory(PerspectiveType.MASTER, flags[FLAGS.CAN_LIST_NS]);
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.MASTER, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.SINGLE: {
@@ -70,7 +69,7 @@ const getNavItems = (perspective, cmp, flags) => {
       if (singleMenus?.length > 0) {
         return dynamicMenusFactory(perspective, singleMenus[0], flags[FLAGS.CAN_LIST_NS]);
       } else {
-        return basicMenusFactory(PerspectiveType.SINGLE, flags[FLAGS.CAN_LIST_NS]);
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.SINGLE, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.DEVELOPER: {
@@ -78,7 +77,7 @@ const getNavItems = (perspective, cmp, flags) => {
       if (developerMenus?.length > 0) {
         return dynamicMenusFactory(perspective, developerMenus[0], flags[FLAGS.CAN_LIST_NS]);
       } else {
-        return basicMenusFactory(PerspectiveType.DEVELOPER, flags[FLAGS.CAN_LIST_NS]);
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.DEVELOPER, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.BAREMETAL: {
@@ -86,7 +85,15 @@ const getNavItems = (perspective, cmp, flags) => {
       if (baremetalMenus?.length > 0) {
         return dynamicMenusFactory(perspective, baremetalMenus[0], flags[FLAGS.CAN_LIST_NS]);
       } else {
-        return basicMenusFactory(PerspectiveType.BAREMETAL, flags[FLAGS.CAN_LIST_NS]);
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.BAREMETAL, flags[FLAGS.CAN_LIST_NS]);
+      }
+    }
+    case PerspectiveType.SAS: {
+      const sasMenus = _.filter(tabs, { name: PerspectiveType.SAS });
+      if (sasMenus?.length > 0) {
+        return dynamicMenusFactory(perspective, sasMenus[0], flags[FLAGS.CAN_LIST_NS]);
+      } else {
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.SAS, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.CUSTOM: {
@@ -94,7 +101,7 @@ const getNavItems = (perspective, cmp, flags) => {
       if (customMenus?.length > 0) {
         return dynamicMenusFactory(perspective, customMenus[0], flags[FLAGS.CAN_LIST_NS]);
       } else {
-        return basicMenusFactory(PerspectiveType.CUSTOM, flags[FLAGS.CAN_LIST_NS]);
+        return tabs ? <></> : basicMenusFactory(PerspectiveType.MASTER, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     default:

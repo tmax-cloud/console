@@ -205,9 +205,11 @@
 
   // custom
   &.custom_menu {
-    background-image: url('../../imgs/hypercloud/lnb/add_menu.svg');
-    &.pf-m-current {
-      background-image: url('../../imgs/hypercloud/lnb/filled/add_menu_filled.svg');
+    background-image: url('../../imgs/hypercloud/lnb/add.svg');
+    .pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/add_filled.svg');
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
     }
   }
 }

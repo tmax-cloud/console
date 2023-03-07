@@ -31,12 +31,18 @@ import { initializationForMenu } from '@console/internal/components/hypercloud/u
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
 import Chatbot from './hypercloud/chatbot/chatbot';
+import { WSFactory } from '@console/internal/module/ws-factory';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
+
+export const WebSocketContext = React.createContext({
+  ws: null,
+  isConnected: false,
+});
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -52,7 +58,30 @@ class App extends React.PureComponent {
     this.state = {
       isNavOpen: this._isDesktop(),
       isDrawerInline: this._isLargeLayout(),
+      ws: null,
+      isConnected: false,
     };
+  }
+  componentDidMount() {
+    const watchURL = 'wss://console.tmaxcloud.org/api/sas';
+    const ws = new WSFactory('sas', {
+      host: '',
+      reconnect: true,
+      path: watchURL,
+      jsonParse: true,
+    });
+
+    ws.onopen(() => {
+      this.setState({ ws, isConnected: true });
+    });
+
+    ws.onclose(() => {
+      this.setState({ ws: null, isConnected: false });
+    });
+
+    ws.onmessage(msg => {
+      console.log('Message from server ', msg);
+    });
   }
 
   UNSAFE_componentWillMount() {
@@ -61,6 +90,11 @@ class App extends React.PureComponent {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._onResize);
+    const { ws } = this.state;
+
+    if (ws) {
+      ws.close();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -137,7 +171,9 @@ class App extends React.PureComponent {
         <ConsoleNotifier location="BannerTop" />
         <Page header={<Masthead onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isMasterPerspective={isMasterClusterPerspective()} />}>
           <ConnectedNotificationDrawer isDesktop={isDrawerInline} onDrawerChange={this._onNotificationDrawerToggle}>
-            <AppContents />
+            <WebSocketContext.Provider value={{ ws: this.state.ws, isConnected: this.state.isConnected }}>
+              <AppContents />
+            </WebSocketContext.Provider>
           </ConnectedNotificationDrawer>
         </Page>
         <CloudShell />

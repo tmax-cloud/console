@@ -172,6 +172,25 @@ const BaremetalNavMenus = [
   },
 ];
 
+const SasNavMenus = [
+  {
+    menuType: MenuType.REGISTERED_MENU,
+    kind: 'SasApp',
+  },
+  {
+    menuType: MenuType.REGISTERED_MENU,
+    kind: 'SasService',
+  },
+  {
+    menuType: MenuType.REGISTERED_MENU,
+    kind: 'SasController',
+  },
+  {
+    menuType: MenuType.REGISTERED_MENU,
+    kind: 'SasNode',
+  },
+];
+
 const CustomNavMenus = [
   {
     kind: 'Add',
@@ -179,4 +198,4 @@ const CustomNavMenus = [
   },
 ];
 
-export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus, BaremetalNavMenus, CustomNavMenus };
+export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus, BaremetalNavMenus, CustomNavMenus, SasNavMenus };

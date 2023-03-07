@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { K8sResourceKind, resourceURL } from '../../module/k8s';
+import { k8sGet, K8sResourceKind, resourceURL } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { KafkaClusterModel, KafkaRebalanceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
-import { k8sList } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import { CodeContainer } from '../utils/hypercloud/code-container';
 import { coFetchJSON } from '@console/internal/co-fetch';
@@ -104,15 +103,7 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
 
   React.useEffect(() => {
     const fetchKafkaConfig = async () => {
-      await k8sList(KafkaClusterModel, {
-        ns: namespace,
-        labelSelector: {
-          matchLabels: {
-            'strimzi.io/cluster': kafkaName,
-          },
-        },
-      }).then(res => {
-        const kafka = res[0];
+      await k8sGet(KafkaClusterModel, kafkaName, namespace).then(kafka => {
         setConfig(kafka.spec?.cruiseControl?.config);
         setLoading(true);
       });
@@ -142,7 +133,7 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
           return <p key={`key-${goal}`}>{goal}</p>;
         })}
       </DetailsItem>
-      {loading && config && config.get('hard.goals') && (
+      {loading && config && Object.keys(config).includes('hard.goals') && (
         <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_6')} obj={kr}>
           {kr.spec?.skipHardGoalCheck ? t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_7') : t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_8')}
         </DetailsItem>
