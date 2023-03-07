@@ -21,7 +21,7 @@ import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
 import { Workspace } from '../utils/workspaces';
 import { convertToForm, onSubmitCallback } from './sync-form-data';
-import { FieldLevelHelp } from 'public/components/utils';
+import { FieldLevelHelp } from '../../../utils/field-level-help';
 
 let defaultArrayLength = 0;
 

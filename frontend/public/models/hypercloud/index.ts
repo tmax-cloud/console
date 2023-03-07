@@ -52,6 +52,22 @@ export const ClusterClaimModel: K8sKind = {
   },
 };
 
+export const ClusterUpdateClaimModel: K8sKind = {
+  label: 'ClusterUpdateClaim',
+  labelPlural: 'Clusters Update Claims',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'claim.tmax.io',
+  plural: 'clusterupdateclaims',
+  abbr: 'CUC',
+  kind: 'ClusterUpdateClaim',
+  id: 'clusterupdateclaim',
+  namespaced: true,
+  i18nInfo: {
+    label: 'COMMON:MSG_MAIN_TABLEHEADER_159',
+    labelPlural: 'COMMON:MSG_MAIN_TABLEHEADER_159',
+  },
+};
+
 export const SignerPolicyModel: K8sKind = {
   kind: 'SignerPolicy',
   label: 'Signer Policy',
