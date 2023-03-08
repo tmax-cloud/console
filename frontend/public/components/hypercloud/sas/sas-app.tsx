@@ -10,7 +10,7 @@ import { K8sResourceKind } from '../../../module/k8s';
 import { DetailsPage, DetailsPageProps } from '../../factory';
 import { SingleExpandableTable } from '../utils/expandable-table';
 import { WebSocketContext } from '../../app';
-import { Button } from '@patternfly/react-core';
+import { Button, Modal } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import '../utils/help.scss';
 import * as _ from 'lodash';
@@ -53,9 +53,9 @@ export const InnerTable = ({ innerDatas, data }) => {
   );
 };
 
-const SasKebab = () => {
+const SasKebab = ({ status, handleModalToggle, data }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-
+  console.log(33, data);
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
   };
@@ -70,16 +70,44 @@ const SasKebab = () => {
     onFocus();
   };
 
-  const dropdownItems = [
-    <DropdownItem key="link">버전 추가</DropdownItem>,
-    <DropdownItem key="action" component="button">
+  const dropdownItemsReady = [
+    <DropdownItem
+      key="add-version"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'addversion');
+      }}
+    >
+      버전 추가
+    </DropdownItem>,
+    <DropdownItem key="app-deploy" component="button">
       앱 배포
     </DropdownItem>,
-    <DropdownItem key="disabled link" isDisabled href="www.google.com">
-      레플리카 수 수정
+    <DropdownItem key="app-delete" component="button">
+      앱 삭제
     </DropdownItem>,
   ];
-
+  const dropdownItemsRunnung = [
+    <DropdownItem
+      key="addversion"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'addversion');
+      }}
+    >
+      버전 추가
+    </DropdownItem>,
+    <DropdownItem key="version-select" component="button">
+      버전 선택
+    </DropdownItem>,
+    <DropdownItem key="replica" component="button">
+      레플리카 수 수정
+    </DropdownItem>,
+    <DropdownItem key="app-stop" component="button">
+      앱 중지
+    </DropdownItem>,
+  ];
+  const dropdownItems = status === 'Archived' ? dropdownItemsReady : dropdownItemsRunnung;
   return <Dropdown className="my-dropdown" onSelect={onSelect} toggle={<KebabToggle className="sas-kebab-min" onToggle={onToggle} />} isOpen={isOpen} isPlain dropdownItems={dropdownItems} position={'right'} />;
 };
 
@@ -162,7 +190,7 @@ const SasAppTable = props => {
       },
       {
         className: Kebab.columnClass,
-        title: <SasKebab />,
+        title: <SasKebab status={obj.STATUS} handleModalToggle={props.handleModalToggle} data={obj} />,
       },
     ];
   };
@@ -174,11 +202,50 @@ const SasAppTable = props => {
   };
   return <SingleExpandableTable header={SasAppColumns} itemList={SasAppList} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={3} />;
 };
+export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPage }) => {
+  const actions = [
+    <Button key="cancel" variant="primary" onClick={handleModalToggle}>
+      취소
+    </Button>,
+    <Button key="confirm" variant="secondary" onClick={handleModalToggle}>
+      {titleModal[1]}
+    </Button>,
+  ];
+  return (
+    <Modal width={600} title={titleModal[0]} isOpen={isModalOpen} onClose={handleModalToggle} actions={actions}>
+      {InnerPage}
+    </Modal>
+  );
+};
 
 export const SasAppPage = () => {
   const webSocket = React.useContext(WebSocketContext);
   const [data, setData] = React.useState([]);
   const [rawData, setRawData] = React.useState([]);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [titleModal, setTitleModal] = React.useState(['', '']);
+  const [InnerPage, setInnerPage] = React.useState(<></>);
+
+  const handleModalToggle = (selectedData, type) => {
+    switch (type) {
+      case 'addversion':
+        setTitleModal(['버전 추가', '저장']);
+        setInnerPage(
+          <>
+            <div>앱 이름</div>
+            <div>{selectedData.APP_NAME}</div>
+            <div>버전</div>
+            <div>설명</div>
+          </>,
+        );
+        break;
+      default:
+        break;
+    }
+
+    setIsModalOpen(!isModalOpen);
+  };
+
   React.useEffect(() => {
     webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetApplicationConsole', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
   }, [webSocket]);
@@ -265,8 +332,9 @@ export const SasAppPage = () => {
           </DropdownToggleCheckbox>
         </Dropdown>
       </div>
+      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal}></ModalPage>
       <div className="sas-main-table">
-        <SasAppTable data={data} />
+        <SasAppTable data={data} handleModalToggle={handleModalToggle} />
       </div>
 
       {/* <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} customData={{ nonK8sResource: true, sas: 'app', kindObj: SasAppModel }} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} isK8sResource={false} />; */}
