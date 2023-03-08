@@ -100,6 +100,11 @@ export const ClusterClaimStatusReducer = (clusterClaim: any): string => {
   return clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
 };
 
+
+export const ClusterUpdateClaimStatusReducer = (clusterUpdateClaim: any): string => {
+  return clusterUpdateClaim.status ? clusterUpdateClaim.status.phase : NO_STATUS;
+};
+
 export const TerraformClaimStatusReducer = (clusterClaim: any): string => {
   return clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
 };
