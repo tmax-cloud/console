@@ -83,7 +83,7 @@ const Terminal = React.forwardRef<ImperativeTerminalType, TerminalProps>(({ onDa
   React.useEffect(() => {
     const element = document.getElementById('hypercloudshell-body') ?? document.getElementById('hypercloudshell-tab-body');
     const { height } = element.getBoundingClientRect();
-    setTerminalHeight(height - 27);
+    setTerminalHeight(height);
 
     if (element.id === 'hypercloudshell-tab-body') {
       window.addEventListener('resize', () => setTerminalHeight(element.getBoundingClientRect().height));
