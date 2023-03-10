@@ -57,8 +57,8 @@ const SasControllerTable = props => {
   const SasControllerColumns = [
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-      sortField: 'CONTROLLER_NAME',
-      data: 'CONTROLLER_NAME',
+      sortField: 'HOSTNAME',
+      data: 'HOSTNAME',
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
@@ -69,6 +69,11 @@ const SasControllerTable = props => {
       title: t('타입'),
       sortField: 'TYPE',
       data: 'TYPE',
+    },
+    {
+      title: t('워커 노드 풀'),
+      sortField: 'POOL_ID',
+      data: 'POOL_ID',
     },
     {
       title: t('생성 일시'),
@@ -86,7 +91,7 @@ const SasControllerTable = props => {
   const rowRenderer = (index, obj) => {
     return [
       {
-        title: <ResourceLink kind={kind} name={obj.CONTROLLER_NAME} namespace={obj.STATUS} title={obj.CONTROLLER_NAME} />,
+        title: <ResourceLink kind={kind} name={obj.HOSTNAME} namespace={obj.HOSTNAME} title={obj.HOSTNAME} />,
         index: index,
       },
       {
@@ -94,10 +99,13 @@ const SasControllerTable = props => {
         title: <Status status={obj.STATUS} />,
       },
       {
-        title: obj.TYPE,
+        title: '워커',
       },
       {
-        title: <Timestamp timestamp={obj.AGE} />,
+        title: obj.POOL_ID,
+      },
+      {
+        title: <Timestamp timestamp={obj.CREATED_AT} />,
       },
       {
         className: Kebab.columnClass,

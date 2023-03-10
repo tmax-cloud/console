@@ -10,13 +10,16 @@ import { K8sResourceKind } from '../../../module/k8s';
 import { DetailsPage, DetailsPageProps } from '../../factory';
 import { SingleExpandableTable } from '../utils/expandable-table';
 import { WebSocketContext } from '../../app';
-import { Button, Modal } from '@patternfly/react-core';
+import { Button, FormSelect, FormSelectOption, Modal } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import '../utils/help.scss';
 import * as _ from 'lodash';
 import { FilterIcon } from '@patternfly/react-icons';
 import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { FileUpload } from '@patternfly/react-core';
+import FileUploadIcon from '@patternfly/react-icons/dist/esm/icons/file-upload-icon';
+import { Form, FormGroup, TextInput } from '@patternfly/react-core';
 
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 const kind = 'SasApp';
@@ -55,7 +58,6 @@ export const InnerTable = ({ innerDatas, data }) => {
 
 const SasKebab = ({ status, handleModalToggle, data }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  console.log(33, data);
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
   };
@@ -80,10 +82,22 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
     >
       버전 추가
     </DropdownItem>,
-    <DropdownItem key="app-deploy" component="button">
+    <DropdownItem
+      key="app-deploy"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'appdeploy');
+      }}
+    >
       앱 배포
     </DropdownItem>,
-    <DropdownItem key="app-delete" component="button">
+    <DropdownItem
+      key="app-delete"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'appdelete');
+      }}
+    >
       앱 삭제
     </DropdownItem>,
   ];
@@ -97,13 +111,31 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
     >
       버전 추가
     </DropdownItem>,
-    <DropdownItem key="version-select" component="button">
+    <DropdownItem
+      key="version-select"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'versionselect');
+      }}
+    >
       버전 선택
     </DropdownItem>,
-    <DropdownItem key="replica" component="button">
+    <DropdownItem
+      key="replica"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'replica');
+      }}
+    >
       레플리카 수 수정
     </DropdownItem>,
-    <DropdownItem key="app-stop" component="button">
+    <DropdownItem
+      key="app-stop"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'appstop');
+      }}
+    >
       앱 중지
     </DropdownItem>,
   ];
@@ -202,12 +234,12 @@ const SasAppTable = props => {
   };
   return <SingleExpandableTable header={SasAppColumns} itemList={SasAppList} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={3} />;
 };
-export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPage }) => {
+export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPage, submit }) => {
   const actions = [
     <Button key="cancel" variant="primary" onClick={handleModalToggle}>
       취소
     </Button>,
-    <Button key="confirm" variant="secondary" onClick={handleModalToggle}>
+    <Button key="confirm" variant="secondary" onClick={submit}>
       {titleModal[1]}
     </Button>,
   ];
@@ -218,6 +250,207 @@ export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPag
   );
 };
 
+const AddVersionModal = ({ appName, setSubmitData }) => {
+  const [value, setValue] = React.useState(null);
+  const [filename, setFilename] = React.useState('');
+  const [version, setVersion] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  React.useEffect(() => {
+    setSubmitData({ modal: 'AddVersionModal', value, filename, version, description });
+  }, [value, filename, version, description]);
+  const handleUpload = files => {
+    const file = files[0];
+    setValue(file);
+    setFilename(file.name);
+  };
+  const handleVersionChange = (name: string) => {
+    setVersion(name);
+  };
+
+  const handleDescriptionChange = (email: string) => {
+    setDescription(email);
+  };
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>앱 이름</div>
+        <div>{appName}</div>
+        <FormGroup label="jar 파일" isRequired fieldId="simple-form-jar-02">
+          <FileUpload clearButtonText={''} id="customized-preview-file" value={value} filename={filename} filenamePlaceholder="Drag and drop a file or upload one" onLoad={handleUpload} hideDefaultPreview browseButtonText="검색...">
+            {value && (
+              <div className="pf-u-m-md">
+                <FileUploadIcon size="lg" /> Custom preview here for your {value.size}-byte file named {value.name}
+              </div>
+            )}
+          </FileUpload>
+        </FormGroup>
+        <FormGroup label="버전" isRequired fieldId="simple-form-version-03">
+          <TextInput value={version} isRequired type="text" id="horizontal-form-name" aria-describedby="horizontal-form-name-helper" name="horizontal-form-name" onChange={handleVersionChange} />
+        </FormGroup>
+        <FormGroup label="설명" fieldId="simple-form-description-02">
+          <TextInput value={description} isRequired type="text" id="horizontal-form-name" aria-describedby="horizontal-form-name-helper" name="horizontal-form-name" onChange={handleDescriptionChange} />
+        </FormGroup>
+      </Form>
+    </>
+  );
+};
+const AppDeployModal = ({ appData, setSubmitData }) => {
+  const [version, setVersion] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [replica, setReplica] = React.useState('');
+  const [target, setTarget] = React.useState('');
+  const versionOptions = [];
+  appData.VERSIONS.map(version => {
+    versionOptions.push({ value: version.DESCRIPTION, label: version.VERSION, disabled: false });
+  });
+  React.useEffect(() => {
+    setDescription(appData?.VERSIONS[0]?.DESCRIPTION);
+  }, []);
+  const targetOptions = [{ value: appData.POOL_ID, label: appData.POOL_ID, disabled: false }];
+
+  React.useEffect(() => {
+    setSubmitData({ modal: 'AppDeployModal', version, description, replica, target });
+  }, [version, description, replica, target]);
+  const handleReplicaChange = (name: string) => {
+    setReplica(name);
+  };
+
+  const handleTargetChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
+    setTarget(value);
+  };
+
+  const handleOptionChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
+    setVersion(value);
+    setDescription(value);
+  };
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>앱 이름</div>
+        <div>{appData.APP_NAME}</div>
+        <FormGroup label="버전" fieldId="simple-form-version-03">
+          <FormSelect value={version} onChange={handleOptionChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
+            {versionOptions.map((option, index) => (
+              <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
+            ))}
+          </FormSelect>
+        </FormGroup>
+        <FormGroup label="설명" fieldId="simple-form-description-02">
+          <div>{description}</div>
+        </FormGroup>
+        <FormGroup label="레플리카 수" isRequired fieldId="simple-form-version-03">
+          <TextInput value={replica} isRequired type="text" id="horizontal-form-name" aria-describedby="horizontal-form-name-helper" name="horizontal-form-name" onChange={handleReplicaChange} />
+        </FormGroup>
+        <FormGroup label="타겟 워커 노드 풀" fieldId="simple-form-version-03">
+          <FormSelect value={target} onChange={handleTargetChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
+            {targetOptions.map((option, index) => (
+              <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
+            ))}
+          </FormSelect>
+        </FormGroup>
+      </Form>
+    </>
+  );
+};
+const AppDeleteModal = ({ appData, setSubmitData }) => {
+  React.useEffect(() => {
+    setSubmitData({ modal: 'AppDeleteModal' });
+  }, []);
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>앱 삭제</div>
+        <div>{`${appData.APP_NAME} 앱을 삭제하시겠습니까?`}</div>
+      </Form>
+    </>
+  );
+};
+const VersionSelectModal = ({ appData, setSubmitData }) => {
+  const [version, setVersion] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const versionOptions = [];
+  appData.VERSIONS.map(version => {
+    versionOptions.push({ value: version.DESCRIPTION, label: version.VERSION, disabled: false });
+  });
+  React.useEffect(() => {
+    setDescription(appData?.VERSIONS[0]?.DESCRIPTION);
+  }, []);
+
+  React.useEffect(() => {
+    setSubmitData({ modal: 'VersionSelectModal', version, description });
+  }, [version, description]);
+
+  const handleOptionChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
+    setVersion(value);
+    setDescription(value);
+  };
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>앱 이름</div>
+        <div>{appData.APP_NAME}</div>
+        <FormGroup label="버전" fieldId="simple-form-version-03">
+          <FormSelect value={version} onChange={handleOptionChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
+            {versionOptions.map((option, index) => (
+              <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
+            ))}
+          </FormSelect>
+        </FormGroup>
+        <FormGroup label="설명" fieldId="simple-form-description-02">
+          <div>{description}</div>
+        </FormGroup>
+      </Form>
+    </>
+  );
+};
+const ReplicaModal = ({ appData, setSubmitData }) => {
+  const [inputValue, setInputValue] = React.useState(parseInt(appData.REPLICAS));
+
+  React.useEffect(() => {
+    setSubmitData({ modal: 'ReplicaModal', inputValue });
+  }, [inputValue]);
+
+  const handleInputChange = event => {
+    let newValue = event.target.value;
+    newValue = parseInt(newValue);
+    setInputValue(newValue);
+  };
+
+  const handleIncrement = () => {
+    setInputValue(inputValue + 1);
+  };
+
+  const handleDecrement = () => {
+    setInputValue(inputValue - 1);
+  };
+
+  return (
+    <div>
+      <button onClick={handleIncrement}>+</button>
+      <input type="number" value={inputValue} onChange={handleInputChange} />
+      <button onClick={handleDecrement}>-</button>
+    </div>
+  );
+};
+const AppStopModal = ({ appData, setSubmitData }) => {
+  React.useEffect(() => {
+    setSubmitData({ modal: 'AppStopModal' });
+  }, []);
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>앱 중지</div>
+        <div>{`${appData.APP_NAME} 앱의 배포를 중지하시겠습니까?`}</div>
+      </Form>
+    </>
+  );
+};
+
 export const SasAppPage = () => {
   const webSocket = React.useContext(WebSocketContext);
   const [data, setData] = React.useState([]);
@@ -225,19 +458,37 @@ export const SasAppPage = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
+  const [submitData, setSubmitData] = React.useState({});
 
+  const submit = () => {
+    console.log(123, submitData);
+    setIsModalOpen(!isModalOpen);
+  };
   const handleModalToggle = (selectedData, type) => {
     switch (type) {
       case 'addversion':
         setTitleModal(['버전 추가', '저장']);
-        setInnerPage(
-          <>
-            <div>앱 이름</div>
-            <div>{selectedData.APP_NAME}</div>
-            <div>버전</div>
-            <div>설명</div>
-          </>,
-        );
+        setInnerPage(<AddVersionModal appName={selectedData.APP_NAME} setSubmitData={setSubmitData} />);
+        break;
+      case 'appdeploy':
+        setTitleModal(['앱 배포', '배포']);
+        setInnerPage(<AppDeployModal appData={selectedData} setSubmitData={setSubmitData} />);
+        break;
+      case 'appdelete':
+        setTitleModal(['앱 삭제', '삭제']);
+        setInnerPage(<AppDeleteModal appData={selectedData} setSubmitData={setSubmitData} />);
+        break;
+      case 'versionselect':
+        setTitleModal(['버전 선택', '배포']);
+        setInnerPage(<VersionSelectModal appData={selectedData} setSubmitData={setSubmitData} />);
+        break;
+      case 'replica':
+        setTitleModal(['레플리카 수 수정', '저장']);
+        setInnerPage(<ReplicaModal appData={selectedData} setSubmitData={setSubmitData} />);
+        break;
+      case 'appstop':
+        setTitleModal(['앱 중지', '중지']);
+        setInnerPage(<AppStopModal appData={selectedData} setSubmitData={setSubmitData} />);
         break;
       default:
         break;
@@ -332,7 +583,7 @@ export const SasAppPage = () => {
           </DropdownToggleCheckbox>
         </Dropdown>
       </div>
-      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal}></ModalPage>
+      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal} submit={submit}></ModalPage>
       <div className="sas-main-table">
         <SasAppTable data={data} handleModalToggle={handleModalToggle} />
       </div>
