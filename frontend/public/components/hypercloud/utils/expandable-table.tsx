@@ -133,9 +133,9 @@ type Header = {
 type SingleExpandableTableProps = {
   itemList: any[]; // outer table의 itemList
   rowRenderer: (index, obj, itemCount: number) => any[]; // outer table의 row 한줄에 들어갈 요소들을 배열 형태로 return하는 renderer 함수
-  innerRenderer: (parentItem) => any; // inner table을 render하는 함수(ExpandableInnerTable 컴포넌트 사용해야됨)
+  innerRenderer?: (parentItem) => any; // inner table을 render하는 함수(ExpandableInnerTable 컴포넌트 사용해야됨)
   header: Header[]; // header column들의 배열. 펼침 기능을 사용할 column object에는 cellTransforms: [compoundExpand] 속성 넣어줘야 함.
-  compoundParent: number; // table 펼칠 수 있는 column의 index
+  compoundParent?: number; // table 펼칠 수 있는 column의 index
   customSorts?: { [key: string]: any };
 };
 type PFSortState = {
