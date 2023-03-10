@@ -483,7 +483,10 @@ $co-external-link-padding-right: 15px;
 .co-m-pane__body-group {
   padding: 0 0 30px 0;
 }
-
+.pf-c-file-upload__file-select .pf-c-button.pf-m-control:disabled,
+.pf-c-file-upload__file-select .pf-c-button.pf-m-control.pf-m-disabled {
+  display: none;
+}
 .co-m-table-grid {
   &__body {
     min-height: 50px;

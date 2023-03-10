@@ -4,7 +4,7 @@ import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reduc
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 // import { TFunction } from 'i18next';
-import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
+import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, ResourceLink, ResourceSummary, SectionHeading } from '../../utils';
 import { K8sResourceKind } from '../../../module/k8s';
 import { DetailsPage, DetailsPageProps } from '../../factory';
 import { WebSocketContext } from '../../app';
@@ -43,24 +43,25 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
         handleModalToggle(data, 'addversion');
       }}
     >
-      컨트롤러 실행
+      크론 삭제
     </DropdownItem>,
     <DropdownItem key="app-deploy" component="button">
-      컨트롤러 삭제
+      크론 생성
     </DropdownItem>,
   ];
-  const dropdownItemsRunnung = [
-    <DropdownItem
-      key="addversion"
-      component="button"
-      onClick={() => {
-        handleModalToggle(data, 'addversion');
-      }}
-    >
-      컨트롤러 중지
-    </DropdownItem>,
-  ];
-  const dropdownItems = status === 'Archived' ? dropdownItemsReady : dropdownItemsRunnung;
+  // const dropdownItemsRunnung = [
+  //   <DropdownItem
+  //     key="addversion"
+  //     component="button"
+  //     onClick={() => {
+  //       handleModalToggle(data, 'addversion');
+  //     }}
+  //   >
+  //     컨트롤러 중지
+  //   </DropdownItem>,
+  // ];
+  // const dropdownItems = data === 'Archived' ? dropdownItemsReady : dropdownItemsRunnung;
+  const dropdownItems = dropdownItemsReady;
   return <Dropdown className="my-dropdown" onSelect={onSelect} toggle={<KebabToggle className="sas-kebab-min" onToggle={onToggle} />} isOpen={isOpen} isPlain dropdownItems={dropdownItems} position={'right'} />;
 };
 
@@ -71,23 +72,18 @@ const SasControllerTable = props => {
   const SasControllerColumns = [
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-      sortField: 'CONTROLLER_NAME',
-      data: 'CONTROLLER_NAME',
+      sortField: 'SERVICE_PACKAGE',
+      data: 'SERVICE_PACKAGE',
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortField: 'STATUS',
-      data: 'STATUS',
+      title: t('앱'),
+      sortField: 'APP_NAME',
+      data: 'APP_NAME',
     },
     {
-      title: t('타입'),
-      sortField: 'TYPE',
-      data: 'TYPE',
-    },
-    {
-      title: t('생성 일시'),
-      sortField: 'AGE',
-      data: 'AGE',
+      title: t('크론 수'),
+      sortField: 'CRON',
+      data: 'CRON',
     },
     {
       title: '',
@@ -100,18 +96,14 @@ const SasControllerTable = props => {
   const rowRenderer = (index, obj) => {
     return [
       {
-        title: <ResourceLink kind={kind} name={obj.CONTROLLER_NAME} namespace={obj.STATUS} title={obj.CONTROLLER_NAME} />,
+        title: <ResourceLink kind={kind} name={obj.SERVICE_PACKAGE} namespace={obj.SERVICE_PACKAGE} title={obj.SERVICE_PACKAGE} />,
         index: index,
       },
       {
-        className: 'co-break-word',
-        title: <Status status={obj.STATUS} />,
+        title: obj.APP_NAME,
       },
       {
-        title: obj.TYPE,
-      },
-      {
-        title: <Timestamp timestamp={obj.AGE} />,
+        title: obj.CRON,
       },
       {
         className: Kebab.columnClass,
