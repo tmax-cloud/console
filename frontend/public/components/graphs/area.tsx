@@ -77,7 +77,7 @@ export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], form
           </Chart>
         </PrometheusGraphLink>
       ) : (
-        <GraphEmpty height={height} loading={loading} />
+        <GraphEmpty height={height} loading={loading} title={title}/>
       )}
     </PrometheusGraph>
   );
