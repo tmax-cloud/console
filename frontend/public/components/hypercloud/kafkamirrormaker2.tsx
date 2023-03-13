@@ -52,7 +52,7 @@ export const MirrorTable = ({ data, km2 }) => {
           <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
             {t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_9')}
             {'  '}
-            <Tooltip content={[<span key={`mirror-table-tooltip-${km2.index}`}>커넥터 정보가 유효하지 않을 시 해당 값은 불러오기가 불가능한 상태입니다</span>]}>
+            <Tooltip content={[<span key={`mirror-table-tooltip-${km2.index}`}>{t('COMMON:MSG_MAIN_TABLEHEADER_162')}</span>]}>
               <HelpIcon className="co-field-level-help__icon" />
             </Tooltip>
           </div>

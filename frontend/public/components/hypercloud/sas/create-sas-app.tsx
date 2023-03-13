@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Form, FormGroup, TextInput, FileUpload, FormSelect, FormSelectOption, ActionGroup, Button } from '@patternfly/react-core';
-import { WebSocketContext } from '../../app';
+// import { WebSocketContext } from '../../app';
 import FileUploadIcon from '@patternfly/react-icons/dist/esm/icons/file-upload-icon';
 
 export const CreateSasApp = () => {
-  const webSocket = React.useContext(WebSocketContext);
+  // const webSocket = React.useContext(WebSocketContext);
   const [name, setName] = React.useState('');
   const [value, setValue] = React.useState(null);
   const [filename, setFilename] = React.useState('');
