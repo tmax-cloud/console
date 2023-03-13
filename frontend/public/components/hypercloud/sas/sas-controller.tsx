@@ -224,9 +224,9 @@ export const SasControllerPage = () => {
             <span data-test-id="resource-title" className="co-resource-item__resource-name">
               컨트롤러
             </span>
-            <Link className="co-m-primary-action" to="/k8s/all-namespaces/import">
+            <Link className="co-m-primary-action" to="/sas-controller/~new">
               <Button variant="primary" id="yaml-create">
-                컨트롤러 생성
+                앱 생성
               </Button>
             </Link>
           </div>

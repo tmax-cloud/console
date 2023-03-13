@@ -268,7 +268,7 @@ const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
   );
 };
 
-export const SasAppControllersList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
+export const SasAppNodeList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
   const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
@@ -291,7 +291,7 @@ export const SasAppControllersList: React.FC<AWXDetailsListProps> = ({ obj: awx 
   );
 };
 
-const SasControllerDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
+const SasNodeDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -309,9 +309,9 @@ const SasControllerDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
 
 const { details, editResource } = navFactory;
 
-export const SasControllersDetailsPage: React.FC<DetailsPageProps> = props => {
+export const SasNodeDetailsPage: React.FC<DetailsPageProps> = props => {
   const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(SasControllerDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(SasNodeDetails)), editResource()]} />;
 };
 
 type ImageSummaryProps = {
