@@ -232,6 +232,7 @@ export const PodContainerTable: React.FC<PodContainerTableProps> = ({ heading, c
 
 const PodGraphs = requirePrometheus(({ pod }) => {
   const { t } = useTranslation();
+  const status: string = podPhase(pod);
   return (
     <>
       <div className="row">
@@ -243,7 +244,7 @@ const PodGraphs = requirePrometheus(({ pod }) => {
           <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_2')} humanize={humanizeCpuCores} namespace={pod.metadata.namespace} query={`pod:container_cpu_usage:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
         </div>
         <div className="col-md-12 col-lg-4">
-          <Area title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} query={`pod:container_fs_usage_bytes:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
+          <Area status={status} title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} query={`pod:container_fs_usage_bytes:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
         </div>
       </div>
       <div className="row">
