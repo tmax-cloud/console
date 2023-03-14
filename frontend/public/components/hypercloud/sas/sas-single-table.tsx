@@ -17,7 +17,7 @@ const makeTableHeader = (header: Header[], t: TFunction) => {
   };
 };
 
-export const SingleSasTable: React.FC<SingleExpandableTableProps> = ({ header, itemList, rowRenderer, innerRenderer, compoundParent }) => {
+export const SingleSasTable: React.FC<SingleExpandableTableProps> = ({ header, itemList, rowRenderer }) => {
   const [tableRows, setTableRows] = React.useState([]);
   const { t } = useTranslation();
   const headerFunc = makeTableHeader(header, t);
@@ -50,7 +50,6 @@ export const SingleSasTable: React.FC<SingleExpandableTableProps> = ({ header, i
 
   const onSort = (_event, index, direction, extraData) => {
     const sortField = extraData.column.data;
-    //tableRows의 홀수 행만 outerTable의 값 : index는 0,2....
     sortRows({ index, sortField, direction }, tableRows);
     setSortBy({ index, sortField, direction });
   };
@@ -73,11 +72,11 @@ type Header = {
 };
 
 type SingleExpandableTableProps = {
-  itemList: any[]; // outer table의 itemList
-  rowRenderer: (index, obj) => any[]; // outer table의 row 한줄에 들어갈 요소들을 배열 형태로 return하는 renderer 함수
-  innerRenderer?: (parentItem) => any; // inner table을 render하는 함수(ExpandableInnerTable 컴포넌트 사용해야됨)
-  header: Header[]; // header column들의 배열. 펼침 기능을 사용할 column object에는 cellTransforms: [compoundExpand] 속성 넣어줘야 함.
-  compoundParent?: number; // table 펼칠 수 있는 column의 index
+  itemList: any[];
+  rowRenderer: (index, obj) => any[];
+  innerRenderer?: (parentItem) => any;
+  header: Header[];
+  compoundParent?: number;
   customSorts?: { [key: string]: any };
 };
 type PFSortState = {

@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
-import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
-// import { TFunction } from 'i18next';
-import { DetailsItem, detailsPage, Kebab, NavBar, navFactory, PageHeading, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
-import { K8sResourceKind } from '../../../module/k8s';
+import { detailsPage, Kebab, NavBar, navFactory, PageHeading, ResourceLink, SectionHeading, Timestamp } from '../../utils';
 import { DetailsPageProps } from '../../factory';
 import { WebSocketContext } from '../../app';
 import { Button, Modal } from '@patternfly/react-core';
@@ -16,6 +13,7 @@ import { FilterIcon } from '@patternfly/react-icons';
 import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { SingleSasTable } from './sas-single-table';
+import { CONTROLLER_SOCKET } from './sas-string';
 
 const kind = 'SasController';
 
@@ -166,7 +164,7 @@ export const SasControllerPage = () => {
   };
 
   React.useEffect(() => {
-    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetController', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+    webSocket.ws?.send(CONTROLLER_SOCKET);
   }, [webSocket]);
 
   webSocket.ws &&
@@ -255,67 +253,14 @@ export const SasControllerPage = () => {
       <div className="sas-main-table">
         <SasControllerTable data={data} handleModalToggle={handleModalToggle} />
       </div>
-
-      {/* <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} customData={{ nonK8sResource: true, sas: 'app', kindObj: SasAppModel }} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} isK8sResource={false} />; */}
     </>
   );
 };
 
 export default SasControllerPage;
 
-const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
-  const images = [obj.spec?.image, ...(obj.spec?.ee_images?.map(item => item.image) || []), obj.spec?.redis_image, obj.spec?.postgres_image].filter(item => !!item);
-
-  if (images.length === 0) {
-    images.push('-');
-  }
-
-  return (
-    <>
-      {images.map((image, index) => {
-        return <div key={`image-${index}`}>{image}</div>;
-      })}
-    </>
-  );
-};
-
-export const SasAppControllersList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
-  const { t } = useTranslation();
-  return (
-    <dl className="co-m-pane__details">
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
-        <Status status={AwxStatusReducer(awx)} />
-      </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.hostname">
-        {awx.spec?.hostname ? (
-          <a href={`https://${awx.spec?.hostname}`} target="_blank">
-            {awx.spec.hostname}
-          </a>
-        ) : (
-          <div>-</div>
-        )}
-      </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
-        <ImageSummary obj={awx} />
-      </DetailsItem>
-    </dl>
-  );
-};
-
-const SasControllerDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
-  const { t } = useTranslation();
-  return (
-    <>
-      <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1')} />
-        <div className="row">
-          <div className="col-sm-6">
-            <ResourceSummary resource={awx} showOwner={false} />
-          </div>
-        </div>
-      </div>
-    </>
-  );
+const SasControllerDetails: React.FC = () => {
+  return <></>;
 };
 
 const { details } = navFactory;
@@ -327,7 +272,7 @@ export const SasControllersDetailsPage: React.FC<DetailsPageProps> = props => {
   const [data, setData] = React.useState([]);
   const [singleData, setSingleData] = React.useState(null);
   React.useEffect(() => {
-    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetController', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+    webSocket.ws?.send(CONTROLLER_SOCKET);
   }, [webSocket]);
   webSocket.ws &&
     webSocket.ws.onmessage(msg => {
@@ -346,9 +291,6 @@ export const SasControllersDetailsPage: React.FC<DetailsPageProps> = props => {
       }
     });
   }, [data, name]);
-  React.useEffect(() => {
-    console.log(123123, singleData);
-  }, [singleData]);
 
   return (
     <div>
@@ -375,16 +317,4 @@ export const SasControllersDetailsPage: React.FC<DetailsPageProps> = props => {
       </div>
     </div>
   );
-};
-
-type ImageSummaryProps = {
-  obj: K8sResourceKind;
-};
-
-type AWXDetailsListProps = {
-  obj: K8sResourceKind;
-};
-
-type AWXDetailsProps = {
-  obj: K8sResourceKind;
 };
