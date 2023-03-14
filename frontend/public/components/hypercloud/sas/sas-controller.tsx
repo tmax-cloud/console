@@ -4,9 +4,9 @@ import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reduc
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 // import { TFunction } from 'i18next';
-import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
+import { DetailsItem, detailsPage, Kebab, NavBar, navFactory, PageHeading, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
 import { K8sResourceKind } from '../../../module/k8s';
-import { DetailsPage, DetailsPageProps } from '../../factory';
+import { DetailsPageProps } from '../../factory';
 import { WebSocketContext } from '../../app';
 import { Button, Modal } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,6 @@ import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { SingleSasTable } from './sas-single-table';
 
-const menuActions: KebabAction[] = [...Kebab.factory.common];
 const kind = 'SasController';
 
 const SasKebab = ({ status, handleModalToggle, data }) => {
@@ -101,7 +100,7 @@ const SasControllerTable = props => {
   const rowRenderer = (index, obj) => {
     return [
       {
-        title: <ResourceLink kind={kind} name={obj.CONTROLLER_NAME} namespace={obj.STATUS} title={obj.CONTROLLER_NAME} />,
+        title: <ResourceLink kind={kind} name={obj.CONTROLLER_NAME} namespace={obj.STATUS} title={obj.CONTROLLER_NAME} manualPath={`/sas-controller/${obj.CONTROLLER_NAME}`} />,
         index: index,
       },
       {
@@ -319,11 +318,63 @@ const SasControllerDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
   );
 };
 
-const { details, editResource } = navFactory;
+const { details } = navFactory;
 
 export const SasControllersDetailsPage: React.FC<DetailsPageProps> = props => {
-  const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(SasControllerDetails)), editResource()]} />;
+  const { name } = props.match.params;
+  const [appName, setAppName] = React.useState(name);
+  const webSocket = React.useContext(WebSocketContext);
+  const [data, setData] = React.useState([]);
+  const [singleData, setSingleData] = React.useState(null);
+  React.useEffect(() => {
+    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetController', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+  }, [webSocket]);
+  webSocket.ws &&
+    webSocket.ws.onmessage(msg => {
+      // eslint-disable-next-line no-console
+      console.log('Message from server~!', msg);
+      setData(msg.body.formattedBody.items);
+    });
+
+  React.useEffect(() => {
+    setAppName(name);
+  }, [name]);
+  React.useEffect(() => {
+    data.map(item => {
+      if (item.CONTROLLER_NAME === appName) {
+        setSingleData(item);
+      }
+    });
+  }, [data, name]);
+  React.useEffect(() => {
+    console.log(123123, singleData);
+  }, [singleData]);
+
+  return (
+    <div>
+      <PageHeading detail={true} title={appName} badge={props.badge} icon={props.icon}></PageHeading>
+      <div className={'co-m-page__body'}>
+        <div className="co-m-horizontal-nav">{<NavBar pages={[details(detailsPage(SasControllerDetails))]} baseURL={props.match.url} basePath={props.match.path} />}</div>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={'앱 상세'} />
+        <div className="row">
+          <div className="col-lg-6">
+            <dt>이름</dt>
+            <dd>{appName}</dd>
+            <dt>생성 일시</dt>
+            <dd>{singleData?.CREATED_AT}</dd>
+          </div>
+          <div className="col-lg-6">
+            <dt>상태</dt>
+            <Status status={singleData?.STATUS} />
+            <dt>타입</dt>
+            <dd>{singleData?.TYPE}</dd>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 type ImageSummaryProps = {
