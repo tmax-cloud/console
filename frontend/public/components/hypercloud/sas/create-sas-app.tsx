@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Form, FormGroup, TextInput, FileUpload, FormSelect, FormSelectOption, ActionGroup, Button } from '@patternfly/react-core';
-import { WebSocketContext } from '../../app';
+// import { WebSocketContext } from '../../app';
 import FileUploadIcon from '@patternfly/react-icons/dist/esm/icons/file-upload-icon';
 
 export const CreateSasApp = () => {
-  const webSocket = React.useContext(WebSocketContext);
+  // const webSocket = React.useContext(WebSocketContext);
   const [name, setName] = React.useState('');
   const [value, setValue] = React.useState(null);
   const [filename, setFilename] = React.useState('');
@@ -67,13 +67,13 @@ export const CreateSasApp = () => {
           <FormGroup label="버전" isRequired fieldId="simple-form-version-01">
             <TextInput isRequired type="text" id="simple-form-version-01" name="simple-form-version-01" value={version} onChange={handleVersionChange} />
           </FormGroup>
-          <FormGroup label="설명" isRequired fieldId="simple-form-description-01">
+          <FormGroup label="설명" fieldId="simple-form-description-01">
             <TextInput isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={description} onChange={handleDescriptionChange} />
           </FormGroup>
           <FormGroup label="레플리카 수" isRequired fieldId="simple-form-replica-01">
             <TextInput isRequired type="text" id="simple-form-replica-01" name="simple-form-replica-01" value={replica} onChange={handleReplicaChange} />
           </FormGroup>
-          <FormGroup label="타겟 워커 노드 풀" fieldId="simple-form-version-03">
+          <FormGroup label="타겟 워커 노드 풀" isRequired fieldId="simple-form-version-03">
             <FormSelect value={target} onChange={handleTargetChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
               {targetOptions.map((option, index) => (
                 <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
