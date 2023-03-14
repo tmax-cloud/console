@@ -5,9 +5,9 @@ import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reduc
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 // import { TFunction } from 'i18next';
-import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
+import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, PageHeading, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
 import { K8sResourceKind } from '../../../module/k8s';
-import { DetailsPage, DetailsPageProps } from '../../factory';
+import { DetailsPage } from '../../factory';
 import { SingleExpandableTable } from '../utils/expandable-table';
 import { WebSocketContext } from '../../app';
 import { Button, FormSelect, FormSelectOption, Modal } from '@patternfly/react-core';
@@ -20,6 +20,8 @@ import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { FileUpload } from '@patternfly/react-core';
 import FileUploadIcon from '@patternfly/react-icons/dist/esm/icons/file-upload-icon';
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
+import { NavBar } from '../../utils';
+import { Table, TableHeader, TableBody, TableProps } from '@patternfly/react-table';
 
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 const kind = 'SasApp';
@@ -195,7 +197,7 @@ const SasAppTable = props => {
   const rowRenderer = (index, obj) => {
     return [
       {
-        title: <ResourceLink kind={kind} name={obj.APP_NAME} namespace={obj.STATUS} title={obj.APP_NAME} />,
+        title: <ResourceLink kind={kind} name={obj.APP_NAME} namespace={obj.STATUS} title={obj.APP_NAME} manualPath={`/sas-app/${obj.APP_NAME}`} />,
         index: index,
       },
       {
@@ -638,6 +640,7 @@ const SasAppDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
   const { t } = useTranslation();
   return (
     <>
+      <div>hihihihihi</div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1')} />
         <div className="row">
@@ -652,8 +655,98 @@ const SasAppDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
 
 const { details, editResource } = navFactory;
 
-export const SasAppsDetailsPage: React.FC<DetailsPageProps> = props => {
+export const SasAppsDetailsPage = props => {
   const [url, setUrl] = React.useState(null);
+  const { name } = props.match.params;
+  const [appName, setAppName] = React.useState(name);
+  const webSocket = React.useContext(WebSocketContext);
+  const [data, setData] = React.useState([]);
+  const [singleData, setSingleData] = React.useState(null);
+  const [servicedata, setServiceData] = React.useState(null);
+  React.useEffect(() => {
+    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetApplicationConsole', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetService', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+  }, [webSocket]);
+  webSocket.ws &&
+    webSocket.ws.onmessage(msg => {
+      // eslint-disable-next-line no-console
+      console.log('Message from server~~!', msg);
+      if (msg.header.targetServiceName === 'com.tmax.superobject.admin.master.GetService') {
+        setServiceData(msg.body.formattedBody.items);
+      } else setData(msg.body.formattedBody.items);
+    });
+
+  React.useEffect(() => {
+    setAppName(name);
+  }, [name]);
+  React.useEffect(() => {
+    data.map(item => {
+      if (item.APP_NAME === appName) {
+        setSingleData(item);
+      }
+    });
+  }, [data, name]);
+  React.useEffect(() => {
+    console.log(123123, singleData);
+  }, [singleData]);
+
+  const columns: TableProps['cells'] = ['버전', '설명', 'Jar 파일명', '생서일시', ''];
+  const rows: TableProps['rows'] = singleData?.VERSIONS.map(repo => [repo.VERSION, repo.DESCRIPTION, repo.JAR_NAME, repo.CREATED_AT, '']);
+  const serviceColumns: TableProps['cells'] = ['이름', '앱', '크론 수', ''];
+  const serviceRows: TableProps['rows'] = servicedata
+    ?.filter(repo => {
+      if (repo.APP_NAME === appName) return true;
+      return false;
+    })
+    .map(repo => [repo.SERVICE_PACKAGE, repo.APP_NAME, repo.CRON, '']);
+  console.log(12, serviceRows, rows);
+  return (
+    <div>
+      <PageHeading detail={true} title={appName} badge={props.badge} icon={props.icon}></PageHeading>
+      <div className={'co-m-page__body'}>
+        <div className="co-m-horizontal-nav">{<NavBar pages={[details(detailsPage(SasAppDetails))]} baseURL={props.match.url} basePath={props.match.path} />}</div>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={'앱 상세'} />
+        <div className="row">
+          <div className="col-lg-6">
+            <dt>이름</dt>
+            <dd>{appName}</dd>
+            <dt>생성 일시</dt>
+            <dd>{singleData?.CREATED_AT}</dd>
+          </div>
+          <div className="col-lg-6">
+            <dt>상태</dt>
+            <Status status={singleData?.STATUS} />
+            <dt>배포버전</dt>
+            <dd>{singleData?.ACTIVATE_VERSION}</dd>
+            <dt>레플리카수</dt>
+            <dd>{singleData?.REPLICAS}</dd>
+            <dt>타겟 워커 노드 풀</dt>
+            <dd>{singleData?.POOL_ID}</dd>
+          </div>
+        </div>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={'버전'} />
+        {singleData && (
+          <Table aria-label="Simple Table" cells={columns} rows={rows}>
+            <TableHeader />
+            <TableBody />
+          </Table>
+        )}
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={'서비스'} />
+        {servicedata && serviceRows && (
+          <Table aria-label="Simple Table" cells={serviceColumns} rows={serviceRows}>
+            <TableHeader />
+            <TableBody />
+          </Table>
+        )}
+      </div>
+    </div>
+  );
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(SasAppDetails)), editResource()]} />;
 };
 
