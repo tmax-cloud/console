@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { compoundExpand } from '@patternfly/react-table';
-import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
-// import { TFunction } from 'i18next';
-import { DetailsItem, detailsPage, Kebab, KebabAction, navFactory, PageHeading, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../../utils';
-import { K8sResourceKind } from '../../../module/k8s';
-import { DetailsPage } from '../../factory';
+import { detailsPage, Kebab, navFactory, PageHeading, ResourceLink, SectionHeading, Timestamp } from '../../utils';
 import { SingleExpandableTable } from '../utils/expandable-table';
 import { WebSocketContext } from '../../app';
 import { Button, FormSelect, FormSelectOption, Modal } from '@patternfly/react-core';
@@ -22,8 +18,8 @@ import FileUploadIcon from '@patternfly/react-icons/dist/esm/icons/file-upload-i
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
 import { NavBar } from '../../utils';
 import { Table, TableHeader, TableBody, TableProps } from '@patternfly/react-table';
+import { APP_SOCKET, SERVICE_SOCKET } from './sas-string';
 
-const menuActions: KebabAction[] = [...Kebab.factory.common];
 const kind = 'SasApp';
 
 export const InnerRow = ({ innerData }) => {
@@ -500,7 +496,7 @@ export const SasAppPage = () => {
   };
 
   React.useEffect(() => {
-    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetApplicationConsole', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+    webSocket.ws?.send(APP_SOCKET);
   }, [webSocket]);
 
   webSocket.ws &&
@@ -589,74 +585,19 @@ export const SasAppPage = () => {
       <div className="sas-main-table">
         <SasAppTable data={data} handleModalToggle={handleModalToggle} />
       </div>
-
-      {/* <ListPage {...props} canCreate={true} kind={kind} rowFilters={filters.bind(null, t)()} customData={{ nonK8sResource: true, sas: 'app', kindObj: SasAppModel }} ListComponent={KafkaMirrorMaker2Table.bind(null, t)} isK8sResource={false} />; */}
     </>
   );
 };
 
 export default SasAppPage;
 
-const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
-  const images = [obj.spec?.image, ...(obj.spec?.ee_images?.map(item => item.image) || []), obj.spec?.redis_image, obj.spec?.postgres_image].filter(item => !!item);
-
-  if (images.length === 0) {
-    images.push('-');
-  }
-
-  return (
-    <>
-      {images.map((image, index) => {
-        return <div key={`image-${index}`}>{image}</div>;
-      })}
-    </>
-  );
+const SasAppDetails: React.FC = () => {
+  return <></>;
 };
 
-export const SasAppDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
-  const { t } = useTranslation();
-  return (
-    <dl className="co-m-pane__details">
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
-        <Status status={AwxStatusReducer(awx)} />
-      </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.hostname">
-        {awx.spec?.hostname ? (
-          <a href={`https://${awx.spec?.hostname}`} target="_blank">
-            {awx.spec.hostname}
-          </a>
-        ) : (
-          <div>-</div>
-        )}
-      </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
-        <ImageSummary obj={awx} />
-      </DetailsItem>
-    </dl>
-  );
-};
-
-const SasAppDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
-  const { t } = useTranslation();
-  return (
-    <>
-      <div>hihihihihi</div>
-      <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1')} />
-        <div className="row">
-          <div className="col-sm-6">
-            <ResourceSummary resource={awx} showOwner={false} />
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const { details, editResource } = navFactory;
+const { details } = navFactory;
 
 export const SasAppsDetailsPage = props => {
-  const [url, setUrl] = React.useState(null);
   const { name } = props.match.params;
   const [appName, setAppName] = React.useState(name);
   const webSocket = React.useContext(WebSocketContext);
@@ -664,8 +605,8 @@ export const SasAppsDetailsPage = props => {
   const [singleData, setSingleData] = React.useState(null);
   const [servicedata, setServiceData] = React.useState(null);
   React.useEffect(() => {
-    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetApplicationConsole', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
-    webSocket.ws?.send(`{ header: { targetServiceName: 'com.tmax.superobject.admin.master.GetService', messageType: 'REQUEST', contentType: 'TEXT' }, body: {poolId : 'default', getAll : 'true', describe : 'true'} }`);
+    webSocket.ws?.send(APP_SOCKET);
+    webSocket.ws?.send(SERVICE_SOCKET);
   }, [webSocket]);
   webSocket.ws &&
     webSocket.ws.onmessage(msg => {
@@ -686,9 +627,6 @@ export const SasAppsDetailsPage = props => {
       }
     });
   }, [data, name]);
-  React.useEffect(() => {
-    console.log(123123, singleData);
-  }, [singleData]);
 
   const columns: TableProps['cells'] = ['버전', '설명', 'Jar 파일명', '생서일시', ''];
   const rows: TableProps['rows'] = singleData?.VERSIONS.map(repo => [repo.VERSION, repo.DESCRIPTION, repo.JAR_NAME, repo.CREATED_AT, '']);
@@ -698,8 +636,7 @@ export const SasAppsDetailsPage = props => {
       if (repo.APP_NAME === appName) return true;
       return false;
     })
-    .map(repo => [repo.SERVICE_PACKAGE, repo.APP_NAME, repo.CRON, '']);
-  console.log(12, serviceRows, rows);
+    .map(repo => ({ cells: [repo.SERVICE_PACKAGE, repo.APP_NAME, repo.CRON, ''] }));
   return (
     <div>
       <PageHeading detail={true} title={appName} badge={props.badge} icon={props.icon}></PageHeading>
@@ -738,8 +675,8 @@ export const SasAppsDetailsPage = props => {
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={'서비스'} />
-        {servicedata && serviceRows && (
-          <Table aria-label="Simple Table" cells={serviceColumns} rows={serviceRows}>
+        {servicedata && serviceRows && serviceRows.length > 0 && (
+          <Table aria-label="Simple Table2" cells={serviceColumns} rows={serviceRows}>
             <TableHeader />
             <TableBody />
           </Table>
@@ -747,17 +684,4 @@ export const SasAppsDetailsPage = props => {
       </div>
     </div>
   );
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(SasAppDetails)), editResource()]} />;
-};
-
-type ImageSummaryProps = {
-  obj: K8sResourceKind;
-};
-
-type AWXDetailsListProps = {
-  obj: K8sResourceKind;
-};
-
-type AWXDetailsProps = {
-  obj: K8sResourceKind;
 };

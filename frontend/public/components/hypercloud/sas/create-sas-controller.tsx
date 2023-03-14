@@ -14,7 +14,6 @@ export const CreateSasController = () => {
   };
 
   const handleFileInputChange = (file, _event) => {
-    console.log(123, file, _event);
     setFilename(file.name);
     setValue(file);
   };
