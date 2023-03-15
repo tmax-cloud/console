@@ -27,7 +27,7 @@ export const chartStatusColors = {
   [AreaChartStatus.WARNING]: warningColor.value,
 };
 
-export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], formatDate = twentyFourHourTime, height = DEFAULT_HEIGHT, humanize = humanizeNumber, loading = true, padding, query, theme = getCustomTheme(ChartThemeColor.blue, ChartThemeVariant.light, areaTheme), tickCount = DEFAULT_TICK_COUNT, title, xAxis = true, yAxis = true, chartStyle, byteDataType = '', xAxisComponent }) => {
+export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], formatDate = twentyFourHourTime, height = DEFAULT_HEIGHT, humanize = humanizeNumber, loading = true, padding, query, theme = getCustomTheme(ChartThemeColor.blue, ChartThemeVariant.light, areaTheme), tickCount = DEFAULT_TICK_COUNT, title, status, xAxis = true, yAxis = true, chartStyle, byteDataType = '', xAxisComponent }) => {
   const [containerRef, width] = useRefWidth();
   const [processedData, setProcessedData] = React.useState(data);
   const [unit, setUnit] = React.useState('');
@@ -77,7 +77,7 @@ export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], form
           </Chart>
         </PrometheusGraphLink>
       ) : (
-        <GraphEmpty height={height} loading={loading} />
+        <GraphEmpty height={height} loading={loading} status={status}/>
       )}
     </PrometheusGraph>
   );
@@ -113,6 +113,7 @@ export type AreaChartProps = {
   chartStyle?: object[];
   byteDataType?: ByteDataTypes; //Use this to process the whole data frame at once
   xAxisComponent?: React.ReactNode;
+  status?: string;
 };
 
 type AreaProps = AreaChartProps & {
