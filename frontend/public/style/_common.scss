@@ -487,6 +487,16 @@ $co-external-link-padding-right: 15px;
 .pf-c-file-upload__file-select .pf-c-button.pf-m-control.pf-m-disabled {
   display: none;
 }
+
+.td-in-kebab {
+  width: 10px;
+}
+
+.link-black-no-underline {
+  color: black;
+  text-decoration: none;
+}
+
 .co-m-table-grid {
   &__body {
     min-height: 50px;
