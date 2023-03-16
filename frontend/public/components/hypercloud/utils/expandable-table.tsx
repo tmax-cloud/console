@@ -114,7 +114,7 @@ export const SingleExpandableTable: React.FC<SingleExpandableTableProps> = ({ he
   };
 
   return (
-    <PfTable aria-label="Compound expandable table" onExpand={onExpand} rows={tableRows} cells={headerFunc()} onSort={onSort} sortBy={sortBy}>
+    <PfTable aria-label="Compound expandable table" className="pf-m-compact pf-m-border-rows" onExpand={onExpand} rows={tableRows} cells={headerFunc()} onSort={onSort} sortBy={sortBy}>
       <PfTableHeader />
       <PfTableBody />
     </PfTable>
