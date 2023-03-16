@@ -55,7 +55,7 @@ export const SingleSasTable: React.FC<SingleExpandableTableProps> = ({ header, i
   };
 
   return (
-    <PfTable aria-label="Compound expandable table" rows={tableRows} cells={headerFunc()} onSort={onSort} sortBy={sortBy}>
+    <PfTable aria-label="Compound expandable table" className="pf-m-compact pf-m-border-rows" rows={tableRows} cells={headerFunc()} onSort={onSort} sortBy={sortBy}>
       <PfTableHeader />
       <PfTableBody />
     </PfTable>

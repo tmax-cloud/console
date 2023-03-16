@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { detailsPage, Kebab, navFactory, PageHeading, ResourceLink, SectionHeading, Timestamp } from '../../utils';
 import { SingleExpandableTable } from '../utils/expandable-table';
 import { WebSocketContext } from '../../app';
-import { Button } from '@patternfly/react-core';
+import { Badge, Button } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import '../utils/help.scss';
 import * as _ from 'lodash';
@@ -154,7 +154,8 @@ export const SasAppPage = () => {
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
   const [submitData, setSubmitData] = React.useState({});
-
+  const [filterNumberState, setfilterNumberState] = React.useState([0, 0, 0]);
+  let filterNumber = [0, 0, 0];
   const submit = () => {
     console.log(123, submitData);
     setIsModalOpen(!isModalOpen);
@@ -201,6 +202,18 @@ export const SasAppPage = () => {
       // eslint-disable-next-line no-console
       console.log('Message from server!! ', msg);
       setData(msg.body.formattedBody.items);
+      msg.body.formattedBody.items.map(d => {
+        if (d.STATUS === 'Archived') {
+          filterNumber = [filterNumber[0] + 1, filterNumber[1], filterNumber[2]];
+          console.log('a', filterNumber);
+        } else if (d.STATUS === 'Deployed') {
+          filterNumber = [filterNumber[0], filterNumber[1] + 1, filterNumber[2]];
+          console.log('d', filterNumber);
+        } else if (d.STATUS === 'Failed') {
+          filterNumber = [filterNumber[0], filterNumber[1], filterNumber[2] + 1];
+        }
+      });
+      setfilterNumberState(filterNumber);
       // setData([{ APP_NAME: 'simple', BINARY_ID: '45cf706', CREATED_AT: '-', DESCRIPTION: 'simple app for testing', HOST: '-', JAR_NAME: 'simple.jar', POOL_ID: '-', REPLICAS: 0, STATUS: 'Archived', VERSION: 'v1', index: 0, VERSIONS: [0, 1] }]);
     });
   const [isOpen, setIsOpen] = React.useState(false);
@@ -269,12 +282,21 @@ export const SasAppPage = () => {
           <div className="filter-drop-down">상태</div>
           <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox1" isChecked={toggle1Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(0)}>
             Archived
+            <Badge key={1} isRead>
+              {filterNumberState[0]}
+            </Badge>
           </DropdownToggleCheckbox>
           <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox2" isChecked={toggle2Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(1)}>
             Deployed
+            <Badge key={1} isRead>
+              {filterNumberState[1]}
+            </Badge>
           </DropdownToggleCheckbox>
           <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox3" isChecked={toggle3Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(2)}>
             Failed
+            <Badge key={1} isRead>
+              {filterNumberState[2]}
+            </Badge>
           </DropdownToggleCheckbox>
         </Dropdown>
       </div>
