@@ -141,6 +141,32 @@ export const AppDeleteModal = ({ appData, setSubmitData }) => {
     </>
   );
 };
+export const ControllerDeleteModal = ({ appData, setSubmitData }) => {
+  React.useEffect(() => {
+    setSubmitData({ modal: 'ControllerDeleteModal' });
+  }, []);
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>{`${appData.CONTROLLER_NAME} 컨트롤러를 삭제하시겠습니까?`}</div>
+      </Form>
+    </>
+  );
+};
+export const NodeDeleteModal = ({ appData, setSubmitData }) => {
+  React.useEffect(() => {
+    setSubmitData({ modal: 'NodeDeleteModal' });
+  }, []);
+
+  return (
+    <>
+      <Form isHorizontal={false}>
+        <div>{`${appData.HOSTNAME} 노드를 삭제하시겠습니까?`}</div>
+      </Form>
+    </>
+  );
+};
 
 export const VersionSelectModal = ({ appData, setSubmitData }) => {
   const [version, setVersion] = React.useState('');

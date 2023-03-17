@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { detailsPage, Kebab, NavBar, navFactory, PageHeading, ResourceLink, SectionHeading, Timestamp } from '../../utils';
 import { DetailsPageProps } from '../../factory';
 import { WebSocketContext } from '../../app';
-import { Button, Modal } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import '../utils/help.scss';
 import * as _ from 'lodash';
@@ -14,6 +14,7 @@ import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { SingleSasTable } from './sas-single-table';
 import { CONTROLLER_SOCKET } from './sas-string';
+import { ControllerDeleteModal, ModalPage } from './sas-modal';
 
 const kind = 'SasController';
 
@@ -25,7 +26,7 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
 
   const onFocus = () => {
     const element = document.getElementById('toggle-kebab');
-    element.focus();
+    element?.focus();
   };
 
   const onSelect = () => {
@@ -38,12 +39,18 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
       key="add-version"
       component="button"
       onClick={() => {
-        handleModalToggle(data, 'addversion');
+        console.log('controllerstart', data);
       }}
     >
       컨트롤러 실행
     </DropdownItem>,
-    <DropdownItem key="app-deploy" component="button">
+    <DropdownItem
+      key="app-deploy"
+      component="button"
+      onClick={() => {
+        handleModalToggle(data, 'controllerdelete');
+      }}
+    >
       컨트롤러 삭제
     </DropdownItem>,
   ];
@@ -52,7 +59,7 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
       key="addversion"
       component="button"
       onClick={() => {
-        handleModalToggle(data, 'addversion');
+        console.log('controllerstop', data);
       }}
     >
       컨트롤러 중지
@@ -84,8 +91,8 @@ const SasControllerTable = props => {
     },
     {
       title: t('생성 일시'),
-      sortField: 'AGE',
-      data: 'AGE',
+      sortField: 'CREATED_AT',
+      data: 'CREATED_AT',
     },
     {
       title: '',
@@ -109,7 +116,7 @@ const SasControllerTable = props => {
         title: obj.TYPE,
       },
       {
-        title: <Timestamp timestamp={obj.AGE} />,
+        title: <Timestamp timestamp={obj.CREATED_AT} />,
       },
       {
         className: Kebab.columnClass,
@@ -119,21 +126,6 @@ const SasControllerTable = props => {
   };
   return <SingleSasTable header={SasControllerColumns} itemList={SasControllerList} rowRenderer={rowRenderer} />;
 };
-export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPage }) => {
-  const actions = [
-    <Button key="cancel" variant="primary" onClick={handleModalToggle}>
-      취소
-    </Button>,
-    <Button key="confirm" variant="secondary" onClick={handleModalToggle}>
-      {titleModal[1]}
-    </Button>,
-  ];
-  return (
-    <Modal width={600} title={titleModal[0]} isOpen={isModalOpen} onClose={handleModalToggle} actions={actions}>
-      {InnerPage}
-    </Modal>
-  );
-};
 
 export const SasControllerPage = () => {
   const webSocket = React.useContext(WebSocketContext);
@@ -142,24 +134,20 @@ export const SasControllerPage = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
-
+  const [submitData, setSubmitData] = React.useState({});
+  const submit = () => {
+    console.log(123, submitData);
+    setIsModalOpen(!isModalOpen);
+  };
   const handleModalToggle = (selectedData, type) => {
     switch (type) {
-      case 'addversion':
-        setTitleModal(['버전 추가', '저장']);
-        setInnerPage(
-          <>
-            <div>앱 이름</div>
-            <div>{selectedData.APP_NAME}</div>
-            <div>버전</div>
-            <div>설명</div>
-          </>,
-        );
-        break;
+      case 'controllerdelete':
+        setTitleModal(['컨트롤러 삭제', '삭제']);
+        setInnerPage(<ControllerDeleteModal appData={selectedData} setSubmitData={setSubmitData} />);
+
       default:
         break;
     }
-
     setIsModalOpen(!isModalOpen);
   };
 
@@ -249,7 +237,7 @@ export const SasControllerPage = () => {
           </DropdownToggleCheckbox>
         </Dropdown>
       </div>
-      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal}></ModalPage>
+      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal} submit={submit}></ModalPage>
       <div className="sas-main-table">
         <SasControllerTable data={data} handleModalToggle={handleModalToggle} />
       </div>

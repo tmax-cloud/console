@@ -376,7 +376,7 @@ export const SasAppsDetailsPage = props => {
     updatedRows[index].DESCRIPTION = newDescription;
     setSingleData({ ...singleData, VERSIONS: updatedRows });
   };
-  const columns: TableProps['cells'] = ['버전', '설명', 'Jar 파일명', '생서일시', ''];
+  const columns: TableProps['cells'] = ['버전', '설명', 'Jar 파일명', '생성일시', ''];
   const serviceColumns: TableProps['cells'] = ['이름', '앱', '크론 수', ''];
   const serviceRows: TableProps['rows'] = servicedata
     ?.filter(repo => {

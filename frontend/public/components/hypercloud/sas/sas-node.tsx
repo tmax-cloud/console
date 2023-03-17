@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { detailsPage, Kebab, NavBar, navFactory, PageHeading, ResourceLink, SectionHeading, Timestamp } from '../../utils';
 import { DetailsPageProps } from '../../factory';
 import { WebSocketContext } from '../../app';
-import { Button, Modal } from '@patternfly/react-core';
 import '../utils/help.scss';
 import * as _ from 'lodash';
 import { FilterIcon } from '@patternfly/react-icons';
@@ -13,6 +12,7 @@ import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { SingleSasTable } from './sas-single-table';
 import { NODE_SOCKET } from './sas-string';
+import { ModalPage, NodeDeleteModal } from './sas-modal';
 
 const kind = 'SasController';
 
@@ -24,7 +24,7 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
 
   const onFocus = () => {
     const element = document.getElementById('toggle-kebab');
-    element.focus();
+    element?.focus();
   };
 
   const onSelect = () => {
@@ -37,7 +37,7 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
       key="add-version"
       component="button"
       onClick={() => {
-        handleModalToggle(data, 'addversion');
+        handleModalToggle(data, 'nodedelete');
       }}
     >
       노드 삭제
@@ -112,21 +112,6 @@ const SasControllerTable = props => {
   };
   return <SingleSasTable header={SasControllerColumns} itemList={SasControllerList} rowRenderer={rowRenderer} />;
 };
-export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPage }) => {
-  const actions = [
-    <Button key="cancel" variant="primary" onClick={handleModalToggle}>
-      취소
-    </Button>,
-    <Button key="confirm" variant="secondary" onClick={handleModalToggle}>
-      {titleModal[1]}
-    </Button>,
-  ];
-  return (
-    <Modal width={600} title={titleModal[0]} isOpen={isModalOpen} onClose={handleModalToggle} actions={actions}>
-      {InnerPage}
-    </Modal>
-  );
-};
 
 export const SasNodePage = () => {
   const webSocket = React.useContext(WebSocketContext);
@@ -135,19 +120,17 @@ export const SasNodePage = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
-
+  const [submitData, setSubmitData] = React.useState({});
+  const submit = () => {
+    console.log(123, submitData);
+    setIsModalOpen(!isModalOpen);
+  };
   const handleModalToggle = (selectedData, type) => {
     switch (type) {
-      case 'addversion':
-        setTitleModal(['버전 추가', '저장']);
-        setInnerPage(
-          <>
-            <div>앱 이름</div>
-            <div>{selectedData.APP_NAME}</div>
-            <div>버전</div>
-            <div>설명</div>
-          </>,
-        );
+      case 'nodedelete':
+        setTitleModal(['노드 삭제', '삭제']);
+        setInnerPage(<NodeDeleteModal appData={selectedData} setSubmitData={setSubmitData} />);
+
         break;
       default:
         break;
@@ -237,7 +220,7 @@ export const SasNodePage = () => {
           </DropdownToggleCheckbox>
         </Dropdown>
       </div>
-      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal}></ModalPage>
+      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal} submit={submit}></ModalPage>{' '}
       <div className="sas-main-table">
         <SasControllerTable data={data} handleModalToggle={handleModalToggle} />
       </div>
