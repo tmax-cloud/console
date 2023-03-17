@@ -12,7 +12,7 @@ export const SasAppKebab = ({ status, handleModalToggle, data }) => {
 
   const onFocus = () => {
     const element = document.getElementById('toggle-kebab');
-    element.focus();
+    element?.focus();
   };
 
   const onSelect = () => {
@@ -32,10 +32,8 @@ export const SasAppKebab = ({ status, handleModalToggle, data }) => {
     </DropdownItem>,
   ];
   const serviceItems = [
-    <Link to={'/sas-app/~new'} className={'link-black-no-underline'}>
-      <DropdownItem key="add-serviceItems" component="button">
-        크론 생성
-      </DropdownItem>
+    <Link key="add-cronItems" to={`/sas-create-cron/${data?.SERVICE_PACKAGE}`} className={'link-black-no-underline'}>
+      <DropdownItem component="button">크론 생성</DropdownItem>
     </Link>,
   ];
   const dropdownItemsReady = [
