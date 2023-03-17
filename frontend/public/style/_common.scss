@@ -496,6 +496,24 @@ $co-external-link-padding-right: 15px;
   color: black;
   text-decoration: none;
 }
+.sas-app-filter {
+  display: flex;
+  gap: 30px;
+}
+.cron-title {
+  padding: 30px;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+}
+.cron-form-gr {
+  display: flex;
+  gap: 10px;
+}
+.cron-form-in {
+  width: 100px !important;
+}
+.filter-form-in {
+  width: 300px !important;
+}
 
 .co-m-table-grid {
   &__body {

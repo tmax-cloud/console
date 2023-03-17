@@ -18,7 +18,7 @@ import { Table, TableHeader, TableBody, TableProps } from '@patternfly/react-tab
 import { APP_SOCKET, SERVICE_SOCKET } from './sas-string';
 import { SasAppKebab } from './sas-kebab';
 import { AddVersionModal, AppDeleteModal, AppDeployModal, AppStopModal, ReplicaModal, VersionDeleteModal, VersionSelectModal } from './sas-modal';
-import { InlineEditCell, ModalPage } from './sas-utils';
+import { InlineEditCell, InputGroupWithDropdown, ModalPage } from './sas-utils';
 
 const kind = 'SasApp';
 
@@ -155,6 +155,7 @@ export const SasAppPage = () => {
   const [InnerPage, setInnerPage] = React.useState(<></>);
   const [submitData, setSubmitData] = React.useState({});
   const [filterNumberState, setfilterNumberState] = React.useState([0, 0, 0]);
+  const [filterName, setFilterName] = React.useState('');
   let filterNumber = [0, 0, 0];
   const submit = () => {
     console.log(123, submitData);
@@ -202,6 +203,7 @@ export const SasAppPage = () => {
       // eslint-disable-next-line no-console
       console.log('Message from server!! ', msg);
       setData(msg.body.formattedBody.items);
+      setRawData(msg.body.formattedBody.items);
       msg.body.formattedBody.items.map(d => {
         if (d.STATUS === 'Archived') {
           filterNumber = [filterNumber[0] + 1, filterNumber[1], filterNumber[2]];
@@ -221,6 +223,10 @@ export const SasAppPage = () => {
   const onToggle = () => {
     setIsOpen(!isOpen);
   };
+  React.useEffect(() => {
+    const newData = rawData.filter(d => d.APP_NAME.includes(filterName));
+    setData(newData);
+  }, [filterName]);
 
   const onCheckboxChange = async index => {
     const newCheckboxes = [...checkboxes];
@@ -239,14 +245,8 @@ export const SasAppPage = () => {
         }
       });
     }
-    if (rawData.length === 0) {
-      setRawData(data);
-      const newData = data.filter(d => checked.includes(d.STATUS));
-      setData(newData);
-    } else {
-      const newData = rawData.filter(d => checked.includes(d.STATUS));
-      setData(newData);
-    }
+    const newData = rawData.filter(d => checked.includes(d.STATUS));
+    setData(newData);
   };
   const toggle1Checkbox = checkboxes[0];
   const toggle2Checkbox = checkboxes[1];
@@ -270,35 +270,38 @@ export const SasAppPage = () => {
             </Link>
           </div>
         </h1>
-        <Dropdown
-          toggle={
-            <DropdownToggle id="my-dropdown" onToggle={onToggle}>
-              <FilterIcon className="span--icon__right-margin" />
-              필터
-            </DropdownToggle>
-          }
-          isOpen={isOpen}
-        >
-          <div className="filter-drop-down">상태</div>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox1" isChecked={toggle1Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(0)}>
-            Archived
-            <Badge key={1} isRead>
-              {filterNumberState[0]}
-            </Badge>
-          </DropdownToggleCheckbox>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox2" isChecked={toggle2Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(1)}>
-            Deployed
-            <Badge key={1} isRead>
-              {filterNumberState[1]}
-            </Badge>
-          </DropdownToggleCheckbox>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox3" isChecked={toggle3Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(2)}>
-            Failed
-            <Badge key={1} isRead>
-              {filterNumberState[2]}
-            </Badge>
-          </DropdownToggleCheckbox>
-        </Dropdown>
+        <div className={'sas-app-filter'}>
+          <Dropdown
+            toggle={
+              <DropdownToggle id="my-dropdown" onToggle={onToggle}>
+                <FilterIcon className="span--icon__right-margin" />
+                필터
+              </DropdownToggle>
+            }
+            isOpen={isOpen}
+          >
+            <div className="filter-drop-down">상태</div>
+            <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox1" isChecked={toggle1Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(0)}>
+              Archived
+              <Badge key={1} isRead>
+                {filterNumberState[0]}
+              </Badge>
+            </DropdownToggleCheckbox>
+            <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox2" isChecked={toggle2Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(1)}>
+              Deployed
+              <Badge key={1} isRead>
+                {filterNumberState[1]}
+              </Badge>
+            </DropdownToggleCheckbox>
+            <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox3" isChecked={toggle3Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(2)}>
+              Failed
+              <Badge key={1} isRead>
+                {filterNumberState[2]}
+              </Badge>
+            </DropdownToggleCheckbox>
+          </Dropdown>
+          <InputGroupWithDropdown setSearchName={setFilterName} />
+        </div>
       </div>
       <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal} submit={submit}></ModalPage>
       <div className="sas-main-table">
@@ -327,6 +330,7 @@ export const SasAppsDetailsPage = props => {
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
   const [submitData, setSubmitData] = React.useState({});
+
   const submit = () => {
     console.log(123, submitData);
     setIsModalOpen(!isModalOpen);
