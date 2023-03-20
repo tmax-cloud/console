@@ -11,6 +11,8 @@ import { stripNS, createLink } from './items';
 import { getActivePerspective } from '../../reducers/ui';
 import { CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 
+const sasIcon = ['App', 'Service', 'Controller', 'Node'];
+
 const navSectionStateToProps = (state: RootState, { required }: NavSectionProps): NavSectionStateProps => {
   const flags = state[featureReducerName];
   const canRender = required ? flags.get(required) : true;
@@ -189,6 +191,9 @@ export const NavSection = connect(navSectionStateToProps)(
                 .replace('/', '_');
 
         if (isSingleChild) {
+          if (sasIcon.includes(title)) {
+            return children.length > 0 ? <div className={`navIcon ${title}`}> {children} </div> : null;
+          }
           return children.length > 0 ? <div className={`navIcon ${prettyType}`}> {children} </div> : null;
         }
         return children.length > 0 ? (
