@@ -14,6 +14,8 @@ import * as SelectedMasterClusterIcon from '@console/internal/imgs/hypercloud/ln
 import * as SelectedSingleClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/single_cluster_filled.svg';
 import * as SelectedDeveloperIcon from '@console/internal/imgs/hypercloud/lnb/filled/developer_filled.svg';
 import * as SelectedBaremetalIcon from '@console/internal/imgs/hypercloud/lnb/filled/baremetal_filled.svg';
+// import * as SasIcon from '@console/internal/imgs/hypercloud/lnb/sas.svg';
+// import * as SasFilledIcon from '@console/internal/imgs/hypercloud/lnb/filled/sas_filled.svg';
 
 export enum PerspectiveType {
   MASTER = 'MASTER',
@@ -80,7 +82,6 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
             getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
             getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
-
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -126,8 +127,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         //   properties: {
         //     id: PerspectiveType.SAS,
         //     name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
-        //     icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-        //     selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
+        //     icon: <img src={SasIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+        //     selectedIcon: <img src={SasFilledIcon} className="font-icon" />,
         //     getLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
         //     getK8sLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
         //     getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
@@ -165,8 +166,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         //   properties: {
         //     id: PerspectiveType.SAS,
         //     name: t ? t(PerspectiveLabelKeys[PerspectiveType.SAS]) : 'SAS',
-        //     icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-        //     selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
+        //     icon: <img src={SasIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+        //     selectedIcon: <img src={SasFilledIcon} className="font-icon" />,
         //     getLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
         //     getK8sLandingPageURL: () => (isFirstTime ? '/sas-app' : '/welcome'),
         //     getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
