@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { detailsPage, Kebab, NavBar, navFactory, PageHeading, ResourceLink, SectionHeading, Timestamp } from '../../utils';
 import { DetailsPageProps } from '../../factory';
 import { WebSocketContext } from '../../app';
-import { Button, Modal } from '@patternfly/react-core';
 import '../utils/help.scss';
 import * as _ from 'lodash';
 import { FilterIcon } from '@patternfly/react-icons';
@@ -13,7 +12,9 @@ import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { SingleSasTable } from './sas-single-table';
 import { NODE_SOCKET } from './sas-string';
-
+import { ModalPage, NodeDeleteModal } from './sas-modal';
+import { Badge } from '@patternfly/react-core';
+import { InputGroupWithDropdown } from './sas-utils';
 const kind = 'SasController';
 
 const SasKebab = ({ status, handleModalToggle, data }) => {
@@ -24,7 +25,7 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
 
   const onFocus = () => {
     const element = document.getElementById('toggle-kebab');
-    element.focus();
+    element?.focus();
   };
 
   const onSelect = () => {
@@ -37,7 +38,7 @@ const SasKebab = ({ status, handleModalToggle, data }) => {
       key="add-version"
       component="button"
       onClick={() => {
-        handleModalToggle(data, 'addversion');
+        handleModalToggle(data, 'nodedelete');
       }}
     >
       노드 삭제
@@ -112,21 +113,6 @@ const SasControllerTable = props => {
   };
   return <SingleSasTable header={SasControllerColumns} itemList={SasControllerList} rowRenderer={rowRenderer} />;
 };
-export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPage }) => {
-  const actions = [
-    <Button key="cancel" variant="primary" onClick={handleModalToggle}>
-      취소
-    </Button>,
-    <Button key="confirm" variant="secondary" onClick={handleModalToggle}>
-      {titleModal[1]}
-    </Button>,
-  ];
-  return (
-    <Modal width={600} title={titleModal[0]} isOpen={isModalOpen} onClose={handleModalToggle} actions={actions}>
-      {InnerPage}
-    </Modal>
-  );
-};
 
 export const SasNodePage = () => {
   const webSocket = React.useContext(WebSocketContext);
@@ -135,19 +121,22 @@ export const SasNodePage = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
+  const [submitData, setSubmitData] = React.useState({});
+  const [filterName, setFilterName] = React.useState('');
+  const [filterNumberState, setfilterNumberState] = React.useState([0, 0, 0]);
+  let filterNumber = [0, 0, 0];
+
+  const submit = () => {
+    console.log(submitData);
+    setIsModalOpen(!isModalOpen);
+  };
 
   const handleModalToggle = (selectedData, type) => {
     switch (type) {
-      case 'addversion':
-        setTitleModal(['버전 추가', '저장']);
-        setInnerPage(
-          <>
-            <div>앱 이름</div>
-            <div>{selectedData.APP_NAME}</div>
-            <div>버전</div>
-            <div>설명</div>
-          </>,
-        );
+      case 'nodedelete':
+        setTitleModal(['노드 삭제', '삭제']);
+        setInnerPage(<NodeDeleteModal appData={selectedData} setSubmitData={setSubmitData} />);
+
         break;
       default:
         break;
@@ -165,7 +154,19 @@ export const SasNodePage = () => {
       // eslint-disable-next-line no-console
       console.log('Message from server!! ', msg);
       setData(msg.body.formattedBody.items);
-      // setData([{ APP_NAME: 'simple', BINARY_ID: '45cf706', CREATED_AT: '-', DESCRIPTION: 'simple app for testing', HOST: '-', JAR_NAME: 'simple.jar', POOL_ID: '-', REPLICAS: 0, STATUS: 'Archived', VERSION: 'v1', index: 0, VERSIONS: [0, 1] }]);
+      setRawData(msg.body.formattedBody.items);
+      msg.body.formattedBody.items.map(d => {
+        if (d.STATUS === 'Archived') {
+          filterNumber = [filterNumber[0] + 1, filterNumber[1], filterNumber[2]];
+          console.log('a', filterNumber);
+        } else if (d.STATUS === 'Deployed') {
+          filterNumber = [filterNumber[0], filterNumber[1] + 1, filterNumber[2]];
+          console.log('d', filterNumber);
+        } else if (d.STATUS === 'Failed') {
+          filterNumber = [filterNumber[0], filterNumber[1], filterNumber[2] + 1];
+        }
+      });
+      setfilterNumberState(filterNumber);
     });
   const [isOpen, setIsOpen] = React.useState(false);
   const [checkboxes, setCheckboxes] = React.useState([false, false, false]);
@@ -190,15 +191,13 @@ export const SasNodePage = () => {
         }
       });
     }
-    if (rawData.length === 0) {
-      setRawData(data);
-      const newData = data.filter(d => checked.includes(d.STATUS));
-      setData(newData);
-    } else {
-      const newData = rawData.filter(d => checked.includes(d.STATUS));
-      setData(newData);
-    }
+    const newData = rawData.filter(d => checked.includes(d.STATUS));
+    setData(newData);
   };
+  React.useEffect(() => {
+    const newData = rawData.filter(d => d.HOSTNAME.includes(filterName));
+    setData(newData);
+  }, [filterName]);
 
   const toggle1Checkbox = checkboxes[0];
   const toggle2Checkbox = checkboxes[1];
@@ -216,28 +215,40 @@ export const SasNodePage = () => {
             </span>
           </div>
         </h1>
-        <Dropdown
-          toggle={
-            <DropdownToggle id="my-dropdown" onToggle={onToggle}>
-              <FilterIcon className="span--icon__right-margin" />
-              필터
-            </DropdownToggle>
-          }
-          isOpen={isOpen}
-        >
-          <div className="filter-drop-down">상태</div>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox1" isChecked={toggle1Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(0)}>
-            Archived
-          </DropdownToggleCheckbox>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox2" isChecked={toggle2Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(1)}>
-            Deployed
-          </DropdownToggleCheckbox>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox3" isChecked={toggle3Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(2)}>
-            Failed
-          </DropdownToggleCheckbox>
-        </Dropdown>
+        <div className={'sas-app-filter'}>
+          <Dropdown
+            toggle={
+              <DropdownToggle id="my-dropdown" onToggle={onToggle}>
+                <FilterIcon className="span--icon__right-margin" />
+                필터
+              </DropdownToggle>
+            }
+            isOpen={isOpen}
+          >
+            <div className="filter-drop-down">상태</div>
+            <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox1" isChecked={toggle1Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(0)}>
+              Archived
+              <Badge key={1} isRead>
+                {filterNumberState[0]}
+              </Badge>
+            </DropdownToggleCheckbox>
+            <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox2" isChecked={toggle2Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(1)}>
+              Deployed
+              <Badge key={1} isRead>
+                {filterNumberState[1]}
+              </Badge>
+            </DropdownToggleCheckbox>
+            <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox3" isChecked={toggle3Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(2)}>
+              Failed
+              <Badge key={1} isRead>
+                {filterNumberState[2]}
+              </Badge>
+            </DropdownToggleCheckbox>
+          </Dropdown>
+          <InputGroupWithDropdown setSearchName={setFilterName} />
+        </div>
       </div>
-      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal}></ModalPage>
+      <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal} submit={submit}></ModalPage>{' '}
       <div className="sas-main-table">
         <SasControllerTable data={data} handleModalToggle={handleModalToggle} />
       </div>

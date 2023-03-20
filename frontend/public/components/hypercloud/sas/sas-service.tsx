@@ -8,11 +8,10 @@ import { WebSocketContext } from '../../app';
 import { Button, Modal } from '@patternfly/react-core';
 import '../utils/help.scss';
 import * as _ from 'lodash';
-import { FilterIcon } from '@patternfly/react-icons';
-import { DropdownToggle, DropdownToggleCheckbox } from '@patternfly/react-core';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { SingleSasTable } from './sas-single-table';
 import { SERVICE_SOCKET } from './sas-string';
+import { InputGroupWithDropdown } from './sas-utils';
 
 const kind = 'SasController';
 
@@ -133,6 +132,7 @@ export const SasServicePage = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [titleModal, setTitleModal] = React.useState(['', '']);
   const [InnerPage, setInnerPage] = React.useState(<></>);
+  const [filterName, setFilterName] = React.useState('');
 
   const handleModalToggle = (selectedData, type) => {
     switch (type) {
@@ -163,44 +163,14 @@ export const SasServicePage = () => {
       // eslint-disable-next-line no-console
       console.log('Message from server!! ', msg);
       setData(msg.body.formattedBody.items);
+      setRawData(msg.body.formattedBody.items);
       // setData([{ APP_NAME: 'simple', BINARY_ID: '45cf706', CREATED_AT: '-', DESCRIPTION: 'simple app for testing', HOST: '-', JAR_NAME: 'simple.jar', POOL_ID: '-', REPLICAS: 0, STATUS: 'Archived', VERSION: 'v1', index: 0, VERSIONS: [0, 1] }]);
     });
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [checkboxes, setCheckboxes] = React.useState([false, false, false]);
-  const onToggle = () => {
-    setIsOpen(!isOpen);
-  };
+  React.useEffect(() => {
+    const newData = rawData.filter(d => d.SERVICE_PACKAGE.includes(filterName));
+    setData(newData);
+  }, [filterName]);
 
-  const onCheckboxChange = async index => {
-    const newCheckboxes = [...checkboxes];
-    newCheckboxes[index] = !newCheckboxes[index];
-    setCheckboxes(newCheckboxes);
-    let checked = ['Archived', 'Deployed', 'Failed'];
-    if (newCheckboxes.includes(true)) {
-      checked = [];
-      newCheckboxes.map((bool, idx) => {
-        if (bool && idx === 0) {
-          checked.push('Archived');
-        } else if (bool && idx === 1) {
-          checked.push('Deployed');
-        } else if (bool && idx === 2) {
-          checked.push('Failed');
-        }
-      });
-    }
-    if (rawData.length === 0) {
-      setRawData(data);
-      const newData = data.filter(d => checked.includes(d.STATUS));
-      setData(newData);
-    } else {
-      const newData = rawData.filter(d => checked.includes(d.STATUS));
-      setData(newData);
-    }
-  };
-
-  const toggle1Checkbox = checkboxes[0];
-  const toggle2Checkbox = checkboxes[1];
-  const toggle3Checkbox = checkboxes[2];
   return (
     <>
       <Helmet>
@@ -214,26 +184,7 @@ export const SasServicePage = () => {
             </span>
           </div>
         </h1>
-        <Dropdown
-          toggle={
-            <DropdownToggle id="my-dropdown" onToggle={onToggle}>
-              <FilterIcon className="span--icon__right-margin" />
-              필터
-            </DropdownToggle>
-          }
-          isOpen={isOpen}
-        >
-          <div className="filter-drop-down">상태</div>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox1" isChecked={toggle1Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(0)}>
-            Archived
-          </DropdownToggleCheckbox>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox2" isChecked={toggle2Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(1)}>
-            Deployed
-          </DropdownToggleCheckbox>
-          <DropdownToggleCheckbox className="filter-drop-down" id="my-dropdown-checkbox3" isChecked={toggle3Checkbox} aria-label="Dropdown checkbox example" onChange={() => onCheckboxChange(2)}>
-            Failed
-          </DropdownToggleCheckbox>
-        </Dropdown>
+        <InputGroupWithDropdown setSearchName={setFilterName} />
       </div>
       <ModalPage isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} InnerPage={InnerPage} titleModal={titleModal}></ModalPage>
       <div className="sas-main-table">

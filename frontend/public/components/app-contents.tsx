@@ -186,6 +186,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
 
           <LazyRoute path="/sas-service" exact loader={() => import('./hypercloud/sas/sas-service' /* webpackChunkName: "sas-service" */).then(m => m.SasServicePage)} />
           <LazyRoute path="/sas-service/:name" exact loader={() => import('./hypercloud/sas/sas-service' /* webpackChunkName: "sas-service" */).then(m => m.SasControllersDetailsPage)} />
+          <LazyRoute path="/sas-create-cron/:cron" exact loader={() => import('./hypercloud/sas/create-cron' /* webpackChunkName: "sas-create-cron" */).then(m => m.CreateCron)} />
 
           <LazyRoute path="/sas-controller" exact loader={() => import('./hypercloud/sas/sas-controller' /* webpackChunkName: "sas-controller" */).then(m => m.SasControllerPage)} />
           <LazyRoute path="/sas-controller/~new" exact loader={() => import('./hypercloud/sas/create-sas-controller' /* webpackChunkName: "sas-controller" */).then(m => m.CreateSasController)} />
