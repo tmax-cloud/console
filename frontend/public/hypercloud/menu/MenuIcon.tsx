@@ -38,7 +38,6 @@ export const MenuIconTitle = (props: MenuIconTitleProps) => {
     .toLowerCase()
     .replace(' ', '_')
     .replace('/', '_');
-  console.log(12, prettyType);
   switch (prettyType) {
     case 'home':
       return <MenuIconContainer title={title} icon={HomeIcon} />;
