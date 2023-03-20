@@ -27,6 +27,39 @@ const getHosts = ingress => {
   return <div className="text-muted">No hosts</div>;
 };
 
+export const ingressValildPorts = ingress => {
+  const rules = _.get(ingress, 'spec.rules', []);
+  const paths = [];
+  rules.forEach(rule => {
+    _.get(rule, 'http.paths', []).forEach(path => paths.push(path));
+  });
+  const ports = [];
+  paths.forEach(path => {
+    ports.push(path.backend?.service?.port?.number);
+  });
+  return ports.reduce((acc, v) => {
+    return acc.includes(v) ? acc : [...acc, v];
+  }, []);
+};
+
+const getAddresses = ingress => {
+  const ip = ingress.status?.loadBalancer?.ingress[0].ip;
+
+  const Ports = ingressValildPorts(ingress);
+  // const Ports = [80, 433];
+  if (ip && Ports.length) {
+    return (
+      <div className="co-truncate co-select-to-copy">
+        {Ports.map(port => (
+          <p>{`${ip}:${port}`}</p>
+        ))}
+      </div>
+    );
+  }
+
+  return <div className="text-muted">No addresses</div>;
+};
+
 const getTLSCert = ingress => {
   if (!_.has(ingress.spec, 'tls')) {
     return (
@@ -49,6 +82,7 @@ const getTLSCert = ingress => {
 const tableColumnClasses = [
   classNames('col-md-6', 'col-sm-4', 'col-xs-6'),
   classNames('col-md-6', 'col-sm-4', 'col-xs-6'),
+  classNames('col-md-6', 'col-sm-4', 'hidden-xs'),
   classNames('col-md-6', 'col-sm-4', 'hidden-xs'),
   classNames('col-md-4', 'hidden-sm', 'hidden-xs'),
   classNames('col-md-2', 'col-sm-2', 'col-xs-2', 'co-text-center'), // memo 컬럼 classname
@@ -84,13 +118,19 @@ const IngressTableHeader = t => {
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_150'),
-      transforms: null,
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_27'),
+      sortFunc: 'ingressValildPorts',
+      transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: '',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_150'),
+      transforms: null,
       props: { className: tableColumnClasses[5] },
+    },
+    {
+      title: '',
+      props: { className: tableColumnClasses[6] },
     },
   ];
 };
@@ -109,10 +149,11 @@ const IngressTableRow = ({ obj: ingress, index, key, style }) => {
         <LabelList kind={kind} labels={ingress.metadata.labels} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>{getHosts(ingress)}</TableData>
-      <TableData className={tableColumnClasses[4]}>
+      <TableData className={tableColumnClasses[4]}>{getAddresses(ingress)}</TableData>
+      <TableData className={tableColumnClasses[5]}>
         <Memo model={IngressModel} resource={ingress} />
       </TableData>
-      <TableData className={tableColumnClasses[5]}>
+      <TableData className={tableColumnClasses[6]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={ingress} />
       </TableData>
     </TableRow>
