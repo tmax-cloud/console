@@ -46,7 +46,7 @@ export const CreateSasApp = () => {
   const cancel = () => {};
   return (
     <div>
-      <div style={{ padding: '30px', borderBottom: '1px solid rgba(51, 51, 51, 0.5)' }}>
+      <div className={'cron-title'}>
         <h1>{'앱 생성'}</h1>
       </div>
       <div className={'co-m-pane__body'}>

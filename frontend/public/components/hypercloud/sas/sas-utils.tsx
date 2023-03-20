@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Modal } from '@patternfly/react-core';
+import { Button, Dropdown, DropdownToggle, Modal } from '@patternfly/react-core';
 import '../utils/help.scss';
 import * as _ from 'lodash';
 import { TextInput } from '@patternfly/react-core';
@@ -60,5 +60,48 @@ export const ModalPage = ({ isModalOpen, handleModalToggle, titleModal, InnerPag
     <Modal width={600} title={titleModal[0]} isOpen={isModalOpen} onClose={handleModalToggle} actions={actions}>
       {InnerPage}
     </Modal>
+  );
+};
+
+import { InputGroup, DropdownItem } from '@patternfly/react-core';
+
+export const InputGroupWithDropdown = ({ setSearchName }) => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
+  const onToggle = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+  };
+
+  const onSelect = () => {
+    setIsOpen(false);
+  };
+
+  const dropdownItems = [
+    <DropdownItem key="opt-1" value="label" component="button">
+      레이블
+    </DropdownItem>,
+    <DropdownItem key="opt-2" value="name" component="button">
+      이름
+    </DropdownItem>,
+  ];
+
+  return (
+    <React.Fragment>
+      <InputGroup className="filter-form-in">
+        <Dropdown onSelect={onSelect} toggle={<DropdownToggle onToggle={onToggle}>이름</DropdownToggle>} isOpen={isOpen} dropdownItems={dropdownItems} />
+        <TextInput
+          id="textInput-with-dropdown"
+          aria-label="input with dropdown and button"
+          placeholder="이름으로 검색"
+          onChange={value => {
+            console.log(12, value);
+            setSearchName(value);
+          }}
+        />
+        <Button id="inputDropdownButton1" variant="control">
+          /
+        </Button>
+      </InputGroup>
+    </React.Fragment>
   );
 };

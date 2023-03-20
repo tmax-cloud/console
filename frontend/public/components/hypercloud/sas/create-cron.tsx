@@ -62,7 +62,7 @@ export const CreateCron = props => {
   const cancel = () => {};
   return (
     <div>
-      <div style={{ padding: '30px', borderBottom: '1px solid rgba(51, 51, 51, 0.5)' }}>
+      <div className={'cron-title'}>
         <h1>크론 생성 (서비스 : {cron})</h1>
       </div>
       <div className={'co-m-pane__body'}>
@@ -80,9 +80,9 @@ export const CreateCron = props => {
           {cronType === 'Delay' && (
             <>
               <FormGroup label="지연할 시간" fieldId="simple-form-satr-01">
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <TextInput style={{ width: '100px' }} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={delayCycleTime} onChange={handleDelayCycleChange} />
-                  <FormSelect style={{ width: '100px' }} value={timeUnit} onChange={handleTimeUnitChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
+                <div className={'cron-form-gr'}>
+                  <TextInput className={'cron-form-in'} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={delayCycleTime} onChange={handleDelayCycleChange} />
+                  <FormSelect className={'cron-form-in'} value={timeUnit} onChange={handleTimeUnitChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
                     {timeUnitOptions.map((option, index) => (
                       <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
                     ))}
@@ -94,7 +94,7 @@ export const CreateCron = props => {
           {cronType === 'Reservation' && (
             <>
               <FormGroup label="예약 시간" fieldId="simple-form-description-01">
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div className={'cron-form-gr'}>
                   <DatePicker dateFormat="yyyy.mm.dd HH:mm:ss" selected={startDate} onChange={(date: Date | null) => setStartDate(date)} />
                 </div>
               </FormGroup>
@@ -103,9 +103,9 @@ export const CreateCron = props => {
           {(cronType === 'Delay with fixed' || cronType === 'Delay with rate') && (
             <>
               <FormGroup label="지연할 시간" fieldId="simple-form-description-01">
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <TextInput style={{ width: '100px' }} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={delayTime} onChange={handleDelayChange} />
-                  <FormSelect style={{ width: '100px' }} value={timeUnit} onChange={handleTimeUnitChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
+                <div className={'cron-form-gr'}>
+                  <TextInput className={'cron-form-in'} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={delayTime} onChange={handleDelayChange} />
+                  <FormSelect className={'cron-form-in'} value={timeUnit} onChange={handleTimeUnitChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
                     {timeUnitOptions.map((option, index) => (
                       <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
                     ))}
@@ -113,9 +113,9 @@ export const CreateCron = props => {
                 </div>
               </FormGroup>
               <FormGroup label="실행 주기" fieldId="simple-form-satr-01">
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <TextInput style={{ width: '100px' }} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={delayCycleTime} onChange={handleDelayCycleChange} />
-                  <FormSelect style={{ width: '100px' }} value={timeCycleUnit} onChange={handleCycleTimeUnitChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
+                <div className={'cron-form-gr'}>
+                  <TextInput className={'cron-form-in'} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={delayCycleTime} onChange={handleDelayCycleChange} />
+                  <FormSelect className={'cron-form-in'} value={timeCycleUnit} onChange={handleCycleTimeUnitChange} id="horizontal-form-title" name="horizontal-form-title" aria-label="Your title">
                     {timeUnitOptions.map((option, index) => (
                       <FormSelectOption isDisabled={option.disabled} key={index} value={option.value} label={option.label} />
                     ))}
@@ -124,7 +124,7 @@ export const CreateCron = props => {
               </FormGroup>
               <FormGroup label="실행 수" fieldId="simple-form-satr-012">
                 <div>
-                  <TextInput style={{ width: '100px' }} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={runs} onChange={handleRunChange} />
+                  <TextInput className={'cron-form-in'} isRequired type="text" id="simple-form-description-01" name="simple-form-description-01" value={runs} onChange={handleRunChange} />
                 </div>
                 <div>입력하지 않을 경우 계속 실행됩니다.</div>
               </FormGroup>
