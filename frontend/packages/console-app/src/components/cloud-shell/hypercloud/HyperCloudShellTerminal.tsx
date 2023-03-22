@@ -29,8 +29,8 @@ const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) =>
 
   // API call
   React.useEffect(() => {
-    coFetchJSON(`api/hypercloud/kubectl?userName=${user['email']}`, 'POST');
-    coFetchJSON(`api/hypercloud/kubectl?userName=${user['email']}`, 'GET')
+    coFetchJSON(`api/hypercloud/kubectl?userName=${user['id']}`, 'POST');
+    coFetchJSON(`api/hypercloud/kubectl?userName=${user['id']}`, 'GET')
       .then(response => {
         let date = new Date();
         date.setSeconds(date.getSeconds() + Number(response.timeout));
@@ -43,7 +43,7 @@ const HyperCloudShellTerminal: React.FC<CloudShellTerminalProps> = ({ user }) =>
 
   React.useEffect(() => {
     const podCheck = setInterval(() => {
-      k8sGet(PodModel, `${namespace}-${user['email'].replace(/_/g, '-').replace('@', '.')}`, namespace).then(data => {
+      k8sGet(PodModel, `${namespace}-${user['id'].replace(/_/g, '-').replace('@', '.')}`, namespace).then(data => {
         setKubectlPod(data);
         if (data.status.phase === 'Running') {
           setKubectlPodReady(true);
