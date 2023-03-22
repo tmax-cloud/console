@@ -203,6 +203,39 @@
     }
   }
 
+  // sas
+  &.App {
+    background-image: url('../../imgs/hypercloud/lnb/app.svg');
+    .pf-m-current {
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
+      background-image: url('../../imgs/hypercloud/lnb/filled/app_filled.svg');
+    }
+  }
+  &.Controller {
+    background-image: url('../../imgs/hypercloud/lnb/controller.svg');
+    .pf-m-current {
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
+      background-image: url('../../imgs/hypercloud/lnb/filled/controller_filled.svg');
+    }
+  }
+  &.Node {
+    background-image: url('../../imgs/hypercloud/lnb/node.svg');
+    .pf-m-current {
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
+      background-image: url('../../imgs/hypercloud/lnb/filled/node_filled.svg');
+    }
+  }
+  &.Service {
+    background-image: url('../../imgs/hypercloud/lnb/service_sas.svg');
+    .pf-m-current {
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
+      background-image: url('../../imgs/hypercloud/lnb/filled/service_filled.svg');
+    }
+  }
   // custom
   &.custom_menu {
     background-image: url('../../imgs/hypercloud/lnb/add.svg');

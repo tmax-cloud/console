@@ -38,7 +38,6 @@ export const MenuIconTitle = (props: MenuIconTitleProps) => {
     .toLowerCase()
     .replace(' ', '_')
     .replace('/', '_');
-
   switch (prettyType) {
     case 'home':
       return <MenuIconContainer title={title} icon={HomeIcon} />;
@@ -78,10 +77,10 @@ export const MenuIconTitle = (props: MenuIconTitleProps) => {
       return <MenuIconContainer title={title} icon={FederationIcon} />;
     case 'ansible':
       return <MenuIconContainer title={title} icon={AnsibleIcon} />;
-      case 'redis':
-        return <MenuIconContainer title={title} icon={RedisIcon} />;
-        case 'service_binding':
-          return <MenuIconContainer title={title} icon={ServiceBindingIcon} />;
+    case 'redis':
+      return <MenuIconContainer title={title} icon={RedisIcon} />;
+    case 'service_binding':
+      return <MenuIconContainer title={title} icon={ServiceBindingIcon} />;
     default:
       return <MenuIconContainer title={title} icon={DefaultIcon} />;
   }
