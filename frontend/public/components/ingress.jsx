@@ -46,7 +46,6 @@ const getAddresses = ingress => {
   const ip = ingress.status?.loadBalancer?.ingress[0].ip;
 
   const Ports = ingressValildPorts(ingress);
-  // const Ports = [80, 433];
   if (ip && Ports.length) {
     return (
       <div className="co-truncate co-select-to-copy">
