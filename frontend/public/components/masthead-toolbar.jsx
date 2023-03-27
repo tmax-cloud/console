@@ -63,7 +63,7 @@ export const DropdownGroups = () => {
       <QuestionCircleIcon color="white" />
     </span>
   );
-  return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher" onSelect={onSelect} onToggle={onToggle} isOpen={isOpen} items={dropdownItems} toggleIcon={helpToggle} color="white" isGrouped />;
+  return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher" onSelect={onSelect} onToggle={onToggle} isOpen={isOpen} items={dropdownItems} position="right" toggleIcon={helpToggle} color="white" isGrouped />;
 };
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
