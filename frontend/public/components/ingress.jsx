@@ -27,29 +27,19 @@ const getHosts = ingress => {
   return <div className="text-muted">No hosts</div>;
 };
 
-export const ingressValildPorts = ingress => {
-  const rules = _.get(ingress, 'spec.rules', []);
-  const paths = [];
-  rules.forEach(rule => {
-    _.get(rule, 'http.paths', []).forEach(path => paths.push(path));
-  });
-  const ports = [];
-  paths.forEach(path => {
-    ports.push(path.backend?.service?.port?.number);
-  });
-  return ports.reduce((acc, v) => {
-    return acc.includes(v) ? acc : [...acc, v];
-  }, []);
+export const ingressIp = ingress => {
+  return ingress.status?.loadBalancer?.ingress[0]?.ip;
 };
 
 const getAddresses = ingress => {
-  const ip = ingress.status?.loadBalancer?.ingress[0].ip;
+  const ip = ingressIp(ingress);
+  const tls = ingress.spec?.tls;
 
-  const Ports = ingressValildPorts(ingress);
-  if (ip && Ports.length) {
+  const ports = tls ? [80, 443] : [80];
+  if (ip) {
     return (
       <div className="co-truncate co-select-to-copy">
-        {Ports.map(port => (
+        {ports.map(port => (
           <p>{`${ip}:${port}`}</p>
         ))}
       </div>
@@ -118,7 +108,7 @@ const IngressTableHeader = t => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_27'),
-      sortFunc: 'ingressValildPorts',
+      sortFunc: 'ingressIp',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
