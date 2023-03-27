@@ -35,13 +35,12 @@ const getAddresses = ingress => {
   const ip = ingressIp(ingress);
   const tls = ingress.spec?.tls;
 
-  const ports = tls ? [80, 443] : [80];
+  const addresses = tls ? [`${ip}:80`, `${ip}:443`] : [`${ip}:80`];
   if (ip) {
+    const addressesStr = addresses.join(', ');
     return (
-      <div className="co-truncate co-select-to-copy">
-        {ports.map(port => (
-          <p>{`${ip}:${port}`}</p>
-        ))}
+      <div className="co-truncate co-select-to-copy" title={hostsStr}>
+        {addressesStr}
       </div>
     );
   }
