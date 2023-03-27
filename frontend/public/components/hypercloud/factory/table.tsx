@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getNodeRoles, getMachinePhase, nodeMemory, nodeCPU, nodeFS, nodePods } from '@console/shared';
 import * as UIActions from '../../../actions/ui';
 import { alertStateOrder, silenceFiringAlertsOrder, silenceStateOrder } from '../../../reducers/monitoring';
-import { ingressValidHosts, ingressValildPorts } from '../../ingress';
+import { ingressValidHosts, ingressIp } from '../../ingress';
 import { convertToBaseValue, EmptyBox, StatusBox, WithScrollContainer } from '../../utils';
 import { getClusterOperatorStatus, getClusterOperatorVersion, getJobTypeAndCompletions, getTemplateInstanceStatus, K8sResourceKind, K8sResourceKindReference, NodeKind, planExternalName, PodKind, podPhase, podReadiness, podRestarts, serviceCatalogStatus, serviceClassDisplayName, MachineKind } from '../../../module/k8s';
 
@@ -71,7 +71,7 @@ const sorts = {
   daemonsetNumScheduled: daemonset => _.toInteger(_.get(daemonset, 'status.currentNumberScheduled')),
   dataSize: resource => _.size(_.get(resource, 'data')) + _.size(_.get(resource, 'binaryData')),
   ingressValidHosts,
-  ingressValildPorts,
+  ingressIp,
   serviceCatalogStatus,
   jobCompletions: job => getJobTypeAndCompletions(job).completions,
   jobType: job => getJobTypeAndCompletions(job).type,
