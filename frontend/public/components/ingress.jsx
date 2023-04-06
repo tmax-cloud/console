@@ -39,7 +39,7 @@ const getAddresses = ingress => {
   if (ip) {
     const addressesStr = addresses.join(', ');
     return (
-      <div className="co-truncate co-select-to-copy" title={hostsStr}>
+      <div className="co-truncate co-select-to-copy" title={addressesStr}>
         {addressesStr}
       </div>
     );
