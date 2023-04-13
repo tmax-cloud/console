@@ -153,7 +153,7 @@ export const ReplicationControllerModel: K8sKind = {
 export const HorizontalPodAutoscalerModel: K8sKind = {
   label: 'Horizontal Pod Autoscaler',
   plural: 'horizontalpodautoscalers',
-  apiVersion: 'v2beta2',
+  apiVersion: 'v2',
   apiGroup: 'autoscaling',
   abbr: 'HPA',
   namespaced: true,
@@ -783,7 +783,7 @@ export const CustomResourceDefinitionModel: K8sKind = {
 
 export const CronJobModel: K8sKind = {
   label: 'Cron Job',
-  apiVersion: 'v1beta1',
+  apiVersion: 'v1',
   apiGroup: 'batch',
   plural: 'cronjobs',
   abbr: 'CJ',
