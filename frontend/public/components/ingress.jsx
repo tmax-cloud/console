@@ -29,7 +29,7 @@ const getHosts = ingress => {
 
 export const ingressIp = ingress => {
   const ingressList = ingress.status?.loadBalancer?.ingress;
-  return ingressList && ingressList.length > 1 ? ingressList[0].ip : null;
+  return ingressList && ingressList.length > 0 ? ingressList[0].ip : null;
 };
 
 const getAddresses = ingress => {
