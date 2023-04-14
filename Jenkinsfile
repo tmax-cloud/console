@@ -36,7 +36,7 @@ spec:
     }
   }
   environment {
-    BRANCH = "master"
+    BRANCH = "aicc"
     BUILD_MODE = "${params.BUILD_MODE}"
 
     DOCKER_REGISTRY="tmaxcloudck"
@@ -49,7 +49,7 @@ spec:
 
     // GUIDE_URL = "https://github.com/tmax-cloud/install-console/blob/5.0/README.md"
     GUIDE_URL = "https://github.com/tmax-cloud/charts/blob/main/charts/console/README.md"
-    CHANGELOG_SERVER = "https://github.com/tmax-cloud/console/blob/master/CHANGELOG/CHANGELOG-SERVER.md"
+    CHANGELOG_SERVER = "https://github.com/tmax-cloud/console/blob/aicc/CHANGELOG/CHANGELOG-SERVER.md"
 
     USER_TOKEN = "jinsoo-access-token"
     USER_NAME = "jinsoo-youn"
