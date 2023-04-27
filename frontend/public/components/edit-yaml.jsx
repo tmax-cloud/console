@@ -23,6 +23,7 @@ import { withTranslation } from 'react-i18next';
 
 import { isResourceSchemaBasedMenu, getResourceSchemaUrl } from './hypercloud/form';
 import { coFetchJSON } from '../co-fetch';
+import { resourceSchemaMap } from './hypercloud/utils/schemas';
 
 const generateObjToLoad = (kind, id, yaml, namespace = 'default') => {
   const sampleObj = safeLoad(yaml ? yaml : yamlTemplates.getIn([kind, id]));
@@ -180,9 +181,29 @@ export const EditYAML_ = connect(stateToProps)(
 
     loadResourceSchema(model) {
       const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
-      const url = getResourceSchemaUrl(model, isCustomResourceType);
-      url &&
-        coFetchJSON(url).then(template => {
+      if (isCustomResourceType) {
+        const url = getResourceSchemaUrl(model, isCustomResourceType);
+        url &&
+          coFetchJSON(url).then(template => {
+            let currentDefinition;
+            if (isCustomResourceType) {
+              if (template?.spec?.validation?.openAPIV3Schema) {
+                currentDefinition = template?.spec?.validation?.openAPIV3Schema;
+              } else {
+                currentDefinition = template?.spec?.versions.filter(version => {
+                  if (version.name === model.apiVersion) {
+                    return true;
+                  }
+                })[0]?.schema?.openAPIV3Schema;
+              }
+            } else {
+              currentDefinition = JSON.parse(template);
+            }
+            const currentProperties = _.get(currentDefinition, 'properties') || _.get(currentDefinition, 'items.properties');
+            this.setState({ definition: currentProperties ? currentDefinition : null });
+          });
+      } else {
+        template => {
           let currentDefinition;
           if (isCustomResourceType) {
             if (template?.spec?.validation?.openAPIV3Schema) {
@@ -199,7 +220,10 @@ export const EditYAML_ = connect(stateToProps)(
           }
           const currentProperties = _.get(currentDefinition, 'properties') || _.get(currentDefinition, 'items.properties');
           this.setState({ definition: currentProperties ? currentDefinition : null });
-        });
+        };
+        const schema = resourceSchemaMap.get(model.kind);
+        this.setState({ definition: schema ? schema : null });
+      }
     }
 
     loadYaml(reload = false, obj = this.props.obj) {

@@ -19,6 +19,7 @@ import { AsyncComponent } from '../../utils/async';
 import { isSaveButtonDisabled } from '../utils/button-state';
 import { OnlyYamlEditorKinds } from './create-pinned-resource';
 import { coFetchJSON } from '../../../co-fetch';
+import { resourceSchemaMap } from '../utils/schemas';
 
 export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, obj, create, customFormEditor }) => {
   const [loaded, setLoaded] = React.useState(false);
@@ -26,12 +27,18 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 
   React.useEffect(() => {
     const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
-    const url = getResourceSchemaUrl(model, isCustomResourceType);
-    url &&
-      coFetchJSON(url).then(template => {
-        setTemplate(isCustomResourceType ? template : JSON.parse(template));
-        setLoaded(true);
-      });
+    if (isCustomResourceType) {
+      const url = getResourceSchemaUrl(model, isCustomResourceType);
+      url &&
+        coFetchJSON(url).then(template => {
+          setTemplate(isCustomResourceType ? template : JSON.parse(template));
+          setLoaded(true);
+        });
+    } else {
+      const schema = resourceSchemaMap.get(model.kind);
+      setTemplate(schema);
+      setLoaded(true);
+    }
   }, [model.apiGroup, model.kind, model.plural]);
 
   const [, setHelpText] = React.useState(FORM_HELP_TEXT);
