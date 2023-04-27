@@ -20,7 +20,7 @@ import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl, shouldNo
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { coFetchJSON } from '@console/internal/co-fetch';
-import { resourceSchemaMap } from '../utils/schemas'
+import { resourceSchemaMap } from '../utils/schemas';
 // import { safeDump } from 'js-yaml';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
@@ -106,7 +106,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
             setTemplate(template);
             setLoaded(true);
           });
-      } else {     
+      } else {
         const schema = resourceSchemaMap.get(model.kind);
         setTemplate(schema);
         setLoaded(true);
