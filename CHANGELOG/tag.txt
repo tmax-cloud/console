@@ -1,5 +1,4 @@
 Console Version History
-5.2.34.3
 5.2.34.2
 5.2.34.1
 5.2.34.0
