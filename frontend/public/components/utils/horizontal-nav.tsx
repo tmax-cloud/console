@@ -22,6 +22,7 @@ import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl } from '.
 import { useTranslation } from 'react-i18next';
 import { Metering } from '../hypercloud/metering';
 import { coFetchJSON } from '@console/internal/co-fetch';
+import { resourceSchemaMap } from '../hypercloud/utils/schemas';
 
 const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
 export const viewYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} readOnly={true} />;
@@ -244,12 +245,17 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
     let model = props.model;
     if (model) {
       const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
-      const url = getResourceSchemaUrl(model, isCustomResourceType);
-      url &&
-        coFetchJSON(url).then(template => {
-          template = isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : JSON.parse(template);
-          props.setActiveSchema(template);
-        });
+      if (isCustomResourceType) {
+        const url = getResourceSchemaUrl(model, isCustomResourceType);
+        url &&
+          coFetchJSON(url).then(template => {
+            template = isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : JSON.parse(template);
+            props.setActiveSchema(template);
+          });
+      } else {
+        const schema = resourceSchemaMap.get(model.kind);
+        props.setActiveSchema(schema);
+      }
     }
   }, []);
 
