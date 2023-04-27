@@ -36,7 +36,7 @@ spec:
     PRODUCT = "hypercloud-console"
     MAJOR_VER="5"
     MINOR_VER="2"
-    PATCH_VER="0"
+    PATCH_VER="34"
     HOTFIX_VER="0"
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
 
@@ -57,15 +57,9 @@ spec:
         git branch
         git pull origin ${BRANCH}:${BRANCH}
         """
-         script {
-            PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
+         script {            
             HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
-          if (BUILD_MODE == 'PATCH') {
-            def number = (PATCH_VER as int) + 1
-            PATCH_VER = number.toString()
-            HOTFIX_VER = "0"
-            VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-          } else if (BUILD_MODE == 'HOTFIX') {
+          if (BUILD_MODE == 'HOTFIX') {
             def hotfix_number = (HOTFIX_VER as int) + 1
             HOTFIX_VER = hotfix_number.toString()
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
@@ -78,7 +72,7 @@ spec:
           sh """
           git tag ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
-          git tag --list "5.2.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
+          git tag --list "5.2.34.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
       }
     }
@@ -96,18 +90,12 @@ spec:
     stage('Changelog'){
       when {
         anyOf {
-          environment name: 'BUILD_MODE', value: 'PATCH'
           environment name: 'BUILD_MODE', value: 'HOTFIX'
         }
       }
       steps {
         script {
-          if (BUILD_MODE == 'PATCH') {
-            def number = (PATCH_VER as int) -1
-            PATCH_VER = number.toString()
-            HOTFIX_VER = "0"
-            PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-          } else if (BUILD_MODE == 'HOTFIX') {
+          if (BUILD_MODE == 'HOTFIX') {
             def hotfix_number = (HOTFIX_VER as int) - 1
             HOTFIX_VER = hotfix_number.toString()
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
@@ -136,7 +124,6 @@ spec:
     stage('Email'){
       when {
         anyOf {
-          environment name: 'BUILD_MODE', value: 'PATCH'
           environment name: 'BUILD_MODE', value: 'HOTFIX'
         }
       }
@@ -164,7 +151,6 @@ spec:
     stage('Deploy'){
       when {
         anyOf {
-          environment name: 'BUILD_MODE', value: 'PATCH'
           environment name: 'BUILD_MODE', value: 'HOTFIX'
         }     
       }
@@ -192,7 +178,7 @@ spec:
     success {
       sh "echo SUCCESSFUL"
       emailext (
-        to: "jinsoo_youn@tmax.co.kr",
+        to: "hyowook_park@tmax.co.kr",
         subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
         body:  """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
             <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
@@ -202,7 +188,7 @@ spec:
     failure {
       sh "echo FAILED"
       emailext (
-        to: "jinsoo_youn@tmax.co.kr",
+        to: "hyowook_park@tmax.co.kr",
         subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
         body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
           <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
