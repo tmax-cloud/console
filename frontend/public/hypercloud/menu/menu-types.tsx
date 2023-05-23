@@ -177,7 +177,7 @@ export const CustomMenusMap: CustomMenus = {
     kind: 'Git',
     visible: true,
     type: MenuLinkType.NewTabLink,
-    defaultLabel: 'COMMON:MSG_LNB_MENU_195',
+    defaultLabel: 'Gitea',
     url: '',
     isMultiOnly: false,
   },
