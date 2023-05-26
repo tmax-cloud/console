@@ -190,20 +190,20 @@ const filterGroups = ['kind'];
 // initialFilters cannot be typed as it has multiple usages
 const getAvailableFilters = (initialFilters): PageFilters => {
   const filters: PageFilters = _.cloneDeep(initialFilters);
-  if (getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE) {
-    filters.kind = {
-      ClusterServiceClass: {
-        label: 'Cluster Service Class',
-        value: 'ClusterServiceClass',
-        active: false,
-      },
-      ServiceClass: {
-        label: 'Service Class',
-        value: 'ServiceClass',
-        active: false,
-      },
-    };
-  } else {
+  // if (getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE) {
+  //   filters.kind = {
+  //     ClusterServiceClass: {
+  //       label: 'Cluster Service Class',
+  //       value: 'ClusterServiceClass',
+  //       active: false,
+  //     },
+  //     ServiceClass: {
+  //       label: 'Service Class',
+  //       value: 'ServiceClass',
+  //       active: false,
+  //     },
+  //   };
+  // } else {
     filters.kind = {
       // ClusterServiceVersion: {
       //   label: 'Operator Backed',
@@ -225,17 +225,17 @@ const getAvailableFilters = (initialFilters): PageFilters => {
         value: 'Template',
         active: false,
       },
-      ClusterServiceClass: {
-        label: 'Cluster Service Class',
-        value: 'ClusterServiceClass',
-        active: false,
-      },
-      ServiceClass: {
-        label: 'Service Class',
-        value: 'ServiceClass',
-        active: false,
-      },
-    };
+      // ClusterServiceClass: {
+      //   label: 'Cluster Service Class',
+      //   value: 'ClusterServiceClass',
+      //   active: false,
+      // },
+      // ServiceClass: {
+      //   label: 'Service Class',
+      //   value: 'ServiceClass',
+      //   active: false,
+      // },
+    // };
   }
 
   return filters;

@@ -51,7 +51,7 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicecatalogs,
-    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind],
+    innerMenus: [ Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
