@@ -2,10 +2,10 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { coFetchJSON } from '@console/internal/co-fetch';
 
-import en from './k8s-v1.19/en.json';
-import ko from './k8s-v1.19/ko.json';
+import en from './k8s-v1.25/en.json';
+import ko from './k8s-v1.25/ko.json';
 
-const DEFAULT_K8S_VERSION = 'v1.19';
+const DEFAULT_K8S_VERSION = 'v1.25';
 const VERSION = ['v1.19', 'v1.25'];
 const LANG = ['en', 'ko'];
 const NS = ['COMMON', 'SINGLE', 'MULTI', 'DESCRIPTION'];
@@ -26,11 +26,11 @@ export const getI18nResources = async () => {
   const k8sVersion = data ? data.gitVersion : DEFAULT_K8S_VERSION;
   const version = k8sVersion && k8sVersion.split('.').length > 1 ? `${k8sVersion.split('.')[0]}.${k8sVersion.split('.')[1]}` : DEFAULT_K8S_VERSION;
   if (VERSION.includes(version) && version !== DEFAULT_K8S_VERSION) {
-    const en = await import(`./k8s-${version}/${LANG[0]}.json`);
-    const ko = await import(`./k8s-${version}/${LANG[1]}.json`);
+    const newEn = await import(`./k8s-${version}/${LANG[0]}.json`);
+    const newKo = await import(`./k8s-${version}/${LANG[1]}.json`);
     NS.forEach(ns => {
-      i18n.addResourceBundle(LANG[0], ns, en[ns] || {});
-      i18n.addResourceBundle(LANG[1], ns, ko[ns] || {});
+      i18n.addResourceBundle(LANG[0], ns, newEn[ns] || {});
+      i18n.addResourceBundle(LANG[1], ns, newKo[ns] || {});
     });
   }
 };
