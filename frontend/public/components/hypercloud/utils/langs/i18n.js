@@ -6,7 +6,7 @@ import en from './k8s-v1.19/en.json';
 import ko from './k8s-v1.19/ko.json';
 
 const DEFAULT_K8S_VERSION = 'v1.19';
-const VERSION = ['v1.19', 'v1.22'];
+const VERSION = ['v1.19', 'v1.25'];
 const LANG = ['en', 'ko'];
 const NS = ['COMMON', 'SINGLE', 'MULTI', 'DESCRIPTION'];
 
