@@ -18,7 +18,7 @@ const KeyMap = {
 const progressBar = new cliProgress.SingleBar({ format: 'progress [{bar}] {percentage}% | {value}/{total} bytes' }, cliProgress.Presets.lagacy);
 
 const dir = './langs';
-const k8sVersion = ['v1.19', 'v1.22'];
+const k8sVersion = ['v1.19', 'v1.25'];
 
 /**
  * EXCEL에 입력된 문자열을 수정
