@@ -27,6 +27,10 @@ const templateInstanceFormFactory = params => {
 
 const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = props => {
   const { t } = useTranslation();
+  const searchParams = new URLSearchParams(location.search);
+  const templateType = searchParams.get('type');
+  const templateName = searchParams.get('templateName');
+
   const methods = useFormContext();
   const {
     formState: { errors },
@@ -53,7 +57,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   const selectedType = useWatch({
     control: methods.control,
     name: 'type',
-    defaultValue: 'Template',
+    defaultValue: templateType === 'ClusterTemplate' ? 'ClusterTemplate' : 'Template',
   });
 
   const selectedTemplate = useWatch({
@@ -68,8 +72,8 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
         <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: TemplateModel.kind, namespace: namespace, prop: 'template' }]} type="single" defaultValue="" useHookForm />
       </Section>
     ) : (
-      <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV11_1')} id="clustertemplate" isRequired={true}>
-        <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: ClusterTemplateModel.kind, prop: 'clustertemplate' }]} type="single" defaultValue="" useHookForm />
+      <Section label={t('COMMON:MSG_LNB_MENU_181')} id="clustertemplate" isRequired={true}>
+        {!!templateName ? <div>{templateName}</div> : <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: ClusterTemplateModel.kind, prop: 'clustertemplate' }]} type="single" defaultValue="" useHookForm />}
       </Section>
     );
 
@@ -167,8 +171,15 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   }, [selectedType]);
 
   useEffect(() => {
-    const templateName = selectedTemplate.split('~~')[1];
-    getTemplateParameters(templateName);
+    const searchParams = new URLSearchParams(location.search);
+    const clusterTemplateName = searchParams.get('templateName');
+    if (!!clusterTemplateName) {
+      const templateName = clusterTemplateName;
+      getTemplateParameters(templateName);
+    } else {
+      const templateName = selectedTemplate.split('~~')[1];
+      getTemplateParameters(templateName);
+    }
   }, [selectedTemplate, errors]);
 
   return (

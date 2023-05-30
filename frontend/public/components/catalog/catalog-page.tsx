@@ -125,9 +125,9 @@ export const CatalogListPage = withTranslation()(
             tileProvider: _.get(serviceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: serviceClass.spec.tags,
             categories: serviceClass.spec.externalMetadata.categories,
-            createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
+            createLabel: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_38'),
             // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
-            href: `/k8s/ns/${namespace}/serviceinstances/~new?service-class=${serviceClass.metadata.name}`,
+            href: `/k8s/ns/${namespace}/templateinstances/~new?`,
             supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
             longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
             documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
@@ -156,7 +156,7 @@ export const CatalogListPage = withTranslation()(
           // 지금은 cluster service class 선택하고 create 누르면 default네임스페이스의 서비스인스턴스생성 페이지로 이동하게 해놓음
           acc.push({
             obj: clusterServiceClass,
-            kind: 'ClusterServiceClass',
+            kind: 'ClusterTemplate',
             tileName: serviceClassDisplayName(clusterServiceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
@@ -164,9 +164,10 @@ export const CatalogListPage = withTranslation()(
             tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: clusterServiceClass.spec.tags,
             categories: clusterServiceClass.spec.externalMetadata.categories,
-            createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
+            createLabel: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_38'),
             // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
-            href: `/k8s/ns/${namespace}/serviceinstances/~new?cluster-service-class=${clusterServiceClass.metadata.name}`,
+            href: `/k8s/ns/${namespace}/templateinstances/~new?type=ClusterTemplate&templateName=${clusterServiceClass.spec.externalName}`,
+            // cluster-service-class=${clusterServiceClass.metadata.name}
             supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
             longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
             documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.urlDescription'),
