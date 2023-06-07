@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import * as catalogImg from '../../imgs/logos/catalog-icon.svg';
 import { Badge, Modal } from '@patternfly/react-core';
 import { CatalogItemHeader, CatalogTile, CatalogTileBadge } from '@patternfly/react-catalog-view-extension';
-import { getCatalogPageType, CatalogPageType } from './catalog-page';
 import { DEV_CATALOG_FILTER_KEY as filterKey } from '@console/shared';
 import { history } from '../utils/router';
 import { normalizeIconClass } from './catalog-item-icon';
