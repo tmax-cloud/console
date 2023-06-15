@@ -443,6 +443,10 @@ export const EditYAML_ = connect(stateToProps)(
       const options = { readOnly, scrollBeyondLastLine: false };
       const model = this.getModel(obj);
       const { samples, snippets } = model ? getResourceSidebarSamples(model, yamlSamplesList) : { samples: [], snippets: [] };
+      const translatedSample = samples.map((s)=>{
+        return {...s, title: t(s.title), description: t(s.description)}
+        }
+      );
       const showSchema = definition && !_.isEmpty(definition);
       const hasSidebarContent = showSchema || !_.isEmpty(samples) || !_.isEmpty(snippets);
       const sidebarLink =
@@ -519,7 +523,7 @@ export const EditYAML_ = connect(stateToProps)(
                   </div>
                 </div>
               </div>
-              {hasSidebarContent && <ResourceSidebar definition={definition} isCreateMode={create} kindObj={model} loadSampleYaml={this.replaceYamlContent_} insertSnippetYaml={this.insertYamlContent_} downloadSampleYaml={this.downloadSampleYaml_} showSidebar={showSidebar} toggleSidebar={this.toggleSidebar} samples={samples} snippets={snippets} showSchema={showSchema} />}
+              {hasSidebarContent && <ResourceSidebar definition={definition} isCreateMode={create} kindObj={model} loadSampleYaml={this.replaceYamlContent_} insertSnippetYaml={this.insertYamlContent_} downloadSampleYaml={this.downloadSampleYaml_} showSidebar={showSidebar} toggleSidebar={this.toggleSidebar} samples={translatedSample} snippets={snippets} showSchema={showSchema} />}
             </div>
           </div>
         </div>
