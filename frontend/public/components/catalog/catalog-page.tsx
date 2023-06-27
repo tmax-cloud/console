@@ -98,10 +98,6 @@ export const CatalogListPage = withTranslation()(
         clusterTemplateItems = this.normalizeClusterTemplates(clusterTemplates);
       }
 
-      // if (clusterServiceClasses) {
-      //   clusterServiceClassItems = this.normalizeClusterServiceClasses(clusterServiceClasses.data);
-      // }
-
       if (imageStreams) {
         imageStreamItems = this.normalizeImageStreams(imageStreams.data);
       }
