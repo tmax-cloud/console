@@ -6,13 +6,13 @@ import { safeLoad } from 'js-yaml';
 import { PropertyItem } from '@patternfly/react-catalog-view-extension';
 import { ANNOTATIONS, FLAGS, APIError } from '@console/shared';
 import { CatalogTileViewPage, Item } from './catalog-items';
-import { k8sListPartialMetadata, referenceForModel, serviceClassDisplayName, K8sResourceCommon, K8sResourceKind, PartialObjectMetadata, TemplateKind } from '../../module/k8s';
+import { k8sListPartialMetadata, referenceForModel, serviceClassDisplayName, K8sResourceCommon, K8sResourceKind, PartialObjectMetadata, TemplateKind, k8sList } from '../../module/k8s';
 import { withStartGuide } from '../start-guide';
 import { connectToFlags, flagPending, FlagsObject } from '../../reducers/features';
 import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, Box, MsgBox, Timestamp } from '../utils';
 import { getAnnotationTags, getMostRecentBuilderTag, isBuilder } from '../image-stream';
-import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon } from './catalog-item-icon';
-import { ClusterServiceClassModel, TemplateModel, ServiceClassModel } from '../../models';
+import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon, getTemplateCatalogIcon, getTemplateImage } from './catalog-item-icon';
+import { ClusterServiceClassModel, TemplateModel, ServiceClassModel, ClusterTemplateModel } from '../../models';
 import * as plugins from '../../plugins';
 import { coFetch, coFetchJSON } from '../../co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
@@ -43,15 +43,27 @@ export const CatalogListPage = withTranslation()(
     }
 
     componentDidUpdate(prevProps) {
-      const { serviceClasses, clusterServiceClasses, templateMetadata, projectTemplateMetadata, imageStreams, helmCharts, namespace, loaded, t } = this.props;
-      if ((!prevProps.loaded && loaded) || !_.isEqual(namespace, prevProps.namespace) || !_.isEqual(serviceClasses, prevProps.serviceClasses) || !_.isEqual(clusterServiceClasses, prevProps.clusterServiceClasses) || !_.isEqual(templateMetadata, prevProps.templateMetadata) || !_.isEqual(projectTemplateMetadata, prevProps.projectTemplateMetadata) || !_.isEqual(imageStreams, prevProps.imageStreams) || !_.isEqual(helmCharts, prevProps.helmCharts) || !_.isEqual(t, prevProps.t)) {
+      const { templates, clusterTemplates, serviceClasses, clusterServiceClasses, templateMetadata, projectTemplateMetadata, imageStreams, helmCharts, namespace, loaded, t } = this.props;
+      if (
+        (!prevProps.loaded && loaded) ||
+        !_.isEqual(namespace, prevProps.namespace) ||
+        !_.isEqual(clusterTemplates, prevProps.clusterTemplates) ||
+        !_.isEqual(templates, prevProps.templates) ||
+        !_.isEqual(serviceClasses, prevProps.serviceClasses) ||
+        !_.isEqual(clusterServiceClasses, prevProps.clusterServiceClasses) ||
+        !_.isEqual(templateMetadata, prevProps.templateMetadata) ||
+        !_.isEqual(projectTemplateMetadata, prevProps.projectTemplateMetadata) ||
+        !_.isEqual(imageStreams, prevProps.imageStreams) ||
+        !_.isEqual(helmCharts, prevProps.helmCharts) ||
+        !_.isEqual(t, prevProps.t)
+      ) {
         const items = this.getItems();
         this.setState({ items });
       }
     }
 
     getItems(): Item[] {
-      const { serviceClasses, clusterServiceClasses, imageStreams, templateMetadata, projectTemplateMetadata, helmCharts, loaded, t } = this.props;
+      const { templates, clusterTemplates, serviceClasses, imageStreams, templateMetadata, projectTemplateMetadata, helmCharts, loaded, t } = this.props;
       // MEMO : getDevCatalogModels로 DevCatalogModel가져와서 normalize실행해주면 dev-catalog.ts에 정의된 normalizeClusterServiceVersions 함수가 실행됨.
       // normalizeClusterServiceVersions함수에서 t함수를 쓰기위해 bind시켜줌.
       const extensionItems = _.flatten(
@@ -64,9 +76,11 @@ export const CatalogListPage = withTranslation()(
       let serviceClassItems: Item[] = [];
       let clusterServiceClassItems: Item[] = [];
       let imageStreamItems: Item[] = [];
-      let templateItems: Item[] = [];
+      let templateMetadataItems: Item[] = [];
       let projectTemplateItems: Item[] = [];
-      let helmChartItems: Item[] = [];
+      let helmChartMetadataItems: Item[] = [];
+      let templateItems: Item[] = [];
+      let clusterTemplateItems: Item[] = [];
 
       if (!loaded) {
         return [];
@@ -76,8 +90,12 @@ export const CatalogListPage = withTranslation()(
         serviceClassItems = this.normalizeServiceClasses(serviceClasses.data);
       }
 
-      if (clusterServiceClasses) {
-        clusterServiceClassItems = this.normalizeClusterServiceClasses(clusterServiceClasses.data);
+      if (templates) {
+        templateItems = this.normalizeCatalogTemplates(templates);
+      }
+
+      if (clusterTemplates) {
+        clusterTemplateItems = this.normalizeClusterTemplates(clusterTemplates);
       }
 
       if (imageStreams) {
@@ -86,7 +104,7 @@ export const CatalogListPage = withTranslation()(
 
       // Templates are not passed as a Firehose item since we only request template metadata.
       if (templateMetadata) {
-        templateItems = this.normalizeTemplates(templateMetadata);
+        templateMetadataItems = this.normalizeTemplates(templateMetadata);
       }
 
       // Templates are not passed as a Firehose item since we only request template metadata.
@@ -95,10 +113,10 @@ export const CatalogListPage = withTranslation()(
       }
 
       if (helmCharts) {
-        helmChartItems = this.normalizeHelmCharts(helmCharts);
+        helmChartMetadataItems = this.normalizeHelmCharts(helmCharts);
       }
 
-      const items: Item[] = [...serviceClassItems, ...clusterServiceClassItems, ...imageStreamItems, ...templateItems, ...extensionItems, ...projectTemplateItems, ...helmChartItems];
+      const items: Item[] = [...serviceClassItems, ...clusterServiceClassItems, ...imageStreamItems, ...templateMetadataItems, ...extensionItems, ...projectTemplateItems, ...helmChartMetadataItems, ...templateItems, ...clusterTemplateItems];
 
       return _.sortBy(items, 'tileName');
     }
@@ -131,46 +149,6 @@ export const CatalogListPage = withTranslation()(
             supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
             longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
             documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
-          });
-          return acc;
-        },
-        [] as Item[],
-      );
-    }
-
-    normalizeClusterServiceClasses(clusterServiceClasses: K8sResourceKind[]) {
-      // TODO : namespace가 없을 경우(all-namespace로 선택된 경우) 일단 default로 namespace설정되게 해놨는데 어떻게 처리할지 정해지면 수정하기
-      const { namespace = 'default', t } = this.props;
-      return _.reduce(
-        clusterServiceClasses,
-        (acc, clusterServiceClass) => {
-          // Prefer native templates to template-service-broker service classes.
-          // if (serviceClass.status.removedFromBrokerCatalog || serviceClass.spec.clusterServiceBrokerName === 'template-service-broker') {
-          //   return acc;
-          // }
-
-          const iconClass = getServiceClassIcon(clusterServiceClass);
-          const tileImgUrl = getServiceClassImage(clusterServiceClass);
-
-          // TODO : service class를 사용한 service instance 기획이 나오면 해당 페이지로 이동시켜주도록 href 수정하기
-          // 지금은 cluster service class 선택하고 create 누르면 default네임스페이스의 서비스인스턴스생성 페이지로 이동하게 해놓음
-          acc.push({
-            obj: clusterServiceClass,
-            kind: 'ClusterTemplate',
-            tileName: serviceClassDisplayName(clusterServiceClass),
-            tileIconClass: tileImgUrl ? null : iconClass,
-            tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            tileDescription: clusterServiceClass.spec.description,
-            tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
-            tags: clusterServiceClass.spec.tags,
-            categories: clusterServiceClass.spec.externalMetadata.categories,
-            createLabel: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_38'),
-            // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
-            href: `/k8s/ns/${namespace}/templateinstances/~new?type=ClusterTemplate&templateName=${clusterServiceClass.spec.externalName}`,
-            // cluster-service-class=${clusterServiceClass.metadata.name}
-            supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
-            longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
-            documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.urlDescription'),
           });
           return acc;
         },
@@ -326,6 +304,69 @@ export const CatalogListPage = withTranslation()(
       });
     }
 
+    normalizeCatalogTemplates(templates): Item[] {
+      const { namespace = 'default', t } = this.props;
+      return _.reduce(
+        templates,
+        (acc, template) => {
+          const iconClass = getTemplateCatalogIcon(template);
+          const tileImgUrl = getTemplateImage(template);
+
+          // TODO : service class를 사용한 service instance 기획이 나오면 해당 페이지로 이동시켜주도록 href 수정하기
+          acc.push({
+            obj: template,
+            kind: 'Template',
+            tileName: template.metadata.name,
+            tileIconClass: tileImgUrl ? null : iconClass,
+            tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
+            tileDescription: template.shortDescription,
+            tileProvider: template.provider,
+            tags: template.tags,
+            createLabel: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_38'),
+            // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
+            href: `/k8s/ns/${namespace}/templateinstances/~new?type=Template&templateName=${template.metadata.name}`,
+            supportUrl: template.metadata.selfLink,
+            longDescription: template.longDescription,
+            documentationUrl: template.urlDescription,
+          });
+          return acc;
+        },
+        [] as Item[],
+      );
+    }
+
+    normalizeClusterTemplates(clusterTemplates): Item[] {
+      const { namespace = 'default', t } = this.props;
+      return _.reduce(
+        clusterTemplates,
+        (acc, clusterTemplate) => {
+          const iconClass = getTemplateCatalogIcon(clusterTemplate);
+          const tileImgUrl = getTemplateImage(clusterTemplate);
+
+          // TODO : service class를 사용한 service instance 기획이 나오면 해당 페이지로 이동시켜주도록 href 수정하기
+          acc.push({
+            obj: clusterTemplate,
+            kind: 'ClusterTemplate',
+            tileName: clusterTemplate.metadata.name,
+            tileIconClass: tileImgUrl ? null : iconClass,
+            tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
+            tileDescription: clusterTemplate.shortDescription,
+            tileProvider: clusterTemplate.provider,
+            categories: clusterTemplate.categories,
+            createLabel: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_38'),
+            // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
+            href: `/k8s/ns/${namespace}/templateinstances/~new?type=ClusterTemplate&templateName=${clusterTemplate.metadata.name}`,
+            // cluster-service-class=${clusterServiceClass.metadata.name}
+            supportUrl: clusterTemplate.metadata.selfLink,
+            longDescription: clusterTemplate.longDescription,
+            documentationUrl: clusterTemplate.urlDescription,
+          });
+          return acc;
+        },
+        [] as Item[],
+      );
+    }
+
     render() {
       const { loaded, loadError, namespace = 'default', t } = this.props;
       const { items } = this.state;
@@ -369,6 +410,8 @@ export const Catalog = connectToFlags<CatalogProps>(
   const [projectTemplateMetadata, setProjectTemplateMetadata] = React.useState<K8sResourceCommon[]>(null);
   const [projectTemplateError, setProjectTemplateError] = React.useState<APIError>();
   const [helmCharts, setHelmCharts] = React.useState<HelmChartEntries>();
+  const [templates, setTemplates] = React.useState<any[]>();
+  const [clusterTemplates, setClusterTemplates] = React.useState<any[]>();
 
   const loadTemplates = openshiftFlag && !mock;
 
@@ -416,6 +459,18 @@ export const Catalog = connectToFlags<CatalogProps>(
       });
     };
     fetchHelmChart();
+  }, []);
+
+  React.useEffect(() => {
+    k8sList(TemplateModel, { ns: namespace }).then(list => {
+      setTemplates(list);
+    });
+  }, [namespace]);
+
+  React.useEffect(() => {
+    k8sList(ClusterTemplateModel).then(list => {
+      setClusterTemplates(list);
+    });
   }, []);
 
   const error = templateError || projectTemplateError;
@@ -474,7 +529,7 @@ export const Catalog = connectToFlags<CatalogProps>(
   return (
     <div className="co-catalog__body">
       <Firehose resources={mock ? [] : resources}>
-        <CatalogListPage namespace={namespace} templateMetadata={templateMetadata} projectTemplateMetadata={projectTemplateMetadata} helmCharts={helmCharts} {...(props as any)} />
+        <CatalogListPage namespace={namespace} templateMetadata={templateMetadata} projectTemplateMetadata={projectTemplateMetadata} helmCharts={helmCharts} clusterTemplates={clusterTemplates} templates={templates} {...(props as any)} />
       </Firehose>
     </div>
   );

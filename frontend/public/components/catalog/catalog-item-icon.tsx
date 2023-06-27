@@ -222,6 +222,16 @@ export const getServiceClassImage = (serviceClass: K8sResourceKind): string => {
   return _.get(serviceClass, ['spec', 'externalMetadata', 'imageUrl']) || iconClassImg;
 };
 
+export const getTemplateImage = (template: any): string => {
+  const iconClass = getServiceClassIcon(template);
+  const iconClassImg = getImageForIconClass(iconClass);
+  return template.imageUrl || iconClassImg;
+};
+
+export const getTemplateCatalogIcon = (template: K8sResourceKind): string => {
+  return _.get(template, ['imageUrl'], logos.get('icon-catalog'));
+};
+
 export const getImageStreamIcon = (tag: string): string => {
   return _.get(tag, 'annotations.iconClass');
 };
