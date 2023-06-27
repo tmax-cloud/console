@@ -52,6 +52,7 @@ type TypeFilters = {
   ClusterServiceVersion?: FilterItem;
   HelmChart?: FilterItem;
   ImageStream?: FilterItem;
+  ClusterTemplate?: FilterItem;
   Template?: FilterItem;
   ClusterServiceClass?: FilterItem;
   ServiceClass?: FilterItem;
@@ -219,6 +220,11 @@ const getAvailableFilters = (initialFilters): PageFilters => {
       //   value: 'ImageStream',
       //   active: false,
       // },
+      ClusterTemplate: {
+        label: 'Cluster Template',
+        value: 'ClusterTemplate',
+        active: false,
+      },
       Template: {
         label: 'Template',
         value: 'Template',

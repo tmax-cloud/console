@@ -69,7 +69,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   const templateDropdown =
     selectedType === 'Template' ? (
       <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV11_1')} id="template" isRequired={true}>
-        <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: TemplateModel.kind, namespace: namespace, prop: 'template' }]} type="single" defaultValue="" useHookForm />
+        {!!templateName ? <div>{templateName}</div> : <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: TemplateModel.kind, namespace: namespace, prop: 'template' }]} type="single" defaultValue="" useHookForm />}
       </Section>
     ) : (
       <Section label={t('COMMON:MSG_LNB_MENU_181')} id="clustertemplate" isRequired={true}>
