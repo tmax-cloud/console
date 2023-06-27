@@ -159,46 +159,6 @@ export const CatalogListPage = withTranslation()(
         [] as Item[],
       );
     }
-  
-    // normalizeClusterServiceClasses(clusterServiceClasses: K8sResourceKind[]) {
-    //   // TODO : namespace가 없을 경우(all-namespace로 선택된 경우) 일단 default로 namespace설정되게 해놨는데 어떻게 처리할지 정해지면 수정하기
-    //   const { namespace = 'default', t } = this.props;
-    //   return _.reduce(
-    //     clusterServiceClasses,
-    //     (acc, clusterServiceClass) => {
-    //       // Prefer native templates to template-service-broker service classes.
-    //       // if (serviceClass.status.removedFromBrokerCatalog || serviceClass.spec.clusterServiceBrokerName === 'template-service-broker') {
-    //       //   return acc;
-    //       // }
-
-    //       const iconClass = getServiceClassIcon(clusterServiceClass);
-    //       const tileImgUrl = getServiceClassImage(clusterServiceClass);
-
-    //       // TODO : service class를 사용한 service instance 기획이 나오면 해당 페이지로 이동시켜주도록 href 수정하기
-    //       // 지금은 cluster service class 선택하고 create 누르면 default네임스페이스의 서비스인스턴스생성 페이지로 이동하게 해놓음
-    //       acc.push({
-    //         obj: clusterServiceClass,
-    //         kind: 'ClusterServiceClass',
-    //         tileName: serviceClassDisplayName(clusterServiceClass),
-    //         tileIconClass: tileImgUrl ? null : iconClass,
-    //         tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-    //         tileDescription: clusterServiceClass.spec.description,
-    //         tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
-    //         tags: clusterServiceClass.spec.tags,
-    //         categories: clusterServiceClass.spec.externalMetadata.categories,
-    //         createLabel: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_38'),
-    //         // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
-    //         href: `/k8s/ns/${namespace}/templateinstances/~new?type=ClusterTemplate&templateName=${clusterServiceClass.spec.externalName}`,
-    //         // cluster-service-class=${clusterServiceClass.metadata.name}
-    //         supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
-    //         longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
-    //         documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.urlDescription'),
-    //       });
-    //       return acc;
-    //     },
-    //     [] as Item[],
-    //   );
-    // }
 
     normalizeTemplates(templates: Array<TemplateKind | PartialObjectMetadata>): Item[] {
       return _.reduce(
