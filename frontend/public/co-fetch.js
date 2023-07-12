@@ -102,7 +102,9 @@ const getCSRFToken = () =>
     .pop();
 
 const isCallToSubdomain = (url = '') => {
-  return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
+  // tmaxcloud.org 외 다른 도메인에서도 가능해야 하므로 임시로 조치함
+  // return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
+  return !url.includes(location.host);
 };
 
 export const coFetch = (url, options = {}, timeout = 60000) => {
