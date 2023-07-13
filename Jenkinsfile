@@ -52,7 +52,7 @@ spec:
     CHANGELOG_SERVER = "https://github.com/tmax-cloud/console/blob/master/CHANGELOG/CHANGELOG-SERVER.md"
 
     USER_TOKEN = "hyowook-access-token"
-    USER_NAME = "hyowook-park"
+    USER_NAME = "hyowook_park"
     USER_EMAIL = "hyowook_park@tmax.co.kr"
   }
   stages {
