@@ -67,9 +67,11 @@ pipeline {
 
     stage('Build') {
       steps{
-        sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
-        sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${VER} -f ./Dockerfile ."
-        sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${VER}"
+        container('kaniko'){
+          sh """
+            /kaniko/executor --context `pwd` --destination ${DOCKER_REGISTRY}/${PRODUCT}:${VER}
+          """
+        }
       }
     }
 
