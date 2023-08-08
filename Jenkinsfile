@@ -9,32 +9,7 @@ pipeline {
     H 9 * * 4 %BUILD_MODE=PATCH
     ''')
   }
-  agent {
-    kubernetes {
-      yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:debug
-    command:
-    - sleep
-    args:
-    - 9999999
-    volumeMounts:
-    - mountPath: /kaniko/.docker
-      name: kaniko-secret
-  volumes:
-  - name: kaniko-secret
-    secret:
-      secretName: dockercred
-      items:
-      - key: .dockerconfigjson
-        path: config.json
-'''
-    }
-  }
+  agent none
   environment {
     BRANCH = "master"
     BUILD_MODE = "${params.BUILD_MODE}"
