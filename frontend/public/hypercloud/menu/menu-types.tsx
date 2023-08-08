@@ -157,6 +157,14 @@ export const CustomMenusMap: CustomMenus = {
     // url: 'argocd.ckcloud.org',
     isMultiOnly: false,
   },
+  Rollout: {
+    kind: 'Rollout',
+    visible: true,
+    type: MenuLinkType.NewTabLink,
+    defaultLabel: 'Argo Rollout',
+    url: '',
+    isMultiOnly: false,
+  },
   Grafana: {
     kind: 'Grafana',
     visible: true,
