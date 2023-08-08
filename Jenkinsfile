@@ -67,11 +67,14 @@ pipeline {
 
     stage('Build') {
       steps{
-        container('kaniko'){
-          sh """
-            /kaniko/executor --context `pwd` --destination ${DOCKER_REGISTRY}/${PRODUCT}:${VER}
-          """
-        }
+        withCredentials([usernamePassword(
+            credentialsId: 'tmaxcloudck',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PWD')]){
+            sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
+            sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${VER} -f ./Dockerfile ."
+            sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${VER}"
+          }
       }
     }
 
