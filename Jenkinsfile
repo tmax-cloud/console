@@ -9,7 +9,7 @@ pipeline {
     H 9 * * 4 %BUILD_MODE=PATCH
     ''')
   }
-  agent none
+  agent any
   environment {
     BRANCH = "master"
     BUILD_MODE = "${params.BUILD_MODE}"
