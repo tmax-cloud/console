@@ -16,6 +16,7 @@ const en = i18next.getFixedT('en');
 const INGRESS_LABEL_VALUES: IngressLabelValue[] = [
   { labelValue: 'hyperregistry', menuKey: CustomMenusMap.Harbor.kind, endPoint: '/c/oidc/login' },
   { labelValue: 'argocd', menuKey: CustomMenusMap.ArgoCD.kind, endPoint: '/auth/login' },
+  { labelValue: 'rollout', menuKey: CustomMenusMap.Rollout.kind },
   { labelValue: 'gitea', menuKey: CustomMenusMap.Git.kind },
   { labelValue: 'grafana', menuKey: CustomMenusMap.Grafana.kind, endPoint: '/login/generic_oauth' },
   { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind, endPoint: '/api/kiali/api/auth/openid_redirect' },
