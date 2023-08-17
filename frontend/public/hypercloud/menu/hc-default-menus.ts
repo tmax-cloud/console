@@ -160,11 +160,11 @@ const SingleNavMenus = [
 ];
 
 const BaremetalNavMenus = [
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.ansible,
-    innerMenus: [Models.AWXModel.kind],
-  },
+  // {
+  //   menuType: MenuType.CONTAINER,
+  //   label: MenuContainerLabels.ansible,
+  //   innerMenus: [Models.AWXModel.kind],
+  // },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.provisioning,
