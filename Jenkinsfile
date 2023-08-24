@@ -6,7 +6,7 @@ pipeline {
     // ref https://plugins.jenkins.io/parameterized-scheduler/
     // trigger at 9:00 every Thursday
     parameterizedCron('''
-    H 9 * * 4 %BUILD_MODE=PATCH
+    H 21 * * 4 %BUILD_MODE=PATCH
     ''')
   }
   agent any
