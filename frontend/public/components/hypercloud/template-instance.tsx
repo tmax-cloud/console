@@ -106,7 +106,7 @@ const TemplateInstanceTableRow = ({ obj, index, key, style }) => {
         <Status status={phase} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>{objectSummary}</TableData>
-      <TableData className={tableColumnClasses[4]}>{!!obj.metadata.labels?.serviceInstanceRef ? <ResourceLink kind="ServiceInstance" name={obj.metadata.labels?.serviceInstanceRef} namespace={obj.metadata.namespace} title={obj.metadata.labels?.serviceInstanceRef} /> : 'None'}</TableData>
+      {/* <TableData className={tableColumnClasses[4]}>{!!obj.metadata.labels?.serviceInstanceRef ? <ResourceLink kind="ServiceInstance" name={obj.metadata.labels?.serviceInstanceRef} namespace={obj.metadata.namespace} title={obj.metadata.labels?.serviceInstanceRef} /> : 'None'}</TableData> */}
       <TableData className={tableColumnClasses[5]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
@@ -141,12 +141,12 @@ const TemplateInstanceTableHeader = (t?: TFunction) => {
       title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_104'),
       props: { className: tableColumnClasses[3] },
     },
-    {
-      title: t('COMMON:MSG_LNB_MENU_17'),
-      sortField: 'metadata.labels.serviceInstanceRef',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
-    },
+    // {
+    //   title: t('COMMON:MSG_LNB_MENU_17'),
+    //   sortField: 'metadata.labels.serviceInstanceRef',
+    //   transforms: [sortable],
+    //   props: { className: tableColumnClasses[4] },
+    // },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
