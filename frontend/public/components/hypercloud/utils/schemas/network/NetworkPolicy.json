@@ -1,1 +1,186 @@
-{"description":"%NetworkPolicy.json","properties":{"apiVersion":{"description":"%NetworkPolicy.json.properties.apiVersion","type":["string","null"],"enum":["networking.k8s.io/v1"]},"kind":{"description":"%NetworkPolicy.json.properties.kind","type":["string","null"],"enum":["NetworkPolicy"]},"metadata":{"description":"%NetworkPolicy.json.properties.metadata","properties":{"annotations":{"description":"%NetworkPolicy.json.properties.metadata.properties.annotations","type":"object","additionalProperties":{"type":["string","null"]}},"clusterName":{"description":"%NetworkPolicy.json.properties.metadata.properties.clusterName","type":["string","null"]},"creationTimestamp":{"description":"%NetworkPolicy.json.properties.metadata.properties.creationTimestamp","type":["string","null"],"format":"date-time"},"deletionGracePeriodSeconds":{"description":"%NetworkPolicy.json.properties.metadata.properties.deletionGracePeriodSeconds","type":"integer","format":"int64"},"deletionTimestamp":{"description":"%NetworkPolicy.json.properties.metadata.properties.deletionTimestamp","type":["string","null"],"format":"date-time"},"finalizers":{"description":"%NetworkPolicy.json.properties.metadata.properties.finalizers","type":["array","null"],"items":{"type":["string","null"]},"x-kubernetes-patch-strategy":"merge"},"generateName":{"description":"%NetworkPolicy.json.properties.metadata.properties.generateName","type":["string","null"]},"generation":{"description":"%NetworkPolicy.json.properties.metadata.properties.generation","type":"integer","format":"int64"},"initializers":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers","required":["pending"],"properties":{"pending":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.pending","type":"array","items":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.pending.items","required":["name"],"properties":{"name":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.pending.items.properties.name","type":"string"}},"additionalProperties":false},"x-kubernetes-patch-merge-key":"name","x-kubernetes-patch-strategy":"merge"},"result":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result","properties":{"apiVersion":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.apiVersion","type":["string","null"],"enum":["v1"]},"code":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.code","type":"integer","format":"int32"},"details":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details","properties":{"causes":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.causes","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.causes.items","properties":{"field":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.causes.items.properties.field","type":["string","null"]},"message":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.causes.items.properties.message","type":["string","null"]},"reason":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.causes.items.properties.reason","type":["string","null"]}},"additionalProperties":false}},"group":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.group","type":["string","null"]},"kind":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.kind","type":["string","null"]},"name":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.name","type":["string","null"]},"retryAfterSeconds":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.retryAfterSeconds","type":"integer","format":"int32"},"uid":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.details.properties.uid","type":["string","null"]}},"additionalProperties":false},"kind":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.kind","type":["string","null"],"enum":["Status"]},"message":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.message","type":["string","null"]},"metadata":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.metadata","properties":{"continue":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.metadata.properties.continue","type":["string","null"]},"resourceVersion":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.metadata.properties.resourceVersion","type":["string","null"]},"selfLink":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.metadata.properties.selfLink","type":["string","null"]}},"additionalProperties":false},"reason":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.reason","type":["string","null"]},"status":{"description":"%NetworkPolicy.json.properties.metadata.properties.initializers.properties.result.properties.status","type":["string","null"]}},"x-kubernetes-group-version-kind":[{"group":"","kind":"Status","version":"v1"}],"additionalProperties":false}},"additionalProperties":false},"labels":{"description":"%NetworkPolicy.json.properties.metadata.properties.labels","type":"object","additionalProperties":{"type":["string","null"]}},"name":{"description":"%NetworkPolicy.json.properties.metadata.properties.name","type":["string","null"]},"namespace":{"description":"%NetworkPolicy.json.properties.metadata.properties.namespace","type":["string","null"]},"ownerReferences":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items","required":["apiVersion","kind","name","uid"],"properties":{"apiVersion":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items.properties.apiVersion","type":"string"},"blockOwnerDeletion":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items.properties.blockOwnerDeletion","type":"boolean"},"controller":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items.properties.controller","type":"boolean"},"kind":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items.properties.kind","type":"string"},"name":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items.properties.name","type":"string"},"uid":{"description":"%NetworkPolicy.json.properties.metadata.properties.ownerReferences.items.properties.uid","type":"string"}},"additionalProperties":false},"x-kubernetes-patch-merge-key":"uid","x-kubernetes-patch-strategy":"merge"},"resourceVersion":{"description":"%NetworkPolicy.json.properties.metadata.properties.resourceVersion","type":["string","null"]},"selfLink":{"description":"%NetworkPolicy.json.properties.metadata.properties.selfLink","type":["string","null"]},"uid":{"description":"%NetworkPolicy.json.properties.metadata.properties.uid","type":["string","null"]}},"additionalProperties":false},"spec":{"description":"%NetworkPolicy.json.properties.spec","required":["podSelector"],"properties":{"egress":{"description":"%NetworkPolicy.json.properties.spec.properties.egress","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items","properties":{"ports":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.ports","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.ports.items","properties":{"port":{"oneOf":[{"title":"string","type":["string","null"]},{"title":"integer","type":"integer"}]},"protocol":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.ports.items.properties.protocol","type":["string","null"]}},"additionalProperties":false}},"to":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items","properties":{"ipBlock":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.ipBlock","required":["cidr"],"properties":{"cidr":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.ipBlock.properties.cidr","type":"string"},"except":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.ipBlock.properties.except","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false},"namespaceSelector":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector","properties":{"matchExpressions":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector.properties.matchExpressions","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector.properties.matchExpressions.items","required":["key","operator"],"properties":{"key":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector.properties.matchExpressions.items.properties.key","type":"string","x-kubernetes-patch-merge-key":"key","x-kubernetes-patch-strategy":"merge"},"operator":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector.properties.matchExpressions.items.properties.operator","type":"string"},"values":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector.properties.matchExpressions.items.properties.values","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false}},"matchLabels":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.namespaceSelector.properties.matchLabels","type":"object","additionalProperties":{"type":["string","null"]}}},"additionalProperties":false},"podSelector":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector","properties":{"matchExpressions":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector.properties.matchExpressions","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector.properties.matchExpressions.items","required":["key","operator"],"properties":{"key":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector.properties.matchExpressions.items.properties.key","type":"string","x-kubernetes-patch-merge-key":"key","x-kubernetes-patch-strategy":"merge"},"operator":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector.properties.matchExpressions.items.properties.operator","type":"string"},"values":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector.properties.matchExpressions.items.properties.values","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false}},"matchLabels":{"description":"%NetworkPolicy.json.properties.spec.properties.egress.items.properties.to.items.properties.podSelector.properties.matchLabels","type":"object","additionalProperties":{"type":["string","null"]}}},"additionalProperties":false}},"additionalProperties":false}}},"additionalProperties":false}},"ingress":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items","properties":{"from":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items","properties":{"ipBlock":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.ipBlock","required":["cidr"],"properties":{"cidr":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.ipBlock.properties.cidr","type":"string"},"except":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.ipBlock.properties.except","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false},"namespaceSelector":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector","properties":{"matchExpressions":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector.properties.matchExpressions","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector.properties.matchExpressions.items","required":["key","operator"],"properties":{"key":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector.properties.matchExpressions.items.properties.key","type":"string","x-kubernetes-patch-merge-key":"key","x-kubernetes-patch-strategy":"merge"},"operator":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector.properties.matchExpressions.items.properties.operator","type":"string"},"values":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector.properties.matchExpressions.items.properties.values","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false}},"matchLabels":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.namespaceSelector.properties.matchLabels","type":"object","additionalProperties":{"type":["string","null"]}}},"additionalProperties":false},"podSelector":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector","properties":{"matchExpressions":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector.properties.matchExpressions","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector.properties.matchExpressions.items","required":["key","operator"],"properties":{"key":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector.properties.matchExpressions.items.properties.key","type":"string","x-kubernetes-patch-merge-key":"key","x-kubernetes-patch-strategy":"merge"},"operator":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector.properties.matchExpressions.items.properties.operator","type":"string"},"values":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector.properties.matchExpressions.items.properties.values","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false}},"matchLabels":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.from.items.properties.podSelector.properties.matchLabels","type":"object","additionalProperties":{"type":["string","null"]}}},"additionalProperties":false}},"additionalProperties":false}},"ports":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.ports","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.ports.items","properties":{"port":{"oneOf":[{"title":"string","type":["string","null"]},{"title":"integer","type":"integer"}]},"protocol":{"description":"%NetworkPolicy.json.properties.spec.properties.ingress.items.properties.ports.items.properties.protocol","type":["string","null"]}},"additionalProperties":false}}},"additionalProperties":false}},"podSelector":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector","properties":{"matchExpressions":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions","type":["array","null"],"items":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items","required":["key","operator"],"properties":{"key":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items.properties.key","type":"string","x-kubernetes-patch-merge-key":"key","x-kubernetes-patch-strategy":"merge"},"operator":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items.properties.operator","type":"string"},"values":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items.properties.values","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false}},"matchLabels":{"description":"%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchLabels","type":"object","additionalProperties":{"type":["string","null"]}}},"additionalProperties":false},"policyTypes":{"description":"%NetworkPolicy.json.properties.spec.properties.policyTypes","type":["array","null"],"items":{"type":["string","null"]}}},"additionalProperties":false}},"x-kubernetes-group-version-kind":[{"group":"networking.k8s.io","kind":"NetworkPolicy","version":"v1"}],"additionalProperties":false,"$schema":"http://json-schema.org/schema#","type":"object"}
+{
+    "description": "%NetworkPolicy.json",
+    "properties": {
+        "apiVersion": {
+            "description": "%NetworkPolicy.json.properties.apiVersion",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "kind": {
+            "description": "%NetworkPolicy.json.properties.kind",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "metadata": {
+            "description": "%NetworkPolicy.json.properties.metadata",
+            "type": [
+                "object",
+                "null"
+            ],
+            "properties": {
+                "annotations": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.annotations",
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "additionalProperties": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "creationTimestamp": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.creationTimestamp"
+                },
+                "deletionGracePeriodSeconds": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.deletionGracePeriodSeconds",
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "deletionTimestamp": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.deletionTimestamp"
+                },
+                "finalizers": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.finalizers",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "generateName": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.generateName",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "generation": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.generation",
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "labels": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.labels",
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "additionalProperties": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "managedFields": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.managedFields",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "name": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.name",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "namespace": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.namespace",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ownerReferences": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.ownerReferences",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "resourceVersion": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.resourceVersion",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "selfLink": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.selfLink",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "uid": {
+                    "description": "%NetworkPolicy.json.properties.metadata.properties.uid",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
+        },
+        "spec": {
+            "description": "%NetworkPolicy.json.properties.spec",
+            "type": [
+                "object",
+                "null"
+            ],
+            "properties": {
+                "egress": {
+                    "description": "%NetworkPolicy.json.properties.spec.properties.egress",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "ingress": {
+                    "description": "%NetworkPolicy.json.properties.spec.properties.ingress",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "podSelector": {
+                    "description": "%NetworkPolicy.json.properties.spec.properties.podSelector"
+                },
+                "policyTypes": {
+                    "description": "%NetworkPolicy.json.properties.spec.properties.policyTypes",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                }
+            }
+        },
+        "status": {
+            "description": "%NetworkPolicy.json.properties.status",
+            "type": [
+                "object",
+                "null"
+            ],
+            "properties": {
+                "conditions": {
+                    "description": "%NetworkPolicy.json.properties.status.properties.conditions",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                }
+            }
+        }
+    }
+}
