@@ -403,6 +403,7 @@ export const Catalog = connectToFlags<CatalogProps>(
 )(props => {
   const { flags, mock, namespace } = props;
   flags[FLAGS.OPENSHIFT] = false; // MEMO: 임시처리...
+  flags[FLAGS.SERVICE_CATALOG] = false; // MEMO: 임시처리...
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   const serviceCatalogFlag = flags[FLAGS.SERVICE_CATALOG];
   const [templateMetadata, setTemplateMetadata] = React.useState<K8sResourceCommon>();
