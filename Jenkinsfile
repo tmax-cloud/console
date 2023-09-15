@@ -135,7 +135,7 @@ pipeline {
           """        
         }
         emailext (
-          to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
+          to: 'ck_platformqa@tmax.co.kr, ck_rnd1_unit@tmax.co.kr, ck_rnd2_unit@tmax.co.kr, ck_rnd3_4@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
           body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 5.2.11.0 버전부터 console의 변수 값 설정이 변경 되었습니다." +
