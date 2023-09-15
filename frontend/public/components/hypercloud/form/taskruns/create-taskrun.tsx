@@ -282,10 +282,20 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
 
 const getCustomFormEditor = ({ match, kind, Form, isCreate }) => props => {
   const { formData, onChange } = props;
-  const _formData = React.useMemo(() => convertToForm(formData), [formData]);
-  const setFormData = React.useCallback(formData => onSubmitCallback(formData), [onSubmitCallback]);
+  const [formDataState, setFormDataState] = React.useState(convertToForm(formData));
+  const [formDatas, setFormDatas] = React.useState(() => formData_ => {
+    return onSubmitCallback(formData_);
+  });
+
+  React.useEffect(() => {
+    setFormDatas(() => formData => onSubmitCallback(formData));
+  }, [onSubmitCallback]);
+
+  React.useEffect(() => {
+    setFormDataState(convertToForm(formData));
+  }, [formData]);
   const watchFieldNames = ['metadata.labels', 'taskRef', 'params', 'spec.resources.inputs', 'spec.resources.outputs', 'spec.workspaces', 'spec.volumes', 'spec.steps', 'spec.timeout', 'spec.serviceAccountName'];
-  return <Form {...props} fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} onSubmitCallback={onSubmitCallback} isCreate={isCreate} useDefaultForm formData={_formData} setFormData={setFormData} onChange={onChange} watchFieldNames={watchFieldNames} />;
+  return <Form {...props} fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: match.params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={isCreate} formData={formDataState} setFormData={formDatas} onChange={onChange} watchFieldNames={watchFieldNames} />;
 };
 
 export const CreateTaskRun: React.FC<CreateTaskRunProps> = props => {
