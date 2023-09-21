@@ -108,6 +108,8 @@ export const onSubmitCallback = data => {
     }
   });
 
+  data.apiVersion = `${TaskRunModel.apiGroup}/${TaskRunModel.apiVersion}`;
+
   data = _.defaultsDeep({ kind: TaskRunModel.kind, spec: { taskRef, params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } }, data);
   return data;
 };

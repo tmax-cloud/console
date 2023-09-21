@@ -236,7 +236,7 @@ export const CustomMenusMap: CustomMenus = {
     kind: 'Harbor',
     visible: true,
     type: MenuLinkType.NewTabLink,
-    defaultLabel: 'COMMON:MSG_LNB_MENU_155',
+    defaultLabel: 'COMMON:MSG_LNB_MENU_214',
     url: '',
     isMultiOnly: false,
   },

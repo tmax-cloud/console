@@ -479,9 +479,10 @@ export const Catalog = connectToFlags<CatalogProps>(
     return <LoadError message={error.message} label="Templates" className="loading-box loading-box__errored" />;
   }
 
-  if (_.some(flags, flag => flagPending(flag))) {
-    return null;
-  }
+  // MEMO: 임시로 주석처리...
+  // if (_.some(flags, flag => flagPending(flag))) {
+  //   return null;
+  // }
 
   const resources = [
     ...(serviceCatalogFlag
