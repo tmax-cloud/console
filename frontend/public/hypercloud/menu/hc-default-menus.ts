@@ -35,7 +35,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.management,
-    innerMenus: [Models.ResourceQuotaModel.kind, Models.LimitRangeModel.kind, Models.CustomResourceDefinitionModel.kind, Models.PodSecurityPolicyModel.kind],
+    innerMenus: [Models.ResourceQuotaModel.kind, Models.LimitRangeModel.kind, Models.CustomResourceDefinitionModel.kind],
   },
 ];
 
