@@ -58,7 +58,7 @@ pipeline {
             git config --global user.email ${USER_EMAIL}
           """
           sh """
-          git tag ${VER}
+          git tag -f ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
           git tag --list "5.2.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
