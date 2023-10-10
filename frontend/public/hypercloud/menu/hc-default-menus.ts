@@ -150,7 +150,7 @@ const SingleNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
-    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind, Models.PodSecurityPolicyModel.kind],
+    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
