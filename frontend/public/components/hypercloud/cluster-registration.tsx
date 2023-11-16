@@ -80,10 +80,6 @@ export const ClusterRegistrationsPage: React.FC = props => {
       href: 'clusterregistrations',
       name: 'COMMON:MSG_MAIN_TAB_3',
     },
-    {
-      href: 'clusterupdateclaims',
-      name: 'COMMON:MSG_MAIN_TABLEHEADER_159',
-    },
   ];
   return <ListPage canCreate={true} multiNavPages={pages} tableProps={tableProps} kind={kind} {...props} />;
 };
