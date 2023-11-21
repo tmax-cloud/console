@@ -266,7 +266,11 @@
                     ]
                 },
                 "sessionAffinityConfig": {
-                    "description": "%Service.json.properties.spec.properties.sessionAffinityConfig"
+                    "description": "%Service.json.properties.spec.properties.sessionAffinityConfig",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "type": {
                     "description": "%Service.json.properties.spec.properties.type",
