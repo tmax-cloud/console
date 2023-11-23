@@ -266,9 +266,27 @@
                     ]
                 },
                 "sessionAffinityConfig": {
-                    "description": "%Service.json.properties.spec.properties.sessionAffinityConfig",
+                    "description": "%Service.json.properties.spec.properties.sessionAffinity",
+                    "properties": {
+                        "clientIP": {
+                            "description": "%Service.json.properties.spec.properties.sessionAffinity.properties.clientIP",
+                            "properties": {
+                                "description": "%Service.json.properties.spec.properties.sessionAffinityConfig.properties.clientIP.properties.timeoutSeconds",
+                                "timeoutSeconds": {
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "type": [
+                                "object",
+                                "null"
+                            ]
+                        }
+                    },
                     "type": [
-                        "string",
+                        "object",
                         "null"
                     ]
                 },
