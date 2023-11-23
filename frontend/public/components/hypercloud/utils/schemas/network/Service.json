@@ -266,10 +266,10 @@
                     ]
                 },
                 "sessionAffinityConfig": {
-                    "description": "%Service.json.properties.spec.properties.sessionAffinity",
+                    "description": "%Service.json.properties.spec.properties.sessionAffinityConfig",
                     "properties": {
                         "clientIP": {
-                            "description": "%Service.json.properties.spec.properties.sessionAffinity.properties.clientIP",
+                            "description": "%Service.json.properties.spec.properties.sessionAffinityConfig.properties.clientIP",
                             "properties": {
                                 "description": "%Service.json.properties.spec.properties.sessionAffinityConfig.properties.clientIP.properties.timeoutSeconds",
                                 "timeoutSeconds": {
