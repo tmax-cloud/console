@@ -155,7 +155,63 @@
                     ]
                 },
                 "podSelector": {
-                    "description": "%NetworkPolicy.json.properties.spec.properties.podSelector"
+                    "description": "%NetworkPolicy.json.properties.spec.properties.podSelector",
+                    "properties": {
+                        "matchExpressions": {
+                            "description": "%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions",
+                            "items": {
+                                "description": "%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items",
+                                "properties": {
+                                    "key": {
+                                        "description": "%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items.properties.key",
+                                        "type": "string",
+                                        "x-kubernetes-patch-merge-key": "key",
+                                        "x-kubernetes-patch-strategy": "merge"
+                                    },
+                                    "operator": {
+                                        "description": "%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items.properties.operator",
+                                        "type": "string"
+                                    },
+                                    "values": {
+                                        "description": "%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchExpressions.items.properties.values",
+                                        "items": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "type": [
+                                            "array",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "key",
+                                    "operator"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
+                            },
+                            "type": [
+                                "array",
+                                "null"
+                            ]
+                        },
+                        "matchLabels": {
+                            "additionalProperties": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "description": "%NetworkPolicy.json.properties.spec.properties.podSelector.properties.matchLabels",
+                            "type": "object"
+                        }
+                    },
+                    "type": "object",
+                    "x-kubernetes-map-type": "atomic",
+                    "additionalProperties": false
                 },
                 "policyTypes": {
                     "description": "%NetworkPolicy.json.properties.spec.properties.policyTypes",
