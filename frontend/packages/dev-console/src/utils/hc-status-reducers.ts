@@ -187,9 +187,8 @@ export const InferenceServiceReducer = (inferenceService: any): string => {
           phase = 'Not Ready';
         }
       }
-      return phase;
     });
-    return NO_STATUS;
+    return phase;
   }
   return NO_STATUS;
 };
