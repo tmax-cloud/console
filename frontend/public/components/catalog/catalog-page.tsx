@@ -8,12 +8,11 @@ import { ANNOTATIONS, FLAGS, APIError } from '@console/shared';
 import { CatalogTileViewPage, Item } from './catalog-items';
 import { k8sListPartialMetadata, referenceForModel, serviceClassDisplayName, K8sResourceCommon, K8sResourceKind, PartialObjectMetadata, TemplateKind, k8sList } from '../../module/k8s';
 import { withStartGuide } from '../start-guide';
-// import { connectToFlags, flagPending, FlagsObject } from '../../reducers/features';
-import { connectToFlags, FlagsObject } from '../../reducers/features';
+import { connectToFlags, flagPending, FlagsObject } from '../../reducers/features';
 import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, Box, MsgBox, Timestamp } from '../utils';
 import { getAnnotationTags, getMostRecentBuilderTag, isBuilder } from '../image-stream';
 import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon, getTemplateCatalogIcon, getTemplateImage } from './catalog-item-icon';
-import { ClusterServiceClassModel, TemplateModel, ServiceClassModel, ClusterTemplateModel } from '../../models';
+import { ClusterServiceClassModel, TemplateModel, ClusterTemplateModel } from '../../models';
 import * as plugins from '../../plugins';
 import { coFetch, coFetchJSON } from '../../co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
@@ -96,7 +95,7 @@ export const CatalogListPage = withTranslation()(
       }
 
       if (clusterTemplates) {
-        clusterTemplateItems = this.normalizeClusterTemplates(clusterTemplates);
+        clusterTemplateItems = this.normalizeClusterTemplates(clusterTemplates.data);
       }
 
       if (imageStreams) {
@@ -480,10 +479,9 @@ export const Catalog = connectToFlags<CatalogProps>(
     return <LoadError message={error.message} label="Templates" className="loading-box loading-box__errored" />;
   }
 
-  // MEMO: 임시로 주석처리...
-  // if (_.some(flags, flag => flagPending(flag))) {
-  //   return null;
-  // }
+  if (_.some(flags, flag => flagPending(flag))) {
+    return null;
+  }
 
   const resources = [
     ...(serviceCatalogFlag
@@ -499,10 +497,9 @@ export const Catalog = connectToFlags<CatalogProps>(
     ...[
       {
         isList: true,
-        kind: referenceForModel(ServiceClassModel),
-        namespaced: true,
-        namespace,
-        prop: 'serviceClasses',
+        kind: referenceForModel(ClusterTemplateModel),
+        namespaced: false,
+        prop: 'clusterTemplates',
       },
     ],
     ...(openshiftFlag
@@ -528,7 +525,6 @@ export const Catalog = connectToFlags<CatalogProps>(
           }))
       : []),
   ];
-
   return (
     <div className="co-catalog__body">
       <Firehose resources={mock ? [] : resources}>
