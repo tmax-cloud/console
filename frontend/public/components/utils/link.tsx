@@ -61,7 +61,7 @@ export const ExternalLink: React.FC<ExternalLinkProps> = ({ href, text, addition
   </a>
 );
 
-export const HyperCloudManualLink = window.location.origin + '/static/usermanual/5.1-ko/welcome/intro.html';
+export const HyperCloudManualLink = window.location.origin + '/static/usermanual/5.2-ko/welcome/intro.html';
 
 // Open links in a new window and set noopener/noreferrer.
 export const LinkifyExternal: React.FC<{ children: React.ReactNode }> = ({ children }) => <Linkify properties={{ target: '_blank', rel: 'noopener noreferrer' }}>{children}</Linkify>;
