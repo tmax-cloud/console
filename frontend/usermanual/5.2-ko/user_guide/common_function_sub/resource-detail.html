@@ -1,0 +1,4726 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html>
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>리소스 상세 정보 확인 - 기본 기능 | 웹 콘솔 기본 사용법 | HyperCloud 5.2</title>
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans+KR' rel='stylesheet' type='text/css'>
+  <link href="../../../5.2-ko/_stylesheets/subdomain.css" rel="stylesheet" type="text/css">
+  <link href="../../../5.2-ko/_stylesheets/search.css" rel="stylesheet" />
+  <link href="../../../5.2-ko/_stylesheets/osh-nav-footer.css" rel="stylesheet" type="text/css" media="screen, print" />
+  <link href="../../../5.2-ko/_stylesheets/docs.css" rel="stylesheet" type="text/css">
+  <link href="../../../5.2-ko/_stylesheets/nav.css" rel="stylesheet" />
+  <link href="../../../5.2-ko/_images/hypercloud_favicon.png" rel="apple-touch-icon-precomposed" type="image/png">
+  <link href="../../../5.2-ko/_images/hypercloud_favicon.png" rel="shortcut icon" type="text/css"> 
+  <!--[if IE]><link rel="shortcut icon" href="../../../5.2-ko/_images/hypercloud_favicon.png"><![endif]-->
+  <!-- or, set /favicon.ico for IE10 win -->
+  <meta content="HyperCloud" name="application-name">
+  <meta content="#000000" name="msapplication-TileColor">
+  <meta content="../../../5.2-ko/_images/hypercloud_favicon.png" name="msapplication-TileImage">
+  <style>
+    pre{
+      white-space: pre-wrap;
+      work-break: break-all;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body onload="selectVersion('5.2'); selectLanguage('hypercloud', '5.2')">
+  <div class="navbar navbar-other" role="navigation">
+	<div class="nav-logo">
+		<a href="https://www.tmax.co.kr/hypercloud">
+			<img src="../../../5.2-ko/_images/hypercloud_logo_new.png">
+		</a>
+	</div>
+	<div class="nav-version">
+		<ul class="navbar-nav">
+			<li class="nav-item hidden-xs">
+				<!-- <a class="nav-link manual" href="javascript:void(0);">매뉴얼</a> -->
+				<a class="nav-link manual" href="javascript:void(0);" onclick="goFirstPage('hypercloud', '5.2'); return false;" >매뉴얼</a>
+				<div class="divider"></div>
+			</li>
+			<li class="nav-item hidden-xs">
+				<a class="nav-link disabled version" >버전</a>
+				</li>
+			<li class="nav-item">
+				<select id="version-selector" onchange="versionSelector(this, 'hypercloud', '5.2');">
+					<!-- 새 버전 추가 -->
+					<option value="5.2">HyperCloud 5.2</option>
+					<option value="5.1.1">HyperCloud 5.1.1</option>
+				        <option value="5.1">HyperCloud 5.1</option>
+					<option value="5">HyperCloud 5</option>
+					<option value="4.1">HyperCloud 4.1</option>
+					<!-- <option value="3">HyperCloud 3</option> -->
+				</select>
+			</li>
+		</ul>
+	</div>
+	<div class="nav-right">
+		<ul class="navbar-nav">
+			
+			<!-- <li class="nav-item console hidden-xs" >
+				<a class="nav-link" href="https://console.tmaxcloud.com/" target="_blank">
+					콘솔
+					<span class="fa fa-external-link"></span>
+				</a>
+			</li> --!>
+		</ul>
+	</div>
+</div>
+  <div class="container">
+    <p class="toggle-nav visible-xs pull-left">
+      <button class="btn btn-default btn-sm" type="button" data-toggle="offcanvas">Toggle nav</button>
+    </p>
+    <ol class="breadcrumb">
+      <li class="sitename">
+        <a href="https://www.tmax.co.kr/hypercloud">문서</a>
+      </li>
+      <li class="hidden-xs active">
+        <a href="../../welcome/intro.html">HyperCloud 5.2</a>
+      </li>
+      <li class="hidden-xs active">
+        <a href="../../user_guide/intro-basic.html">웹 콘솔 기본 사용법</a>
+      </li>
+      <li class="hidden-xs active"><a href="../../user_guide/common_function_sub/label-edit.html">기본 기능</a></li>
+      <li class="hidden-xs active">
+        리소스 상세 정보 확인
+      </li>
+    </ol>
+    <div class="row row-offcanvas row-offcanvas-left">
+      <div class="col-xs-8 col-sm-3 col-md-3 sidebar sidebar-offcanvas">
+        <!-- <div class="row-fluid">
+          <div id="hc-search">
+            <input id="hc-search-input" type="text">
+            <button id="hc-search-btn">Search</button>
+          </div>
+
+          <div id="hc-search-modal">
+            <div id="hc-modal-content">
+              <span id="hc-modal-close">&times;</span>
+              <div id="hc-search-results-wrapper">
+                <div id="hc-search-results"></div>
+                <div id="hc-search-progress-indicator" class="text-center search-progress-indicator"><i class="fa fa-circle-o-notch fa-spin" style="font-size:42px"></i></div>
+                <div class="text-center">
+                  <button id="hc-search-more-btn">Show more results</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> --!>
+        <ul class="nav nav-sidebar">
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup0">
+        <span id="tgSpan0" class="fa fa-angle-right"></span>
+          환영합니다
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup0" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../welcome/intro.html">지원 사항</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-0-1">
+                <span id="sgSpan-0-1" class="fa fa-caret-right"></span>
+                  &nbsp;제품 소개
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-0-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../welcome/overview_sub/index.html">
+                      개요
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../welcome/overview_sub/advantage.html">
+                      특장점
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../welcome/overview_sub/value-proposition.html">
+                      가치 제안
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../welcome/legal-notice.html">법적 고지</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup1">
+        <span id="tgSpan1" class="fa fa-angle-right"></span>
+          릴리즈 노트
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup1" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../welcome/release-note.html">HyperCloud 5.2 릴리즈 정보</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup2">
+        <span id="tgSpan2" class="fa fa-angle-right"></span>
+          설치 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup2" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-2-0">
+                <span id="sgSpan-2-0" class="fa fa-caret-right"></span>
+                  &nbsp;폐쇄망 환경에서 Kubespray로 설치
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-2-0" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../installation_guide/kubespray/offline-intro.html">
+                      개요
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../installation_guide/kubespray/offline-onpremise.html">
+                      온프레미스 환경에서 구축
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../installation_guide/kubespray/offline-aws.html">
+                      AWS 환경에서 구축
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup3">
+        <span id="tgSpan3" class="fa fa-angle-down"></span>
+          웹 콘솔 기본 사용법
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup3" class="collapse in list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../user_guide/intro-basic.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-3-1">
+                <span id="sgSpan-3-1" class="fa fa-caret-right"></span>
+                  &nbsp;콘솔 접속
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-3-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_connect_sub/execution-environment.html">
+                      실행 환경
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_connect_sub/console-login.html">
+                      로그인
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_connect_sub/console-id-management.html">
+                      콘솔 계정 관리
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-3-2">
+                <span id="sgSpan-3-2" class="fa fa-caret-right"></span>
+                  &nbsp;콘솔 화면
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-3-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_layout_sub/console-layout-main.html">
+                      메인 화면 구성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_layout_sub/task-bar.html">
+                      작업표시줄 영역
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-3-3">
+                <span id="sgSpan-3-3" class="fa fa-caret-down"></span>
+                  &nbsp;기본 기능
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-3-3" class="nav-tertiary list-unstyled collapse in">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/common_function_sub/label-edit.html">
+                      레이블 관리
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/common_function_sub/annotation-edit.html">
+                      주석 관리
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class=" active" href="../../user_guide/common_function_sub/resource-detail.html">
+                      리소스 상세 정보 확인
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/common_function_sub/resource-info-edit.html">
+                      리소스 정보 수정
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/common_function_sub/resource-delete.html">
+                      리소스 삭제
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/common_function_sub/yaml-down.html">
+                      YAML 파일 다운로드
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup4">
+        <span id="tgSpan4" class="fa fa-angle-right"></span>
+          멀티 클러스터 콘솔 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup4" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../user_guide/intro-multi.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-4-1">
+                <span id="sgSpan-4-1" class="fa fa-caret-right"></span>
+                  &nbsp;메인 메뉴
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-4-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/cluster.html">
+                      클러스터
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/terraform.html">
+                      테라폼 클레임
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-4-2">
+                <span id="sgSpan-4-2" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (클러스터)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-4-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/cluster-registrations-create.html">
+                      클러스터 등록 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/cluster-claims-create.html">
+                      클러스터 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-4-3">
+                <span id="sgSpan-4-3" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (테라폼 클레임)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-4-3" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/terraform-claim-create.html">
+                      테라폼 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup5">
+        <span id="tgSpan5" class="fa fa-angle-right"></span>
+          마스터 클러스터 콘솔 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup5" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../user_guide/intro-master.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-1">
+                <span id="sgSpan-5-1" class="fa fa-caret-right"></span>
+                  &nbsp;메인 메뉴
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/home.html">
+                      홈
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/work-load.html">
+                      워크로드
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/network.html">
+                      네트워크
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/storage.html">
+                      스토리지
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/host.html">
+                      호스트
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/permission.html">
+                      인증/인가
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/management.html">
+                      관리
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-2">
+                <span id="sgSpan-5-2" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (홈)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/namespace-create.html">
+                      네임스페이스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/namespace-claim-create.html">
+                      네임스페이스 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-3">
+                <span id="sgSpan-5-3" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (워크로드)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-3" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/pod-create.html">
+                      파드 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/deployment-create.html">
+                      디플로이먼트 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/statefulset-create.html">
+                      스테이트풀 셋 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/secret-create.html">
+                      시크릿 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/config-map-create.html">
+                      컨피그 맵 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/cron-job-create.html">
+                      크론 잡 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/job-create.html">
+                      잡 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/daemonset-create.html">
+                      데몬 셋 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/replicaset-create.html">
+                      레플리카 셋 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/hpa-create.html">
+                      HPA 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-4">
+                <span id="sgSpan-5-4" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (네트워크)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-4" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/service-create.html">
+                      서비스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/ingress-create.html">
+                      인그레스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/network-policy-create.html">
+                      네트워크 정책 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-5">
+                <span id="sgSpan-5-5" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (스토리지)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-5" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/persistent-volume-create.html">
+                      영구 볼륨 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/persistent-volume-claim-create.html">
+                      영구 볼륨 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/storage-class-create.html">
+                      스토리지 클래스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-6">
+                <span id="sgSpan-5-6" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (인증/인가)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-6" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/service-account-create.html">
+                      서비스 계정 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/role-create.html">
+                      롤 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/role-binding-create.html">
+                      롤 바인딩 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/role-binding-claim-create.html">
+                      롤 바인딩 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-5-7">
+                <span id="sgSpan-5-7" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (관리)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-5-7" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/resource-quota-create.html">
+                      리소스 쿼타 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/resource-quota-claim-create.html">
+                      리소스 쿼타 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/basic-resource-create.html">
+                      제한 범위 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/custom-resource-create.html">
+                      사용자 리소스 정의 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup6">
+        <span id="tgSpan6" class="fa fa-angle-right"></span>
+          싱글 클러스터 콘솔 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup6" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../user_guide/intro-single.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../user_guide/single-cluster-select.html">관리 대상 서브 클러스터 선택</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-6-2">
+                <span id="sgSpan-6-2" class="fa fa-caret-right"></span>
+                  &nbsp;메뉴
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-6-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/single-namespace.html">
+                      네임스페이스
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/single-role-binding.html">
+                      롤 바인딩
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/single-resource-quota.html">
+                      리소스 쿼타
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-6-3">
+                <span id="sgSpan-6-3" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (홈)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-6-3" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/single-namespace-create.html">
+                      네임스페이스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-6-4">
+                <span id="sgSpan-6-4" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (인증/인가)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-6-4" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/single-role-binding-create.html">
+                      롤 바인딩 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-6-5">
+                <span id="sgSpan-6-5" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (관리)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-6-5" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/single-resource-quota-create.html">
+                      리소스 쿼타 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup7">
+        <span id="tgSpan7" class="fa fa-angle-right"></span>
+          개발자 콘솔 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup7" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../user_guide/intro-developer.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-1">
+                <span id="sgSpan-7-1" class="fa fa-caret-right"></span>
+                  &nbsp;메인 메뉴
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/topology.html">
+                      토폴로지
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/service-catalog.html">
+                      서비스 카탈로그
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/helm.html">
+                      헬름
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/service-mesh.html">
+                      서비스 메시
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/ci-cd.html">
+                      CI/CD
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/ai-dev.html">
+                      AI-DevOps
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/kafka.html">
+                      카프카
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/redis.html">
+                      레디스
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/console_menu_sub/service-binding.html">
+                      서비스 바인딩
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-2">
+                <span id="sgSpan-7-2" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (서비스 카탈로그)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/template-create.html">
+                      템플릿 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/cluster-template-create.html">
+                      클러스터 템플릿 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/catalog-service-claim-create.html">
+                      클러스터 템플릿 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/template-instance-create.html">
+                      템플릿 인스턴스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-3">
+                <span id="sgSpan-7-3" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (헬름)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-3" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/helm-repo-create.html">
+                      헬름 리포지터리 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/helm-release-create.html">
+                      헬름 릴리스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-4">
+                <span id="sgSpan-7-4" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (서비스 메시)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-4" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/virtual-service-create.html">
+                      가상 서비스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/destination-rule-create.html">
+                      목적지 규칙 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/envoy-filter-create.html">
+                      엔보이 필터 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/gateway-create.html">
+                      게이트웨이 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/sidecar-create.html">
+                      사이드카 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/service-entry-create.html">
+                      서비스 엔트리 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/request-auth-create.html">
+                      요청 인증 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/peer-auth-create.html">
+                      피어 인증 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/auth-policy-create.html">
+                      인가 정책 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-5">
+                <span id="sgSpan-7-5" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (CI/CD)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-5" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/task-create.html">
+                      태스크 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/cluster-task-create.html">
+                      클러스터 태스크 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/task-run-create.html">
+                      태스크 런 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/pipeline-create.html">
+                      파이프라인 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/pipeline-run-create.html">
+                      파이프라인 런 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/pipeline-resource-create.html">
+                      파이프라인 리소스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/integration-config-create.html">
+                      인테그레이션 컨피그 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-6">
+                <span id="sgSpan-7-6" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (AI DevOps)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-6" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/notebook-server-create.html">
+                      노트북 서버 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/katib-create.html">
+                      하이퍼파라미터 튜닝 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/training-job-create.html">
+                      트레이닝 잡 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kf-serving-create.html">
+                      추론 서비스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/trained-model-create.html">
+                      학습 모델 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-7">
+                <span id="sgSpan-7-7" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (카프카)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-7" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kafca-cluster-create.html">
+                      카프카 클러스터 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kafca-connect-create.html">
+                      카프카 커넥트 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kafca-connector-create.html">
+                      카프카 커넥터 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kafca-bridge-create.html">
+                      카프카 브릿지 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kafca-mirrormaker2-create.html">
+                      카프카 미러 메이커 2 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/kafca-rebalance-create.html">
+                      카프카 리밸런스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-8">
+                <span id="sgSpan-7-8" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (레디스)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-8" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/redis-create.html">
+                      레디스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/redis-cluster-create.html">
+                      레디스 클러스터 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-7-9">
+                <span id="sgSpan-7-9" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (서비스 바인딩)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-7-9" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../user_guide/resource_create_sub/service-binding-create.html">
+                      서비스 바인딩 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup8">
+        <span id="tgSpan8" class="fa fa-angle-right"></span>
+          운영자 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup8" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../admin_guide/intro-admin.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-1">
+                <span id="sgSpan-8-1" class="fa fa-caret-right"></span>
+                  &nbsp;시스템 구성
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/system_configuration/hardware-configuration.html">
+                      하드웨어 구성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/system_configuration/software-configuration.html">
+                      소프트웨어 구성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/system_configuration/namespace-info.html">
+                      네임스페이스 정보
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/system_configuration/software-setting.html">
+                      소프트웨어 설정
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/system_configuration/auditlog-setting.html">
+                      감사 로그 설정
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-2">
+                <span id="sgSpan-8-2" class="fa fa-caret-right"></span>
+                  &nbsp;애플리케이션
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/application/container-image-management.html">
+                      컨테이너 이미지 관리
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/application/hyperauth.html">
+                      HyperAuth
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/application/kube-object.html">
+                      Kube 객체
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-3">
+                <span id="sgSpan-8-3" class="fa fa-caret-right"></span>
+                  &nbsp;CI/CD
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-3" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/cicd/history-confirm.html">
+                      동작 상태와 이력 확인
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/cicd/garbage-clean-up.html">
+                      Garbage 정리
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-4">
+                <span id="sgSpan-8-4" class="fa fa-caret-right"></span>
+                  &nbsp;모니터링
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-4" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/monitoring/system-monitoring.html">
+                      동작 상태와 이력 확인
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/monitoring/grafana.html">
+                      그라파나
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-5">
+                <span id="sgSpan-8-5" class="fa fa-caret-right"></span>
+                  &nbsp;ArgoCD
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-5" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/argocd/git-link.html">
+                      Git 연동하기
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/argocd/app-deploy.html">
+                      애플리케이션 배포하기
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-6">
+                <span id="sgSpan-8-6" class="fa fa-caret-right"></span>
+                  &nbsp;백업 및 복구
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-6" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/backup/etcd-backup.html">
+                      etcd 백업 및 복구
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/backup/hyperauth-backup.html">
+                      hyperauth 백업 및 복구
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/backup/hyperregistry-backup.html">
+                      hyperregistry 백업 및 복구
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/backup/gitea-backup.html">
+                      gitea 백업 및 복구
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/backup/hypercloud5-system-backup.html">
+                      hypercloud5-system 백업 및 복구
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-7">
+                <span id="sgSpan-8-7" class="fa fa-caret-right"></span>
+                  &nbsp;점검사항
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-7" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/check_point/node-check.html">
+                      노드 점검
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/check_point/kube-system-pod-check.html">
+                      파드 점검
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../admin_guide/hypercloud-management.html">HyperCloud 관리</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../admin_guide/kube-auth-management.html">Kube 인증서 관리</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../../admin_guide/multicluster-management.html">멀티 클러스터 계정 관리</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-8-11">
+                <span id="sgSpan-8-11" class="fa fa-caret-right"></span>
+                  &nbsp;문제 해결
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-8-11" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/trouble_shooting/oauth2-proxy-error.html">
+                      oauth2-proxy 오류
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/trouble_shooting/basic-log-inquire.html">
+                      로그 조회
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../../admin_guide/trouble_shooting/chrome-error.html">
+                      크롬 오류
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+</ul>
+      </div>
+      <div class="col-xs-12 col-sm-9 col-md-9 main">
+        <div class="page-header">
+          <h1>리소스 상세 정보 확인</h1>
+        </div>
+        <div class="paragraph">
+<p>생성한 리소스의 상세한 정보를 확인할 수 있다.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>각 메뉴의 메인 화면에서 상세 정보를 확인할 리소스의 이름을 클릭한다.</p>
+</li>
+<li>
+<p>해당 리소스의 상세 정보 확인이 열리면 각 탭을 선택해 관련 정보를 상세하게 확인한다.<br>
+다음은 각 탭에 대한 설명이다. (리소스 종류에 따라 제공하는 탭의 종류는 다름)</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">탭</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">YAML</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스의 설정값 확인 및 수정을 위한 YAML 에디터</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">개요</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스의 상태와 활동 등의 모니터링 정보 조회</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">레플리카 셋</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스와 연결된 레플리카 셋 목록 조회</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>파드의 로그 데이터를 실시간으로 조회</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">롤 바인딩</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스와 연결된 롤 바인딩 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리소스</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스에서 관리하는 파이프라인 리소스 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상세</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스의 상세 설정 정보 제공</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스의 설정값 확인 및 수정을 위한 에디터 제공 (Form 및 YAML)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스에서 한 시간 동안 발생한 이벤트를 실시간으로 조회</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">인스턴스</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스를 통해 생성된 커스텀 리소스 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">터미널</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>실행 중인 파드에 접속하기 위한 터미널 제공</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">파드</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스와 연결된 파드 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">파라미터</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스의 변수를 정의하는 파라미터 객체 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">파이프라인 런</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스로 수행된 파이프라인 런 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">환경</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>리소스에 설정된 환경변수 목록 조회 및 관리</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../../5.2-ko/_javascripts/modernizr.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/subdomain.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/nav-tertiary.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/bootstrap-offcanvas.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/reformat-html.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/hc-search.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/page-loader.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/clipboard.min.js" type="text/javascript"></script>
+  <script src="../../../5.2-ko/_javascripts/clipboard.js" type="text/javascript"></script>
+
+ <script>
+  var dk = 'hypercloud';
+  var version = '5.2';
+  var distros = {
+    'hypercloud': ['hypercloud', version],
+  };
+  distros[dk] ? hcSearchCategory.apply(null, distros[dk]) : hcSearchCategory("docs");
+  </script>
+
+  <script type="text/javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+      $("[id^='topicGroup']").on('show.bs.collapse', function (event) {
+        if (!($(event.target).attr('id').match(/^topicSubGroup/))) {
+          $(this).parent().find("[id^='tgSpan']").toggleClass("fa-angle-right fa-angle-down");
+        }
+      });
+      $("[id^='topicGroup']").on('hide.bs.collapse', function (event) {
+        if (!($(event.target).attr('id').match(/^topicSubGroup/))) {
+          $(this).parent().find("[id^='tgSpan']").toggleClass("fa-angle-right fa-angle-down");
+        }
+      });
+      $("[id^='topicSubGroup']").on('show.bs.collapse', function () {
+        $(this).parent().find("[id^='sgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+      $("[id^='topicSubGroup']").on('hide.bs.collapse', function () {
+        $(this).parent().find("[id^='sgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+      $("[id^='topicSubSubGroup']").on('show.bs.collapse', function () {
+        $(this).parent().find("[id^='ssgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+      $("[id^='topicSubSubGroup']").on('hide.bs.collapse', function () {
+        $(this).parent().find("[id^='ssgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+
+    });
+    /*]]>*/
+  </script>
+  <script type="text/javascript">
+    console.debug('distro_key',`hypercloud`);
+    console.debug('distro',`HyperCloud`);
+    console.debug('version',`5.2`);
+    console.debug('site_name',`문서`);
+    console.debug('site_url',`https://www.tmax.co.kr/hypercloud`);
+    console.debug('group_id',`50937.32.53080.49556.32.44592.48376.32.49324.50857.48277`);
+    console.debug('group_title',`웹 콘솔 기본 사용법`);
+    console.debug('subgroup_id',`50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733`);
+    console.debug('subsubgroup_id',``);
+    console.debug('subgroup_title',`기본 기능`);
+    console.debug('topic_id',`50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::47532.49548.49828.32.49345.49464.32.51221.48372.32.54869.51064`);
+    console.debug('topic_title',`리소스 상세 정보 확인`);
+    console.debug('article_title',`리소스 상세 정보 확인`);
+    console.debug('navigation',`[{:id=>"54872.50689.54633.45768.45796", :name=>"환영합니다", :topics=>[{:id=>"54872.50689.54633.45768.45796::51648.50896.32.49324.54637", :name=>"지원 사항", :path=>"../welcome/intro.html"}, {:id=>"54872.50689.54633.45768.45796::51228.54408.32.49548.44060", :name=>"제품 소개", :topics=>[{:id=>"54872.50689.54633.45768.45796::51228.54408.32.49548.44060::44060.50836", :name=>"개요", :path=>"../welcome/overview_sub/index.html"}, {:id=>"54872.50689.54633.45768.45796::51228.54408.32.49548.44060::53945.51109.51216", :name=>"특장점", :path=>"../welcome/overview_sub/advantage.html"}, {:id=>"54872.50689.54633.45768.45796::51228.54408.32.49548.44060::44032.52824.32.51228.50504", :name=>"가치 제안", :path=>"../welcome/overview_sub/value-proposition.html"}]}, {:id=>"54872.50689.54633.45768.45796::48277.51201.32.44256.51648", :name=>"법적 고지", :path=>"../welcome/legal-notice.html"}]}, {:id=>"47540.47532.51592.32.45432.53944", :name=>"릴리즈 노트", :topics=>[{:id=>"47540.47532.51592.32.45432.53944::72.121.112.101.114.67.108.111.117.100.32.53.46.50.32.47540.47532.51592.32.51221.48372", :name=>"HyperCloud 5.2 릴리즈 정보", :path=>"../welcome/release-note.html"}]}, {:id=>"49444.52824.32.50504.45236.49436", :name=>"설치 안내서", :topics=>[{:id=>"49444.52824.32.50504.45236.49436::54224.49604.47581.32.54872.44221.50640.49436.32.75.117.98.101.115.112.114.97.121.47196.32.49444.52824", :name=>"폐쇄망 환경에서 Kubespray로 설치", :topics=>[{:id=>"49444.52824.32.50504.45236.49436::54224.49604.47581.32.54872.44221.50640.49436.32.75.117.98.101.115.112.114.97.121.47196.32.49444.52824::44060.50836", :name=>"개요", :path=>"../installation_guide/kubespray/offline-intro.html"}, {:id=>"49444.52824.32.50504.45236.49436::54224.49604.47581.32.54872.44221.50640.49436.32.75.117.98.101.115.112.114.97.121.47196.32.49444.52824::50728.54532.47112.48120.49828.32.54872.44221.50640.49436.32.44396.52629", :name=>"온프레미스 환경에서 구축", :path=>"../installation_guide/kubespray/offline-onpremise.html"}, {:id=>"49444.52824.32.50504.45236.49436::54224.49604.47581.32.54872.44221.50640.49436.32.75.117.98.101.115.112.114.97.121.47196.32.49444.52824::65.87.83.32.54872.44221.50640.49436.32.44396.52629", :name=>"AWS 환경에서 구축", :path=>"../installation_guide/kubespray/offline-aws.html"}]}]}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277", :name=>"웹 콘솔 기본 사용법", :topics=>[{:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44060.50836", :name=>"개요", :path=>"../user_guide/intro-basic.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.51217.49549", :name=>"콘솔 접속", :topics=>[{:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.51217.49549::49892.54665.32.54872.44221", :name=>"실행 환경", :path=>"../user_guide/console_connect_sub/execution-environment.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.51217.49549::47196.44536.51064", :name=>"로그인", :path=>"../user_guide/console_connect_sub/console-login.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.51217.49549::53080.49556.32.44228.51221.32.44288.47532", :name=>"콘솔 계정 관리", :path=>"../user_guide/console_connect_sub/console-id-management.html"}]}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.54868.47732", :name=>"콘솔 화면", :topics=>[{:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.54868.47732::47700.51064.32.54868.47732.32.44396.49457", :name=>"메인 화면 구성", :path=>"../user_guide/console_layout_sub/console-layout-main.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::53080.49556.32.54868.47732::51089.50629.54364.49884.51460.32.50689.50669", :name=>"작업표시줄 영역", :path=>"../user_guide/console_layout_sub/task-bar.html"}]}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733", :name=>"기본 기능", :topics=>[{:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::47112.51060.48660.32.44288.47532", :name=>"레이블 관리", :path=>"../user_guide/common_function_sub/label-edit.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::51452.49437.32.44288.47532", :name=>"주석 관리", :path=>"../user_guide/common_function_sub/annotation-edit.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::47532.49548.49828.32.49345.49464.32.51221.48372.32.54869.51064", :name=>"리소스 상세 정보 확인", :path=>"../user_guide/common_function_sub/resource-detail.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::47532.49548.49828.32.51221.48372.32.49688.51221", :name=>"리소스 정보 수정", :path=>"../user_guide/common_function_sub/resource-info-edit.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::47532.49548.49828.32.49325.51228", :name=>"리소스 삭제", :path=>"../user_guide/common_function_sub/resource-delete.html"}, {:id=>"50937.32.53080.49556.32.44592.48376.32.49324.50857.48277::44592.48376.32.44592.45733::89.65.77.76.32.54028.51068.32.45796.50868.47196.46300", :name=>"YAML 파일 다운로드", :path=>"../user_guide/common_function_sub/yaml-down.html"}]}]}, {:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436", :name=>"멀티 클러스터 콘솔 안내서", :topics=>[{:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::44060.50836", :name=>"개요", :path=>"../user_guide/intro-multi.html"}, {:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684", :name=>"메인 메뉴", :topics=>[{:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::53364.47084.49828.53552", :name=>"클러스터", :path=>"../user_guide/console_menu_sub/cluster.html"}, {:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::53580.46972.54268.32.53364.47112.51076", :name=>"테라폼 클레임", :path=>"../user_guide/console_menu_sub/terraform.html"}]}, {:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.53364.47084.49828.53552.41", :name=>"리소스 생성 (클러스터)", :topics=>[{:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.53364.47084.49828.53552.41::53364.47084.49828.53552.32.46321.47197.32.49373.49457", :name=>"클러스터 등록 생성", :path=>"../user_guide/resource_create_sub/cluster-registrations-create.html"}, {:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.53364.47084.49828.53552.41::53364.47084.49828.53552.32.53364.47112.51076.32.49373.49457", :name=>"클러스터 클레임 생성", :path=>"../user_guide/resource_create_sub/cluster-claims-create.html"}]}, {:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.53580.46972.54268.32.53364.47112.51076.41", :name=>"리소스 생성 (테라폼 클레임)", :topics=>[{:id=>"47680.54000.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.53580.46972.54268.32.53364.47112.51076.41::53580.46972.54268.32.53364.47112.51076.32.49373.49457", :name=>"테라폼 클레임 생성", :path=>"../user_guide/resource_create_sub/terraform-claim-create.html"}]}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436", :name=>"마스터 클러스터 콘솔 안내서", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::44060.50836", :name=>"개요", :path=>"../user_guide/intro-master.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684", :name=>"메인 메뉴", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::54856", :name=>"홈", :path=>"../user_guide/console_menu_sub/home.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::50892.53356.47196.46300", :name=>"워크로드", :path=>"../user_guide/console_menu_sub/work-load.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::45348.53944.50892.53356", :name=>"네트워크", :path=>"../user_guide/console_menu_sub/network.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::49828.53664.47532.51648", :name=>"스토리지", :path=>"../user_guide/console_menu_sub/storage.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::54840.49828.53944", :name=>"호스트", :path=>"../user_guide/console_menu_sub/host.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::51064.51613.47.51064.44032", :name=>"인증/인가", :path=>"../user_guide/console_menu_sub/permission.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::44288.47532", :name=>"관리", :path=>"../user_guide/console_menu_sub/management.html"}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54856.41", :name=>"리소스 생성 (홈)", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54856.41::45348.51076.49828.54168.51060.49828.32.49373.49457", :name=>"네임스페이스 생성", :path=>"../user_guide/resource_create_sub/namespace-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54856.41::45348.51076.49828.54168.51060.49828.32.53364.47112.51076.32.49373.49457", :name=>"네임스페이스 클레임 생성", :path=>"../user_guide/resource_create_sub/namespace-claim-create.html"}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41", :name=>"리소스 생성 (워크로드)", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::54028.46300.32.49373.49457", :name=>"파드 생성", :path=>"../user_guide/resource_create_sub/pod-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::46356.54540.47196.51060.47676.53944.32.49373.49457", :name=>"디플로이먼트 생성", :path=>"../user_guide/resource_create_sub/deployment-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::49828.53580.51060.53944.54400.32.49483.32.49373.49457", :name=>"스테이트풀 셋 생성", :path=>"../user_guide/resource_create_sub/statefulset-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::49884.53356.47551.32.49373.49457", :name=>"시크릿 생성", :path=>"../user_guide/resource_create_sub/secret-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::52968.54588.44536.32.47605.32.49373.49457", :name=>"컨피그 맵 생성", :path=>"../user_guide/resource_create_sub/config-map-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::53356.47200.32.51105.32.49373.49457", :name=>"크론 잡 생성", :path=>"../user_guide/resource_create_sub/cron-job-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::51105.32.49373.49457", :name=>"잡 생성", :path=>"../user_guide/resource_create_sub/job-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::45936.47788.32.49483.32.49373.49457", :name=>"데몬 셋 생성", :path=>"../user_guide/resource_create_sub/daemonset-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::47112.54540.47532.52852.32.49483.32.49373.49457", :name=>"레플리카 셋 생성", :path=>"../user_guide/resource_create_sub/replicaset-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::72.80.65.32.49373.49457", :name=>"HPA 생성", :path=>"../user_guide/resource_create_sub/hpa-create.html"}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41", :name=>"리소스 생성 (네트워크)", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41::49436.48708.49828.32.49373.49457", :name=>"서비스 생성", :path=>"../user_guide/resource_create_sub/service-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41::51064.44536.47112.49828.32.49373.49457", :name=>"인그레스 생성", :path=>"../user_guide/resource_create_sub/ingress-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41::45348.53944.50892.53356.32.51221.52293.32.49373.49457", :name=>"네트워크 정책 생성", :path=>"../user_guide/resource_create_sub/network-policy-create.html"}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41", :name=>"리소스 생성 (스토리지)", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::50689.44396.32.48380.47464.32.49373.49457", :name=>"영구 볼륨 생성", :path=>"../user_guide/resource_create_sub/persistent-volume-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::50689.44396.32.48380.47464.32.53364.47112.51076.32.49373.49457", :name=>"영구 볼륨 클레임 생성", :path=>"../user_guide/resource_create_sub/persistent-volume-claim-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::49828.53664.47532.51648.32.53364.47000.49828.32.49373.49457", :name=>"스토리지 클래스 생성", :path=>"../user_guide/resource_create_sub/storage-class-create.html"}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41", :name=>"리소스 생성 (인증/인가)", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::49436.48708.49828.32.44228.51221.32.49373.49457", :name=>"서비스 계정 생성", :path=>"../user_guide/resource_create_sub/service-account-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.49373.49457", :name=>"롤 생성", :path=>"../user_guide/resource_create_sub/role-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.48148.51064.46377.32.49373.49457", :name=>"롤 바인딩 생성", :path=>"../user_guide/resource_create_sub/role-binding-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.48148.51064.46377.32.53364.47112.51076.32.49373.49457", :name=>"롤 바인딩 클레임 생성", :path=>"../user_guide/resource_create_sub/role-binding-claim-create.html"}]}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41", :name=>"리소스 생성 (관리)", :topics=>[{:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41::47532.49548.49828.32.53244.53440.32.49373.49457", :name=>"리소스 쿼타 생성", :path=>"../user_guide/resource_create_sub/resource-quota-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41::47532.49548.49828.32.53244.53440.32.53364.47112.51076.32.49373.49457", :name=>"리소스 쿼타 클레임 생성", :path=>"../user_guide/resource_create_sub/resource-quota-claim-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41::51228.54620.32.48276.50948.32.49373.49457", :name=>"제한 범위 생성", :path=>"../user_guide/resource_create_sub/basic-resource-create.html"}, {:id=>"47560.49828.53552.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41::49324.50857.51088.32.47532.49548.49828.32.51221.51032.32.49373.49457", :name=>"사용자 리소스 정의 생성", :path=>"../user_guide/resource_create_sub/custom-resource-create.html"}]}]}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436", :name=>"싱글 클러스터 콘솔 안내서", :topics=>[{:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::44060.50836", :name=>"개요", :path=>"../user_guide/intro-single.html"}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::44288.47532.32.45824.49345.32.49436.48652.32.53364.47084.49828.53552.32.49440.53469", :name=>"관리 대상 서브 클러스터 선택", :path=>"../user_guide/single-cluster-select.html"}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.45684", :name=>"메뉴", :topics=>[{:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.45684::45348.51076.49828.54168.51060.49828", :name=>"네임스페이스", :path=>"../user_guide/console_menu_sub/single-namespace.html"}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.45684::47204.32.48148.51064.46377", :name=>"롤 바인딩", :path=>"../user_guide/console_menu_sub/single-role-binding.html"}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47700.45684::47532.49548.49828.32.53244.53440", :name=>"리소스 쿼타", :path=>"../user_guide/console_menu_sub/single-resource-quota.html"}]}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54856.41", :name=>"리소스 생성 (홈)", :topics=>[{:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54856.41::45348.51076.49828.54168.51060.49828.32.49373.49457", :name=>"네임스페이스 생성", :path=>"../user_guide/resource_create_sub/single-namespace-create.html"}]}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41", :name=>"리소스 생성 (인증/인가)", :topics=>[{:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.48148.51064.46377.32.49373.49457", :name=>"롤 바인딩 생성", :path=>"../user_guide/resource_create_sub/single-role-binding-create.html"}]}, {:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41", :name=>"리소스 생성 (관리)", :topics=>[{:id=>"49905.44544.32.53364.47084.49828.53552.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.44288.47532.41::47532.49548.49828.32.53244.53440.32.49373.49457", :name=>"리소스 쿼타 생성", :path=>"../user_guide/resource_create_sub/single-resource-quota-create.html"}]}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436", :name=>"개발자 콘솔 안내서", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::44060.50836", :name=>"개요", :path=>"../user_guide/intro-developer.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684", :name=>"메인 메뉴", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::53664.54260.47196.51648", :name=>"토폴로지", :path=>"../user_guide/console_menu_sub/topology.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::49436.48708.49828.32.52852.53448.47196.44536", :name=>"서비스 카탈로그", :path=>"../user_guide/console_menu_sub/service-catalog.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::54764.47492", :name=>"헬름", :path=>"../user_guide/console_menu_sub/helm.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::49436.48708.49828.32.47700.49884", :name=>"서비스 메시", :path=>"../user_guide/console_menu_sub/service-mesh.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::67.73.47.67.68", :name=>"CI/CD", :path=>"../user_guide/console_menu_sub/ci-cd.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::65.73.45.68.101.118.79.112.115", :name=>"AI-DevOps", :path=>"../user_guide/console_menu_sub/ai-dev.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::52852.54532.52852", :name=>"카프카", :path=>"../user_guide/console_menu_sub/kafka.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::47112.46356.49828", :name=>"레디스", :path=>"../user_guide/console_menu_sub/redis.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47700.51064.32.47700.45684::49436.48708.49828.32.48148.51064.46377", :name=>"서비스 바인딩", :path=>"../user_guide/console_menu_sub/service-binding.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41", :name=>"리소스 생성 (서비스 카탈로그)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53596.54540.47551.32.49373.49457", :name=>"템플릿 생성", :path=>"../user_guide/resource_create_sub/template-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53364.47084.49828.53552.32.53596.54540.47551.32.49373.49457", :name=>"클러스터 템플릿 생성", :path=>"../user_guide/resource_create_sub/cluster-template-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53364.47084.49828.53552.32.53596.54540.47551.32.53364.47112.51076.32.49373.49457", :name=>"클러스터 템플릿 클레임 생성", :path=>"../user_guide/resource_create_sub/catalog-service-claim-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53596.54540.47551.32.51064.49828.53556.49828.32.49373.49457", :name=>"템플릿 인스턴스 생성", :path=>"../user_guide/resource_create_sub/template-instance-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54764.47492.41", :name=>"리소스 생성 (헬름)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54764.47492.41::54764.47492.32.47532.54252.51648.53552.47532.32.49373.49457", :name=>"헬름 리포지터리 생성", :path=>"../user_guide/resource_create_sub/helm-repo-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.54764.47492.41::54764.47492.32.47540.47532.49828.32.49373.49457", :name=>"헬름 릴리스 생성", :path=>"../user_guide/resource_create_sub/helm-release-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41", :name=>"리소스 생성 (서비스 메시)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::44032.49345.32.49436.48708.49828.32.49373.49457", :name=>"가상 서비스 생성", :path=>"../user_guide/resource_create_sub/virtual-service-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::47785.51201.51648.32.44508.52825.32.49373.49457", :name=>"목적지 규칙 생성", :path=>"../user_guide/resource_create_sub/destination-rule-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::50644.48372.51060.32.54596.53552.32.49373.49457", :name=>"엔보이 필터 생성", :path=>"../user_guide/resource_create_sub/envoy-filter-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::44172.51060.53944.50920.51060.32.49373.49457", :name=>"게이트웨이 생성", :path=>"../user_guide/resource_create_sub/gateway-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::49324.51060.46300.52852.32.49373.49457", :name=>"사이드카 생성", :path=>"../user_guide/resource_create_sub/sidecar-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::49436.48708.49828.32.50644.53944.47532.32.49373.49457", :name=>"서비스 엔트리 생성", :path=>"../user_guide/resource_create_sub/service-entry-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::50836.52397.32.51064.51613.32.49373.49457", :name=>"요청 인증 생성", :path=>"../user_guide/resource_create_sub/request-auth-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::54588.50612.32.51064.51613.32.49373.49457", :name=>"피어 인증 생성", :path=>"../user_guide/resource_create_sub/peer-auth-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::51064.44032.32.51221.52293.32.49373.49457", :name=>"인가 정책 생성", :path=>"../user_guide/resource_create_sub/auth-policy-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41", :name=>"리소스 생성 (CI/CD)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::53468.49828.53356.32.49373.49457", :name=>"태스크 생성", :path=>"../user_guide/resource_create_sub/task-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::53364.47084.49828.53552.32.53468.49828.53356.32.49373.49457", :name=>"클러스터 태스크 생성", :path=>"../user_guide/resource_create_sub/cluster-task-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::53468.49828.53356.32.47088.32.49373.49457", :name=>"태스크 런 생성", :path=>"../user_guide/resource_create_sub/task-run-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.49373.49457", :name=>"파이프라인 생성", :path=>"../user_guide/resource_create_sub/pipeline-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.47088.32.49373.49457", :name=>"파이프라인 런 생성", :path=>"../user_guide/resource_create_sub/pipeline-run-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.47532.49548.49828.32.49373.49457", :name=>"파이프라인 리소스 생성", :path=>"../user_guide/resource_create_sub/pipeline-resource-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::51064.53580.44536.47112.51060.49496.32.52968.54588.44536.32.49373.49457", :name=>"인테그레이션 컨피그 생성", :path=>"../user_guide/resource_create_sub/integration-config-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41", :name=>"리소스 생성 (AI DevOps)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::45432.53944.48513.32.49436.48260.32.49373.49457", :name=>"노트북 서버 생성", :path=>"../user_guide/resource_create_sub/notebook-server-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::54616.51060.54140.54028.46972.48120.53552.32.53916.45789.32.49373.49457", :name=>"하이퍼파라미터 튜닝 생성", :path=>"../user_guide/resource_create_sub/katib-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::53944.47112.51060.45789.32.51105.32.49373.49457", :name=>"트레이닝 잡 생성", :path=>"../user_guide/resource_create_sub/training-job-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::52628.47200.32.49436.48708.49828.32.49373.49457", :name=>"추론 서비스 생성", :path=>"../user_guide/resource_create_sub/kf-serving-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::54617.49845.32.47784.45944.32.49373.49457", :name=>"학습 모델 생성", :path=>"../user_guide/resource_create_sub/trained-model-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41", :name=>"리소스 생성 (카프카)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41::52852.54532.52852.32.53364.47084.49828.53552.32.49373.49457", :name=>"카프카 클러스터 생성", :path=>"../user_guide/resource_create_sub/kafca-cluster-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41::52852.54532.52852.32.52964.45349.53944.32.49373.49457", :name=>"카프카 커넥트 생성", :path=>"../user_guide/resource_create_sub/kafca-connect-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41::52852.54532.52852.32.52964.45349.53552.32.49373.49457", :name=>"카프카 커넥터 생성", :path=>"../user_guide/resource_create_sub/kafca-connector-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41::52852.54532.52852.32.48652.47551.51648.32.49373.49457", :name=>"카프카 브릿지 생성", :path=>"../user_guide/resource_create_sub/kafca-bridge-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41::52852.54532.52852.32.48120.47084.32.47700.51060.52964.32.50.32.49373.49457", :name=>"카프카 미러 메이커 2 생성", :path=>"../user_guide/resource_create_sub/kafca-mirrormaker2-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.52852.54532.52852.41::52852.54532.52852.32.47532.48184.47088.49828.32.49373.49457", :name=>"카프카 리밸런스 생성", :path=>"../user_guide/resource_create_sub/kafca-rebalance-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47112.46356.49828.41", :name=>"리소스 생성 (레디스)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47112.46356.49828.41::47112.46356.49828.32.49373.49457", :name=>"레디스 생성", :path=>"../user_guide/resource_create_sub/redis-create.html"}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47112.46356.49828.41::47112.46356.49828.32.53364.47084.49828.53552.32.49373.49457", :name=>"레디스 클러스터 생성", :path=>"../user_guide/resource_create_sub/redis-cluster-create.html"}]}, {:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.48148.51064.46377.41", :name=>"리소스 생성 (서비스 바인딩)", :topics=>[{:id=>"44060.48156.51088.32.53080.49556.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.48148.51064.46377.41::49436.48708.49828.32.48148.51064.46377.32.49373.49457", :name=>"서비스 바인딩 생성", :path=>"../user_guide/resource_create_sub/service-binding-create.html"}]}]}, {:id=>"50868.50689.51088.32.50504.45236.49436", :name=>"운영자 안내서", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::44060.50836", :name=>"개요", :path=>"../admin_guide/intro-admin.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::49884.49828.53596.32.44396.49457", :name=>"시스템 구성", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::49884.49828.53596.32.44396.49457::54616.46300.50920.50612.32.44396.49457", :name=>"하드웨어 구성", :path=>"../admin_guide/system_configuration/hardware-configuration.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::49884.49828.53596.32.44396.49457::49548.54532.53944.50920.50612.32.44396.49457", :name=>"소프트웨어 구성", :path=>"../admin_guide/system_configuration/software-configuration.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::49884.49828.53596.32.44396.49457::45348.51076.49828.54168.51060.49828.32.51221.48372", :name=>"네임스페이스 정보", :path=>"../admin_guide/system_configuration/namespace-info.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::49884.49828.53596.32.44396.49457::49548.54532.53944.50920.50612.32.49444.51221", :name=>"소프트웨어 설정", :path=>"../admin_guide/system_configuration/software-setting.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::49884.49828.53596.32.44396.49457::44048.49324.32.47196.44536.32.49444.51221", :name=>"감사 로그 설정", :path=>"../admin_guide/system_configuration/auditlog-setting.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::50528.54540.47532.52992.51060.49496", :name=>"애플리케이션", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::50528.54540.47532.52992.51060.49496::52968.53580.51060.45320.32.51060.48120.51648.32.44288.47532", :name=>"컨테이너 이미지 관리", :path=>"../admin_guide/application/container-image-management.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::50528.54540.47532.52992.51060.49496::72.121.112.101.114.65.117.116.104", :name=>"HyperAuth", :path=>"../admin_guide/application/hyperauth.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::50528.54540.47532.52992.51060.49496::75.117.98.101.32.44061.52404", :name=>"Kube 객체", :path=>"../admin_guide/application/kube-object.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::67.73.47.67.68", :name=>"CI/CD", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::67.73.47.67.68::46041.51089.32.49345.53468.50752.32.51060.47141.32.54869.51064", :name=>"동작 상태와 이력 확인", :path=>"../admin_guide/cicd/history-confirm.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::67.73.47.67.68::71.97.114.98.97.103.101.32.51221.47532", :name=>"Garbage 정리", :path=>"../admin_guide/cicd/garbage-clean-up.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::47784.45768.53552.47553", :name=>"모니터링", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::47784.45768.53552.47553::46041.51089.32.49345.53468.50752.32.51060.47141.32.54869.51064", :name=>"동작 상태와 이력 확인", :path=>"../admin_guide/monitoring/system-monitoring.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::47784.45768.53552.47553::44536.46972.54028.45208", :name=>"그라파나", :path=>"../admin_guide/monitoring/grafana.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::65.114.103.111.67.68", :name=>"ArgoCD", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::65.114.103.111.67.68::71.105.116.32.50672.46041.54616.44592", :name=>"Git 연동하기", :path=>"../admin_guide/argocd/git-link.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::65.114.103.111.67.68::50528.54540.47532.52992.51060.49496.32.48176.54252.54616.44592", :name=>"애플리케이션 배포하기", :path=>"../admin_guide/argocd/app-deploy.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::48177.50629.32.48143.32.48373.44396", :name=>"백업 및 복구", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::48177.50629.32.48143.32.48373.44396::101.116.99.100.32.48177.50629.32.48143.32.48373.44396", :name=>"etcd 백업 및 복구", :path=>"../admin_guide/backup/etcd-backup.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::48177.50629.32.48143.32.48373.44396::104.121.112.101.114.97.117.116.104.32.48177.50629.32.48143.32.48373.44396", :name=>"hyperauth 백업 및 복구", :path=>"../admin_guide/backup/hyperauth-backup.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::48177.50629.32.48143.32.48373.44396::104.121.112.101.114.114.101.103.105.115.116.114.121.32.48177.50629.32.48143.32.48373.44396", :name=>"hyperregistry 백업 및 복구", :path=>"../admin_guide/backup/hyperregistry-backup.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::48177.50629.32.48143.32.48373.44396::103.105.116.101.97.32.48177.50629.32.48143.32.48373.44396", :name=>"gitea 백업 및 복구", :path=>"../admin_guide/backup/gitea-backup.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::48177.50629.32.48143.32.48373.44396::104.121.112.101.114.99.108.111.117.100.53.45.115.121.115.116.101.109.32.48177.50629.32.48143.32.48373.44396", :name=>"hypercloud5-system 백업 및 복구", :path=>"../admin_guide/backup/hypercloud5-system-backup.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::51216.44160.49324.54637", :name=>"점검사항", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::51216.44160.49324.54637::45432.46300.32.51216.44160", :name=>"노드 점검", :path=>"../admin_guide/check_point/node-check.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::51216.44160.49324.54637::54028.46300.32.51216.44160", :name=>"파드 점검", :path=>"../admin_guide/check_point/kube-system-pod-check.html"}]}, {:id=>"50868.50689.51088.32.50504.45236.49436::72.121.112.101.114.67.108.111.117.100.32.44288.47532", :name=>"HyperCloud 관리", :path=>"../admin_guide/hypercloud-management.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::75.117.98.101.32.51064.51613.49436.32.44288.47532", :name=>"Kube 인증서 관리", :path=>"../admin_guide/kube-auth-management.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::47680.54000.32.53364.47084.49828.53552.32.44228.51221.32.44288.47532", :name=>"멀티 클러스터 계정 관리", :path=>"../admin_guide/multicluster-management.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::47928.51228.32.54644.44208", :name=>"문제 해결", :topics=>[{:id=>"50868.50689.51088.32.50504.45236.49436::47928.51228.32.54644.44208::111.97.117.116.104.50.45.112.114.111.120.121.32.50724.47448", :name=>"oauth2-proxy 오류", :path=>"../admin_guide/trouble_shooting/oauth2-proxy-error.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::47928.51228.32.54644.44208::47196.44536.32.51312.54924", :name=>"로그 조회", :path=>"../admin_guide/trouble_shooting/basic-log-inquire.html"}, {:id=>"50868.50689.51088.32.50504.45236.49436::47928.51228.32.54644.44208::53356.47212.32.50724.47448", :name=>"크롬 오류", :path=>"../admin_guide/trouble_shooting/chrome-error.html"}]}]}]`);
+    console.debug('css_path',`../../../5.2-ko/_stylesheets/`);
+    console.debug('javascripts_path',`../../../5.2-ko/_javascripts/`);
+    console.debug('images_path',`../../../5.2-ko/_images/`);
+    console.debug('template_path',`/mnt/c/Users/김정우/Desktop/5.2 매뉴얼/hypercloud-docs/_templates`);
+    console.debug('site_home_path',`../../../index.html`);
+    console.debug('breadcrumb_group',`<a href="../../user_guide/intro-basic.html">웹 콘솔 기본 사용법</a>`);
+    console.debug('breadcrumb_root',`<a href="../../welcome/intro.html">HyperCloud 5.2</a>`);
+    console.debug('breadcrumb_subgroup_block',`<li class="hidden-xs active"><a href="../../user_guide/common_function_sub/label-edit.html">기본 기능</a></li>`);
+    console.debug('breadcrumb_subsubgroup_block',``);
+    console.debug('breadcrumb_topic',`리소스 상세 정보 확인`);
+    console.debug('subtopic_shim',`../`);
+    console.debug('repo_path',`user_guide/common_function_sub/resource-detail.adoc`)  ;
+  </script>
+  <footer id="rh">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+              <a href="https://www.tmax.co.kr/hypercloud" target="_blank">
+                <img src="../../../5.2-ko/_images/footer_tmaxcloud_logo.svg" class="img-fluid" alt="Tmax A&C" style="height: 16px; margin-right:10px">
+              </a>
+            </div>
+            <div class="col-sm-6">
+              <p class="text-nowrap">Copyright 2021 TmaxCloud Co., Ltd. All rights reserved.</span></p>
+            </div>
+            <!-- <div class="col">
+                <nav class="nav">
+                    <a target="_blank" href="https://www.tmaxcloud.com/term/TmaxCloud_Terms_of_Service.html" class="nav-link">이용약관</a>
+                    <a target="_blank" href="https://www.tmaxcloud.com/term/TmaxCloud_Privacy_Policy.html" class="nav-link">개인정보처리방침</a>
+                    <a target="_blank" href="https://www.tmaxcloud.com/term/HyperCloud_Cloud_SLA.html" class="nav-link">SLA</a>
+                </nav>
+            </div> --!>
+        </div>
+    </div>
+</footer>
+
+<!-- Adobe DTM -->
+<script type="text/javascript">
+if (("undefined" !== typeof _satellite) && ("function" === typeof _satellite.pageBottom)) {
+   _satellite.pageBottom();
+}
+</script>
+<!-- End Adobe DTM -->
+
+  <a id="back-to-top" href="#" onclick="window.scrollTo(0,0);" class="back-to-top" role="button"><i class="fa fa-long-arrow-up "></i>Top</a>
+  <script type="text/javascript">
+    const TopBtn = document.getElementById("back-to-top");
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 62) {
+        TopBtn.style.display = "flex";
+      } else {
+        TopBtn.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
