@@ -1,0 +1,2839 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html>
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>특장점 | 환영합니다 | HyperCloud 4.1</title>
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans+KR' rel='stylesheet' type='text/css'>
+  <link href="../../4.1-ko/_stylesheets/subdomain.css" rel="stylesheet" type="text/css">
+  <link href="../../4.1-ko/_stylesheets/search.css" rel="stylesheet" />
+  <link href="../../4.1-ko/_stylesheets/osh-nav-footer.css" rel="stylesheet" type="text/css" media="screen, print" />
+  <link href="../../4.1-ko/_stylesheets/docs.css" rel="stylesheet" type="text/css">
+  <link href="../../4.1-ko/_stylesheets/nav.css" rel="stylesheet" />
+  <link href="../../4.1-ko/_images/hypercloud_favicon.png" rel="apple-touch-icon-precomposed" type="image/png">
+  <link href="../../4.1-ko/_images/hypercloud_favicon.png" rel="shortcut icon" type="text/css"> 
+  <!--[if IE]><link rel="shortcut icon" href="../../4.1-ko/_images/hypercloud_favicon.png"><![endif]-->
+  <!-- or, set /favicon.ico for IE10 win -->
+  <meta content="HyperCloud" name="application-name">
+  <meta content="#000000" name="msapplication-TileColor">
+  <meta content="../../4.1-ko/_images/hypercloud_favicon.png" name="msapplication-TileImage">
+</head>
+<body onload="selectVersion('4.1'); selectLanguage('hypercloud', '4.1')">
+  <div class="navbar navbar-other" role="navigation">
+	<div class="nav-logo">
+		<a href="https://www.tmax.co.kr/hypercloud">
+			<img src="../../4.1-ko/_images/hypercloud_logo_new.png">
+		</a>
+	</div>
+	<div class="nav-version">
+		<ul class="navbar-nav">
+			<li class="nav-item hidden-xs">
+				<!-- <a class="nav-link manual" href="javascript:void(0);">매뉴얼</a> -->
+				<a class="nav-link manual" href="javascript:void(0);" onclick="goFirstPage('hypercloud', '4.1'); return false;" >매뉴얼</a>
+				<div class="divider"></div>
+			</li>
+			<li class="nav-item hidden-xs">
+				<a class="nav-link disabled version" >버전</a>
+				</li>
+			<li class="nav-item">
+				<select id="version-selector" onchange="versionSelector(this, 'hypercloud', '4.1');">
+					<!-- 새 버전 추가 -->
+					<option value="5.2">HyperCloud 5.2</option>
+					<option value="5.1.1">HyperCloud 5.1.1</option>
+					<option value="5.1">HyperCloud 5.1</option>
+					<option value="5">HyperCloud 5</option>
+					<option value="4.1">HyperCloud 4.1</option>
+					<!-- <option value="3">HyperCloud 3</option> -->
+				</select>
+			</li>
+		</ul>
+	</div>
+	<div class="nav-right">
+		<ul class="navbar-nav">
+			
+			<!-- <li class="nav-item console hidden-xs" >
+				<a class="nav-link" href="https://console.tmaxcloud.com/" target="_blank">
+					콘솔
+					<span class="fa fa-external-link"></span>
+				</a>
+			</li> --!>
+		</ul>
+	</div>
+</div>
+  <div class="container">
+    <p class="toggle-nav visible-xs pull-left">
+      <button class="btn btn-default btn-sm" type="button" data-toggle="offcanvas">Toggle nav</button>
+    </p>
+    <ol class="breadcrumb">
+      <li class="sitename">
+        <a href="https://www.tmax.co.kr/hypercloud">문서</a>
+      </li>
+      <li class="hidden-xs active">
+        <a href="../welcome/intro.html">HyperCloud 4.1</a>
+      </li>
+      <li class="hidden-xs active">
+        <a href="../welcome/intro.html">환영합니다</a>
+      </li>
+      
+      <li class="hidden-xs active">
+        특장점
+      </li>
+    </ol>
+    <div class="row row-offcanvas row-offcanvas-left">
+      <div class="col-xs-8 col-sm-3 col-md-3 sidebar sidebar-offcanvas">
+        <!-- 20200918 검색 기능 제거 -->
+		<!-- <div class="row-fluid">
+          <div id="hc-search">
+            <input id="hc-search-input" type="text">
+            <button id="hc-search-btn">Search</button>
+          </div>
+
+          <div id="hc-search-modal">
+            <div id="hc-modal-content">
+              <span id="hc-modal-close">&times;</span>
+              <div id="hc-search-results-wrapper">
+                <div id="hc-search-results"></div>
+                <div id="hc-search-progress-indicator" class="text-center search-progress-indicator"><i class="fa fa-circle-o-notch fa-spin" style="font-size:42px"></i></div>
+                <div class="text-center">
+                  <button id="hc-search-more-btn">Show more results</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> --!>
+        <ul class="nav nav-sidebar">
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup0">
+        <span id="tgSpan0" class="fa fa-angle-down"></span>
+          환영합니다
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup0" class="collapse in list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../welcome/intro.html">개요</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class=" active" href="../welcome/advantage.html">특장점</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+          <!-- is this is a single page? That is, does this topic have more topics?
+          Welcome 1 More -->
+
+            <!-- ^ this establishs whether we are reading this current page -->
+
+            <li><a class="" href="../welcome/value-proposition.html">가치 제안</a></li>
+            <!--  if active, then highlight it,  otherwise nothing to do -->
+
+      </ul>
+    </li>
+
+<!--  the top level  groupings start here -->
+
+
+
+
+
+<!-- group_id is the one that is user selected. topic_group[id] is what we are parsing via navigation -->
+
+    <li class="nav-header">
+
+
+
+
+
+
+      <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicGroup1">
+        <span id="tgSpan1" class="fa fa-angle-right"></span>
+          웹 콘솔 사용자 안내서
+          <!-- prints out the names of the top level books with arrow down or to right
+               So in this case: Welcome 1 and Another Book -->
+      </a>
+
+
+      <!-- this then goes through all the topics within the top level groups
+      depending on whether it itself contains further topics or is a single file -->
+
+      <ul id="topicGroup1" class="collapse  list-unstyled">
+
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-0">
+                <span id="sgSpan-1-0" class="fa fa-caret-right"></span>
+                  &nbsp;콘솔 접속
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-0" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_connect_sub/execution-environment.html">
+                      실행 환경
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_connect_sub/console-login.html">
+                      로그인
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_connect_sub/console-id-management.html">
+                      콘솔 계정 관리
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-1">
+                <span id="sgSpan-1-1" class="fa fa-caret-right"></span>
+                  &nbsp;콘솔 화면
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-1" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_layout_sub/console-layout-main.html">
+                      메인 화면 구성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_layout_sub/task-bar.html">
+                      작업표시줄 영역
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-2">
+                <span id="sgSpan-1-2" class="fa fa-caret-right"></span>
+                  &nbsp;콘솔 메뉴
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-2" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/home.html">
+                      홈
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/service-catalog.html">
+                      서비스 카탈로그
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/work-load.html">
+                      워크로드
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/service-mesh.html">
+                      서비스 메시
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/network.html">
+                      네트워크
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/storage.html">
+                      스토리지
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/ci-cd.html">
+                      CI/CD
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/ai-dev.html">
+                      AI DevOps
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/security.html">
+                      보안
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/image.html">
+                      이미지
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/management.html">
+                      매니지먼트
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/host.html">
+                      호스트
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/console_menu_sub/permission.html">
+                      인증/인가
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-3">
+                <span id="sgSpan-1-3" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (서비스 카탈로그)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-3" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/service-binding-create.html">
+                      서비스 바인딩 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/service-broker-create.html">
+                      서비스 브로커 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/service-instance-create.html">
+                      서비스 인스턴스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/catalog-service-claim-create.html">
+                      카탈로그 서비스 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/cluster-service-broker-create.html">
+                      클러스터 서비스 브로커 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/template-create.html">
+                      템플릿 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/template-instance-create.html">
+                      템플릿 인스턴스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-4">
+                <span id="sgSpan-1-4" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (워크로드)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-4" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/hpa-create.html">
+                      HPA 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/virtual-machine-create.html">
+                      가상머신 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/daemonset-create.html">
+                      데몬셋 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/deployment-create.html">
+                      디플로이먼트 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/replicaset-create.html">
+                      레플리카 셋 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/statefulset-create.html">
+                      스테이트 풀셋 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/secret-create.html">
+                      시크릿 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/job-create.html">
+                      잡 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/config-map-create.html">
+                      컨피그 맵 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/cron-job-create.html">
+                      크론 잡 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/pod-create.html">
+                      파드 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-5">
+                <span id="sgSpan-1-5" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (서비스 메시)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-5" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/virtual-service-create.html">
+                      가상 서비스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/gateway-create.html">
+                      게이트웨이 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/destination-rule-create.html">
+                      목적지 룰 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/sidecar-create.html">
+                      사이드카 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/service-entry-create.html">
+                      서비스 엔트리 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/envoy-filter-create.html">
+                      앤보이 필터 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/request-auth-create.html">
+                      요청 인증 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/auth-policy-create.html">
+                      인가 정책 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/peer-auth-create.html">
+                      피어 인증 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-6">
+                <span id="sgSpan-1-6" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (네트워크)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-6" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/service-create.html">
+                      서비스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/ingress-create.html">
+                      인그레스 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-7">
+                <span id="sgSpan-1-7" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (스토리지)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-7" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/data-volume-create.html">
+                      데이터 볼륨 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/storage-class-create.html">
+                      스토리지 클래스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/persistent-volume-create.html">
+                      영구 볼륨 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/persistent-volume-claim-create.html">
+                      영구 볼륨 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-8">
+                <span id="sgSpan-1-8" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (CI/CD)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-8" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/task-create.html">
+                      태스크 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/task-run-create.html">
+                      태스크 런 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/pipeline-create.html">
+                      파이프라인 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/pipeline-run-create.html">
+                      파이프라인 런 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/pipeline-resource-create.html">
+                      파이프라인 리소스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/pipeline-condition-create.html">
+                      파이프라인 컨디션 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-9">
+                <span id="sgSpan-1-9" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (AI DevOps)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-9" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/kf-serving-create.html">
+                      KF 서빙 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/notebook-server-create.html">
+                      노트북 서버 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/workflow-create.html">
+                      워크플로우 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/work-temp-create.html">
+                      워크플로우 템플릿 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/katib-create.html">
+                      카티브 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/training-job-create.html">
+                      트레이닝 잡 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-10">
+                <span id="sgSpan-1-10" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (보안)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-10" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/network-policy-create.html">
+                      네트워크 정책 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/pod-security-policy-create.html">
+                      파드 보안 정책 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-11">
+                <span id="sgSpan-1-11" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (이미지)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-11" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/registry-create.html">
+                      레지스트리 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-12">
+                <span id="sgSpan-1-12" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (매니지먼트)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-12" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/namespace-create.html">
+                      네임스페이스 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/namespace-claim-create.html">
+                      네임스페이스 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/resource-quota-create.html">
+                      리소스 쿼타 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/resource-quota-claim-create.html">
+                      리소스 쿼타 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/custom-resource-create.html">
+                      사용자 리소스 정의 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/basic-resource-create.html">
+                      제한 범위 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-13">
+                <span id="sgSpan-1-13" class="fa fa-caret-right"></span>
+                  &nbsp;리소스 생성 (인증/인가)
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-13" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/role-create.html">
+                      롤 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/role-binding-create.html">
+                      롤 바인딩 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/role-binding-claim-create.html">
+                      롤 바인딩 클레임 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/user-create.html">
+                      사용자 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/user-group-create.html">
+                      사용자 그룹 생성
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/resource_create_sub/service-account-create.html">
+                      서비스 계정 생성
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+
+        <!-- for each topic in this topic_group, for example in Welcome 1, what topics exist?
+        Welcome 2 and Welcome 1 More -->
+
+
+            <!-- this topic contains subtopics - Welcome 2 -->
+
+
+            <!-- start a new heading area -->
+
+            <li class="nav-header">
+              <a class="" href="javascript:void(0);" data-toggle="collapse" data-target="#topicSubGroup-1-14">
+                <span id="sgSpan-1-14" class="fa fa-caret-right"></span>
+                  &nbsp;기본 기능
+
+                  <!-- prints out the names of the second level books with arrow down or to right
+                  So in this case: Welcome 2 -->
+
+              </a>
+              <ul id="topicSubGroup-1-14" class="nav-tertiary list-unstyled collapse">
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/label-edit.html">
+                      레이블 관리
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/annotation-edit.html">
+                      주석 관리
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/resource-info-edit.html">
+                      리소스 정보 수정
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/resource-delete.html">
+                      리소스 삭제
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/yaml-sample.html">
+                      YAML 샘플 확인
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/yaml-down.html">
+                      YAML 파일 다운로드
+                    </a>
+                  </li>
+
+                
+
+
+                <!-- for each topic in this topic_group, in Welcome 2, what topics exist?
+                     Welcome 2 Index Page, Welcome 3 and Welcome 2 More - we list them all.. -->
+
+                
+                
+                
+                
+                
+
+                <!-- is this is a single page? That is, does this topic have more topics?
+                 Welcome 2 Index Page and Welcome 2 More -->
+
+
+
+
+                  <li>
+                    <a class="" href="../user_guide/common_function_sub/image-push.html">
+                      레지스트리에 이미지 등록
+                    </a>
+                  </li>
+
+                
+
+              </ul>
+            </li>
+      </ul>
+    </li>
+</ul>
+      </div>
+      <div class="col-xs-12 col-sm-9 col-md-9 main">
+        <div class="page-header">
+          <h1>특장점</h1>
+        </div>
+        <div id="toc" class="toc">
+<div id="toctitle"></div>
+<ul class="sectlevel1">
+<li><a href="#쿠버네티스-기반의-no-lock-in-컨테이너-플랫폼">쿠버네티스 기반의 No Lock-in 컨테이너 플랫폼</a></li>
+<li><a href="#표준-기반의-멀티하이브리드-클라우드-지원">표준 기반의 멀티/하이브리드 클라우드 지원</a></li>
+<li><a href="#검증된-오픈소스-내재화-및-최적화-제공">검증된 오픈소스 내재화 및 최적화 제공</a></li>
+<li><a href="#사용이-편리한-웹-콘솔">사용이 편리한 웹 콘솔</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>본 장에서는 HyperCloud 4.1의 여러가지 특징 중에서 주요 특장점에 대해 설명한다.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="쿠버네티스-기반의-no-lock-in-컨테이너-플랫폼"><a class="anchor" href="#쿠버네티스-기반의-no-lock-in-컨테이너-플랫폼"></a>쿠버네티스 기반의 No Lock-in 컨테이너 플랫폼</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCloud 4.1은 시장의 디펙토 표준인 쿠버네티스를 기반으로 벤더 및 플랫폼 종속성을 완전히 제거한 No Lock-in PaaS 플랫폼을 지향한다. 물리, 가상 환경과 CentOS, Ubuntu, RHEL 등 Linux 계열의 모든 OS를 지원하여 기반 인프라에 대한 제약이 없다.<br>
+쿠버네티스에 대한 엔진 레벨을 컨트롤할 수 있는 풍부한 전문 인력을 기반으로 쿠버네티스 버전은 항상 최신 버전을 유지하며, 쿠버네티스를 베이스로 하는 모든 HyperCloud 4.1 솔루션은 CNCF의 CK인증을 취득하는 것을 기본으로 한다.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="표준-기반의-멀티하이브리드-클라우드-지원"><a class="anchor" href="#표준-기반의-멀티하이브리드-클라우드-지원"></a>표준 기반의 멀티/하이브리드 클라우드 지원</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>쿠버네티스 표준 기반인 HyperCloud 4.1은 AWS, Azure, GCP 등 쿠버네티스를 기반으로 하는 모든 클라우드 환경과 호한이 가능하여 최적의 클러스터 확장성을 보장한다.<br>
+따라서 Cloud-Native 멀티 및 하이브리드 클라우드 구축에 용이하며, 관련하여 다음과 같은 기능을 제공한다.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Cluster API를 통한 클러스터 프로비저닝 및 모니터링</p>
+</li>
+<li>
+<p>Federation으로 멀티클러스터 통합 배포</p>
+</li>
+<li>
+<p>단일창 콘솔을 통한 멀티클러스터 통합 운영 및 관리</p>
+</li>
+<li>
+<p>HyperCloud 4.1의 CI/CD 파이프라인으로 Source-to-Multicloud DevOps 제공</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>이러한 기능을 통해 멀티/하이브리드 환경에서도 개발 생산성과 지속성을 높이고 단일 제어부를 통한 운영관리의 편의성을 보장한다.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="data:image/png;base64,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" alt="figure multi architecture">
+</div>
+<div class="title">그림. HyperCloud 4.1 멀티/하이브리드 클라우드 아키텍처</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="검증된-오픈소스-내재화-및-최적화-제공"><a class="anchor" href="#검증된-오픈소스-내재화-및-최적화-제공"></a>검증된 오픈소스 내재화 및 최적화 제공</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCloud 4.1은 쿠버네티스를 기반으로 엔진을 구성했을 뿐만 아니라, 모니터링, 로깅, 서비스 매시 등의 기능에 대해 쿠버네티스에 최적화된 오픈소스를 내재화하여 패키징한 플랫폼이다.</p>
+</div>
+<div class="paragraph">
+<p>내재화된 오픈소스 리스트는 다음과 같다.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">구분</th>
+<th class="tableblock halign-left valign-top">소프트웨어</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container Runtime Interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cri-o</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container Storage Interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container Network Interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tekton</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service Mesh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Istio, Kiali, Jaeger</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monitoring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prometheus, Grafana</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Elasticsearch, Fluentd, Kibana</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>쿠버네티스 베이스 프레임워크인 Tekton을 내재화하여 CI/CD 환경 구성과 배포 편의성을 향상시켰고, Istio 내재화를 통해 서비스 매쉬 기능을 지원하며 분산트레이싱과 토폴로지 뷰를 통한 서비스간 트래픽 모니터링을 지원한다.<br>
+이 외에도 오픈소스에 대한 시장의 니즈를 반영하여 Middleware/Framework, DBMS, BigData/AI, CI/CD의 4개 카테고리에 대하여 다양한 오픈소스를 자체적으로 검증하여 서비스 카탈로그 형태로 제공한다. 사용자는 템플릿 기반으로 쉽게 등록하고 프로비저닝할 수 있으며, 한 번 등록한 서비스는 재사용이 가능하다. HyperCloud 4.1에서는 다음의 18가지 오픈소스 서비스 카탈로그를 제공하며, 추가적으로 Tmax의 Advanced 솔루션을 최적화하여 서비스 카탈로그로 제공한다.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="사용이-편리한-웹-콘솔"><a class="anchor" href="#사용이-편리한-웹-콘솔"></a>사용이 편리한 웹 콘솔</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCloud 4.1은 사용자의 편의성을 높인 웹 콘솔을 제공한다. 기본적으로 숙련된 사용자를 위한 YAML Editor를 제공할 뿐만 아니라, 클라우드 환경을 처음 사용해보는 초보 사용자도 쉽게 사용할 수 있도록 UI 기반의 Form Editor를 함께 제공한다. YAML Editor의 경우 샘플 가이드를 함께 제공하여 편리하게 YAML을 작성할 수 있다.<br>
+또한 HyperCloud 4.1은 다국어 UI를 지원한다. 기본적으로 영어를 지원하고, 추가적으로 국내 사용자를 위한 한국어 UI를 지원하여 선택하여 사용할 수 있다.</p>
+</div>
+</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../4.1-ko/_javascripts/modernizr.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/subdomain.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/nav-tertiary.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/bootstrap-offcanvas.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/reformat-html.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/hc-search.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/page-loader.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/clipboard.min.js" type="text/javascript"></script>
+  <script src="../../4.1-ko/_javascripts/clipboard.js" type="text/javascript"></script>
+
+ <script>
+  var dk = 'hypercloud';
+  var version = '4.1';
+  var distros = {
+    'hypercloud': ['hypercloud', version],
+  };
+  distros[dk] ? hcSearchCategory.apply(null, distros[dk]) : hcSearchCategory("docs");
+  </script>
+
+  <script type="text/javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+      $("[id^='topicGroup']").on('show.bs.collapse', function (event) {
+        if (!($(event.target).attr('id').match(/^topicSubGroup/))) {
+          $(this).parent().find("[id^='tgSpan']").toggleClass("fa-angle-right fa-angle-down");
+        }
+      });
+      $("[id^='topicGroup']").on('hide.bs.collapse', function (event) {
+        if (!($(event.target).attr('id').match(/^topicSubGroup/))) {
+          $(this).parent().find("[id^='tgSpan']").toggleClass("fa-angle-right fa-angle-down");
+        }
+      });
+      $("[id^='topicSubGroup']").on('show.bs.collapse', function () {
+        $(this).parent().find("[id^='sgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+      $("[id^='topicSubGroup']").on('hide.bs.collapse', function () {
+        $(this).parent().find("[id^='sgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+      $("[id^='topicSubSubGroup']").on('show.bs.collapse', function () {
+        $(this).parent().find("[id^='ssgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+      $("[id^='topicSubSubGroup']").on('hide.bs.collapse', function () {
+        $(this).parent().find("[id^='ssgSpan']").toggleClass("fa-caret-right fa-caret-down");
+      });
+
+    });
+    /*]]>*/
+  </script>
+  <script type="text/javascript">
+    console.debug('distro_key',`hypercloud`);
+    console.debug('distro',`HyperCloud`);
+    console.debug('version',`4.1`);
+    console.debug('site_name',`문서`);
+    console.debug('site_url',`https://www.tmax.co.kr/hypercloud`);
+    console.debug('group_id',`54872.50689.54633.45768.45796`);
+    console.debug('group_title',`환영합니다`);
+    console.debug('subgroup_id',``);
+    console.debug('subsubgroup_id',``);
+    console.debug('subgroup_title',``);
+    console.debug('topic_id',`54872.50689.54633.45768.45796::53945.51109.51216`);
+    console.debug('topic_title',`특장점`);
+    console.debug('article_title',`특장점`);
+    console.debug('navigation',`[{:id=>"54872.50689.54633.45768.45796", :name=>"환영합니다", :topics=>[{:id=>"54872.50689.54633.45768.45796::44060.50836", :name=>"개요", :path=>"../welcome/intro.html"}, {:id=>"54872.50689.54633.45768.45796::53945.51109.51216", :name=>"특장점", :path=>"../welcome/advantage.html"}, {:id=>"54872.50689.54633.45768.45796::44032.52824.32.51228.50504", :name=>"가치 제안", :path=>"../welcome/value-proposition.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436", :name=>"웹 콘솔 사용자 안내서", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.51217.49549", :name=>"콘솔 접속", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.51217.49549::49892.54665.32.54872.44221", :name=>"실행 환경", :path=>"../user_guide/console_connect_sub/execution-environment.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.51217.49549::47196.44536.51064", :name=>"로그인", :path=>"../user_guide/console_connect_sub/console-login.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.51217.49549::53080.49556.32.44228.51221.32.44288.47532", :name=>"콘솔 계정 관리", :path=>"../user_guide/console_connect_sub/console-id-management.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.54868.47732", :name=>"콘솔 화면", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.54868.47732::47700.51064.32.54868.47732.32.44396.49457", :name=>"메인 화면 구성", :path=>"../user_guide/console_layout_sub/console-layout-main.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.54868.47732::51089.50629.54364.49884.51460.32.50689.50669", :name=>"작업표시줄 영역", :path=>"../user_guide/console_layout_sub/task-bar.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684", :name=>"콘솔 메뉴", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::54856", :name=>"홈", :path=>"../user_guide/console_menu_sub/home.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::49436.48708.49828.32.52852.53448.47196.44536", :name=>"서비스 카탈로그", :path=>"../user_guide/console_menu_sub/service-catalog.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::50892.53356.47196.46300", :name=>"워크로드", :path=>"../user_guide/console_menu_sub/work-load.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::49436.48708.49828.32.47700.49884", :name=>"서비스 메시", :path=>"../user_guide/console_menu_sub/service-mesh.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::45348.53944.50892.53356", :name=>"네트워크", :path=>"../user_guide/console_menu_sub/network.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::49828.53664.47532.51648", :name=>"스토리지", :path=>"../user_guide/console_menu_sub/storage.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::67.73.47.67.68", :name=>"CI/CD", :path=>"../user_guide/console_menu_sub/ci-cd.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::65.73.32.68.101.118.79.112.115", :name=>"AI DevOps", :path=>"../user_guide/console_menu_sub/ai-dev.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::48372.50504", :name=>"보안", :path=>"../user_guide/console_menu_sub/security.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::51060.48120.51648", :name=>"이미지", :path=>"../user_guide/console_menu_sub/image.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::47588.45768.51648.47676.53944", :name=>"매니지먼트", :path=>"../user_guide/console_menu_sub/management.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::54840.49828.53944", :name=>"호스트", :path=>"../user_guide/console_menu_sub/host.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::53080.49556.32.47700.45684::51064.51613.47.51064.44032", :name=>"인증/인가", :path=>"../user_guide/console_menu_sub/permission.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41", :name=>"리소스 생성 (서비스 카탈로그)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::49436.48708.49828.32.48148.51064.46377.32.49373.49457", :name=>"서비스 바인딩 생성", :path=>"../user_guide/resource_create_sub/service-binding-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::49436.48708.49828.32.48652.47196.52964.32.49373.49457", :name=>"서비스 브로커 생성", :path=>"../user_guide/resource_create_sub/service-broker-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::49436.48708.49828.32.51064.49828.53556.49828.32.49373.49457", :name=>"서비스 인스턴스 생성", :path=>"../user_guide/resource_create_sub/service-instance-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::52852.53448.47196.44536.32.49436.48708.49828.32.53364.47112.51076.32.49373.49457", :name=>"카탈로그 서비스 클레임 생성", :path=>"../user_guide/resource_create_sub/catalog-service-claim-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53364.47084.49828.53552.32.49436.48708.49828.32.48652.47196.52964.32.49373.49457", :name=>"클러스터 서비스 브로커 생성", :path=>"../user_guide/resource_create_sub/cluster-service-broker-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53596.54540.47551.32.49373.49457", :name=>"템플릿 생성", :path=>"../user_guide/resource_create_sub/template-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.52852.53448.47196.44536.41::53596.54540.47551.32.51064.49828.53556.49828.32.49373.49457", :name=>"템플릿 인스턴스 생성", :path=>"../user_guide/resource_create_sub/template-instance-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41", :name=>"리소스 생성 (워크로드)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::72.80.65.32.49373.49457", :name=>"HPA 생성", :path=>"../user_guide/resource_create_sub/hpa-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::44032.49345.47672.49888.32.49373.49457", :name=>"가상머신 생성", :path=>"../user_guide/resource_create_sub/virtual-machine-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::45936.47788.49483.32.49373.49457", :name=>"데몬셋 생성", :path=>"../user_guide/resource_create_sub/daemonset-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::46356.54540.47196.51060.47676.53944.32.49373.49457", :name=>"디플로이먼트 생성", :path=>"../user_guide/resource_create_sub/deployment-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::47112.54540.47532.52852.32.49483.32.49373.49457", :name=>"레플리카 셋 생성", :path=>"../user_guide/resource_create_sub/replicaset-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::49828.53580.51060.53944.32.54400.49483.32.49373.49457", :name=>"스테이트 풀셋 생성", :path=>"../user_guide/resource_create_sub/statefulset-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::49884.53356.47551.32.49373.49457", :name=>"시크릿 생성", :path=>"../user_guide/resource_create_sub/secret-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::51105.32.49373.49457", :name=>"잡 생성", :path=>"../user_guide/resource_create_sub/job-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::52968.54588.44536.32.47605.32.49373.49457", :name=>"컨피그 맵 생성", :path=>"../user_guide/resource_create_sub/config-map-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::53356.47200.32.51105.32.49373.49457", :name=>"크론 잡 생성", :path=>"../user_guide/resource_create_sub/cron-job-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.50892.53356.47196.46300.41::54028.46300.32.49373.49457", :name=>"파드 생성", :path=>"../user_guide/resource_create_sub/pod-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41", :name=>"리소스 생성 (서비스 메시)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::44032.49345.32.49436.48708.49828.32.49373.49457", :name=>"가상 서비스 생성", :path=>"../user_guide/resource_create_sub/virtual-service-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::44172.51060.53944.50920.51060.32.49373.49457", :name=>"게이트웨이 생성", :path=>"../user_guide/resource_create_sub/gateway-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::47785.51201.51648.32.47344.32.49373.49457", :name=>"목적지 룰 생성", :path=>"../user_guide/resource_create_sub/destination-rule-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::49324.51060.46300.52852.32.49373.49457", :name=>"사이드카 생성", :path=>"../user_guide/resource_create_sub/sidecar-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::49436.48708.49828.32.50644.53944.47532.32.49373.49457", :name=>"서비스 엔트리 생성", :path=>"../user_guide/resource_create_sub/service-entry-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::50532.48372.51060.32.54596.53552.32.49373.49457", :name=>"앤보이 필터 생성", :path=>"../user_guide/resource_create_sub/envoy-filter-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::50836.52397.32.51064.51613.32.49373.49457", :name=>"요청 인증 생성", :path=>"../user_guide/resource_create_sub/request-auth-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::51064.44032.32.51221.52293.32.49373.49457", :name=>"인가 정책 생성", :path=>"../user_guide/resource_create_sub/auth-policy-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49436.48708.49828.32.47700.49884.41::54588.50612.32.51064.51613.32.49373.49457", :name=>"피어 인증 생성", :path=>"../user_guide/resource_create_sub/peer-auth-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41", :name=>"리소스 생성 (네트워크)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41::49436.48708.49828.32.49373.49457", :name=>"서비스 생성", :path=>"../user_guide/resource_create_sub/service-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.45348.53944.50892.53356.41::51064.44536.47112.49828.32.49373.49457", :name=>"인그레스 생성", :path=>"../user_guide/resource_create_sub/ingress-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41", :name=>"리소스 생성 (스토리지)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::45936.51060.53552.32.48380.47464.32.49373.49457", :name=>"데이터 볼륨 생성", :path=>"../user_guide/resource_create_sub/data-volume-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::49828.53664.47532.51648.32.53364.47000.49828.32.49373.49457", :name=>"스토리지 클래스 생성", :path=>"../user_guide/resource_create_sub/storage-class-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::50689.44396.32.48380.47464.32.49373.49457", :name=>"영구 볼륨 생성", :path=>"../user_guide/resource_create_sub/persistent-volume-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.49828.53664.47532.51648.41::50689.44396.32.48380.47464.32.53364.47112.51076.32.49373.49457", :name=>"영구 볼륨 클레임 생성", :path=>"../user_guide/resource_create_sub/persistent-volume-claim-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41", :name=>"리소스 생성 (CI/CD)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::53468.49828.53356.32.49373.49457", :name=>"태스크 생성", :path=>"../user_guide/resource_create_sub/task-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::53468.49828.53356.32.47088.32.49373.49457", :name=>"태스크 런 생성", :path=>"../user_guide/resource_create_sub/task-run-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.49373.49457", :name=>"파이프라인 생성", :path=>"../user_guide/resource_create_sub/pipeline-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.47088.32.49373.49457", :name=>"파이프라인 런 생성", :path=>"../user_guide/resource_create_sub/pipeline-run-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.47532.49548.49828.32.49373.49457", :name=>"파이프라인 리소스 생성", :path=>"../user_guide/resource_create_sub/pipeline-resource-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.67.73.47.67.68.41::54028.51060.54532.46972.51064.32.52968.46356.49496.32.49373.49457", :name=>"파이프라인 컨디션 생성", :path=>"../user_guide/resource_create_sub/pipeline-condition-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41", :name=>"리소스 생성 (AI DevOps)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::75.70.32.49436.48729.32.49373.49457", :name=>"KF 서빙 생성", :path=>"../user_guide/resource_create_sub/kf-serving-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::45432.53944.48513.32.49436.48260.32.49373.49457", :name=>"노트북 서버 생성", :path=>"../user_guide/resource_create_sub/notebook-server-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::50892.53356.54540.47196.50864.32.49373.49457", :name=>"워크플로우 생성", :path=>"../user_guide/resource_create_sub/workflow-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::50892.53356.54540.47196.50864.32.53596.54540.47551.32.49373.49457", :name=>"워크플로우 템플릿 생성", :path=>"../user_guide/resource_create_sub/work-temp-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::52852.54000.48652.32.49373.49457", :name=>"카티브 생성", :path=>"../user_guide/resource_create_sub/katib-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.65.73.32.68.101.118.79.112.115.41::53944.47112.51060.45789.32.51105.32.49373.49457", :name=>"트레이닝 잡 생성", :path=>"../user_guide/resource_create_sub/training-job-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.48372.50504.41", :name=>"리소스 생성 (보안)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.48372.50504.41::45348.53944.50892.53356.32.51221.52293.32.49373.49457", :name=>"네트워크 정책 생성", :path=>"../user_guide/resource_create_sub/network-policy-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.48372.50504.41::54028.46300.32.48372.50504.32.51221.52293.32.49373.49457", :name=>"파드 보안 정책 생성", :path=>"../user_guide/resource_create_sub/pod-security-policy-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51060.48120.51648.41", :name=>"리소스 생성 (이미지)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51060.48120.51648.41::47112.51648.49828.53944.47532.32.49373.49457", :name=>"레지스트리 생성", :path=>"../user_guide/resource_create_sub/registry-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41", :name=>"리소스 생성 (매니지먼트)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41::45348.51076.49828.54168.51060.49828.32.49373.49457", :name=>"네임스페이스 생성", :path=>"../user_guide/resource_create_sub/namespace-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41::45348.51076.49828.54168.51060.49828.32.53364.47112.51076.32.49373.49457", :name=>"네임스페이스 클레임 생성", :path=>"../user_guide/resource_create_sub/namespace-claim-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41::47532.49548.49828.32.53244.53440.32.49373.49457", :name=>"리소스 쿼타 생성", :path=>"../user_guide/resource_create_sub/resource-quota-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41::47532.49548.49828.32.53244.53440.32.53364.47112.51076.32.49373.49457", :name=>"리소스 쿼타 클레임 생성", :path=>"../user_guide/resource_create_sub/resource-quota-claim-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41::49324.50857.51088.32.47532.49548.49828.32.51221.51032.32.49373.49457", :name=>"사용자 리소스 정의 생성", :path=>"../user_guide/resource_create_sub/custom-resource-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.47588.45768.51648.47676.53944.41::51228.54620.32.48276.50948.32.49373.49457", :name=>"제한 범위 생성", :path=>"../user_guide/resource_create_sub/basic-resource-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41", :name=>"리소스 생성 (인증/인가)", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.49373.49457", :name=>"롤 생성", :path=>"../user_guide/resource_create_sub/role-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.48148.51064.46377.32.49373.49457", :name=>"롤 바인딩 생성", :path=>"../user_guide/resource_create_sub/role-binding-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::47204.32.48148.51064.46377.32.53364.47112.51076.32.49373.49457", :name=>"롤 바인딩 클레임 생성", :path=>"../user_guide/resource_create_sub/role-binding-claim-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::49324.50857.51088.32.49373.49457", :name=>"사용자 생성", :path=>"../user_guide/resource_create_sub/user-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::49324.50857.51088.32.44536.47353.32.49373.49457", :name=>"사용자 그룹 생성", :path=>"../user_guide/resource_create_sub/user-group-create.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::47532.49548.49828.32.49373.49457.32.40.51064.51613.47.51064.44032.41::49436.48708.49828.32.44228.51221.32.49373.49457", :name=>"서비스 계정 생성", :path=>"../user_guide/resource_create_sub/service-account-create.html"}]}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733", :name=>"기본 기능", :topics=>[{:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::47112.51060.48660.32.44288.47532", :name=>"레이블 관리", :path=>"../user_guide/common_function_sub/label-edit.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::51452.49437.32.44288.47532", :name=>"주석 관리", :path=>"../user_guide/common_function_sub/annotation-edit.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::47532.49548.49828.32.51221.48372.32.49688.51221", :name=>"리소스 정보 수정", :path=>"../user_guide/common_function_sub/resource-info-edit.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::47532.49548.49828.32.49325.51228", :name=>"리소스 삭제", :path=>"../user_guide/common_function_sub/resource-delete.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::89.65.77.76.32.49368.54540.32.54869.51064", :name=>"YAML 샘플 확인", :path=>"../user_guide/common_function_sub/yaml-sample.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::89.65.77.76.32.54028.51068.32.45796.50868.47196.46300", :name=>"YAML 파일 다운로드", :path=>"../user_guide/common_function_sub/yaml-down.html"}, {:id=>"50937.32.53080.49556.32.49324.50857.51088.32.50504.45236.49436::44592.48376.32.44592.45733::47112.51648.49828.53944.47532.50640.32.51060.48120.51648.32.46321.47197", :name=>"레지스트리에 이미지 등록", :path=>"../user_guide/common_function_sub/image-push.html"}]}]}]`);
+    console.debug('css_path',`../../4.1-ko/_stylesheets/`);
+    console.debug('javascripts_path',`../../4.1-ko/_javascripts/`);
+    console.debug('images_path',`../../4.1-ko/_images/`);
+    console.debug('template_path',`/mnt/c/Users/김정우/Desktop/매뉴얼/5.2/hypercloud-docs/_templates`);
+    console.debug('site_home_path',`../../index.html`);
+    console.debug('breadcrumb_group',`<a href="../welcome/intro.html">환영합니다</a>`);
+    console.debug('breadcrumb_root',`<a href="../welcome/intro.html">HyperCloud 4.1</a>`);
+    console.debug('breadcrumb_subgroup_block',``);
+    console.debug('breadcrumb_subsubgroup_block',``);
+    console.debug('breadcrumb_topic',`특장점`);
+    console.debug('subtopic_shim',``);
+    console.debug('repo_path',`welcome/advantage.adoc`)  ;
+  </script>
+  <footer id="rh">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+              <a href="https://tmaxanc.com/" target="_blank">
+                <img src="../../4.1-ko/_images/footer_anc_logo.svg" class="img-fluid" alt="Tmax A&C" style="height: 16px; margin-right:10px">
+              </a>
+            </div>
+            <div class="col-sm-6">
+              <p class="text-nowrap">Copyright 2020 Tmax A&C Corp. All rights reserved.</span></p>
+            </div>
+			<!-- 20200918 매뉴얼 하단 이용약관, 개인정보,SLA 삭제 -->
+            <!-- <div class="col">
+                <nav class="nav">
+                    <a target="_blank" href="https://www.tmaxcloud.com/term/TmaxCloud_Terms_of_Service.html" class="nav-link">이용약관</a>
+                    <a target="_blank" href="https://www.tmaxcloud.com/term/TmaxCloud_Privacy_Policy.html" class="nav-link">개인정보처리방침</a>
+                    <a target="_blank" href="https://www.tmaxcloud.com/term/HyperCloud_Cloud_SLA.html" class="nav-link">SLA</a>
+                </nav>
+            </div>  --!>
+        </div>
+    </div>
+</footer>
+
+<!-- Adobe DTM -->
+<script type="text/javascript">
+if (("undefined" !== typeof _satellite) && ("function" === typeof _satellite.pageBottom)) {
+   _satellite.pageBottom();
+}
+</script>
+<!-- End Adobe DTM -->
+
+  <a id="back-to-top" href="#" onclick="window.scrollTo(0,0);" class="back-to-top" role="button"><i class="fa fa-long-arrow-up "></i>Top</a>
+  <script type="text/javascript">
+    const TopBtn = document.getElementById("back-to-top");
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 62) {
+        TopBtn.style.display = "flex";
+      } else {
+        TopBtn.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
