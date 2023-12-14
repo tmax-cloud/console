@@ -29,7 +29,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
   const templateType = searchParams.get('type');
-  const templateName = searchParams.get('templateName');
+  const loadedTemplateName = searchParams.get('templateName');
 
   const methods = useFormContext();
   const {
@@ -63,17 +63,17 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   const selectedTemplate = useWatch({
     control: methods.control,
     name: 'template',
-    defaultValue: '',
+    defaultValue: loadedTemplateName ? loadedTemplateName : '',
   });
 
   const templateDropdown =
     selectedType === 'Template' ? (
       <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV11_1')} id="template" isRequired={true}>
-        {!!templateName ? <div>{templateName}</div> : <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: TemplateModel.kind, namespace: namespace, prop: 'template' }]} type="single" defaultValue="" useHookForm />}
+        {!!loadedTemplateName ? <div>{loadedTemplateName}</div> : <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: TemplateModel.kind, namespace: namespace, prop: 'template' }]} type="single" defaultValue="" useHookForm />}
       </Section>
     ) : (
       <Section label={t('COMMON:MSG_LNB_MENU_181')} id="clustertemplate" isRequired={true}>
-        {!!templateName ? <div>{templateName}</div> : <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: ClusterTemplateModel.kind, prop: 'clustertemplate' }]} type="single" defaultValue="" useHookForm />}
+        {!!loadedTemplateName ? <div>{loadedTemplateName}</div> : <ResourceDropdown name="template" idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} methods={methods} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV12_1')} resources={[{ kind: ClusterTemplateModel.kind, prop: 'clustertemplate' }]} type="single" defaultValue="" useHookForm />}
       </Section>
     );
 
@@ -171,10 +171,8 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   }, [selectedType]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const clusterTemplateName = searchParams.get('templateName');
-    if (!!clusterTemplateName) {
-      const templateName = clusterTemplateName;
+    if (!!loadedTemplateName) {
+      const templateName = loadedTemplateName;
       getTemplateParameters(templateName);
     } else {
       const templateName = selectedTemplate.split('~~')[1];
@@ -218,12 +216,15 @@ export const CreateTemplateInstance: React.FC<CreateTemplateInstanceProps> = ({ 
 };
 
 export const onSubmitCallback = data => {
+  const searchParams = new URLSearchParams(location.search);
+  const templateType = searchParams.get('type');
+  const loadedTemplateName = searchParams.get('templateName');
+  const namespace = getActiveNamespace(store.getState());
   const template = data.template;
-  const templateKind = template?.split('~~')[0];
-  const templateName = template?.split('~~')[1];
+  const templateKind = templateType ? templateType : template?.split('~~')[0];
+  const templateName = loadedTemplateName ? loadedTemplateName : template?.split('~~')[1];
   delete data.template;
   delete data.type;
-
   // MEMO : labels data
   const labels = _.cloneDeep(data.labels);
   const formattedLabels = {};
@@ -249,7 +250,7 @@ export const onSubmitCallback = data => {
 
   // MEMO : final data
   if (templateKind === 'Template') {
-    data = _.defaultsDeep({ metadata: { labels: formattedLabels }, spec: { template: { metadata: { name: templateName, namespace: getActiveNamespace(store.getState()) }, parameters: formattedParams } } }, data);
+    data = _.defaultsDeep({ metadata: { labels: formattedLabels }, spec: { template: { metadata: { name: templateName, namespace: namespace }, parameters: formattedParams } } }, data);
   } else {
     data = _.defaultsDeep(
       {
