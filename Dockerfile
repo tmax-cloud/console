@@ -9,7 +9,7 @@ WORKDIR /go/src/github.com/openshift/console/
 RUN ./scripts/build-backend.sh
 RUN ./scripts/build-frontend.sh
 
-FROM openshift/origin-base
+FROM quay.io/openshift/origin-base:v3.11.0
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual
