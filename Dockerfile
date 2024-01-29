@@ -1,7 +1,7 @@
 FROM quay.io/coreos/tectonic-console-builder:v23 AS build
-RUN wget https://dl.google.com/go/go1.16.9.linux-amd64.tar.gz -O go1.16.9.linux-amd64.tar.gz \
-    && tar -xzf go1.16.9.linux-amd64.tar.gz -C /usr/local \
-    && rm go1.16.9.linux-amd64.tar.gz
+RUN wget https://dl.google.com/go/go1.20.linux-amd64.tar.gz -O go1.20.linux-amd64.tar.gz \
+    && tar -xzf go1.20.linux-amd64.tar.gz -C /usr/local \
+    && rm go1.20.linux-amd64.tar.gz
 ENV PATH="/usr/local/go/bin:$PATH"
 
 ARG BUILD_ID
