@@ -14,7 +14,8 @@ pipeline {
     BRANCH = "master"
     BUILD_MODE = "${params.BUILD_MODE}"
 
-    DOCKER_REGISTRY="tmaxcloudck"
+    // DOCKER_REGISTRY="tmaxcloudck"
+    DOCKER_REGISTRY="hyperregistry.tmaxcloud.org/ck3-2"
     PRODUCT = "hypercloud-console"
     MAJOR_VER="5"
     MINOR_VER="2"
@@ -68,7 +69,7 @@ pipeline {
     stage('Build') {
       steps{
         withCredentials([usernamePassword(
-            credentialsId: 'tmaxcloudck',
+            credentialsId: 'hyperregistry',
             usernameVariable: 'DOCKER_USER',
             passwordVariable: 'DOCKER_PWD')]){
             sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
