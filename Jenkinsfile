@@ -69,6 +69,7 @@ pipeline {
     stage('Build') {
       steps{
         withCredentials([usernamePassword(
+            // credentialsId: 'tmaxcloudck',
             credentialsId: 'hyperregistry',
             usernameVariable: 'DOCKER_USER',
             passwordVariable: 'DOCKER_PWD')]){
