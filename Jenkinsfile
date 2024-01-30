@@ -69,7 +69,7 @@ pipeline {
     stage('Build') {
       steps{
         withCredentials([usernamePassword(
-            credentialsId: 'tmaxcloudck',
+            credentialsId: 'hyperregistry',
             usernameVariable: 'DOCKER_USER',
             passwordVariable: 'DOCKER_PWD')]){
             sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
