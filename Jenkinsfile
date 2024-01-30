@@ -73,7 +73,7 @@ pipeline {
             credentialsId: 'hyperregistry',
             usernameVariable: 'DOCKER_USER',
             passwordVariable: 'DOCKER_PWD')]){
-            sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
+            sh "docker login hyperregistry.tmaxcloud.org -u ${DOCKER_USER} -p ${DOCKER_PWD}"
             sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${VER} -f ./Dockerfile ."
             sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${VER}"
           }
