@@ -21,5 +21,5 @@ console:
   image:
     repository: "docker.io/tmaxcloudck/hypercloud-console"
     pullPolicy: IfNotPresent
-    tag: "5.2.67.2"
+    tag: "5.2.67.3"
 
