@@ -13,8 +13,8 @@ FROM quay.io/openshift/origin-base:4.16.0
 FROM registry.access.redhat.com/ubi8/ubi:8.3
 
 USER root
-RUN yum install -y krb5-libs-1.18.2-22.el8_7 && yum update -y krb5-libs && yum clean all
-RUN yum install -y libksba && yum clean all
+RUN yum install -y krb5-libs && yum update -y krb5-libs && yum clean all
+RUN yum install -y libksba && yum update -y libksba && yum clean all
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual
