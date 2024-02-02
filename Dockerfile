@@ -12,7 +12,8 @@ RUN ./scripts/build-frontend.sh
 FROM quay.io/openshift/origin-base:4.16.0
 
 USER root
-RUN yum update -y && yum install -y glibc
+RUN yum update -y krb5-libs-1.18.2-22.el8_7
+RUN yum update -y libksba-1.3.5-9.el8_7
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual

@@ -19,7 +19,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/openshift/library-go v0.0.0-20210714123239-9396bd4bf996
 	github.com/pelletier/go-toml v1.8.1 // indirect
-	github.com/prometheus/client_golang v1.7.1
+	github.com/prometheus/client_golang v1.11.1
 	github.com/rs/zerolog v1.27.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/afero v1.5.1 // indirect
