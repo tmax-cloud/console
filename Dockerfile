@@ -10,6 +10,7 @@ RUN ./scripts/build-backend.sh
 RUN ./scripts/build-frontend.sh
 
 FROM quay.io/openshift/origin-base:4.16.0
+FROM registry.access.redhat.com/ubi8/ubi:8.3
 
 USER root
 RUN yum install -y krb5-libs-1.18.2-22.el8_7 && yum update -y krb5-libs && yum clean all
