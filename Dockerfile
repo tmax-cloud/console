@@ -11,7 +11,7 @@ RUN ./scripts/build-frontend.sh
 
 FROM quay.io/openshift/origin-base:4.16.0
 
-RUN yum update -y krb5-libs && yum clean all
+RUN yum remove -y krb5-libs && yum clean all
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual
