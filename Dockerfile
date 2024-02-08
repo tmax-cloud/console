@@ -11,7 +11,15 @@ RUN ./scripts/build-frontend.sh
 
 FROM quay.io/openshift/origin-base:4.16.0
 
-RUN yum remove -y krb5-libs && yum clean all
+# libksba 패키지 다운로드 및 업데이트
+RUN curl -o /tmp/libksba.rpm https://dl.rockylinux.org/pub/rocky/8/Devel/x86_64/os/Packages/l/libksba-1.3.5-9.el8_7.x86_64.rpm && \
+    rpm -Uvh /tmp/libksba.rpm && \
+    rm -f /tmp/libksba.rpm
+
+# krb5-libs 패키지 다운로드 및 업데이트
+RUN curl -o /tmp/krb5-libs.rpm https://dl.rockylinux.org/pub/rocky/8/BaseOS/x86_64/os/Packages/k/krb5-libs-1.18.2-26.el8.x86_64.rpm && \
+    rpm -Uvh /tmp/krb5-libs.rpm && \
+    rm -f /tmp/krb5-libs.rpm
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual
