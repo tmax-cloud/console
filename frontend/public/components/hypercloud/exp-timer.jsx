@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { NoticeExpirationModal_ } from './modals/notice-expiration-modal';
-import { getLogoutTime } from '../../hypercloud/auth';
 
 let timerID = 0;
 let expTime = 0;
@@ -13,11 +12,19 @@ export class ExpTimer extends React.Component {
     };
   }
   componentDidMount() {
-    expTime = getLogoutTime();
-    timerID = setInterval(() => this.tick(), 1000);
+    const curTime = new Date();
+    const { keycloak } = this.props;
+    const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
+    const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
+    expTime = logoutTime;
+    timerID = window.setInterval(() => this.tick(), 1000);
   }
   tokRefresh() {
-    expTime = getLogoutTime();
+    const curTime = new Date();
+    const { keycloak } = this.props;
+    const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
+    const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
+    expTime = logoutTime;
   }
   componentWillUnmount() {
     // 타이머 등록 해제
@@ -39,19 +46,11 @@ export class ExpTimer extends React.Component {
   tick() {
     if (expTime > 0) {
       expTime -= 1;
-      if (Math.floor(expTime) <= 60) {
-        NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
-      }
-      this.expFormat();
-    } else {
-      // 모달 띄우기 전에 이미 세션 시간이 만료된 경우, 로그아웃 처리
-      if (!document.getElementById('notice-expiration-modal-content')) {
-        clearInterval(timerID);
-        this.props.logout();
-      } else {
-        clearInterval(timerID); // 세션 만료된 후 타이머 등록 해제
-      }
     }
+    if (Math.floor(expTime) === 60) {
+      NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
+    }
+    this.expFormat();
   }
   render() {
     const { expText } = this.state;

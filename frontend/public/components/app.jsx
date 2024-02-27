@@ -26,7 +26,8 @@ import '../style.scss';
 import i18n, { getI18nResources } from './hypercloud/utils/langs/i18n';
 //PF4 Imports
 import { Page } from '@patternfly/react-core';
-import { detectUser } from '../hypercloud/auth';
+import keycloak from '../hypercloud/keycloak';
+import { setAccessToken, setIdToken, setId, resetLoginState, SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, SHOW_ALERT_IN_SAMPLEPAGE } from '../hypercloud/auth';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
@@ -169,7 +170,7 @@ class App extends React.PureComponent {
       <>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <ConsoleNotifier location="BannerTop" />
-        <Page header={<Masthead onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isMasterPerspective={isMasterClusterPerspective()} />}>
+        <Page header={<Masthead keycloak={keycloak} onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isMasterPerspective={isMasterClusterPerspective()} />}>
           <ConnectedNotificationDrawer isDesktop={isDrawerInline} onDrawerChange={this._onNotificationDrawerToggle}>
             <WebSocketContext.Provider value={{ ws: this.state.ws, isConnected: this.state.isConnected }}>
               <AppContents />
@@ -184,8 +185,25 @@ class App extends React.PureComponent {
   }
 }
 
-detectUser()
+keycloak
+  .init({
+    onLoad: 'check-sso',
+    checkLoginIframe: false,
+  })
+  .then(authorization => {
+    if (!authorization) {
+      keycloak.login();
+      return;
+    }
+  })
   .then(async () => {
+    sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'true');
+    sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'true');
+    sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
+    setIdToken(keycloak.idToken);
+    setAccessToken(keycloak.token);
+    setId(keycloak.idTokenParsed.preferred_username);
+
     // k8s 버전별 i18n 리소스 적용
     await getI18nResources();
 
@@ -209,7 +227,7 @@ detectUser()
     // Global timer to ensure all <Timestamp> components update in sync
     setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
 
-    // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
+    fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
 
     // Fetch swagger on load if it's stale.
     fetchSwagger();
@@ -247,8 +265,34 @@ detectUser()
       <div className="co-m-pane__body">
         <h1 className="co-m-pane__heading co-m-pane__heading--center">Oh no! Something went wrong.</h1>
         <label htmlFor="description">Description: </label>
-        <p>{!!error ? error.stack : 'Failed to login'}</p>
+        <p>{!!error ? error.stack : 'Failed to initialize keycloak'}</p>
       </div>,
       document.getElementById('app'),
     );
   });
+
+keycloak.onReady = function () {
+  console.log('[keycloak] onReady');
+};
+keycloak.onAuthSuccess = function () {
+  console.log('[keycloak] onAuthSuccess');
+};
+keycloak.onAuthError = function () {
+  console.log('[keycloak] onAuthError');
+};
+keycloak.onAuthRefreshSuccess = function () {
+  console.log('[keycloak] onAuthRefreshSuccess');
+};
+keycloak.onAuthRefreshError = function () {
+  console.log('[keycloak] onAuthRefreshError');
+};
+keycloak.onAuthLogout = function () {
+  console.log('[keycloak] onAuthLogout');
+  keycloak.logout();
+  resetLoginState();
+};
+keycloak.onTokenExpired = function () {
+  console.log('[keycloak] onTokenExpired ');
+  keycloak.logout();
+  resetLoginState();
+};
