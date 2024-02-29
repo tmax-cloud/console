@@ -19,7 +19,7 @@ CLIENT_ID='hypercloud5'
 read -p "HyperAuth Admin ID : " admin_id
 read -sp "HyperAuth Admin Password : " admin_password
 echo ""
-TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/auth/realms/tmax/protocol/openid-connect/token" \
+TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/realms/tmax/protocol/openid-connect/token" \
   -d grant_type=password \
   -d response_type=id_token \
   -d scope=openid \
@@ -40,10 +40,11 @@ echo $id_token
   --cert-file=./tls/tls.crt \
   --key-file=./tls/tls.key \
   --public-dir="./frontend/public/dist" \
-  --keycloak-auth-url=https://hyperauth.tmaxcloud.org/auth \
+  --keycloak-auth-url=https://hyperauth.tmaxcloud.org \
   --keycloak-client-id=hypercloud5 \
   --keycloak-realm=tmax \
   --mc-mode=true \
+  --pod-terminal=false \
   --chatbot-embed=true \
   --custom-product-name="hypercloud" \
   --svc-type="LoadBalancer" \

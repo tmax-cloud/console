@@ -39,6 +39,7 @@ declare interface Window {
     GOARCH: string;
     GOOS: string;
     mcMode: boolean;
+    podTerminal: boolean;
     showCustomPerspective: boolean;
     KeycloakAuthURL: string;
     KeycloakRealm: string;

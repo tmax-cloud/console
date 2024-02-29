@@ -72,6 +72,7 @@ type jsGlobals struct {
 	KeycloakUseHiddenIframe bool   `json:keycloakUseHiddenIframe`
 
 	McMode            bool   `json:mcMode`
+	PodTerminal       bool   `json:podTerminal`
 	ChatbotEmbed      bool   `json:chatbotEmbed`
 	ReleaseModeFlag   bool   `json:"releaseModeFlag"`
 	CustomProductName string `json:"customProductName"`
@@ -87,6 +88,7 @@ type Console struct {
 	KubeVersion string
 	// customization
 	McMode            bool
+	PodTerminal	      bool
 	ChatbotEmbed      bool
 	ReleaseModeFlag   bool
 	GitlabURL         string
