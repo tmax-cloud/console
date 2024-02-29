@@ -313,15 +313,7 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
 
   return (
     <>
-      {isAlert && isSingleClusterPerspective() && (
-        <ToastPopupAlert
-          title={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_2')}
-          message={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_1')}
-          onceOption={true}
-          sessionStoragekey={SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE}
-          setIsAlert={setIsAlert}
-        />
-      )}
+      {isAlert && isSingleClusterPerspective() && <ToastPopupAlert title={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_2')} message={t('SINGLE:MSG_PODS_PODDETAILS_TABOVERVIEW_1')} onceOption={true} sessionStoragekey={SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE} setIsAlert={setIsAlert} />}
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(pod, t) })} />
@@ -372,6 +364,8 @@ export const PodExecLoader: React.FC<PodExecLoaderProps> = ({ obj, message }) =>
 );
 
 export const PodsDetailsPage: React.FC<PodDetailsPageProps> = props => {
+  const isShowTerminal = window.SERVER_FLAGS.podTerminal;
+
   return (
     <DetailsPage
       {...props}
@@ -383,7 +377,7 @@ export const PodsDetailsPage: React.FC<PodDetailsPageProps> = props => {
         navFactory.envEditor(PodEnvironmentComponent),
         navFactory.logs(PodLogs),
         navFactory.events(ResourceEventStream),
-        {
+        isShowTerminal && {
           href: 'terminal',
           name: 'COMMON:MSG_DETAILS_TAB_8',
           component: PodExecLoader,

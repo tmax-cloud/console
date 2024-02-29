@@ -33,6 +33,7 @@ type App struct {
 	KeycloakUseHiddenIframe bool   `yaml:"keycloakUseHiddenIframe,omitempty" json:keycloakUseHiddenIframe`
 
 	McMode            bool   `yaml:"mcMode,omitempty" json:"mcMode"`
+	PodTerminal       bool   `yaml:"podTerminal,omitempty" json:"podTerminal"`
 	ChatbotEmbed      bool   `yaml:"chatbotEmbed,omitempty" json:"chatbotEmbed"`
 	ReleaseMode       bool   `yaml:"releaseMode,omitempty" json:"releaseMode"`
 	CustomProductName string `yaml:"customProductName,omitempty" json:"customProductName"`

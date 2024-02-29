@@ -98,6 +98,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfg.GitlabURL, "managed-gitlab-url", "http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/", "URL of gitlab server")
 	// appInfo
 	rootCmd.PersistentFlags().BoolVar(&cfg.McMode, "mc-mode", true, "Choose Cluster Mode (multi | single)")
+	rootCmd.PersistentFlags().BoolVar(&cfg.PodTerminal, "pod-terminal", true, "Choose Pod Terminal (boolean)")
 	rootCmd.PersistentFlags().BoolVar(&cfg.ReleaseMode, "release-mode", true, "when true, use jwt token given by keycloak")
 	rootCmd.PersistentFlags().StringVar(&cfg.PublicDir, "public-dir", "./frontend/public/dist", "listen Address")
 	rootCmd.PersistentFlags().StringVar(&cfg.DynamicFile, "dynamic-file", "./configs/dynamic-config.yaml", "dynamic config file (default is ./configs/dynamic-config.yaml")

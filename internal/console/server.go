@@ -38,6 +38,7 @@ type Server struct {
 	PublicDir string `json:"publicDir"`
 
 	McMode            bool   `description:"Activate Multi-Cluster Mode" json:"mcMode" toml:"mcMode,omitempty" yaml:"mcMode,omitempty" export:"true"`
+	PodTerminal       bool   `description:"Activate Pod-Terminal Mode" json:"podTerminal" toml:"podTerminal,omitempty" yaml:"podTerminal,omitempty" export:"true"`
 	ChatbotEmbed      bool   `description:"Activate Chatbot" json:"chatbotEmbed" toml:"chatbotEmbed,omitempty" yaml:"chatbotEmbed,omitempty" export:"true"`
 	CustomProductName string `description:"Setting Custom Product Name" json:"customProductName" toml:"customProductName,omitempty" yaml:"customProductName,omitempty" export:"true"`
 
@@ -58,6 +59,7 @@ func New(fs *flag.FlagSet) *Server {
 	fs.StringVar(&s.BasePath, "base-path", "/", "url base path")
 	fs.StringVar(&s.PublicDir, "public-dir", "./frontend/public/dist", "directory containing static web assets.")
 	fs.BoolVar(&s.McMode, "mc-mode", true, "Activate Multi-Cluster Mode")
+	fs.BoolVar(&s.PodTerminal, "pod-terminal", true, "Activate Pod-Terminal Mode")
 	fs.BoolVar(&s.ChatbotEmbed, "chatbot-embed", true, "Activate Chatbot")
 	fs.StringVar(&s.CustomProductName, "custom-product-name", customProductName, "Setting Custom Product Name")
 	fs.StringVar(&s.SvcType, "svc-type", traefikServiceType, "Service type of api-gateway(traefik) default: LoadBalancer")
@@ -121,6 +123,7 @@ func (s *Server) CreateRouter() http.Handler {
 		KubeAPIServerURL:  s.KubeAPIServerURL,
 		SvcType:           s.SvcType,
 		McMode:            s.McMode,
+		PodTerminal:       s.PodTerminal,
 		ChatbotEmbed:      s.ChatbotEmbed,
 		CustomProductName: s.CustomProductName,
 	}
