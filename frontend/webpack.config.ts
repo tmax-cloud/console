@@ -39,7 +39,7 @@ const config: Configuration = {
     inline: HOT_RELOAD !== 'false',
   },
   resolve: {
-    extensions: ['.glsl', '.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.glsl', '.ts', '.tsx', '.js', '.jsx','.mjs'],
   },
   node: {
     fs: 'empty',
@@ -51,6 +51,11 @@ const config: Configuration = {
   },
   module: {
     rules: [
+      { 
+        test: /\.js$/,  include: /node_modules\/@azure\//, loader: "babel-loader",options:{
+          presets:["@babel/preset-env", "@babel/typescript"],plugins:["@babel/plugin-transform-optional-chaining"]
+        }
+      },
       { test: /\.glsl$/, loader: 'raw!glslify' },
       {
         test: /(\.jsx?)|(\.tsx?)$/,

@@ -38,11 +38,18 @@ const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
+import { MsalProvider, useMsalAuthentication } from '@azure/msal-react';
+import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
+import { msalConfig } from './authConfig';
 
 export const WebSocketContext = React.createContext({
   ws: null,
   isConnected: false,
 });
+
+export const msalInstance = new PublicClientApplication(msalConfig);
+
+
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -62,6 +69,9 @@ class App extends React.PureComponent {
       isConnected: false,
     };
   }
+
+
+
   componentDidMount() {
     const watchURL = 'wss://console.tmaxcloud.org/api/sas';
     const ws = new WSFactory('sas', {
@@ -164,7 +174,8 @@ class App extends React.PureComponent {
   render() {
     const { isNavOpen, isDrawerInline } = this.state;
     const { productName } = getBrandingDetails();
-
+    const { login, result, error } = useMsalAuthentication(InteractionType.Popup);
+    console.log(login, result, error)
     return (
       <>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
@@ -184,71 +195,85 @@ class App extends React.PureComponent {
   }
 }
 
-detectUser()
-  .then(async () => {
-    // k8s 버전별 i18n 리소스 적용
-    await getI18nResources();
+const configuration = {
+  auth: {
+    clientId: "client-id"
+  }
+};
 
-    // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
-    await setUrlFromIngresses();
+const pca = new PublicClientApplication(configuration);
 
-    const startDiscovery = () => store.dispatch(watchAPIServices());
-    // Load cached API resources from localStorage to speed up page load.
-    getCachedResources()
-      .then(resources => {
-        if (resources) {
-          store.dispatch(receivedResources(resources));
-        }
-        // Still perform discovery to refresh the cache.
-        startDiscovery();
-      })
-      .catch(startDiscovery);
+msalInstance.initialize().then(async () => {
 
-    store.dispatch(detectFeatures());
+  await getI18nResources();
 
-    // Global timer to ensure all <Timestamp> components update in sync
-    setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
+  // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
+  await setUrlFromIngresses();
 
-    // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
+  const startDiscovery = () => store.dispatch(watchAPIServices());
+  // Load cached API resources from localStorage to speed up page load.
+  getCachedResources()
+    .then(resources => {
+      if (resources) {
+        store.dispatch(receivedResources(resources));
+      }
+      // Still perform discovery to refresh the cache.
+      startDiscovery();
+    })
+    .catch(startDiscovery);
 
-    // Fetch swagger on load if it's stale.
-    fetchSwagger();
+  store.dispatch(detectFeatures());
 
-    // Used by GUI tests to check for unhandled exceptions
-    window.windowError = false;
-    window.onerror = window.onunhandledrejection = e => {
+  // Global timer to ensure all <Timestamp> components update in sync
+  setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
+
+  // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
+
+  // Fetch swagger on load if it's stale.
+  fetchSwagger();
+
+  // Used by GUI tests to check for unhandled exceptions
+  window.windowError = false;
+  window.onerror = window.onunhandledrejection = e => {
+    // eslint-disable-next-line no-console
+    console.error('Uncaught error', e);
+    window.windowError = e || true;
+  };
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .getRegistrations()
+      .then(registrations => registrations.forEach(reg => reg.unregister()))
       // eslint-disable-next-line no-console
-      console.error('Uncaught error', e);
-      window.windowError = e || true;
-    };
+      .catch(e => console.warn('Error unregistering service workers', e));
+  }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .getRegistrations()
-        .then(registrations => registrations.forEach(reg => reg.unregister()))
-        // eslint-disable-next-line no-console
-        .catch(e => console.warn('Error unregistering service workers', e));
+  // Default to using the first account if no account is active on page load
+  if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
+    // Account selection logic is app dependent. Adjust as needed for different use cases.
+    msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
+  }
+
+  // Optional - This will update account state if a user signs in from another tab or window
+  msalInstance.enableAccountStorageEvents();
+
+  msalInstance.addEventCallback((event) => {
+    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload.account) {
+      const account = event.payload.account;
+      msalInstance.setActiveAccount(account);
     }
+  });
 
-    render(
+  render(
+    <MsalProvider instance={pca}>
       <Provider store={store}>
         <Router history={history} basename={window.SERVER_FLAGS.basePath}>
           <Switch>
-            <Route path="/terminal" component={CloudShellTab} />
             <Route path="/" component={App} />
           </Switch>
         </Router>
-      </Provider>,
-      document.getElementById('app'),
-    );
-  })
-  .catch(error => {
-    render(
-      <div className="co-m-pane__body">
-        <h1 className="co-m-pane__heading co-m-pane__heading--center">Oh no! Something went wrong.</h1>
-        <label htmlFor="description">Description: </label>
-        <p>{!!error ? error.stack : 'Failed to login'}</p>
-      </div>,
-      document.getElementById('app'),
-    );
-  });
+      </Provider>
+    </MsalProvider>,
+    document.getElementById('app'),
+  );
+});
