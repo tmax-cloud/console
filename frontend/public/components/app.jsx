@@ -26,7 +26,6 @@ import '../style.scss';
 import i18n, { getI18nResources } from './hypercloud/utils/langs/i18n';
 //PF4 Imports
 import { Page } from '@patternfly/react-core';
-import { detectUser } from '../hypercloud/auth';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
@@ -51,6 +50,7 @@ export const msalInstance = new PublicClientApplication(msalConfig);
 
 
 
+
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -61,7 +61,6 @@ class App extends React.PureComponent {
     this._onResize = this._onResize.bind(this);
     this.previousDesktopState = this._isDesktop();
     this.previousDrawerInlineState = this._isLargeLayout();
-
     this.state = {
       isNavOpen: this._isDesktop(),
       isDrawerInline: this._isLargeLayout(),
@@ -174,10 +173,8 @@ class App extends React.PureComponent {
   render() {
     const { isNavOpen, isDrawerInline } = this.state;
     const { productName } = getBrandingDetails();
-    const { login, result, error } = useMsalAuthentication(InteractionType.Popup);
-    console.log(login, result, error)
     return (
-      <>
+      <MsalProvider instance={this.props.pca}>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <ConsoleNotifier location="BannerTop" />
         <Page header={<Masthead onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isMasterPerspective={isMasterClusterPerspective()} />}>
@@ -190,90 +187,94 @@ class App extends React.PureComponent {
         <CloudShell />
         <ConsoleNotifier location="BannerBottom" />
         {window.SERVER_FLAGS.chatbotEmbed && <Chatbot />}
-      </>
+      </MsalProvider>
     );
   }
 }
 
-const configuration = {
-  auth: {
-    clientId: "client-id"
-  }
-};
-
-const pca = new PublicClientApplication(configuration);
-
 msalInstance.initialize().then(async () => {
 
-  await getI18nResources();
+  // await getI18nResources();
 
-  // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
-  await setUrlFromIngresses();
+  // // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
+  // await setUrlFromIngresses();
 
-  const startDiscovery = () => store.dispatch(watchAPIServices());
-  // Load cached API resources from localStorage to speed up page load.
-  getCachedResources()
-    .then(resources => {
-      if (resources) {
-        store.dispatch(receivedResources(resources));
-      }
-      // Still perform discovery to refresh the cache.
-      startDiscovery();
-    })
-    .catch(startDiscovery);
+  // const startDiscovery = () => store.dispatch(watchAPIServices());
+  // // Load cached API resources from localStorage to speed up page load.
+  // getCachedResources()
+  //   .then(resources => {
+  //     if (resources) {
+  //       store.dispatch(receivedResources(resources));
+  //     }
+  //     // Still perform discovery to refresh the cache.
+  //     startDiscovery();
+  //   })
+  //   .catch(startDiscovery);
 
-  store.dispatch(detectFeatures());
+  // store.dispatch(detectFeatures());
 
-  // Global timer to ensure all <Timestamp> components update in sync
-  setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
+  // // Global timer to ensure all <Timestamp> components update in sync
+  // setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
 
-  // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
+  // // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
 
-  // Fetch swagger on load if it's stale.
-  fetchSwagger();
+  // // Fetch swagger on load if it's stale.
+  // fetchSwagger();
 
-  // Used by GUI tests to check for unhandled exceptions
-  window.windowError = false;
-  window.onerror = window.onunhandledrejection = e => {
-    // eslint-disable-next-line no-console
-    console.error('Uncaught error', e);
-    window.windowError = e || true;
-  };
+  // // Used by GUI tests to check for unhandled exceptions
+  // window.windowError = false;
+  // window.onerror = window.onunhandledrejection = e => {
+  //   // eslint-disable-next-line no-console
+  //   console.error('Uncaught error', e);
+  //   window.windowError = e || true;
+  // };
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .getRegistrations()
-      .then(registrations => registrations.forEach(reg => reg.unregister()))
-      // eslint-disable-next-line no-console
-      .catch(e => console.warn('Error unregistering service workers', e));
-  }
+  // if ('serviceWorker' in navigator) {
+  //   navigator.serviceWorker
+  //     .getRegistrations()
+  //     .then(registrations => registrations.forEach(reg => reg.unregister()))
+  //     // eslint-disable-next-line no-console
+  //     .catch(e => console.warn('Error unregistering service workers', e));
+  // }
 
-  // Default to using the first account if no account is active on page load
-  if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
-    // Account selection logic is app dependent. Adjust as needed for different use cases.
-    msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
-  }
 
-  // Optional - This will update account state if a user signs in from another tab or window
-  msalInstance.enableAccountStorageEvents();
 
-  msalInstance.addEventCallback((event) => {
-    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload.account) {
-      const account = event.payload.account;
-      msalInstance.setActiveAccount(account);
-    }
+  // // Default to using the first account if no account is active on page load
+  // if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
+  //   // Account selection logic is app dependent. Adjust as needed for different use cases.
+  //   msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
+  // }
+
+  // // Optional - This will update account state if a user signs in from another tab or window
+  // msalInstance.enableAccountStorageEvents();
+
+  // msalInstance.addEventCallback((event) => {
+  //   if (event.eventType === EventType.LOGIN_SUCCESS && event.payload.account) {
+  //     const account = event.payload.account;
+  //     msalInstance.setActiveAccount(account);
+  //   }
+  // });
+
+  msalInstance.handleRedirectPromise().then((tokenResponse) => {
+    console.log(tokenResponse)
+    // Check if the tokenResponse is null
+    // If the tokenResponse !== null, then you are coming back from a successful authentication redirect.
+    // If the tokenResponse === null, you are not coming back from an auth redirect.
+  }).catch((error) => {
+    console.log(error)
+    // handle error, either in the library or coming back from the server
   });
 
+
   render(
-    <MsalProvider instance={pca}>
-      <Provider store={store}>
-        <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-          <Switch>
-            <Route path="/" component={App} />
-          </Switch>
-        </Router>
-      </Provider>
-    </MsalProvider>,
+
+    <Provider store={store}>
+      <Router history={history} basename={window.SERVER_FLAGS.basePath}>
+        <Switch>
+          <Route path="/" component={(props) => <App {...props, { pca: msalInstance }} />} />
+        </Switch>
+      </Router>
+    </Provider>,
     document.getElementById('app'),
   );
 });

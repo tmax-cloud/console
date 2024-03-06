@@ -256,19 +256,19 @@ class MastheadToolbarContents_ extends React.Component {
         },
         ...(flags[FLAGS.CONSOLE_CLI_DOWNLOAD]
           ? [
-              {
-                component: <Link to="/command-line-tools">Command Line Tools</Link>,
-              },
-            ]
+            {
+              component: <Link to="/command-line-tools">Command Line Tools</Link>,
+            },
+          ]
           : []),
         ...(reportBugLink
           ? [
-              {
-                label: reportBugLink.label,
-                externalLink: true,
-                href: reportBugLink.href,
-              },
-            ]
+            {
+              label: reportBugLink.label,
+              externalLink: true,
+              href: reportBugLink.href,
+            },
+          ]
           : []),
         {
           label: 'About',
@@ -538,14 +538,14 @@ class MastheadToolbarContents_ extends React.Component {
 
           <ToolbarGroup>
             {/* mobile -- (notification drawer button) */
-            // 기능 추가되면 완성하기
-            alertAccess && !notificationsRead && (
-              <ToolbarItem className="visible-xs-block">
-                <NotificationBadge aria-label="Notification Drawer" onClick={drawerToggle} isRead={notificationsRead}>
-                  <BellIcon />
-                </NotificationBadge>
-              </ToolbarItem>
-            )}
+              // 기능 추가되면 완성하기
+              alertAccess && !notificationsRead && (
+                <ToolbarItem className="visible-xs-block">
+                  <NotificationBadge aria-label="Notification Drawer" onClick={drawerToggle} isRead={notificationsRead}>
+                    <BellIcon />
+                  </NotificationBadge>
+                </ToolbarItem>
+              )}
             {/* mobile -- (system status button) */}
             <SystemStatusButton statuspageData={statuspageData} className="visible-xs-block" />
             {/* mobile -- kebab dropdown [(application launcher |) import yaml | documentation, about (| logout)] */}
@@ -575,13 +575,13 @@ const MastheadToolbarContents = connect(mastheadToolbarStateToProps, {
 export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags }) => {
   const resources = flags[FLAGS.CLUSTER_VERSION]
     ? [
-        {
-          kind: clusterVersionReference,
-          name: 'version',
-          isList: false,
-          prop: 'cv',
-        },
-      ]
+      {
+        kind: clusterVersionReference,
+        name: 'version',
+        isList: false,
+        prop: 'cv',
+      },
+    ]
     : [];
   return (
     <Firehose resources={resources}>

@@ -20,7 +20,7 @@ const groups = 'groups';
 const accountUrl = 'accountUrl';
 const expireTime = 'expireTime';
 
-export const getId = function() {
+export const getId = function () {
   return sessionStorage.getItem(id);
 };
 
@@ -32,7 +32,7 @@ const getGroups = () => {
   }
 };
 
-export const getUserGroup = function() {
+export const getUserGroup = function () {
   const usergroups = getGroups();
   let result = '';
   if (usergroups?.length > 0) {
@@ -41,7 +41,7 @@ export const getUserGroup = function() {
   return result;
 };
 
-export const getAuthUrl = function() {
+export const getAuthUrl = function () {
   return sessionStorage.getItem(accountUrl) || `${window.SERVER_FLAGS.KeycloakAuthURL}/realms/${window.SERVER_FLAGS.KeycloakRealm}`;
 };
 
@@ -80,7 +80,7 @@ export const setId = function(id) {
 */
 
 // 로그아웃 시 사용
-export const resetLoginState = function() {
+export const resetLoginState = function () {
   sessionStorage.clear();
   return;
 };
@@ -190,10 +190,10 @@ export const getLogoutTime = () => {
 
 // 여러번 로그아웃되지 않도록 함
 export const logout = _.once(() => {
-  const realm = getAuthUrl();
-  if (realm) {
-    resetLoginState();
-    const redirectUrl = `${realm}/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(location.origin)}`;
-    window.location = `${location.origin}${REQUEST_LOGOUT_URL}?rd=${redirectUrl}`;
-  }
+  // const realm = getAuthUrl();
+  // if (realm) {
+  //   resetLoginState();
+  //   const redirectUrl = `${realm}/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(location.origin)}`;
+  //   window.location = `${location.origin}${REQUEST_LOGOUT_URL}?rd=${redirectUrl}`;
+  // }
 });
