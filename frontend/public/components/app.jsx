@@ -39,7 +39,7 @@ const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 import 'url-search-params-polyfill';
 import { MsalProvider, useMsalAuthentication } from '@azure/msal-react';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
-import { msalConfig } from './authConfig';
+import { msalConfig } from '../module/AADAuthConfig';
 
 export const WebSocketContext = React.createContext({
   ws: null,
@@ -170,13 +170,18 @@ class App extends React.PureComponent {
     }
   }
 
+  _onLogin = async () => {
+    console.log(this.props.msalInstance)
+    const loginResponse = await this.props.msalInstance.loginPopup({});
+  }
   render() {
     const { isNavOpen, isDrawerInline } = this.state;
     const { productName } = getBrandingDetails();
     return (
-      <MsalProvider instance={this.props.pca}>
+      <>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <ConsoleNotifier location="BannerTop" />
+        <div><button onClick={this._onLogin}>로그인버튼</button></div>
         <Page header={<Masthead onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isMasterPerspective={isMasterClusterPerspective()} />}>
           <ConnectedNotificationDrawer isDesktop={isDrawerInline} onDrawerChange={this._onNotificationDrawerToggle}>
             <WebSocketContext.Provider value={{ ws: this.state.ws, isConnected: this.state.isConnected }}>
@@ -187,73 +192,66 @@ class App extends React.PureComponent {
         <CloudShell />
         <ConsoleNotifier location="BannerBottom" />
         {window.SERVER_FLAGS.chatbotEmbed && <Chatbot />}
-      </MsalProvider>
+      </>
     );
   }
 }
 
 msalInstance.initialize().then(async () => {
 
-  // await getI18nResources();
+  await getI18nResources();
 
-  // // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
-  // await setUrlFromIngresses();
+  // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
+  await setUrlFromIngresses();
 
-  // const startDiscovery = () => store.dispatch(watchAPIServices());
-  // // Load cached API resources from localStorage to speed up page load.
-  // getCachedResources()
-  //   .then(resources => {
-  //     if (resources) {
-  //       store.dispatch(receivedResources(resources));
-  //     }
-  //     // Still perform discovery to refresh the cache.
-  //     startDiscovery();
-  //   })
-  //   .catch(startDiscovery);
+  const startDiscovery = () => store.dispatch(watchAPIServices());
+  // Load cached API resources from localStorage to speed up page load.
+  getCachedResources()
+    .then(resources => {
+      if (resources) {
+        store.dispatch(receivedResources(resources));
+      }
+      // Still perform discovery to refresh the cache.
+      startDiscovery();
+    })
+    .catch(startDiscovery);
 
-  // store.dispatch(detectFeatures());
+  store.dispatch(detectFeatures());
 
-  // // Global timer to ensure all <Timestamp> components update in sync
-  // setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
+  // Global timer to ensure all <Timestamp> components update in sync
+  setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
 
-  // // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
+  // fetchEventSourcesCrd(); // 작성 이유 알 수 없음. '/api/console/knative-event-sources' 콜 사용하지 않기에 주석 처리
 
-  // // Fetch swagger on load if it's stale.
-  // fetchSwagger();
+  // Fetch swagger on load if it's stale.
+  fetchSwagger();
 
-  // // Used by GUI tests to check for unhandled exceptions
-  // window.windowError = false;
-  // window.onerror = window.onunhandledrejection = e => {
-  //   // eslint-disable-next-line no-console
-  //   console.error('Uncaught error', e);
-  //   window.windowError = e || true;
-  // };
+  // Used by GUI tests to check for unhandled exceptions
+  window.windowError = false;
+  window.onerror = window.onunhandledrejection = e => {
+    // eslint-disable-next-line no-console
+    console.error('Uncaught error', e);
+    window.windowError = e || true;
+  };
 
-  // if ('serviceWorker' in navigator) {
-  //   navigator.serviceWorker
-  //     .getRegistrations()
-  //     .then(registrations => registrations.forEach(reg => reg.unregister()))
-  //     // eslint-disable-next-line no-console
-  //     .catch(e => console.warn('Error unregistering service workers', e));
-  // }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .getRegistrations()
+      .then(registrations => registrations.forEach(reg => reg.unregister()))
+      // eslint-disable-next-line no-console
+      .catch(e => console.warn('Error unregistering service workers', e));
+  }
 
 
 
-  // // Default to using the first account if no account is active on page load
-  // if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
-  //   // Account selection logic is app dependent. Adjust as needed for different use cases.
-  //   msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
-  // }
+  // Default to using the first account if no account is active on page load
+  if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
+    // Account selection logic is app dependent. Adjust as needed for different use cases.
+    msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
+  }
 
-  // // Optional - This will update account state if a user signs in from another tab or window
-  // msalInstance.enableAccountStorageEvents();
-
-  // msalInstance.addEventCallback((event) => {
-  //   if (event.eventType === EventType.LOGIN_SUCCESS && event.payload.account) {
-  //     const account = event.payload.account;
-  //     msalInstance.setActiveAccount(account);
-  //   }
-  // });
+  // Optional - This will update account state if a user signs in from another tab or window
+  msalInstance.enableAccountStorageEvents();
 
   msalInstance.handleRedirectPromise().then((tokenResponse) => {
     console.log(tokenResponse)
@@ -266,15 +264,21 @@ msalInstance.initialize().then(async () => {
   });
 
 
-  render(
+  const username = "test"
+  const myAccount = msalInstance.getAccountByUsername(username);
+  console.log("myAccount", myAccount)
 
-    <Provider store={store}>
-      <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-        <Switch>
-          <Route path="/" component={(props) => <App {...props, { pca: msalInstance }} />} />
-        </Switch>
-      </Router>
-    </Provider>,
+
+
+  render(
+    <MsalProvider instance={msalInstance}>
+      <Provider store={store}>
+        <Router history={history} basename={window.SERVER_FLAGS.basePath}>
+          <Switch>
+            <Route path="/" component={(props) => <App {...props, { msalInstance }} />} />
+          </Switch>
+        </Router>
+      </Provider>  </MsalProvider>,
     document.getElementById('app'),
   );
 });

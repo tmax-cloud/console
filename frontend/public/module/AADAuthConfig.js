@@ -14,8 +14,8 @@ const isFirefox = firefox > 0; // Only needed if you need to support the redirec
 // Config object to be passed to Msal on creation
 export const msalConfig = {
     auth: {
-        clientId: 'client-id',
-        authority: 'authority',
+        clientId: 'fcda7d8a-3836-48c5-9cbf-f1cc9972099a',
+        authority: 'https://login.microsoftonline.com/tmaxcloudcomputinggmail.onmicrosoft.com',
         redirectUri: "/",
         postLogoutRedirectUri: "/",
     },
