@@ -37,8 +37,8 @@ const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
-import { MsalProvider, useMsalAuthentication } from '@azure/msal-react';
-import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
+import { MsalAuthenticationTemplate, MsalProvider, useIsAuthenticated, useMsal, useMsalAuthentication } from '@azure/msal-react';
+import { InteractionStatus, InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { msalConfig } from '../module/AADAuthConfig';
 
 export const WebSocketContext = React.createContext({
@@ -107,7 +107,6 @@ class App extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
     const oldLocation = _.omit(prevProps.location, ['key']);
     const newLocation = _.omit(props.location, ['key']);
@@ -117,6 +116,7 @@ class App extends React.PureComponent {
     // two way data binding :-/
     const { pathname } = props.location;
     store.dispatch(UIActions.setCurrentLocation(pathname));
+
   }
 
   _isLargeLayout() {
@@ -171,14 +171,13 @@ class App extends React.PureComponent {
   }
 
   _onLogin = async () => {
-    console.log(this.props.msalInstance)
-    const loginResponse = await this.props.msalInstance.loginPopup({});
+    const loginResponse = await this.props.msalInstance.loginPopup();
   }
   render() {
     const { isNavOpen, isDrawerInline } = this.state;
     const { productName } = getBrandingDetails();
     return (
-      <>
+      <MsalCheck>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <ConsoleNotifier location="BannerTop" />
         <div><button onClick={this._onLogin}>로그인버튼</button></div>
@@ -192,10 +191,20 @@ class App extends React.PureComponent {
         <CloudShell />
         <ConsoleNotifier location="BannerBottom" />
         {window.SERVER_FLAGS.chatbotEmbed && <Chatbot />}
-      </>
+      </MsalCheck>
     );
   }
 }
+
+const MsalCheck = ({ children }) => {
+  const { accounts } = useMsal();
+  React.useEffect(() => {
+    console.log(accounts)
+  }, [accounts]);
+
+  return <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>{children}</MsalAuthenticationTemplate >
+}
+
 
 msalInstance.initialize().then(async () => {
 
@@ -252,21 +261,6 @@ msalInstance.initialize().then(async () => {
 
   // Optional - This will update account state if a user signs in from another tab or window
   msalInstance.enableAccountStorageEvents();
-
-  msalInstance.handleRedirectPromise().then((tokenResponse) => {
-    console.log(tokenResponse)
-    // Check if the tokenResponse is null
-    // If the tokenResponse !== null, then you are coming back from a successful authentication redirect.
-    // If the tokenResponse === null, you are not coming back from an auth redirect.
-  }).catch((error) => {
-    console.log(error)
-    // handle error, either in the library or coming back from the server
-  });
-
-
-  const username = "test"
-  const myAccount = msalInstance.getAccountByUsername(username);
-  console.log("myAccount", myAccount)
 
 
 
