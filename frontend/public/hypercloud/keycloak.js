@@ -1,5 +1,3 @@
-/* THIS FILE IS DEPRECATED */
-
 import Keycloak from 'keycloak-js';
 
 const keycloak = new Keycloak({

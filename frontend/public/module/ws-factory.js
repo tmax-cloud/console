@@ -4,10 +4,10 @@
  *
  */
 /* eslint-disable no-console */
+import { getIdToken } from '../hypercloud/auth';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../actions/ui';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 function createURL(host, path) {
   let url;
@@ -34,15 +34,14 @@ function createURL(host, path) {
   }
 
   if (path) {
-    url += path;
-  }
-
-  if (path.split('/')[1] === 'helm') {
-    const mapUrl = CustomMenusMap.Helm.url;
-    if (location.protocol === 'https:') {
-      url = `wss://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
+    if (!!getIdToken()) {
+      if (path.indexOf('?') !== -1) {
+        url += path + '&token=' + getIdToken();
+      } else {
+        url += path + '?token=' + getIdToken();
+      }
     } else {
-      url = `ws://${mapUrl.replace('https://', '').replace('http://', '') + path}`;
+      url += path;
     }
   }
 
@@ -124,9 +123,9 @@ WSFactory.prototype._connect = function () {
   };
   this.ws.onclose = function (evt) {
     console.log(`websocket closed: ${that.id}`, evt);
-    // that._state = 'closed';
-    // that._triggerEvent('close', evt);
-    // that._reconnect();
+    that._state = 'closed';
+    that._triggerEvent('close', evt);
+    that._reconnect();
   };
   this.ws.onerror = function (evt) {
     console.log(`websocket error: ${that.id}`);
@@ -256,6 +255,7 @@ WSFactory.prototype.bufferSize = function () {
 };
 
 WSFactory.prototype.destroy = function (timedout) {
+  console.log(`destroying websocket: ${this.id}`);
   if (this._state === 'destroyed') {
     return;
   }

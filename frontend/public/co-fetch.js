@@ -1,9 +1,10 @@
 import * as _ from 'lodash-es';
 import 'whatwg-fetch';
+import { getIdToken } from './hypercloud/auth';
 import { authSvc } from './module/auth';
 import store from './redux';
+import keycloak from './hypercloud/keycloak';
 import { isSingleClusterPerspective, getSingleClusterFullBasePath } from './hypercloud/perspectives';
-import { history } from '@console/internal/components/utils/router';
 
 const initDefaults = {
   headers: {},
@@ -36,6 +37,7 @@ const validateStatus = (response, url) => {
 
   if (response.status === 401) {
     //authSvc.logout(window.location.pathname);
+    //keycloak.logout();
     // return response.json().then(json => {
     //   const error = new Error(json.message || 'Authorization failed.');
     //   error.response = response;
@@ -101,12 +103,6 @@ const getCSRFToken = () =>
     .map(c => c.slice(cookiePrefix.length))
     .pop();
 
-const isCallToSubdomain = (url = '') => {
-  // tmaxcloud.org 외 다른 도메인에서도 가능해야 하므로 임시로 조치함
-  // return new RegExp('[a-z]+\\.tmaxcloud\\.org+').test(url) && !url.includes(location.host);
-  return !url.includes(location.host);
-};
-
 export const coFetch = (url, options = {}, timeout = 60000) => {
   const allOptions = _.defaultsDeep({}, initDefaults, options);
   if (allOptions.method !== 'GET') {
@@ -120,22 +116,30 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
     delete allOptions.headers['X-CSRFToken'];
   }
 
-  // multicluster.tmaxcloud.org 등의 하위도메인에서 API 요청할 경우 credentials 옵션을 include로 설정
-  if (isCallToSubdomain(url)) {
-    allOptions.credentials = 'include';
+  if (!!getIdToken()) {
+    allOptions.headers.Authorization = 'Bearer ' + getIdToken();
+    const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
+
+    // return fetch promise directly if timeout <= 0
+    if (timeout < 1) {
+      return fetchPromise;
+    }
+
+    const timeoutPromise = new Promise((unused, reject) => setTimeout(() => reject(new TimeoutError(url, timeout)), timeout));
+
+    // Initiate both the fetch promise and a timeout promise
+    return Promise.race([fetchPromise, timeoutPromise]);
+  } else {
+    // return fetch promise directly if timeout <= 0
+    if (timeout < 1) {
+      return fetchPromise;
+    }
+
+    const timeoutPromise = new Promise((unused, reject) => setTimeout(() => reject(new TimeoutError(url, timeout)), timeout));
+
+    // Initiate both the fetch promise and a timeout promise
+    return Promise.race([timeoutPromise]);
   }
-
-  const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
-
-  // return fetch promise directly if timeout <= 0
-  if (timeout < 1) {
-    return fetchPromise;
-  }
-
-  const timeoutPromise = new Promise((unused, reject) => setTimeout(() => reject(new TimeoutError(url, timeout)), timeout));
-
-  // Initiate both the fetch promise and a timeout promise
-  return Promise.race([fetchPromise, timeoutPromise]);
 };
 
 const parseJson = response => response.json();
@@ -159,9 +163,6 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
     // MEMO : 도메인 뒷부분만 url로 들어오는 경우, singlecluster perspective면 ingress 도메인 주소로 설정해줘야함.
     if (!url.startsWith('/')) {
       url = `/${url}`;
-    }
-    if (url.includes('null') === true) {
-      history.push('/ingress-check?ingresslabelvalue=multicluster');
     }
     url = `${getSingleClusterFullBasePath()}${url}`;
   }

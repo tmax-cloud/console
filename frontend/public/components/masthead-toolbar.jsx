@@ -17,54 +17,13 @@ import { AboutModal } from './about-modal';
 import { clusterVersionReference, getReportBugLink } from '../module/k8s/cluster-settings';
 import * as redhatLogoImg from '../imgs/logos/redhat.svg';
 import { ExpTimer } from './hypercloud/exp-timer';
-import { createAccountUrl, logout as _logout, tokenRefresh } from '../hypercloud/auth';
-import { useTranslation, withTranslation } from 'react-i18next';
+import { setAccessToken, setIdToken } from '../hypercloud/auth';
+import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
 import { setLanguage } from './hypercloud/utils/langs/i18n';
 import { hideChatbot } from './hypercloud/chatbot/chatbot';
-import { Dropdown, DropdownToggle, DropdownGroup, DropdownItem } from '@patternfly/react-core';
 
-import React from 'react';
-import { Dropdown, DropdownToggle, DropdownGroup, DropdownItem } from '@patternfly/react-core';
-
-export const DropdownGroups = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const { t } = useTranslation();
-
-  const onToggle = isOpen => {
-    setIsOpen(isOpen);
-  };
-
-  const onFocus = () => {
-    const element = document.getElementById('toggle-groups');
-    element.focus();
-  };
-
-  const onSelect = () => {
-    setIsOpen(false);
-    onFocus();
-  };
-
-  const dropdownItems = [
-    <DropdownGroup key="group 1">
-      <DropdownItem key="group 1 link">
-        <a href={HyperCloudManualLink} target="_blank" className="pf-c-app-launcher__menu-item">
-          {t('COMMON:MSG_GNB_MORE_1')}
-        </a>
-      </DropdownItem>
-      <DropdownItem key="group 1 action" component="button">
-        <CloudShellMastheadButton />
-      </DropdownItem>
-    </DropdownGroup>,
-  ];
-  const helpToggle = (
-    <span className="pf-c-dropdown__toggle">
-      <QuestionCircleIcon color="white" />
-    </span>
-  );
-  return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher" onSelect={onSelect} onToggle={onToggle} isOpen={isOpen} items={dropdownItems} position="right" toggleIcon={helpToggle} color="white" isGrouped />;
-};
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
     <ToolbarItem className={className}>
@@ -84,7 +43,6 @@ class MastheadToolbarContents_ extends React.Component {
       isLanguageDropdownOpen: false,
       isKebabDropdownOpen: false,
       statuspageData: null,
-      username: null,
       isKubeAdmin: false,
       showAboutModal: false,
     };
@@ -109,16 +67,6 @@ class MastheadToolbarContents_ extends React.Component {
     this._tokenRefresh = this._tokenRefresh.bind(this);
   }
 
-  componentDidMount() {
-    this._updateUser();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!_.isEqual(this.props.user, prevProps.user)) {
-      this._updateUser();
-    }
-  }
-
   _getStatuspageData(statuspageID) {
     fetch(`https://${statuspageID}.statuspage.io/api/v2/summary.json`, {
       headers: { Accept: 'application/json' },
@@ -137,7 +85,7 @@ class MastheadToolbarContents_ extends React.Component {
       this.setState({ username: authSvc.name() });
     }
     this.setState({
-      username: _.get(user, 'id') || _.get(user, 'metadata.name', ''),
+      username: _.get(user, 'fullName') || _.get(user, 'metadata.name', ''),
       isKubeAdmin: _.get(user, 'metadata.name') === 'kube:admin',
     });
   }
@@ -336,26 +284,24 @@ class MastheadToolbarContents_ extends React.Component {
   }
 
   _renderMenu(mobile) {
-    const { flags, consoleLinks, t } = this.props;
-    const { isUserDropdownOpen, isKebabDropdownOpen, username } = this.state;
+    const { flags, consoleLinks, keycloak, t } = this.props;
+    const username = !!keycloak.idTokenParsed.preferred_username ? keycloak.idTokenParsed.preferred_username : keycloak.idTokenParsed.email;
+    const { isUserDropdownOpen, isKebabDropdownOpen } = this.state;
     const additionalUserActions = this._getAdditionalActions(this._getAdditionalLinks(consoleLinks, 'UserMenu'));
     const helpActions = this._helpActions(this._getAdditionalActions(this._getAdditionalLinks(consoleLinks, 'HelpMenu')));
-
-    if (!username) {
-      return null;
-    }
 
     const actions = [];
     const userActions = [];
 
     const openAccountConsole = e => {
       e.preventDefault();
-      window.open(createAccountUrl());
+      window.open(keycloak.createAccountUrl());
     };
 
     const logout = e => {
       e.preventDefault();
-      _logout();
+      sessionStorage.clear();
+      keycloak.logout();
     };
 
     userActions.push({
@@ -407,10 +353,11 @@ class MastheadToolbarContents_ extends React.Component {
         <AngleDownIcon className="pf-c-dropdown__toggle-icon" color="#757575" />
       </span>
     );
+
     return <ApplicationLauncher aria-label="User menu" data-test="user-dropdown" className="co-app-launcher co-user-menu" onSelect={this._onUserDropdownSelect} onToggle={this._onUserDropdownToggle} isOpen={isUserDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={userToggle} isGrouped />;
   }
   _renderLanguageMenu(mobile) {
-    const { flags, consoleLinks, t } = this.props;
+    const { flags, consoleLinks, keycloak, t } = this.props;
     const { isLanguageDropdownOpen } = this.state;
 
     const actions = [];
@@ -474,18 +421,33 @@ class MastheadToolbarContents_ extends React.Component {
   }
 
   _tokenRefresh = () => {
-    tokenRefresh()
-      .then(() => {
-        this.timerRef.tokRefresh();
+    const { keycloak } = this.props;
+    const curTime = new Date();
+    const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
+    const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
+    keycloak
+      .updateToken(Math.ceil(logoutTime))
+      .then(refreshed => {
+        console.log('refreshed', refreshed);
+        if (refreshed) {
+          // TODO: 토큰 설정
+          setIdToken(keycloak.idToken);
+          setAccessToken(keycloak.token);
+          this.timerRef.tokRefresh();
+        } else {
+          // expired time > 60
+          console.log('Token is still valid');
+        }
       })
       .catch(() => {
-        console.error('Failed to refresh the token, or the session has expired');
+        // refresh token 없음
+        console.log('Failed to refresh the token, or the session has expired');
       });
   };
 
   render() {
     const { isApplicationLauncherDropdownOpen, isHelpDropdownOpen, showAboutModal, statuspageData } = this.state;
-    const { consoleLinks, drawerToggle, notificationsRead, canAccessNS, t } = this.props;
+    const { consoleLinks, drawerToggle, notificationsRead, canAccessNS, keycloak, t } = this.props;
     // TODO: notificatoin 기능 완료 되면 추가하기.
     const alertAccess = false; //canAccessNS && !!window.SERVER_FLAGS.prometheusBaseURL;
     return (
@@ -500,8 +462,9 @@ class MastheadToolbarContents_ extends React.Component {
                 ref={input => {
                   this.timerRef = input;
                 }}
-                logout={_logout}
+                logout={keycloak.logout}
                 tokenRefresh={this._tokenRefresh}
+                keycloak={keycloak}
               />
             </ToolbarItem>
             <ToolbarItem>
@@ -533,7 +496,14 @@ class MastheadToolbarContents_ extends React.Component {
                 </Link>
               </Tooltip>
             </ToolbarItem>
-            <DropdownGroups />
+            <CloudShellMastheadButton />
+            <ToolbarItem className="co-masthead-icon__button">
+              <Tooltip content="Manual" position={TooltipPosition.bottom}>
+                <a href={HyperCloudManualLink} target="_blank">
+                  <QuestionCircleIcon className="co-masthead-icon" color="white" />
+                </a>
+              </Tooltip>
+            </ToolbarItem>
           </ToolbarGroup>
 
           <ToolbarGroup>
@@ -572,7 +542,7 @@ const MastheadToolbarContents = connect(mastheadToolbarStateToProps, {
   drawerToggle: UIActions.notificationDrawerToggleExpanded,
 })(connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.CONSOLE_CLI_DOWNLOAD, FLAGS.OPENSHIFT)(withTranslation()(MastheadToolbarContents_)));
 
-export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags }) => {
+export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags, keycloak }) => {
   const resources = flags[FLAGS.CLUSTER_VERSION]
     ? [
       {
@@ -585,7 +555,7 @@ export const MastheadToolbar = connectToFlags(FLAGS.CLUSTER_VERSION)(({ flags })
     : [];
   return (
     <Firehose resources={resources}>
-      <MastheadToolbarContents />
+      <MastheadToolbarContents keycloak={keycloak} />
     </Firehose>
   );
 });

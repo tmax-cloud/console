@@ -8,7 +8,7 @@ import { RadioGroup } from '@console/internal/components/radio';
 import { TextInput } from '@patternfly/react-core';
 import Select, { components } from 'react-select';
 import { coFetchJSON } from '../../../co-fetch';
-import { getId, getUserGroup, REQUEST_ACCOUNT_USERS_URL, REQUEST_ACCOUNT_GROUPS_URL } from '../../../hypercloud/auth';
+import { getId, getUserGroup, getAuthUrl, getAccessToken } from '../../../hypercloud/auth';
 import { UsersIcon, TimesIcon, SearchIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
@@ -19,6 +19,10 @@ const radioItems = (t?: TFunction) => [
   {
     title: t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_RADIOBUTTON_1'),
     value: 'user',
+  },
+  {
+    title: t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_RADIOBUTTON_2'),
+    value: 'group',
   },
 ];
 
@@ -129,8 +133,8 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
 
   const members = _.map(props.existMembers, (value, key) => key);
   const groups = _.map(props.existGroups, (value, key) => key);
-  const membersUrl = members.reduce((acc, curr) => acc + `&except=${curr}`, REQUEST_ACCOUNT_USERS_URL);
-  const groupsUrl = groups.reduce((acc, curr) => acc + `&except=${curr}`, `${REQUEST_ACCOUNT_GROUPS_URL}?exceptDefault=true`);
+  const membersUrl = members.reduce((acc, curr) => acc + `&except=${curr}`, `${getAuthUrl()}/user/list?token=${getAccessToken()}`);
+  const groupsUrl = groups.reduce((acc, curr) => acc + `&except=${curr}`, `${getAuthUrl()}/group/list?exceptDefault=true&token=${getAccessToken()}`);
 
   const selectRef: React.RefObject<HTMLDivElement> = React.createRef();
 
