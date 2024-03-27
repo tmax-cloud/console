@@ -200,7 +200,7 @@ keycloak
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
-    setIdToken(keycloak.idToken);
+    setIdToken(keycloak.tokenParsed["sa-token"]);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
 

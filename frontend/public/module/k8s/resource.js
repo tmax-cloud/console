@@ -20,7 +20,7 @@ const getDynamicProxyPath = cluster => {
 };
 
 /** @type {(model: K8sKind, cluster?: string, basePath?: string) => string} */
-export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster, basePath) => {
+export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion }, cluster, basePath) => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
   let p = basePath || getDynamicProxyPath(cluster);
@@ -40,7 +40,7 @@ export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster, basePat
 };
 
 /** @type {(model: K8sKind) => string} */
-const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster) => {
+const getClusterAPIPath = ({ apiGroup = 'core', apiVersion }, cluster) => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
   let p = multiClusterBasePath;
 
@@ -76,12 +76,12 @@ export const resourceURL = (model, options) => {
   }
 
   if (!_.isEmpty(options.queryParams)) {
-    q = _.map(options.queryParams, function(v, k) {
+    q = _.map(options.queryParams, function (v, k) {
       return `${k}=${v}`;
     });
     u += `${u.indexOf('?') === -1 ? '?' : '&'}${q.join('&')}`;
   }
-  
+
   return u;
 };
 
@@ -101,14 +101,14 @@ export const resourceClusterURL = (model, options) => {
     u += `/${options.path}`;
   }
   if (!_.isEmpty(options.queryParams)) {
-    q = _.map(options.queryParams, function(v, k) {
+    q = _.map(options.queryParams, function (v, k) {
       return `${k}=${v}`;
     });
     u += `?${q.join('&')}`;
 
   }
 
-  if(isCluster(model)) {
+  if (isCluster(model)) {
     return `${u}?userId=${getId()}${getUserGroup()}&accessOnly=false`;
   }
   return `${u}?userId=${getId()}${getUserGroup()}`;
@@ -119,14 +119,14 @@ export const resourceApprovalURL = (model, options, approval) => {
 }
 
 const isCluster = (model) => {
-  if(model.kind === 'ClusterManager') {
+  if (model.kind === 'ClusterManager') {
     return true;
   }
   return false;
 }
 
 const isClusterClaim = (model) => {
-  if(model.kind === 'ClusterClaim') {
+  if (model.kind === 'ClusterClaim') {
     return true;
   }
   return false;
@@ -199,7 +199,7 @@ export const k8sUpdateApproval = (kind, resource, approval, data, method = 'PUT'
     approval,
   );
 
-  switch(method) {
+  switch (method) {
     case 'PATCH': {
       return coFetchJSON.patch(url, data);
     }
@@ -214,7 +214,7 @@ export const k8sUpdateClaim = (kind, clusterClaim, admit, reason = '', nameSpace
   const resourceClusterURL = `api/multi-hypercloud/namespaces/${nameSpace}/clusterclaims/${clusterClaim}?userId=${getId()}${getUserGroup()}`;
 
   const params = new URLSearchParams();
-  const queryParams = { admit: admit.toString(), reason, memberName: 'cho'};
+  const queryParams = { admit: admit.toString(), reason, memberName: 'cho' };
   _.each(queryParams, (value, key) => value && params.append(key, value.toString()));
 
   const url = `${resourceClusterURL}&${params.toString()}`;
@@ -266,11 +266,12 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   }).join('&');
 
   let isMultiCluster = isCluster(kind) || isClusterClaim(kind);
-  const _isNamespace = isNamespace(kind) || isNamespaceClaim(kind);
-  let listURL = isMultiCluster ? resourceClusterURL(kind, {ns: params.ns}) : _isNamespace ? resourceNamespaceURL(kind) : resourceURL(kind, { ns: params.ns });
-  
+  const _isNamespace = false
+  // const _isNamespace = isNamespace(kind) || isNamespaceClaim(kind);
+  let listURL = isMultiCluster ? resourceClusterURL(kind, { ns: params.ns }) : _isNamespace ? resourceNamespaceURL(kind) : resourceURL(kind, { ns: params.ns });
+
   //if(localStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
-  if(sessionStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
+  if (sessionStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
     return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
   }
 

@@ -126,6 +126,7 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   if (isCallToSubdomain(url)) {
     allOptions.credentials = 'include';
   }
+
   if (!!getIdToken()) {
     allOptions.headers.Authorization = 'Bearer ' + getIdToken();
     const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
@@ -202,8 +203,7 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
 };
 
 export const coFetchJSON = (url, method = 'GET', options = {}, timeout) => {
-  const sa_token = '';
-  const allOptions = _.defaultsDeep({}, options, { headers: { Accept: 'application/json', Authorization: `bearer ${sa_token}` } });
+  const allOptions = _.defaultsDeep({}, options, { headers: { Accept: 'application/json' } });
   return coFetchCommon(url, method, allOptions, timeout);
 };
 
