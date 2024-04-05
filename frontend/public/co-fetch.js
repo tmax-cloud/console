@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import 'whatwg-fetch';
-import { getIdToken } from './hypercloud/auth';
+import { getIdToken, getSaToken } from './hypercloud/auth';
 import { authSvc } from './module/auth';
 import store from './redux';
 import keycloak from './hypercloud/keycloak';
@@ -127,8 +127,9 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
     allOptions.credentials = 'include';
   }
 
-  if (!!getIdToken()) {
-    allOptions.headers.Authorization = 'Bearer ' + getIdToken();
+  if (!!getSaToken()) {
+    allOptions.headers.Authorization = 'Bearer ' + getSaToken();
+    console.log('coFetch', url, allOptions)
     const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
 
     if (timeout < 1) {
@@ -183,6 +184,7 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
   // Pass headers last to let callers to override Accept.
   const allOptions = _.defaultsDeep({ method }, options, { headers });
   return coFetch(url, allOptions, timeout).then(response => {
+
     if (!response.ok) {
       return response.text();
     }

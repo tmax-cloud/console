@@ -52,6 +52,8 @@
 #   --log-type="pretty" \
 #   --log-level="trace"
 
+######################################## 위가 원본
+
 
 #!/usr/bin/env bash
 
@@ -66,7 +68,7 @@ myIP=$(hostname -I | awk '{print $1}')
 # k8sIP='172.23.4.201'
 # k8sIP='192.168.6.171'
 k8sIP='192.168.9.182'
-HYPERAUTH_URL='hyperauth.20.249.184.135.nip.io'
+HYPERAUTH_URL='hyperauth.20.249.187.33.nip.io'
 
 REALM='tmax'
 CLIENT_ID='hypercloud5'
@@ -79,7 +81,7 @@ TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/auth/realms/tmax/protocol/
   -d response_type=id_token \
   -d scope=openid \
   -d client_id=$CLIENT_ID \
-  -d username=tmaxcloudck@tmax.co.kr \
+  -d username=test-sa@tmax.co.kr \
   -d password=admin)
   
 ERROR=$(echo "$TOKEN" | jq .error -r)
@@ -96,7 +98,7 @@ echo $id_token
   --cert-file=./tls/tls.crt \
   --key-file=./tls/tls.key \
   --public-dir="./frontend/public/dist" \
-  --keycloak-auth-url=https://hyperauth.20.249.184.135.nip.io/auth \
+  --keycloak-auth-url=https://hyperauth.20.249.187.33.nip.io/auth \
   --keycloak-client-id=hypercloud5 \
   --keycloak-realm=tmax \
   --mc-mode=true \
@@ -107,3 +109,4 @@ echo $id_token
   --k8s-auth-bearer-token="$id_token" \
   --log-type="pretty" \
   --log-level="trace"
+  # keycloak-auth-url은 auth의 ingress를 집어 넣도록 합시다

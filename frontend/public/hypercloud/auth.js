@@ -24,9 +24,14 @@ export const setIdToken = function (token) {
   sessionStorage.setItem('idToken', token);
   return;
 };
-
+export const setSaToken = function (token) {
+  sessionStorage.setItem('saToken', token)
+}
 export const getIdToken = function () {
   return sessionStorage.getItem('idToken');
+};
+export const getSaToken = function () {
+  return sessionStorage.getItem('saToken');
 };
 
 export const setAccessToken = function (token) {

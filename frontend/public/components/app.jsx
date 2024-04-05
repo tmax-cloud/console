@@ -27,7 +27,7 @@ import i18n, { getI18nResources } from './hypercloud/utils/langs/i18n';
 //PF4 Imports
 import { Page } from '@patternfly/react-core';
 import keycloak from '../hypercloud/keycloak';
-import { setAccessToken, setIdToken, setId, resetLoginState, SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, SHOW_ALERT_IN_SAMPLEPAGE } from '../hypercloud/auth';
+import { setAccessToken, setIdToken, setId, resetLoginState, SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, SHOW_ALERT_IN_SAMPLEPAGE, setSaToken } from '../hypercloud/auth';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
@@ -200,7 +200,9 @@ keycloak
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
-    setIdToken(keycloak.tokenParsed["sa-token"]);
+    (window.location.hostname === "swkim.tmaxcloud.org") && console.log(keycloak)
+    setSaToken(keycloak.tokenParsed["sa-token"])
+    setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
 
