@@ -74,7 +74,6 @@ export const resourceURL = (model, options) => {
       u += `/${options.path}`;
     }
   }
-  if (u.includes("namespaces?limit")) u = u.replace("kubernetes", "console");
   if (!_.isEmpty(options.queryParams)) {
     q = _.map(options.queryParams, function (v, k) {
       return `${k}=${v}`;

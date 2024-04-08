@@ -130,6 +130,7 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   // `${location.origin}/api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`; console에서 인증하는 주소 경로로 추측
   if (!!getSaToken()) {
     allOptions.headers.Authorization = 'Bearer ' + getSaToken();
+    if (url.includes("namespaces?limit")) url = url.replace("kubernetes", "console");
     console.log('coFetch', url, allOptions)
     const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
 
