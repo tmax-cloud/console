@@ -74,6 +74,7 @@ export const resourceURL = (model, options) => {
       u += `/${options.path}`;
     }
   }
+  if (u.includes("namespaces")) u = u.replace("kubernetes", "console");
   if (!_.isEmpty(options.queryParams)) {
     q = _.map(options.queryParams, function (v, k) {
       return `${k}=${v}`;
@@ -81,8 +82,7 @@ export const resourceURL = (model, options) => {
     u += `${u.indexOf('?') === -1 ? '?' : '&'}${q.join('&')}`;
   }
   console.log('resourceURL', model, u);
-  if (u.includes("namespaces")) return u.replace("kubernetes", "console");
-  else return u;
+  return u;
 };
 
 export const resourceClusterURL = (model, options) => {
@@ -269,7 +269,7 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   const _isNamespace = false
   // const _isNamespace = isNamespace(kind) || isNamespaceClaim(kind);
   let listURL = isMultiCluster ? resourceClusterURL(kind, { ns: params.ns }) : _isNamespace ? resourceNamespaceURL(kind) : resourceURL(kind, { ns: params.ns });
-
+  console.log('k8sList.listURL', listURL)
   //if(localStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
   if (sessionStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
     return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
