@@ -81,8 +81,8 @@ export const resourceURL = (model, options) => {
     u += `${u.indexOf('?') === -1 ? '?' : '&'}${q.join('&')}`;
   }
   console.log('resourceURL', model, u);
-  if (u.includes("namespaces")) u.replace("kubernetes", "console");
-  return u;
+  if (u.includes("namespaces")) return u.replace("kubernetes", "console");
+  else return u;
 };
 
 export const resourceClusterURL = (model, options) => {
