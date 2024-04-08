@@ -74,14 +74,14 @@ export const resourceURL = (model, options) => {
       u += `/${options.path}`;
     }
   }
-
   if (!_.isEmpty(options.queryParams)) {
     q = _.map(options.queryParams, function (v, k) {
       return `${k}=${v}`;
     });
     u += `${u.indexOf('?') === -1 ? '?' : '&'}${q.join('&')}`;
   }
-
+  console.log('resourceURL', model, u);
+  if (u.includes("namespaces")) u.replace("kubernetes", "console");
   return u;
 };
 

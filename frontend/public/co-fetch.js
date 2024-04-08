@@ -118,10 +118,10 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   // If the URL being requested is absolute (and therefore, not a local request),
   // remove the authorization header to prevent credentials from leaking.
 
-  // if (url.indexOf('://') >= 0) {
-  //   delete allOptions.headers.Authorization;
-  //   delete allOptions.headers['X-CSRFToken'];
-  // }
+  if (url.indexOf('://') >= 0) {
+    delete allOptions.headers.Authorization;
+    delete allOptions.headers['X-CSRFToken'];
+  }
 
   // multicluster.tmaxcloud.org 등의 하위도메인에서 API 요청할 경우 credentials 옵션을 include로 설정
   if (isCallToSubdomain(url)) {
@@ -129,10 +129,9 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   }
   // `${location.origin}/api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`; console에서 인증하는 주소 경로로 추측
   if (!!getSaToken()) {
-    // allOptions.headers.Authorization = 'Bearer ' + getSaToken();
+    allOptions.headers.Authorization = 'Bearer ' + getSaToken();
     console.log('coFetch', url, allOptions)
-    let k8sToConsoleUrl = url.replace("kubernetes", "console")
-    const fetchPromise = fetch(k8sToConsoleUrl, allOptions).then(response => validateStatus(response, url));
+    const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
 
     if (timeout < 1) {
       return fetchPromise;
