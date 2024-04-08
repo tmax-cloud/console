@@ -117,10 +117,10 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
 
   // If the URL being requested is absolute (and therefore, not a local request),
   // remove the authorization header to prevent credentials from leaking.
-  if (url.indexOf('://') >= 0) {
-    delete allOptions.headers.Authorization;
-    delete allOptions.headers['X-CSRFToken'];
-  }
+  // if (url.indexOf('://') >= 0) {
+  //   delete allOptions.headers.Authorization;
+  //   delete allOptions.headers['X-CSRFToken'];
+  // }
 
   // multicluster.tmaxcloud.org 등의 하위도메인에서 API 요청할 경우 credentials 옵션을 include로 설정
   if (isCallToSubdomain(url)) {
@@ -128,7 +128,7 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   }
 
   if (!!getSaToken()) {
-    allOptions.headers.Authorization = 'Bearer ' + getSaToken();
+    // allOptions.headers.Authorization = 'Bearer ' + getSaToken();
     console.log('coFetch', url, allOptions)
     const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
 
