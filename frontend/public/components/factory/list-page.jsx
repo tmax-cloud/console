@@ -145,6 +145,7 @@ export const FireMan_ = connect(mapStateToProps, { filterList })(
       });
       const kindsInFlight = this.props.k8s.getIn(['RESOURCES', 'inFlight']);
       this.setState({ modelExists, kindsInFlight });
+      console.log('updateModelExists modelExists, kindsInFlight, this.props.resources', modelExists, kindsInFlight, this.props.resources)
     }
 
     UNSAFE_componentWillMount() {
@@ -440,7 +441,7 @@ export const MultiListPage = props => {
   React.useEffect(() => {
     isCustomResourceType &&
       k8sList(CustomResourceDefinitionModel).then(res => {
-        _.find(res, function(data) {
+        _.find(res, function (data) {
           return data.spec.names.kind === kind;
         }) ||
           ((href = namespace ? `/k8s/ns/${namespace}/import` : `/k8s/all-namespaces/import`) && setCreatePropsState({ to: href }));

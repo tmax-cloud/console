@@ -149,7 +149,7 @@ const resourceNamespaceURL = (model, isWS) => {
     return `${getSingleClusterFullBasePath()}/api/kubernetes/api/v1/${plural}`;
   } else {
     const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
-    return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+    return `${document.location.origin}/api/console/${path}?userId=${getId()}${getUserGroup()}`;
     // return `${isWS ? '' : document.location.origin}/api/hypercloud/${isWS ? 'websocket/' : ''}${path}?userId=${getId()}${getUserGroup()}`;
   }
 };
