@@ -73,16 +73,16 @@ HYPERAUTH_URL='hyperauth.20.249.187.33.nip.io'
 REALM='tmax'
 CLIENT_ID='hypercloud5'
 # GET id_token
-# read -p "HyperAuth Admin ID : " admin_id
-# read -sp "HyperAuth Admin Password : " admin_password
+read -p "HyperAuth Admin ID : " admin_id
+read -sp "HyperAuth Admin Password : " admin_password
 echo ""
 TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/auth/realms/tmax/protocol/openid-connect/token" \
   -d grant_type=password \
   -d response_type=id_token \
   -d scope=openid \
   -d client_id=$CLIENT_ID \
-  -d username=test-sa@tmax.co.kr \
-  -d password=admin)
+  -d username=$admin_id \
+  -d password=$admin_password)
   
 ERROR=$(echo "$TOKEN" | jq .error -r)
 if [ "$ERROR" != "null" ];then
