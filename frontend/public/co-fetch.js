@@ -131,10 +131,9 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
   if (!!getSaToken()) {
     allOptions.headers.Authorization = 'Bearer ' + getSaToken();
     if (url.includes("namespaces?limit")) url = url.replace("kubernetes", "console");
-    const fetchPromise = fetch(url, allOptions).then(response => {
-      console.log("co-fetch url, response : ", url, response)
-      return validateStatus(response, url)
-    }).catch(err => console.log('co-fetch err : ', err));
+    const fetchPromise = fetch(url, allOptions).then(response =>
+      validateStatus(response, url)
+    ).catch(err => console.log('co-fetch err : ', err));
 
     if (timeout < 1) {
       return fetchPromise;
