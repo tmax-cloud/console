@@ -326,20 +326,9 @@ export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(props => {
   //   ];
   // }
 
-  const pages = isSingleClusterPerspective()
-    ? null
-    : [
-        {
-          href: 'resourcequotas',
-          name: t('COMMON:MSG_LNB_MENU_80'),
-        },
-        {
-          href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
-          name: t('COMMON:MSG_LNB_MENU_102'),
-        },
-      ];
 
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_80')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(ResourceQuotaModel, t) })} canCreate={true} ListComponent={ResourceQuotasList} kind="ResourceQuota" {...props} multiNavPages={pages} />;
+
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_80')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(ResourceQuotaModel, t) })} canCreate={true} ListComponent={ResourceQuotasList} kind="ResourceQuota" {...props}  />;
 });
 
-export const ResourceQuotasDetailsPage = props => <DetailsPage {...props} menuActions={resourceQuotaMenuActions} pages={[navFactory.details(Details), navFactory.editResource()]} />;
+export const ResourceQuotasDetailsPage = props => <DetailsPage {...props} menuActions={resourceQuotaMenuActions} />;

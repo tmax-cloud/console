@@ -185,25 +185,13 @@ export const NamespacesPage = props => {
   //     // `/k8s/ns/${props.namespace || 'default'}/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   //     `/k8s/cluster/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   // };
-  const pages = isSingleClusterPerspective()
-    ? null
-    : [
-        {
-          href: 'namespaces',
-          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
-        },
-        {
-          href: 'namespaceclaims?rowFilter-namespace-claim-status=Awaiting',
-          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
-        },
-      ];
+
 
   return (
     <ListPage
       {...props}
       tableProps={namespacesTableProps}
       canCreate={true}
-      multiNavPages={pages}
       // createProps={createProps}
       // createHandler={() => createNamespaceModal({ blocking: true })}
     />
@@ -690,7 +678,7 @@ export const NamespacesDetailsPage = props => (
       },
       navFactory.editResource(),
       navFactory.roles(RolesPage),
-      !isSingleClusterPerspective() && navFactory.metering(),
+      // !isSingleClusterPerspective() && navFactory.metering(),
     ]}
   />
 );

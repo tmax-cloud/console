@@ -53,9 +53,6 @@ export const DropdownGroups = () => {
           {t('COMMON:MSG_GNB_MORE_1')}
         </a>
       </DropdownItem>
-      <DropdownItem key="group 1 action" component="button">
-        <CloudShellMastheadButton />
-      </DropdownItem>
     </DropdownGroup>,
   ];
   const helpToggle = (

@@ -5,7 +5,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.home,
-    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Audit.kind, CustomMenusMap.Events.kind, CustomMenusMap.ArgoCD.kind, CustomMenusMap.Rollout.kind, CustomMenusMap.Grafana.kind, CustomMenusMap.Git.kind, CustomMenusMap.Harbor.kind],
+    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind,  CustomMenusMap.Events.kind, CustomMenusMap.ArgoCD.kind, CustomMenusMap.Rollout.kind, CustomMenusMap.Grafana.kind, CustomMenusMap.Git.kind, CustomMenusMap.Harbor.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -55,11 +55,6 @@ const DeveloperNavMenus = [
   },
   {
     menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.helm,
-    innerMenus: [CustomMenusMap.HelmRepository.kind, CustomMenusMap.HelmChart.kind, CustomMenusMap.HelmRelease.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicemesh,
     innerMenus: [Models.VirtualServiceModel.kind, Models.DestinationRuleModel.kind, Models.EnvoyFilterModel.kind, Models.GatewayModel.kind, Models.SidecarModel.kind, Models.ServiceEntryModel.kind, Models.RequestAuthenticationModel.kind, Models.PeerAuthenticationModel.kind, Models.AuthorizationPolicyModel.kind, CustomMenusMap.Kiali.kind],
   },
@@ -67,25 +62,6 @@ const DeveloperNavMenus = [
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels['ci/cd'],
     innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind, Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.aidevops,
-    innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.kafka,
-    innerMenus: [Models.KafkaClusterModel.kind, Models.KafkaConnectModel.kind, Models.KafkaConnectorModel.kind, Models.KafkaBridgeModel.kind, Models.KafkaMirrorMaker2Model.kind, Models.KafkaRebalanceModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.redis,
-    innerMenus: [Models.RedisModel.kind, Models.RedisClusterModel.kind],
-  },
-  {
-    menuType: MenuType.REGISTERED_MENU,
-    kind: Models.ServiceBindingModel.kind,
   },
 ];
 

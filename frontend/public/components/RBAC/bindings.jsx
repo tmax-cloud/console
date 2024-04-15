@@ -230,19 +230,6 @@ const rowFilters = t => {
 export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new', single = false, displayTitleRow = true }) => {
   const { t } = useTranslation();
 
-  const pages = isSingleClusterPerspective()
-    ? null
-    : [
-        {
-          href: 'rolebindings',
-          name: t('COMMON:MSG_LNB_MENU_76'),
-        },
-        {
-          href: 'rolebindingclaims?rowFilter-roleBindingClaim-status=Awaiting',
-          name: t('COMMON:MSG_LNB_MENU_101'),
-        },
-      ];
-
   const ko = kindObj(pluralToKind('rolebindings'));
   const { namespaced, plural } = ko;
   //const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
@@ -306,7 +293,6 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
       textFilter="role-binding"
       title={t('COMMON:MSG_LNB_MENU_76')}
       isClusterScope
-      multiNavPages={pages}
       multiNavBaseURL={multiNavBaseURL}
     />
   );

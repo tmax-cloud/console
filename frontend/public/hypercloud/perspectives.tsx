@@ -58,21 +58,46 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
   } else {
     isFirstTime = false;
   }
-  const perspectives: Perspective[] = window.SERVER_FLAGS.mcMode
-    ? [
+  const perspectives: Perspective[] = [        {
+          type: 'Perspective',
+          properties: {
+            id: PerspectiveType.MASTER,
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
+            icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+            selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
+            default: true,
+            getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+          },
+        },
         {
           type: 'Perspective',
           properties: {
-            id: PerspectiveType.MULTI,
-            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MULTI]) : 'Multi-Cluster',
-            icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-            selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
-            default: true,
-            getLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
-            getK8sLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
-            getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
+            id: PerspectiveType.DEVELOPER,
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
+            icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+            selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
+            getLandingPageURL: () => (isFirstTime ? '/developer/add' : '/welcome'),
+            getK8sLandingPageURL: () => (isFirstTime ? '/developer/add' : '/welcome'),
+            getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
-        },
+        },]
+  window.SERVER_FLAGS.mcMode
+    ? [
+        // {
+        //   type: 'Perspective',
+        //   properties: {
+        //     id: PerspectiveType.MULTI,
+        //     name: t ? t(PerspectiveLabelKeys[PerspectiveType.MULTI]) : 'Multi-Cluster',
+        //     icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+        //     selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
+        //     default: true,
+        //     getLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
+        //     getK8sLandingPageURL: () => (isFirstTime ? '/k8s/all-namespaces/clustermanagers' : '/welcome'),
+        //     getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
+        //   },
+        // },
         {
           type: 'Perspective',
           properties: {
@@ -85,18 +110,18 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
-        {
-          type: 'Perspective',
-          properties: {
-            id: PerspectiveType.SINGLE,
-            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SINGLE]) : 'Single-Cluster',
-            icon: <img src={SingleClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
-            selectedIcon: <img src={SelectedSingleClusterIcon} className="font-icon" />,
-            getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
-            getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
-            getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
-          },
-        },
+        // {
+        //   type: 'Perspective',
+        //   properties: {
+        //     id: PerspectiveType.SINGLE,
+        //     name: t ? t(PerspectiveLabelKeys[PerspectiveType.SINGLE]) : 'Single-Cluster',
+        //     icon: <img src={SingleClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+        //     selectedIcon: <img src={SelectedSingleClusterIcon} className="font-icon" />,
+        //     getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+        //     getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+        //     getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+        //   },
+        // },
         {
           type: 'Perspective',
           properties: {
