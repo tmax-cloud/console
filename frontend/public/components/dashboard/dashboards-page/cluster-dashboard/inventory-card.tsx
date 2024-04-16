@@ -76,7 +76,7 @@ const RCCard: React.FC<RCCardProps> = React.memo(({ rcItems }) => {
 
 export const InventoryCard = () => {
   const itemExtensions = useExtensions<DashboardsOverviewInventoryItem>(isDashboardsOverviewInventoryItem);
-  const { resourceItems, claimItems } = React.useMemo(() => splitItems(itemExtensions), [itemExtensions]);
+  const { resourceItems } = React.useMemo(() => splitItems(itemExtensions), [itemExtensions]);
   // const [isSingleCluster, setSingleCluster] = React.useState(isSingleClusterPerspective());
   const { t } = useTranslation();
 

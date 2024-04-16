@@ -270,7 +270,7 @@ export const watchK8sList = (
           return;
         }
 
-        POLLs[id] = setTimeout(pollAndWatch, 15 * 1000);
+        // POLLs[id] = setTimeout(pollAndWatch, 15 * 1000);
       })
       .onbulkmessage(events => [updateListFromWS, extraAction].forEach(f => f && dispatch(f(id, events))));
   };
