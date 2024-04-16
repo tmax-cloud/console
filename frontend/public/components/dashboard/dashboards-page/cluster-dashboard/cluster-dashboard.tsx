@@ -70,10 +70,10 @@ export const ClusterDashboard: React.FC<{}> = () => {
   }, [getActivePerspective()]);
 
   const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
-  const leftCards = [{ Card: DetailsCard }];
+  // const leftCards = [{ Card: DetailsCard }];
   const rightCards = [{ Card: InventoryCard }, { Card: ActivityCard }];
 
-  const dashboard = <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} isSingleCluster={isSingleCluster} />;
+  const dashboard = <DashboardGrid mainCards={mainCards} rightCards={rightCards} isSingleCluster={isSingleCluster} />;
   const error = <AccessDenied message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_27')} />;
 
   return (
