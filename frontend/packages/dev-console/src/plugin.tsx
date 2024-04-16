@@ -16,7 +16,7 @@ import {
   // ImageStreamImportsModel,
   ConfigMapModel,
 } from '@console/internal/models';
-import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
+// import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
 import * as models from './models';
 import * as hypercloudModels from '@console/internal/models';
 import { getKebabActionsForKind } from './utils/kebab-actions';
