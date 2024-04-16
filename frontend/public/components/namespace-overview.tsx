@@ -3,7 +3,7 @@ import Dashboard from '@console/shared/src/components/dashboard/Dashboard';
 import DashboardGrid from '@console/shared/src/components/dashboard/DashboardGrid';
 import DetailCard from './namespace-overview-cards/detail-card';
 import InventoryCard from './namespace-overview-cards/inventory-card';
-import ClaimCard from './namespace-overview-cards/claim-card';
+// import ClaimCard from './namespace-overview-cards/claim-card';
 import StatusCard from './namespace-overview-cards/status-card';
 import { UtilizationCard } from './namespace-overview-cards/utilization-card';
 import ActivityCard from './namespace-overview-cards/activity-card';
@@ -36,12 +36,12 @@ const NamespaceOverview = props => {
     },
   };
 
-  const claimCard = {
-    Card: ClaimCard,
-    props: {
-      namespace: props.obj.metadata?.name,
-    },
-  };
+  // const claimCard = {
+  //   Card: ClaimCard,
+  //   props: {
+  //     namespace: props.obj.metadata?.name,
+  //   },
+  // };
 
   const utilizationCard = {
     Card: UtilizationCard,
@@ -65,7 +65,7 @@ const NamespaceOverview = props => {
   };
   const mainCards = [statusCard, utilizationCard, resourceQuotaCard];
   const leftCards = [detailCard, inventoryCard];
-  const rightCards = isSingle ? [activityCard] : [claimCard, activityCard];
+  const rightCards = isSingle ? [activityCard] : [ activityCard];
   return (
     <Dashboard>
       <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />
