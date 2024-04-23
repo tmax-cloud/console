@@ -202,7 +202,7 @@ keycloak
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
     (window.location.hostname === "swkim.tmaxcloud.org") && console.log(keycloak)
-    keycloak.loadUserProfile().then(({ attributes }) => {
+    await keycloak.loadUserProfile().then(({ attributes }) => {
       setSaToken(attributes.saToken[0]);
       setIdToken(attributes.saToken[0]);
     });

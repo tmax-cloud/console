@@ -19,15 +19,15 @@ const mapCardsToGrid = (cards: GridDashboardCard[] = [], keyPrefix: string, igno
     </GridItem>
   ));
 
-const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards,  rightCards, isSingleCluster }) => {
+const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards, leftCards, rightCards, isSingleCluster }) => {
   const [containerRef, width] = useRefWidth();
   const smallGrid = !!containerRef.current && width <= parseInt(breakpointLG.value, 10);
 
   const mainGridCards = React.useMemo(() => mapCardsToGrid(mainCards, 'main', smallGrid), [mainCards, smallGrid]);
-  // const leftGridCards = React.useMemo(() => mapCardsToGrid(leftCards, 'left', smallGrid), [leftCards, smallGrid]);
+  const leftGridCards = React.useMemo(() => mapCardsToGrid(leftCards, 'left', smallGrid), [leftCards, smallGrid]);
   const rightGridCards = React.useMemo(() => mapCardsToGrid(rightCards, 'right', smallGrid), [rightCards, smallGrid]);
 
-
+console.log("leftGridCards",leftGridCards);
   return (
     <div ref={containerRef}>
       {smallGrid ? (
@@ -35,15 +35,17 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards,  rightCards, i
           <GridItem lg={12} md={12} sm={12}>
             <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
           </GridItem>
-          {/* {isSingleCluster ? null :
-            <GridItem lg={12} md={12} sm={12}>
+          {isSingleCluster ? null :
+            (leftGridCards.length!==0)&&(<GridItem lg={12} md={12} sm={12}>
               <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
-            </GridItem>} */}
+            </GridItem>)}
           <GridItem lg={12} md={12} sm={12}>
             <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
           </GridItem>
         </Grid>
       ) : (
+        isSingleCluster ?
+          (
             <Grid className="co-dashboard-grid">
               <GridItem lg={9} md={9} sm={9}>
                 <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
@@ -52,21 +54,28 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards,  rightCards, i
                 <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
               </GridItem>
             </Grid>
-        // isSingleCluster ?
-        //   (
-        //   ) : (
-        //     <Grid className="co-dashboard-grid">
-        //       {/* <GridItem lg={3} md={3} sm={3}>
-        //         <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
-        //       </GridItem> */}
-        //       <GridItem lg={6} md={6} sm={6}>
-        //         <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
-        //       </GridItem>
-        //       <GridItem lg={3} md={3} sm={3}>
-        //         <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
-        //       </GridItem>
-        //     </Grid>
-        //   )
+          ) : (
+            <Grid className="co-dashboard-grid">
+              {leftGridCards.length!==0 ?  <>
+              <GridItem lg={3} md={3} sm={3}>
+              <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
+            </GridItem>
+            <GridItem lg={6} md={6} sm={6}>
+              <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
+            </GridItem>
+            <GridItem lg={3} md={3} sm={3}>
+              <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
+            </GridItem></>
+                :
+                <><GridItem lg={6} md={6} sm={6}>
+                    <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
+                  </GridItem>
+                  <GridItem lg={3} md={3} sm={3}>
+                    <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
+                  </GridItem></>
+              }
+            </Grid>
+          )
       )}
     </div>
   );
