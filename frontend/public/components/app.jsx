@@ -194,15 +194,21 @@ keycloak
     if (!authorization) {
       keycloak.login();
       return;
+    } else {
+      keycloak.loadUserProfile().then(({ attributes }) => {
+        setSaToken(attributes.saToken[0]);
+        setIdToken(attributes.saToken[0]);
+      });
+      return
     }
   })
-  .then(async () => {
+  .then(async (e) => {
+    console.log("keycloakInit", e)
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, 'true');
     sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
     (window.location.hostname === "swkim.tmaxcloud.org") && console.log(keycloak)
-    setSaToken(keycloak.tokenParsed["sa-token"])
-    setIdToken(keycloak.tokenParsed["sa-token"])
+
     // setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
