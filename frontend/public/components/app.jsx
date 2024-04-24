@@ -203,8 +203,8 @@ keycloak
     sessionStorage.setItem(SHOW_ALERT_IN_SAMPLEPAGE, 'true');
     (window.location.hostname === "swkim.tmaxcloud.org") && console.log(keycloak)
     await keycloak.loadUserProfile().then(({ attributes }) => {
-      setSaToken(attributes.saToken[0]);
-      setIdToken(attributes.saToken[0]);
+      setSaToken(attributes["sa-token"][0]);
+      setIdToken(attributes["sa-token"][0]);
     });
     // setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);

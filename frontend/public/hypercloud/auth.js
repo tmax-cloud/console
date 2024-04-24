@@ -25,13 +25,13 @@ export const setIdToken = function (token) {
   return;
 };
 export const setSaToken = function (token) {
-  sessionStorage.setItem('saToken', token)
+  sessionStorage.setItem('sa-token', token)
 }
 export const getIdToken = function () {
   return sessionStorage.getItem('idToken');
 };
 export const getSaToken = function () {
-  return sessionStorage.getItem('saToken');
+  return sessionStorage.getItem('sa-token');
 };
 
 export const setAccessToken = function (token) {
