@@ -35,48 +35,49 @@ console.log("leftGridCards",leftGridCards);
           <GridItem lg={12} md={12} sm={12}>
             <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
           </GridItem>
-          {isSingleCluster ? null :
+          {/* {isSingleCluster ? null :
             (leftGridCards.length!==0)&&(<GridItem lg={12} md={12} sm={12}>
               <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
-            </GridItem>)}
+            </GridItem>)} */}
           <GridItem lg={12} md={12} sm={12}>
             <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
           </GridItem>
         </Grid>
       ) : (
-        isSingleCluster ?
-          (
+        // isSingleCluster ?
+        //   (
+        //     <Grid className="co-dashboard-grid">
+        //       <GridItem lg={9} md={9} sm={9}>
+        //         <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
+        //       </GridItem>
+        //       <GridItem lg={3} md={3} sm={3}>
+        //         <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
+        //       </GridItem>
+        //     </Grid>
+        //   ) : (
             <Grid className="co-dashboard-grid">
+              {leftGridCards.length!==0 ?  <>
+              <GridItem lg={3} md={3} sm={3}>
+                <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
+              </GridItem>
+              <GridItem lg={6} md={6} sm={6}>
+                <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
+              </GridItem>
+              <GridItem lg={3} md={3} sm={3}>
+                <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
+              </GridItem></>
+              :<>
               <GridItem lg={9} md={9} sm={9}>
                 <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
               </GridItem>
               <GridItem lg={3} md={3} sm={3}>
                 <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
-              </GridItem>
-            </Grid>
-          ) : (
-            <Grid className="co-dashboard-grid">
-              {leftGridCards.length!==0 ?  <>
-              <GridItem lg={3} md={3} sm={3}>
-              <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
-            </GridItem>
-            <GridItem lg={6} md={6} sm={6}>
-              <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
-            </GridItem>
-            <GridItem lg={3} md={3} sm={3}>
-              <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
-            </GridItem></>
-                :
-                <><GridItem lg={6} md={6} sm={6}>
-                    <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
-                  </GridItem>
-                  <GridItem lg={3} md={3} sm={3}>
-                    <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
-                  </GridItem></>
+              </GridItem></>
               }
             </Grid>
-          )
-      )}
+          // )
+      )
+      }
     </div>
   );
 };
