@@ -31,7 +31,7 @@ export const BindableResourceListDropDown = (props: BindableResourceListDropDown
 
   React.useEffect(() => {
     const getBindables = async () => {
-      const data = await coFetchJSON('api/hypercloud/bindableResources');
+      const data = await coFetchJSON('api/kubernetes/bindableResources');
       const keys = Object.keys(data);
       setBindables(keys);
     };

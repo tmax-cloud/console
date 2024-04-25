@@ -18,7 +18,7 @@ const DEFAULT_TICK_COUNT = 3;
 const getHCMeteringURL = (props: MeteringURLProps): string => {
   const params = new URLSearchParams();
   _.each(props, (value, key) => value && params.append(key, value.toString()));
-  return `/api/hypercloud/metering?${params.toString()}`;
+  return `/api/kubernetes/metering?${params.toString()}`;
 };
 
 const useMeteringPoll = ({ delay = DEFAULT_DELAY, timespan = DEFAULT_TIMESPAN, ...rest }: MeteringPollProps) => {

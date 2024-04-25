@@ -180,7 +180,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
 
   React.useEffect(() => {
     const fetchMembers = async () => {
-      const url = `/api/hypercloud/namespaces/${cluster.metadata.namespace}/clustermanagers/${cluster.metadata.name}/member/invited?userId=${getId()}${getUserGroup()}`;
+      const url = `/api/kubernetes/namespaces/${cluster.metadata.namespace}/clustermanagers/${cluster.metadata.name}/member/invited?userId=${getId()}${getUserGroup()}`;
       try {
         const data = await coFetchJSON(url);
         setMembers(data);
@@ -195,7 +195,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
 
   React.useEffect(() => {
     const fetchGroups = async () => {
-      const url = `/api/hypercloud/namespaces/${cluster.metadata.namespace}/clustermanagers/${cluster.metadata.name}/member/group?userId=${getId()}${getUserGroup()}`;
+      const url = `/api/kubernetes/namespaces/${cluster.metadata.namespace}/clustermanagers/${cluster.metadata.name}/member/group?userId=${getId()}${getUserGroup()}`;
       try {
         const data = await coFetchJSON(url);
         setGroups(data);

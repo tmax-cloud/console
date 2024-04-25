@@ -233,7 +233,7 @@ export const CreateServiceBinding: React.FC<CreateServiceBindingProps> = props =
 
   React.useEffect(() => {
     const getBindables = async () => {
-      const data = await coFetchJSON('api/hypercloud/bindableResources');
+      const data = await coFetchJSON('api/kubernetes/bindableResources');
       setBindablesGroupVersion(data);
     };
     getBindables();

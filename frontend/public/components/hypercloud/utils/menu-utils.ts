@@ -19,7 +19,7 @@ const INGRESS_LABEL_VALUES: IngressLabelValue[] = [
   { labelValue: 'rollout', menuKey: CustomMenusMap.Rollout.kind },
   { labelValue: 'gitea', menuKey: CustomMenusMap.Git.kind },
   { labelValue: 'grafana', menuKey: CustomMenusMap.Grafana.kind, endPoint: '/login/generic_oauth' },
-  { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind, endPoint: '/api/kiali/api/auth/openid_redirect' },
+  { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind },
   { labelValue: 'opensearch-dashboards', menuKey: CustomMenusMap.OpenSearch.kind },
   { labelValue: 'jaeger', menuKey: CustomMenusMap.Trace.kind },
   { labelValue: 'helm-apiserver', menuKey: CustomMenusMap.Helm.kind },

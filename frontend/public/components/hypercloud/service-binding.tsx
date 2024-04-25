@@ -100,7 +100,7 @@ export const ServiceBindingsPage: React.FC = props => {
 
   React.useEffect(() => {
     const getBindables = async () => {
-      const data = await coFetchJSON('api/hypercloud/bindableResources')
+      const data = await coFetchJSON('api/kubernetes/bindableResources')
       setBindables(data)
     }
     getBindables()
@@ -119,7 +119,7 @@ export const ServiceBindingDetailsList: React.FC<ServiceBindingDetailsListProps>
 
   React.useEffect(() => {
     const getBindables = async () => {
-      const data = await coFetchJSON('api/hypercloud/bindableResources')
+      const data = await coFetchJSON('api/kubernetes/bindableResources')
       setBindables(data)
     }
     getBindables()

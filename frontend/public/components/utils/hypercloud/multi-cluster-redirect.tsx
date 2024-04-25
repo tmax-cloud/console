@@ -13,7 +13,7 @@ export const MultiClusterRedirect = (props: MultiClusterRedirectProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        const url = `/api/hypercloud/namespaces/${match.params.ns}/${ClusterManagerModel.plural}/${match.params.clusterName}/member_invitation/accept?userId=${getId()}${getUserGroup()}`;
+        const url = `/api/kubernetes/namespaces/${match.params.ns}/${ClusterManagerModel.plural}/${match.params.clusterName}/member_invitation/accept?userId=${getId()}${getUserGroup()}`;
         await coFetchJSON(url);
       } catch {
       } finally {

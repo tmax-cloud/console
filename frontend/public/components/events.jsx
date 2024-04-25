@@ -450,7 +450,7 @@ class _EventStream extends React.Component {
   getEvent = async (start, end, kind, type, textFilter, namespace) => {
     const startTime = parseInt(start.getTime() / 1000);
     const endTime = parseInt(end.getTime() / 1000);
-    let url = `/api/hypercloud/event?startTime=${startTime}&endTime=${endTime}`;
+    let url = `/api/kubernetes/event?startTime=${startTime}&endTime=${endTime}`;
     if (namespace) {
       url = url + `&namespace=${namespace}`;
     }
@@ -541,11 +541,11 @@ class _EventStream extends React.Component {
       textFilter === ''
         ? apiEvents
         : apiEvents.filter(obj => {
-            if (!textMatches(obj)) {
-              return false;
-            }
-            return true;
-          });
+          if (!textMatches(obj)) {
+            return false;
+          }
+          return true;
+        });
 
     return (
       <div className="co-m-pane__body">

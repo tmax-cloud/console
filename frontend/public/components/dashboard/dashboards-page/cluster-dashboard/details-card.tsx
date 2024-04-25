@@ -78,7 +78,7 @@ export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: Details
     const fetchHcVersion = async () => {
       let url;
       if (getActivePerspective() === PerspectiveType.MASTER) {
-        url = 'api/hypercloud/version';
+        url = 'api/kubernetes/version';
       } else {
         url = `api/${getActiveCluster()}/version`;
       }
