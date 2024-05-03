@@ -37,7 +37,7 @@ function createURL(host, path) {
   if (path) {
     if (!!getIdToken()) {
       if (path.indexOf('?') !== -1) {
-        url += path + '&token=' + getIdToken();
+        url += path + '&Auth=' + getIdToken();
       } else {
         url += path + '?token=' + getIdToken();
       }
@@ -124,7 +124,7 @@ WSFactory.prototype._connect = function () {
   }
 
   this.ws.onopen = function () {
-    ws.send(JSON.stringify({ Authorization: `Bearer ${authToken}` }));
+    this.ws.send(JSON.stringify({ Authorization: `Bearer ${getSaToken()}` }));
     console.log(`websocket open: ${that.id}`);
     that._state = 'open';
     that._triggerEvent('open');
@@ -299,7 +299,8 @@ WSFactory.prototype.destroy = function (timedout) {
   delete this.options;
   this._messageBuffer = [];
 };
-
+// Authorization: `Bearer ${authToken}` 
 WSFactory.prototype.send = function (data) {
+  console.log("1111 WSFactory data", data)
   this.ws && this.ws.send(data);
 };
