@@ -27,7 +27,7 @@ import i18n, { getI18nResources } from './hypercloud/utils/langs/i18n';
 //PF4 Imports
 import { Page } from '@patternfly/react-core';
 import keycloak from '../hypercloud/keycloak';
-import { setAccessToken, setIdToken, setId, resetLoginState, SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, SHOW_ALERT_IN_SAMPLEPAGE, setSaToken } from '../hypercloud/auth';
+import { setAccessToken, setIdToken, setId, resetLoginState, SHOW_ALERT_IN_SINGLECLUSTER_NODEPAGE, SHOW_ALERT_IN_SINGLECLUSTER_PODPAGE, SHOW_ALERT_IN_SAMPLEPAGE, setSaToken, getSaToken } from '../hypercloud/auth';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
@@ -63,27 +63,27 @@ class App extends React.PureComponent {
       isConnected: false,
     };
   }
-  componentDidMount() {
-    const watchURL = 'wss://console.tmaxcloud.org/api/sas';
-    const ws = new WSFactory('sas', {
-      host: '',
-      reconnect: true,
-      path: watchURL,
-      jsonParse: true,
-    });
+  // componentDidMount() {
+  //   const watchURL = 'wss://console.tmaxcloud.org/api/sas';
+  //   const ws = new WSFactory('sas', {
+  //     host: '',
+  //     reconnect: true,
+  //     path: watchURL,
+  //     jsonParse: true,
+  //   });
 
-    ws.onopen(() => {
-      this.setState({ ws, isConnected: true });
-    });
+  //   ws.onopen(() => {
+  //     this.setState({ ws, isConnected: true });
+  //   });
 
-    ws.onclose(() => {
-      this.setState({ ws: null, isConnected: false });
-    });
+  //   ws.onclose(() => {
+  //     this.setState({ ws: null, isConnected: false });
+  //   });
 
-    ws.onmessage(msg => {
-      console.log('Message from server ', msg);
-    });
-  }
+  //   ws.onmessage(msg => {
+  //     console.log('Message from server ', msg);
+  //   });
+  // }
 
   UNSAFE_componentWillMount() {
     window.addEventListener('resize', this._onResize);

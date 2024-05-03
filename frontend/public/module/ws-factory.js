@@ -4,7 +4,7 @@
  *
  */
 /* eslint-disable no-console */
-import { getIdToken } from '../hypercloud/auth';
+import { getIdToken, getSaToken } from '../hypercloud/auth';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../actions/ui';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
@@ -74,6 +74,7 @@ export function WSFactory(id, options) {
     bulkmessage: [],
   };
 
+
   this._connect();
 
   if (this.bufferMax) {
@@ -123,6 +124,7 @@ WSFactory.prototype._connect = function () {
   }
 
   this.ws.onopen = function () {
+    ws.send(JSON.stringify({ Authorization: `Bearer ${authToken}` }));
     console.log(`websocket open: ${that.id}`);
     that._state = 'open';
     that._triggerEvent('open');
