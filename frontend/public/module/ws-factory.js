@@ -4,7 +4,6 @@
  *
  */
 /* eslint-disable no-console */
-import { io } from "socket.io-client"
 import { getIdToken, getSaToken } from '../hypercloud/auth';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../actions/ui';
@@ -116,18 +115,25 @@ WSFactory.prototype._connect = function () {
   const that = this;
   this._state = 'init';
   this._messageBuffer = [];
-  try {
-    this.ws = io(this.url, this.options.subprotocols ? {
-      ...this.options.subprotocols, auth: {
-        token: `Bearer ${getSaToken()}`
+  fetch(this.url, {
+    headers: {
+      Authorization: getSaToken()
+    }
+  }).then(response => {
+    console.log("fetch 응답", response);
+    if (response.status === 101) {
+      try {
+        this.ws = new Websocket(this.url, this.options.subprotocols);
+      } catch (e) {
+        console.error('Error creating websocket:', e);
+        this._reconnect();
+        return;
       }
-    } : { token: `Bearer ${getSaToken()}` });
-  } catch (e) {
-    console.error('Error creating websocket:', e);
-    this._reconnect();
-    return;
-  }
-  this.ws.on("connect", () => {
+    }
+  })
+
+
+  this.ws.onopen = function () {
     console.log(`websocket open: ${that.id}`);
     that._state = 'open';
     that._triggerEvent('open');
@@ -135,46 +141,28 @@ WSFactory.prototype._connect = function () {
       clearTimeout(that._connectionAttempt);
       that._connectionAttempt = null;
     }
-  })
-  // this.ws.onopen = function () {
-  //   console.log(`websocket open: ${that.id}`);
-  //   that._state = 'open';
-  //   that._triggerEvent('open');
-  //   if (that._connectionAttempt) {
-  //     clearTimeout(that._connectionAttempt);
-  //     that._connectionAttempt = null;
-  //   }
-  // };
-  this.ws.on("disconnect", (evt) => {
+  };
+
+  this.ws.onclose = function (evt) {
     console.log(`websocket closed: ${that.id}`, evt);
     that._state = 'closed';
     that._triggerEvent('close', evt);
     that._reconnect();
-  })
-  // this.ws.onclose = function (evt) {
-  //   console.log(`websocket closed: ${that.id}`, evt);
-  //   that._state = 'closed';
-  //   that._triggerEvent('close', evt);
-  //   that._reconnect();
-  // };
-  this.ws.on("connect_error", (evt) => {
+  };
+
+  this.ws.onerror = function (evt) {
     console.log(`websocket error: ${that.id}`);
     that._state = 'error';
     that._triggerEvent('error', evt);
-  })
-  // this.ws.onerror = function (evt) {
-  //   console.log(`websocket error: ${that.id}`);
-  //   that._state = 'error';
-  //   that._triggerEvent('error', evt);
-  // };
-  // this.ws.onmessage = function (evt) {
-  //   const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
-  //   // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-  //   if (that._state !== 'destroyed' && that._state !== 'closed') {
-  //     that._state = 'open';
-  //   }
-  //   that._triggerEvent('message', msg);
-  // };
+  };
+  this.ws.onmessage = function (evt) {
+    const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
+    // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
+    if (that._state !== 'destroyed' && that._state !== 'closed') {
+      that._state = 'open';
+    }
+    that._triggerEvent('message', msg);
+  };
 };
 
 WSFactory.prototype._registerHandler = function (type, fn) {
@@ -324,6 +312,5 @@ WSFactory.prototype.destroy = function (timedout) {
 };
 // Authorization: `Bearer ${authToken}` 
 WSFactory.prototype.send = function (data) {
-  console.log("1111 WSFactory data", data)
   this.ws && this.ws.send(data);
 };
