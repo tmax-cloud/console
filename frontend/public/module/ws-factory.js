@@ -116,55 +116,59 @@ WSFactory.prototype._connect = function () {
   this._state = 'init';
   this._messageBuffer = [];
   console.log("이 url로 fetch 시작", this.url)
-
   fetch(`https://${this.url.split("wss://")[1]}`, {
+    method: 'GET',
     mode: 'cors',
     headers: {
+      'Upgrade': 'websocket',
+      'Connection': 'Upgrade',
+      'Sec-WebSocket-Key': 'SGVsbG8sIHdvcmxkIQ==',
+      'Sec-WebSocket-Version': '13',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getSaToken()}`
+      'Authorization': `Bearer ${getSaToken()}`,
     }
   }).then(response => {
     console.log("fetch 응답", response)
-    try {
-      this.ws = new WebSocket(this.url, this.options.subprotocols);
-    } catch (e) {
-      console.error('Error creating websocket:', e);
-      this._reconnect();
-      return;
-    }
-
-    this.ws.onopen = function () {
-      console.log(`websocket open: ${that.id}`);
-      that._state = 'open';
-      that._triggerEvent('open');
-      if (that._connectionAttempt) {
-        clearTimeout(that._connectionAttempt);
-        that._connectionAttempt = null;
+    if (response.status === 101) {
+      try {
+        this.ws = new WebSocket(this.url, this.options.subprotocols);
+      } catch (e) {
+        console.error('Error creating websocket:', e);
+        this._reconnect();
+        return;
       }
-    };
 
-    this.ws.onclose = function (evt) {
-      console.log(`websocket closed: ${that.id}`, evt);
-      that._state = 'closed';
-      that._triggerEvent('close', evt);
-      that._reconnect();
-    };
-
-    this.ws.onerror = function (evt) {
-      console.log(`websocket error: ${that.id}`);
-      that._state = 'error';
-      that._triggerEvent('error', evt);
-    };
-    this.ws.onmessage = function (evt) {
-      const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
-      // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-      if (that._state !== 'destroyed' && that._state !== 'closed') {
+      this.ws.onopen = function () {
+        console.log(`websocket open: ${that.id}`);
         that._state = 'open';
-      }
-      that._triggerEvent('message', msg);
-    };
+        that._triggerEvent('open');
+        if (that._connectionAttempt) {
+          clearTimeout(that._connectionAttempt);
+          that._connectionAttempt = null;
+        }
+      };
 
+      this.ws.onclose = function (evt) {
+        console.log(`websocket closed: ${that.id}`, evt);
+        that._state = 'closed';
+        that._triggerEvent('close', evt);
+        that._reconnect();
+      };
 
+      this.ws.onerror = function (evt) {
+        console.log(`websocket error: ${that.id}`);
+        that._state = 'error';
+        that._triggerEvent('error', evt);
+      };
+      this.ws.onmessage = function (evt) {
+        const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
+        // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
+        if (that._state !== 'destroyed' && that._state !== 'closed') {
+          that._state = 'open';
+        }
+        that._triggerEvent('message', msg);
+      };
+    }
   }).catch(error =>
     console.error(error)
   )
