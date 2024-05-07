@@ -121,7 +121,7 @@ WSFactory.prototype._connect = function () {
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': getSaToken()
+      'Authorization': `Bearer ${getSaToken()}`
     }
   }).then(response => {
     console.log("fetch 응답", response)
