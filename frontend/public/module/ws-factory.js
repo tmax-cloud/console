@@ -115,9 +115,12 @@ WSFactory.prototype._connect = function () {
   const that = this;
   this._state = 'init';
   this._messageBuffer = [];
+  console.log("이 url로 fetch 시작", this.url)
   fetch(this.url, {
+    mode: 'cors',
     headers: {
-      Authorization: getSaToken()
+      'Content-Type': 'application/json',
+      'Authorization': getSaToken()
     }
   }).then(response => {
     console.log("fetch 응답", response);
@@ -130,7 +133,9 @@ WSFactory.prototype._connect = function () {
         return;
       }
     }
-  })
+  }).catch(error =>
+    console.error(error)
+  )
 
 
   this.ws.onopen = function () {
