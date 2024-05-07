@@ -37,9 +37,9 @@ function createURL(host, path) {
   if (path) {
     if (!!getIdToken()) {
       if (path.indexOf('?') !== -1) {
-        url += path + '&Authorization=' + getIdToken();
+        url += path + '&token=' + getIdToken();
       } else {
-        url += path + '?Authorization=' + getIdToken();
+        url += path + '?token=' + getIdToken();
       }
     } else {
       url += path;
