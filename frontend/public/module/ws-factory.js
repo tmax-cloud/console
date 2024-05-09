@@ -111,101 +111,45 @@ WSFactory.prototype._reconnect = function () {
   this._connectionAttempt = setTimeout(attempt, delay);
 };
 
-WSFactory.prototype._connect = async function () {
+WSFactory.prototype._connect = function () {
   const that = this;
   this._state = 'init';
   this._messageBuffer = [];
-  const options = {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getSaToken()}`,
-    }
-  }
-
-
-  console.log("이 url로 fetch 시작", `https://${this.url.split("wss://")[1]}`)
   try {
-    const response = await fetch(`https://${this.url.split("wss://")[1]}`, options);
-    const reader = response.body.getReader();
-    let buffer = "";
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = new TextDecoder().decode(value);
-      buffer += chunk;
-
-      // 버퍼에서 개행 문자('\n')을 기준으로 데이터를 분리하여 처리
-      const parts = buffer.split('\n');
-      for (let i = 0; i < parts.length - 1; i++) {
-        const jsonStr = parts[i];
-        try {
-          const parsedObject = JSON.parse(jsonStr);
-          const msg = parsedObject;
-          // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-
-          that._triggerEvent('message', msg);
-        } catch (error) {
-          console.error('Invalid JSON:', jsonStr);
-        }
-      }
-
-      // 처리된 데이터 이후 버퍼 업데이트
-      buffer = parts[parts.length - 1];
-    }
-    // const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
-    //   // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-    //   if (that._state !== 'destroyed' && that._state !== 'closed') {
-    //     that._state = 'open';
-    //   }
-    //   that._triggerEvent('message', msg);
-
-    console.log('Stream completed');
-  } catch (error) {
-    console.error('Error while watching pods:', error);
+    this.ws = new WebSocket(this.url, this.options.subprotocols);
+  } catch (e) {
+    console.error('Error creating websocket:', e);
+    this._reconnect();
+    return;
   }
 
-
-  // try {
-  //   this.ws = new WebSocket(this.url, this.options.subprotocols);
-  // } catch (e) {
-  //   console.error('Error creating websocket:', e);
-  //   this._reconnect();
-  //   return;
-  // }
-
-  // this.ws.onopen = function () {
-  //   console.log(`websocket open: ${that.id}`);
-  //   that._state = 'open';
-  //   that._triggerEvent('open');
-  //   if (that._connectionAttempt) {
-  //     clearTimeout(that._connectionAttempt);
-  //     that._connectionAttempt = null;
-  //   }
-  // };
-
-  // this.ws.onclose = function (evt) {
-  //   console.log(`websocket closed: ${that.id}`, evt);
-  //   that._state = 'closed';
-  //   that._triggerEvent('close', evt);
-  //   that._reconnect();
-  // };
-
-  // this.ws.onerror = function (evt) {
-  //   console.log(`websocket error: ${that.id}`);
-  //   that._state = 'error';
-  //   that._triggerEvent('error', evt);
-  // };
-  // this.ws.onmessage = function (evt) {
-  //   const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
-  //   // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-  //   if (that._state !== 'destroyed' && that._state !== 'closed') {
-  //     that._state = 'open';
-  //   }
-  //   that._triggerEvent('message', msg);
-  // };
-
-
+  this.ws.onopen = function () {
+    that._state = 'open';
+    that._triggerEvent('open');
+    if (that._connectionAttempt) {
+      clearTimeout(that._connectionAttempt);
+      that._connectionAttempt = null;
+    }
+  };
+  this.ws.onclose = function (evt) {
+    console.log(`websocket closed: ${that.id}`, evt);
+    that._state = 'closed';
+    that._triggerEvent('close', evt);
+    that._reconnect();
+  };
+  this.ws.onerror = function (evt) {
+    console.log(`websocket error: ${that.id}`);
+    that._state = 'error';
+    that._triggerEvent('error', evt);
+  };
+  this.ws.onmessage = function (evt) {
+    const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
+    // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
+    if (that._state !== 'destroyed' && that._state !== 'closed') {
+      that._state = 'open';
+    }
+    that._triggerEvent('message', msg);
+  };
 };
 
 WSFactory.prototype._registerHandler = function (type, fn) {
