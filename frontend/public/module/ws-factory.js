@@ -111,45 +111,101 @@ WSFactory.prototype._reconnect = function () {
   this._connectionAttempt = setTimeout(attempt, delay);
 };
 
-WSFactory.prototype._connect = function () {
+WSFactory.prototype._connect = async function () {
   const that = this;
   this._state = 'init';
   this._messageBuffer = [];
-  try {
-    this.ws = new WebSocket(this.url, this.options.subprotocols);
-  } catch (e) {
-    console.error('Error creating websocket:', e);
-    this._reconnect();
-    return;
+  const options = {
+    headers: {
+      'Content-Type': 'application/json',
+    }
   }
 
-  this.ws.onopen = function () {
-    that._state = 'open';
-    that._triggerEvent('open');
-    if (that._connectionAttempt) {
-      clearTimeout(that._connectionAttempt);
-      that._connectionAttempt = null;
+
+  const response = await fetch(`https://${this.url.split("wss://")[1]}`, options);
+  const reader = response.body.getReader();
+  let buffer = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    const chunk = new TextDecoder().decode(value);
+    buffer += chunk;
+    console.log(buffer);
+    const parts = buffer.split('\n');
+    for (let i = 0; i < parts.length - 1; i++) {
+      const jsonStr = parts[i];
+      try {
+        const msg = JSON.parse(jsonStr)
+        that._triggerEvent('message', msg);
+      } catch (error) {
+        console.error('Invalid JSON:', jsonStr);
+        buffer = parts.slice(i).join('');
+        console.log("남은 버퍼", buffer);
+        break;
+      }
     }
-  };
-  this.ws.onclose = function (evt) {
-    console.log(`websocket closed: ${that.id}`, evt);
-    that._state = 'closed';
-    that._triggerEvent('close', evt);
-    that._reconnect();
-  };
-  this.ws.onerror = function (evt) {
-    console.log(`websocket error: ${that.id}`);
-    that._state = 'error';
-    that._triggerEvent('error', evt);
-  };
-  this.ws.onmessage = function (evt) {
-    const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
-    // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-    if (that._state !== 'destroyed' && that._state !== 'closed') {
-      that._state = 'open';
-    }
-    that._triggerEvent('message', msg);
-  };
+
+
+    // try {
+    //   const parsedObject = JSON.parse(buffer);
+    //   const msg = parsedObject;
+    //   if (msg.code) that._triggerEvent('message', msg.message);
+    // } catch {
+    //   console.error('마지막 검증', buffer);
+    // }
+
+  }
+  // const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
+  //   // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
+  //   if (that._state !== 'destroyed' && that._state !== 'closed') {
+  //     that._state = 'open';
+  //   }
+  //   that._triggerEvent('message', msg);
+
+
+
+
+  // try {
+  //   this.ws = new WebSocket(this.url, this.options.subprotocols);
+  // } catch (e) {
+  //   console.error('Error creating websocket:', e);
+  //   this._reconnect();
+  //   return;
+  // }
+
+  // this.ws.onopen = function () {
+  //   console.log(`websocket open: ${that.id}`);
+  //   that._state = 'open';
+  //   that._triggerEvent('open');
+  //   if (that._connectionAttempt) {
+  //     clearTimeout(that._connectionAttempt);
+  //     that._connectionAttempt = null;
+  //   }
+  // };
+
+  // this.ws.onclose = function (evt) {
+  //   console.log(`websocket closed: ${that.id}`, evt);
+  //   that._state = 'closed';
+  //   that._triggerEvent('close', evt);
+  //   that._reconnect();
+  // };
+
+  // this.ws.onerror = function (evt) {
+  //   console.log(`websocket error: ${that.id}`);
+  //   that._state = 'error';
+  //   that._triggerEvent('error', evt);
+  // };
+  // this.ws.onmessage = function (evt) {
+  //   const msg = that.options && that.options.jsonParse ? JSON.parse(evt.data) : evt.data;
+  //   // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
+  //   if (that._state !== 'destroyed' && that._state !== 'closed') {
+  //     that._state = 'open';
+  //   }
+  //   that._triggerEvent('message', msg);
+  // };
+
+
 };
 
 WSFactory.prototype._registerHandler = function (type, fn) {
@@ -269,22 +325,22 @@ WSFactory.prototype.destroy = function (timedout) {
     return;
   }
 
-  try {
-    this.ws.close();
-  } catch (e) {
-    console.error(e);
-  }
+  // try {
+  //   this.ws.close();
+  // } catch (e) {
+  //   console.error(e);
+  // }
 
   clearInterval(this.flushCanceler);
   clearTimeout(this._connectionAttempt);
 
-  if (this.ws) {
-    this.ws.onopen = null;
-    this.ws.onclose = null;
-    this.ws.onerror = null;
-    this.ws.onmessage = null;
-    delete this.ws;
-  }
+  // if (this.ws) {
+  //   this.ws.onopen = null;
+  //   this.ws.onclose = null;
+  //   this.ws.onerror = null;
+  //   this.ws.onmessage = null;
+  //   delete this.ws;
+  // }
 
   try {
     this._triggerEvent('destroy', timedout);
@@ -297,7 +353,6 @@ WSFactory.prototype.destroy = function (timedout) {
   delete this.options;
   this._messageBuffer = [];
 };
-// Authorization: `Bearer ${authToken}` 
 WSFactory.prototype.send = function (data) {
-  this.ws && this.ws.send(data);
+  // this.ws && this.ws.send(data);
 };
