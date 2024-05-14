@@ -15,7 +15,8 @@ const ControlPlanePopup: React.FC<PrometheusHealthPopupProps> = ({ responses }) 
         {responses.map(({ response, error }, index) => {
           const health = getControlPlaneComponentHealth(response, error);
           const icon = health.state === HealthState.LOADING ? <div className="skeleton-health" /> : healthStateMapping[health.state].icon;
-          const value = health.message || healthStateMapping[health.state]?.message;
+          const value = (index===0||index===3) ? health.message || healthStateMapping[health.state]?.message : "Not supported";
+          
           return (
             <Status key={titles[index]} value={value} icon={icon}>
               {titles[index]}

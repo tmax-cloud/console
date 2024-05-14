@@ -11,8 +11,8 @@ const HealthItemIcon: React.FC<HealthItemIconProps> = ({ state }) => (
 
 const HealthItem: React.FC<HealthItemProps> = React.memo(
   ({ className, state, title, details, popupTitle, noIcon = false, children }) => {
-    const detailMessage =
-      details || (healthStateMapping[state] || healthStateMapping[HealthState.UNKNOWN]).message;
+    // const detailMessage =
+    //   details || (healthStateMapping[state] || healthStateMapping[HealthState.UNKNOWN]).message;
     return (
       <div className={classNames('co-status-card__health-item', className)}>
         {state === HealthState.LOADING ? (
@@ -34,11 +34,11 @@ const HealthItem: React.FC<HealthItemProps> = React.memo(
               title
             )}
           </span>
-          {state !== HealthState.LOADING && detailMessage && (
+          {/* {state !== HealthState.LOADING && detailMessage && (
             <div className="co-dashboard-text--small co-status-card__health-item-text co-status-card__health-item-subtitle">
               {detailMessage}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     );
