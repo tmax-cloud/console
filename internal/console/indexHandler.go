@@ -26,6 +26,7 @@ type Index struct {
 	AlertManagerBaseURL      string `json:"alertManagerBaseURL"`
 
 	McMode            bool   `json:"mcMode"`
+	PodTerminal       bool   `json:"podTerminal"`
 	ChatbotEmbed      bool   `json:"chatbotEmbed"`
 	CustomProductName string `json:"customProductName"`
 

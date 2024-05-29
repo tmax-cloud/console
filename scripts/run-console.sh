@@ -102,6 +102,7 @@ echo $id_token
   --keycloak-client-id=hypercloud5 \
   --keycloak-realm=tmax \
   --mc-mode=true \
+  --pod-terminal=false \
   --chatbot-embed=true \
   --custom-product-name="hypercloud" \
   --svc-type="LoadBalancer" \
