@@ -131,8 +131,8 @@ export const basicMenusFactory = (perspective, canListNS) => {
                         return;
                       }else if(innerMenuKind==="Audit"){
                         return (
-                        <Tooltip content="현재 환경에서는 감사 로그 기능이 지원되지 않습니다. 해당 클라우드 제공자의 콘솔을 이용해 주세요." className="pf-c-nav__link pf-c-nav__link">
-                          <span>감사 로그</span>
+                        <Tooltip content="현재 환경에서는 감사 로그 기능이 지원되지 않습니다. 해당 클라우드 제공자의 콘솔을 이용해 주세요." >
+                          <span className="pf-c-nav__link pf-c-nav__link">감사 로그</span>
                         </Tooltip>)}
                       // MEMO : generateMenu()에서 data를 동일하게 object형식으로 받게하기 위해 정제해줌. (kind와 menuType모두 innerMenuKind로 값 동일함)
                       const d = { kind: innerMenuKind, menuType: innerMenuKind };
