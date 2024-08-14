@@ -9,7 +9,15 @@ import HyperCloudDefaultMenus from '@console/internal/hypercloud/menu/hc-default
 import { CustomMenusMap, MenuType, MenuLinkType, CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getContainerLabel, getLabelTextByDefaultLabel, getLabelTextByKind } from '@console/internal/components/hypercloud/utils/menu-utils';
-import { Tooltip } from '@patternfly/react-core';
+declare global {
+  interface Window {
+    __RUNTIME_CONFIG__: {
+      isNotExistAuditLog: any;
+    };
+  }
+}
+const isNotExistAuditLog = window?.__RUNTIME_CONFIG__?.isNotExistAuditLog;
+
 
 type MenuData = {
   menuType: MenuType;
@@ -129,11 +137,8 @@ export const basicMenusFactory = (perspective, canListNS) => {
                       if (innerMenuKind === 'Dashboard' && !canListNS) {
                         // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
                         return;
-                      }else if(innerMenuKind==="Audit"){
-                        return (
-                        <Tooltip content="현재 환경에서는 감사 로그 기능이 지원되지 않습니다. 해당 클라우드 제공자의 콘솔을 이용해 주세요." >
-                          <span className="pf-c-nav__link pf-c-nav__link">감사 로그</span>
-                        </Tooltip>)}
+                      }else if(innerMenuKind==="Audit"&& isNotExistAuditLog){
+                        return <></> }
                       // MEMO : generateMenu()에서 data를 동일하게 object형식으로 받게하기 위해 정제해줌. (kind와 menuType모두 innerMenuKind로 값 동일함)
                       const d = { kind: innerMenuKind, menuType: innerMenuKind };
                       return generateMenu(perspective, d, true, t, i18n, idx);
