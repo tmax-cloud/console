@@ -22,7 +22,7 @@ RUN curl -o /tmp/krb5-libs.rpm https://dl.rockylinux.org/pub/rocky/8/BaseOS/x86_
     rm -f /tmp/krb5-libs.rpm
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
-COPY --from=build /go/src/github.com/openshift/console/frontend/public/runtime-config.js /opt/bridge/static/dist
+COPY --from=build /go/src/github.com/openshift/console/frontend/public/runtime-config.js /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual
 COPY --from=build /go/src/github.com/openshift/console/bin/console /opt/bridge/bin/console
 RUN mkdir -p /opt/bridge/api/
